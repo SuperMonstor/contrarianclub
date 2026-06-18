@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Contrarian Club Live
 
-## Getting Started
+A Menti-style live audience interaction app for debate events.
 
-First, run the development server:
+Phase 1 is the thinnest complete slice:
+
+- create one event
+- join by QR code or event code
+- run one multiple-choice poll
+- submit one vote per audience device
+- show a presenter display
+- hide or reveal results from the host dashboard
+- sync with Supabase Realtime plus a polling fallback
+
+## Stack
+
+- Next.js App Router
+- TypeScript
+- Supabase Postgres and Realtime
+- Vercel hosting
+- Tailwind CSS
+
+## Local Setup
+
+```bash
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Before creating an event, create a Supabase project and run:
+
+```text
+supabase/migrations/001_phase_one_live_poll.sql
+```
+
+Then fill in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+More setup notes are in `docs/setup.md`.
+
+## Routes
+
+- `/` creates the first live event.
+- `/host/[code]` controls the poll.
+- `/join/[code]` is the audience mobile view.
+- `/present/[code]` is the projector view.
+
+## Commands
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Roadmap
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `roadmap.md` for the full phased plan.
