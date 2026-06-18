@@ -2,18 +2,25 @@ import { createClient } from "@supabase/supabase-js";
 
 export function hasSupabaseServerEnv() {
   return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
+    getSupabaseUrl() && getSupabaseSecretKey(),
   );
 }
 
+export function getSupabaseUrl() {
+  return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+}
+
+export function getSupabaseSecretKey() {
+  return process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+}
+
 export function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = getSupabaseUrl();
+  const serviceRoleKey = getSupabaseSecretKey();
 
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.",
+      "Missing Supabase URL or secret key.",
     );
   }
 

@@ -6,10 +6,10 @@
 2. Open the SQL editor.
 3. Run `supabase/migrations/001_phase_one_live_poll.sql`.
 4. Copy these values into `.env.local`:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-5. Keep `SUPABASE_SERVICE_ROLE_KEY` server-only. Do not expose it in browser code.
+   - `SUPABASE_URL`
+   - `SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SECRET_KEY`
+5. Keep `SUPABASE_SECRET_KEY` server-only. Do not expose it in browser code.
 
 Phase 1 intentionally uses public audience access for joining and voting. Host controls use the service role key through server code. Later phases should add host auth and stricter row-level security.
 

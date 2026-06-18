@@ -37,9 +37,9 @@ supabase/migrations/001_phase_one_live_poll.sql
 Then fill in `.env.local`:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_URL=
+SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
