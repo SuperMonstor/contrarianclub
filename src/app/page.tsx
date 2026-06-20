@@ -1,7 +1,34 @@
+import { redirect } from "next/navigation";
 import { EventCodeEntry } from "@/components/event-code-entry";
 import { Logo } from "@/components/logo";
+import { createServiceClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+async function getDefaultEventCode() {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("events")
+    .select("code")
+    .eq("is_default", true)
+    .maybeSingle<{ code: string }>();
+
+  if (!error) return data?.code ?? null;
+
+  if (error.code === "42703") {
+    return null;
+  }
+
+  throw error;
+}
+
+export default async function Home() {
+  const defaultCode = await getDefaultEventCode();
+
+  if (defaultCode) {
+    redirect(`/join/${defaultCode}`);
+  }
+
   return (
     <main className="club-shell flex min-h-screen items-center justify-center px-5 py-10">
       <section className="club-panel club-rise w-full min-w-0 max-w-lg p-8 sm:p-10">

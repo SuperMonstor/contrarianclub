@@ -10,6 +10,7 @@
    - `supabase/migrations/003_debate_swing.sql`
    - `supabase/migrations/004_harden_vote_integrity.sql`
    - `supabase/migrations/005_scale_poll_format.sql`
+   - `supabase/migrations/006_default_event.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`

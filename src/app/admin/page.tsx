@@ -1,6 +1,14 @@
 import Link from "next/link";
-import { ArrowUpRight, CalendarPlus, LogOut, Monitor, Radio } from "lucide-react";
-import { signOutAdmin } from "@/app/actions";
+import {
+  ArrowUpRight,
+  CalendarPlus,
+  LogOut,
+  Monitor,
+  Radio,
+  Star,
+  StarOff,
+} from "lucide-react";
+import { signOutAdmin, updateDefaultEvent } from "@/app/actions";
 import { Logo } from "@/components/logo";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
@@ -9,19 +17,43 @@ import type { EventSummary } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminEventsPage() {
-  const user = await requireAdminUser();
-  const hostname = await currentHostname();
-  const supabase = createServiceClient();
-  const { data: events, error } = await supabase
+async function getAdminEvents(supabase: ReturnType<typeof createServiceClient>) {
+  const withDefault = await supabase
+    .from("events")
+    .select("id, code, title, status, created_at, is_default")
+    .order("created_at", { ascending: false })
+    .returns<EventSummary[]>();
+
+  if (!withDefault.error) {
+    return {
+      events: withDefault.data ?? [],
+      supportsDefaultEvents: true,
+    };
+  }
+
+  if (withDefault.error.code !== "42703") {
+    throw withDefault.error;
+  }
+
+  const withoutDefault = await supabase
     .from("events")
     .select("id, code, title, status, created_at")
     .order("created_at", { ascending: false })
     .returns<EventSummary[]>();
 
-  if (error) throw error;
+  if (withoutDefault.error) throw withoutDefault.error;
 
-  const list = events ?? [];
+  return {
+    events: withoutDefault.data ?? [],
+    supportsDefaultEvents: false,
+  };
+}
+
+export default async function AdminEventsPage() {
+  const user = await requireAdminUser();
+  const hostname = await currentHostname();
+  const supabase = createServiceClient();
+  const { events: list, supportsDefaultEvents } = await getAdminEvents(supabase);
 
   return (
     <main className="club-shell min-h-screen px-5 py-6">
@@ -60,6 +92,15 @@ export default async function AdminEventsPage() {
             {list.length} {list.length === 1 ? "event" : "events"} on record
           </p>
         </div>
+        {!supportsDefaultEvents && (
+          <div className="club-panel-quiet mt-3 px-4 py-3 text-sm text-[color:var(--cc-parchment)]">
+            Default event controls require migration{" "}
+            <span className="club-mono text-[color:var(--cc-gold-bright)]">
+              006_default_event.sql
+            </span>
+            .
+          </div>
+        )}
 
         <div className="mt-3 grid gap-3.5">
           {list.length === 0 ? (
@@ -79,37 +120,75 @@ export default async function AdminEventsPage() {
             </div>
           ) : (
             list.map((event) => (
-              <Link
-                href={adminPath(`/events/${event.code}`, hostname)}
+              <article
                 key={event.id}
                 className="club-panel group grid gap-4 p-5 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--cc-line-strong)] md:grid-cols-[1fr_auto] md:items-center"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="club-display truncate text-2xl sm:text-3xl">
-                      {event.title}
-                    </h2>
+                    <Link
+                      href={adminPath(`/events/${event.code}`, hostname)}
+                      className="min-w-0"
+                    >
+                      <h2 className="club-display truncate text-2xl transition hover:text-[color:var(--cc-gold-bright)] sm:text-3xl">
+                        {event.title}
+                      </h2>
+                    </Link>
                     <StatusBadge status={event.status} />
+                    {event.is_default && (
+                      <span className="club-chip border-[color:var(--cc-gold)]/50 bg-[color:var(--cc-gold)]/15 text-[color:var(--cc-gold-bright)]">
+                        <Star size={13} fill="currentColor" />
+                        default
+                      </span>
+                    )}
                   </div>
                   <p className="club-mono mt-2 text-sm uppercase tracking-[0.22em] text-[color:var(--cc-gold)]">
                     {event.code}
                   </p>
                 </div>
-                <div className="flex items-center gap-5 text-sm font-medium text-[color:var(--cc-muted)]">
-                  <span className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-[color:var(--cc-muted)]">
+                  {supportsDefaultEvents ? (
+                    <form action={updateDefaultEvent}>
+                      <input type="hidden" name="code" value={event.code} />
+                      <input
+                        type="hidden"
+                        name="isDefault"
+                        value={event.is_default ? "false" : "true"}
+                      />
+                      <button
+                        type="submit"
+                        className={`club-btn min-h-10 px-3 py-2 text-xs ${
+                          event.is_default
+                            ? "border-[color:var(--cc-line)] text-[color:var(--cc-muted)]"
+                            : "club-btn-primary"
+                        }`}
+                      >
+                        {event.is_default ? <StarOff size={15} /> : <Star size={15} />}
+                        {event.is_default ? "Unmark default" : "Make default"}
+                      </button>
+                    </form>
+                  ) : null}
+                  <Link
+                    href={adminPath(`/events/${event.code}`, hostname)}
+                    className="club-btn min-h-10 px-3 py-2 text-xs"
+                  >
                     <Radio size={16} className="text-[color:var(--cc-gold)]" />
                     Manage
-                  </span>
-                  <span className="flex items-center gap-2">
+                  </Link>
+                  <Link
+                    href={`/present/${event.code}`}
+                    target="_blank"
+                    className="club-btn min-h-10 px-3 py-2 text-xs"
+                  >
                     <Monitor size={16} className="text-[color:var(--cc-gold)]" />
                     Present
-                  </span>
+                  </Link>
                   <ArrowUpRight
                     size={18}
                     className="text-[color:var(--cc-faint)] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color:var(--cc-gold)]"
                   />
                 </div>
-              </Link>
+              </article>
             ))
           )}
         </div>

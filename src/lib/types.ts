@@ -10,6 +10,7 @@ export type EventSummary = {
   title: string;
   status: "draft" | "live" | "ended" | "archived";
   created_at: string;
+  is_default?: boolean;
 };
 
 export type ActivitySummary = {

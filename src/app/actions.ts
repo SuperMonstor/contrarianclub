@@ -456,6 +456,47 @@ export async function updateEventStatus(
   revalidatePath(`/present/${code}`);
 }
 
+export async function updateDefaultEvent(formData: FormData) {
+  await requireAdminUser();
+
+  const code = String(formData.get("code") ?? "").trim().toUpperCase();
+  const shouldDefault = formData.get("isDefault") === "true";
+
+  if (!code) {
+    throw new Error("Event code is required.");
+  }
+
+  const supabase = createServiceClient();
+
+  const { error: clearError } = await supabase
+    .from("events")
+    .update({ is_default: false })
+    .eq("is_default", true);
+
+  if (clearError) {
+    if (clearError.code === "42703") {
+      throw new Error(
+        "Default events require Supabase migration 006_default_event.sql.",
+      );
+    }
+
+    throw clearError;
+  }
+
+  if (shouldDefault) {
+    const { error: setError } = await supabase
+      .from("events")
+      .update({ is_default: true })
+      .eq("code", code);
+
+    if (setError) throw setError;
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${code}`);
+}
+
 export async function signOutAdmin() {
   const supabase = await createServerAuthClient();
   await supabase.auth.signOut();
