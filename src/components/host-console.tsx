@@ -5,13 +5,14 @@ import { startTransition, useState } from "react";
 import {
   Eye,
   EyeOff,
+  Flag,
   Monitor,
   Play,
   QrCode,
   RotateCcw,
   Square,
 } from "lucide-react";
-import { controlActivity } from "@/app/actions";
+import { controlActivity, updateEventStatus } from "@/app/actions";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { ControlCommand, EventState } from "@/lib/types";
@@ -27,6 +28,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
     initialState,
   );
   const [command, setCommand] = useState<ControlCommand | null>(null);
+  const [statusCommand, setStatusCommand] = useState<string | null>(null);
 
   const activity = state.activity;
 
@@ -38,6 +40,16 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
       await controlActivity(code, activity.id, nextCommand);
       refreshSoon();
       setCommand(null);
+    });
+  }
+
+  function changeEventStatus(nextStatus: typeof state.event.status) {
+    setStatusCommand(nextStatus);
+
+    startTransition(async () => {
+      await updateEventStatus(code, nextStatus);
+      refreshSoon();
+      setStatusCommand(null);
     });
   }
 
@@ -62,12 +74,41 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             </div>
             <div className="border border-slate-950 bg-white p-3">
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
-                votes
+                status
               </p>
               <p className="mt-1 font-mono text-3xl font-black">
-                {state.totalVotes}
+                {state.event.status}
               </p>
             </div>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => changeEventStatus("draft")}
+              disabled={statusCommand !== null}
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-white px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+            >
+              <Flag size={14} />
+              Draft
+            </button>
+            <button
+              type="button"
+              onClick={() => changeEventStatus("live")}
+              disabled={statusCommand !== null}
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-emerald-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+            >
+              <Flag size={14} />
+              Live
+            </button>
+            <button
+              type="button"
+              onClick={() => changeEventStatus("ended")}
+              disabled={statusCommand !== null}
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-amber-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+            >
+              <Flag size={14} />
+              End
+            </button>
           </div>
           <div className="mt-5 space-y-2 text-sm">
             <a

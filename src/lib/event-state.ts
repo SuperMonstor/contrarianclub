@@ -28,7 +28,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
 
   const { data: event, error: eventError } = await supabase
     .from("events")
-    .select("id, code, title, created_at")
+    .select("id, code, title, status, created_at")
     .eq("code", normalizedCode)
     .maybeSingle<EventSummary>();
 

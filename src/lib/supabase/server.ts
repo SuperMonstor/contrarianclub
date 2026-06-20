@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export function hasSupabaseServerEnv() {
   return Boolean(
@@ -28,6 +30,36 @@ export function createServiceClient() {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+  });
+}
+
+export async function createServerAuthClient() {
+  const supabaseUrl = getSupabaseUrl();
+  const anonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !anonKey) {
+    throw new Error("Missing Supabase URL or public anon key.");
+  }
+
+  const cookieStore = await cookies();
+
+  return createServerClient(supabaseUrl, anonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Server Components can read auth cookies but cannot always write them.
+        }
+      },
     },
   });
 }

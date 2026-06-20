@@ -6,6 +6,7 @@ export type EventSummary = {
   id: string;
   code: string;
   title: string;
+  status: "draft" | "live" | "ended" | "archived";
   created_at: string;
 };
 

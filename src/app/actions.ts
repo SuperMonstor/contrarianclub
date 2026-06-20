@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireAdminUser } from "@/lib/auth";
+import { createServerAuthClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { ControlCommand, PresentationMode } from "@/lib/types";
 
@@ -40,6 +42,8 @@ async function createUniqueCode() {
 }
 
 export async function createEvent(formData: FormData) {
+  await requireAdminUser();
+
   const supabase = createServiceClient();
   const title = String(formData.get("title") ?? "").trim();
   const prompt = String(formData.get("prompt") ?? "").trim();
@@ -94,7 +98,7 @@ export async function createEvent(formData: FormData) {
   if (stateError) throw stateError;
 
   revalidatePath("/");
-  redirect(`/host/${event.code}`);
+  redirect(`/admin/events/${event.code}`);
 }
 
 export async function controlActivity(
@@ -102,6 +106,8 @@ export async function controlActivity(
   activityId: string,
   command: ControlCommand,
 ) {
+  await requireAdminUser();
+
   const supabase = createServiceClient();
 
   const statusByCommand = {
@@ -173,6 +179,33 @@ export async function controlActivity(
   if (stateError) throw stateError;
 
   revalidatePath(`/host/${code}`);
+  revalidatePath(`/admin/events/${code}`);
   revalidatePath(`/join/${code}`);
   revalidatePath(`/present/${code}`);
+}
+
+export async function updateEventStatus(
+  code: string,
+  status: "draft" | "live" | "ended" | "archived",
+) {
+  await requireAdminUser();
+
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("events")
+    .update({ status })
+    .eq("code", code);
+
+  if (error) throw error;
+
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${code}`);
+  revalidatePath(`/join/${code}`);
+  revalidatePath(`/present/${code}`);
+}
+
+export async function signOutAdmin() {
+  const supabase = await createServerAuthClient();
+  await supabase.auth.signOut();
+  redirect("/admin/login");
 }
