@@ -2,13 +2,13 @@ import { AdminLoginForm } from "@/components/admin-login-form";
 
 export default function AdminLoginPage() {
   return (
-    <main className="salon-stage grid min-h-screen place-items-center px-5 text-[#08080d]">
-      <section className="salon-panel w-full max-w-md p-6">
-        <p className="brand-kicker text-[#7a6a42]">
+    <main className="grid min-h-screen place-items-center bg-[#f6f1e7] px-5 text-slate-950">
+      <section className="w-full max-w-md border border-slate-950 bg-white p-6 shadow-[8px_8px_0_#111827]">
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-slate-500">
           Admin
         </p>
-        <h1 className="brand-display mt-3 text-4xl">Sign in</h1>
-        <p className="mt-3 text-sm leading-6 text-[#4d5561]">
+        <h1 className="mt-3 text-3xl font-black">Sign in</h1>
+        <p className="mt-3 text-sm leading-6 text-slate-600">
           Use the admin account created in Supabase Auth.
         </p>
         <div className="mt-6">

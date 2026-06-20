@@ -42,21 +42,21 @@ export function EventCodeEntry() {
           id="code"
           value={code}
           onChange={(event) => setCode(event.target.value)}
-          className="salon-input mt-2 w-full px-4 py-4 font-mono text-3xl font-black uppercase tracking-[0.16em]"
+          className="mt-2 w-full border border-slate-950 bg-[#fdfaf1] px-4 py-4 font-mono text-3xl font-black uppercase tracking-[0.16em] outline-none focus:bg-amber-100"
           placeholder="ABC123"
           autoComplete="off"
           inputMode="text"
         />
       </div>
       {error && (
-        <p className="bg-red-100 px-3 py-3 text-sm font-bold text-red-950 ring-1 ring-red-900/25">
+        <p className="border border-red-900 bg-red-100 px-3 py-3 text-sm font-bold text-red-950">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={isChecking || !code.trim()}
-        className="salon-button salon-button-primary w-full px-4 py-3"
+        className="flex min-h-12 w-full items-center justify-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isChecking ? <Loader2 className="animate-spin" size={18} /> : null}
         Join event

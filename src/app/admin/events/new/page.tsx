@@ -11,9 +11,9 @@ export default async function NewEventPage() {
   const eventsHref = await currentAdminPath("/");
 
   return (
-    <main className="salon-page min-h-screen px-5 py-5 text-[#08080d]">
+    <main className="min-h-screen bg-[#f6f1e7] px-5 py-5 text-slate-950">
       <section className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-6xl gap-6 lg:grid-cols-[1fr_440px]">
-        <div className="salon-panel flex flex-col justify-between p-6 lg:p-10">
+        <div className="flex flex-col justify-between border border-slate-950 bg-[#fdfaf1] p-6 shadow-[8px_8px_0_#111827] lg:p-10">
           <div>
             <Link
               href={eventsHref}
@@ -22,25 +22,25 @@ export default async function NewEventPage() {
               <ArrowLeft size={16} />
               Back to events
             </Link>
-            <p className="brand-kicker mt-8 text-[#7a6a42]">
+            <p className="mt-8 font-mono text-xs uppercase tracking-[0.24em] text-slate-500">
               New event
             </p>
-            <h1 className="brand-display mt-5 max-w-4xl text-5xl leading-none sm:text-7xl">
+            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-none tracking-tight sm:text-7xl">
               Create the room before showtime.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4d5561]">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700">
               This creates a preserved event record with one starter poll. More
               activities can layer on under this event later.
             </p>
           </div>
         </div>
 
-        <aside className="salon-panel p-5">
+        <aside className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
           <div className="mb-5">
-            <p className="brand-kicker text-[#7a6a42]">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-slate-500">
               Event setup
             </p>
-            <h2 className="brand-display mt-2 text-3xl">Start the live loop</h2>
+            <h2 className="mt-2 text-2xl font-black">Start the live loop</h2>
           </div>
 
           <NewEventForm />

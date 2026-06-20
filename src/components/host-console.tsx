@@ -73,40 +73,39 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
   }
 
   return (
-    <div className="salon-stage min-h-screen text-[#08080d]">
-      <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-5 py-5 lg:grid-cols-[340px_1fr]">
-        <aside className="salon-panel-dark p-6 text-[#fff8e8]">
-          <p className="brand-kicker text-[#c8a24a]">
+    <div className="min-h-screen bg-[#f6f1e7] text-slate-950">
+      <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-5 py-5 lg:grid-cols-[360px_1fr]">
+        <aside className="border border-slate-950 bg-[#fdfaf1] p-5 shadow-[8px_8px_0_#111827]">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
             Host control
           </p>
-          <h1 className="brand-display mt-4 text-4xl leading-tight text-[#fff8e8]">
+          <h1 className="mt-4 text-3xl font-black tracking-tight">
             {state.event.title}
           </h1>
-          <div className="salon-hairline my-6" />
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-[#fff8e8]/8 p-4 ring-1 ring-[#f0d36a]/15">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#d8cfbd]/70">
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="border border-slate-950 bg-white p-3">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
                 code
               </p>
-              <p className="mt-2 font-mono text-3xl font-black text-[#fff8e8]">
+              <p className="mt-1 font-mono text-3xl font-black">
                 {state.event.code}
               </p>
             </div>
-            <div className="bg-[#fff8e8]/8 p-4 ring-1 ring-[#f0d36a]/15">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#d8cfbd]/70">
+            <div className="border border-slate-950 bg-white p-3">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
                 status
               </p>
-              <p className="mt-2 font-mono text-3xl font-black text-[#fff8e8]">
+              <p className="mt-1 font-mono text-3xl font-black">
                 {state.event.status}
               </p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => changeEventStatus("draft")}
               disabled={statusCommand !== null}
-              className="salon-button px-2 py-2 text-xs uppercase tracking-[0.12em]"
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-white px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               Draft
@@ -115,7 +114,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               type="button"
               onClick={() => changeEventStatus("live")}
               disabled={statusCommand !== null}
-              className="salon-button salon-button-gold px-2 py-2 text-xs uppercase tracking-[0.12em]"
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-emerald-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               Live
@@ -124,17 +123,17 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               type="button"
               onClick={() => changeEventStatus("ended")}
               disabled={statusCommand !== null}
-              className="salon-button px-2 py-2 text-xs uppercase tracking-[0.12em]"
+              className="flex items-center justify-center gap-1 border border-slate-950 bg-amber-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               End
             </button>
           </div>
-          <div className="mt-6 space-y-2 text-sm">
+          <div className="mt-5 space-y-2 text-sm">
             <a
               href={`/present/${state.event.code}`}
               target="_blank"
-              className="salon-button salon-button-primary w-full justify-between px-4 py-3"
+              className="flex items-center justify-between border border-slate-950 bg-slate-950 px-3 py-3 font-bold text-white"
             >
               <span>Open presenter</span>
               <Monitor size={18} />
@@ -142,13 +141,13 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             <a
               href={`/join/${state.event.code}`}
               target="_blank"
-              className="salon-button w-full justify-between px-4 py-3"
+              className="flex items-center justify-between border border-slate-950 bg-white px-3 py-3 font-bold"
             >
               <span>Open audience join</span>
               <QrCode size={18} />
             </a>
           </div>
-          <p className="mt-6 text-xs leading-5 text-[#d8cfbd]/70">
+          <p className="mt-5 text-xs leading-5 text-slate-600">
             Realtime is backed by Supabase. This screen also refreshes with the
             fallback poller so the host can recover after refreshes or missed
             events.
@@ -156,7 +155,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
         </aside>
 
         <section className="space-y-6">
-          <div className="salon-panel p-6">
+          <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
             <div className="mb-6 grid gap-3 md:grid-cols-2">
               {state.activities.map((item) => (
                 <ActivityCard
@@ -171,18 +170,18 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="brand-kicker text-[#7a6a42]">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
                   Current poll
                 </p>
-                <h2 className="brand-display mt-3 max-w-4xl text-4xl leading-tight">
+                <h2 className="mt-2 text-3xl font-black tracking-tight">
                   {activity?.prompt ?? "No poll configured"}
                 </h2>
               </div>
-              <div className="flex gap-2">
-                <span className="salon-chip">
+              <div className="flex gap-2 font-mono text-xs uppercase tracking-[0.16em]">
+                <span className="border border-slate-950 px-3 py-2">
                   {activity?.status ?? "missing"}
                 </span>
-                <span className="salon-chip bg-[#f0d36a]/70 text-[#08080d]">
+                <span className="border border-slate-950 bg-amber-200 px-3 py-2">
                   {activity?.results_visibility ?? "hidden"}
                 </span>
               </div>
@@ -226,26 +225,26 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-[1fr_320px]">
-            <div className="salon-panel p-6">
+            <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
               <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="brand-display text-2xl">Live results</h3>
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]">
+                <h3 className="text-xl font-black">Live results</h3>
+                <span className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
                   {state.totalVotes} responses
                 </span>
               </div>
               <ResultBars options={state.options} totalVotes={state.totalVotes} />
             </div>
-            <div className="salon-panel-dark p-6 text-[#fff8e8]">
-              <p className="brand-kicker text-[#d8cfbd]/65">
+            <div className="border border-slate-950 bg-[#202c3a] p-5 text-white shadow-[8px_8px_0_#111827]">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/55">
                 sync
               </p>
-              <p className="brand-display mt-4 text-6xl">
+              <p className="mt-4 text-5xl font-black">
                 {state.participantCount}
               </p>
-              <p className="mt-1 text-sm text-[#d8cfbd]">
+              <p className="mt-1 text-sm text-white/70">
                 joined participant{state.participantCount === 1 ? "" : "s"}
               </p>
-              <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-[#d8cfbd]/65">
+              <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-white/55">
                 Last sync
               </p>
               <p className="mt-2 text-sm">
@@ -255,16 +254,16 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
 
           {state.swing && (
-            <div className="salon-panel p-6">
+            <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="brand-kicker text-[#7a6a42]">
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
                     Debate swing
                   </p>
-                  <h3 className="brand-display mt-2 text-4xl">
+                  <h3 className="mt-2 text-3xl font-black">
                     {state.swing.changedPercent}% changed their vote
                   </h3>
-                  <p className="mt-2 text-sm text-[#4d5561]">
+                  <p className="mt-2 text-sm text-slate-600">
                     {state.swing.changedVotes} of {state.swing.matchedVotes} matched
                     voters moved between the pre and post vote.
                   </p>
@@ -272,23 +271,23 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-                <div className="bg-[#eadbc0]/50 p-5 ring-1 ring-[#7a6a42]/18">
-                  <h4 className="brand-display mb-4 text-2xl">Net movement</h4>
+                <div className="border border-slate-950 bg-[#fdfaf1] p-4">
+                  <h4 className="mb-4 font-black">Net movement</h4>
                   <div className="space-y-3">
                     {state.swing.optionTotals.map((option) => (
                       <div
                         key={option.label}
-                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-[#cbbd9b] pb-2 last:border-b-0 last:pb-0"
+                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-slate-300 pb-2 last:border-b-0 last:pb-0"
                       >
                         <span className="font-bold">{option.label}</span>
                         <span className="font-mono font-black">
                           {option.delta > 0 ? "+" : ""}
                           {option.delta}
                         </span>
-                        <span className="text-sm text-[#4d5561]">
+                        <span className="text-sm text-slate-600">
                           before {option.preVotes}
                         </span>
-                        <span className="text-sm text-[#4d5561]">
+                        <span className="text-sm text-slate-600">
                           after {option.postVotes}
                         </span>
                       </div>
@@ -296,11 +295,11 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   </div>
                 </div>
 
-                <div className="bg-[#1e2a35] p-5 text-[#fff8e8] ring-1 ring-[#f0d36a]/15">
-                  <h4 className="brand-display mb-4 text-2xl">Changed paths</h4>
+                <div className="border border-slate-950 bg-[#202c3a] p-4 text-white">
+                  <h4 className="mb-4 font-black">Changed paths</h4>
                   <div className="space-y-2">
                     {state.swing.transitions.length === 0 ? (
-                      <p className="text-sm text-[#d8cfbd]">
+                      <p className="text-sm text-white/65">
                         No matched before/after votes yet.
                       </p>
                     ) : (
@@ -345,23 +344,19 @@ function ActivityCard({
       type="button"
       onClick={onSelect}
       disabled={active || working}
-      className={`p-5 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
-        active
-          ? "salon-panel-gold"
-          : "bg-[#efe4cf]/70 ring-1 ring-[#7a6a42]/18 hover:bg-[#fff9ed]/80"
+      className={`border border-slate-950 p-4 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
+        active ? "bg-amber-200" : "bg-[#fdfaf1]"
       }`}
     >
-      <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#7a6a42]">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
         {phaseLabel(activity.phase)}
       </p>
-      <h3 className="brand-display mt-2 line-clamp-2 text-xl leading-tight">
-        {activity.prompt}
-      </h3>
+      <h3 className="mt-2 line-clamp-2 font-black">{activity.prompt}</h3>
       <div className="mt-4 flex gap-2 font-mono text-xs uppercase tracking-[0.14em]">
-        <span className="salon-chip">
+        <span className="border border-slate-950 bg-white px-2 py-1">
           {activity.status}
         </span>
-        <span className="salon-chip">
+        <span className="border border-slate-950 bg-white px-2 py-1">
           {active ? "active" : working ? "working" : "select"}
         </span>
       </div>
@@ -393,7 +388,7 @@ function ControlButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="salon-button min-h-12 px-4 py-3"
+      className="flex min-h-12 items-center justify-center gap-2 border border-slate-950 bg-[#fdfaf1] px-4 py-3 font-bold transition hover:-translate-y-0.5 hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {icon}
       <span>{active ? "Working" : label}</span>

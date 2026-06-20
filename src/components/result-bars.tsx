@@ -20,7 +20,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
                 className={
                   large
                     ? "text-xl font-semibold text-white"
-                    : "text-sm font-semibold text-[#08080d]"
+                    : "text-sm font-semibold text-slate-950"
                 }
               >
                 {option.label}
@@ -28,8 +28,8 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               <span
                 className={
                   large
-                    ? "font-mono text-2xl text-[#f0d36a]"
-                    : "font-mono text-sm text-[#7a6a42]"
+                    ? "font-mono text-2xl text-amber-200"
+                    : "font-mono text-sm text-slate-500"
                 }
               >
                 {percentage}%
@@ -37,25 +37,25 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
             </div>
             <div
               className={
-                  large
-                    ? "h-7 overflow-hidden rounded-sm bg-white/10"
-                    : "h-4 overflow-hidden rounded-sm bg-[#e1d5bd]"
+                large
+                  ? "h-7 overflow-hidden rounded-sm bg-white/10"
+                  : "h-4 overflow-hidden rounded-sm bg-slate-200"
               }
             >
               <div
                 className={
                   large
-                    ? "h-full rounded-sm bg-[#f0d36a] transition-all duration-700"
-                    : "h-full rounded-sm bg-[#08080d] transition-all duration-500"
+                    ? "h-full rounded-sm bg-amber-300 transition-all duration-700"
+                    : "h-full rounded-sm bg-slate-950 transition-all duration-500"
                 }
                 style={{ width: `${percentage}%` }}
               />
             </div>
             <div
               className={
-                  large
-                    ? "font-mono text-sm uppercase tracking-[0.18em] text-[#d8cfbd]/65"
-                    : "font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]/70"
+                large
+                  ? "font-mono text-sm uppercase tracking-[0.18em] text-white/55"
+                  : "font-mono text-xs uppercase tracking-[0.16em] text-slate-400"
               }
             >
               {option.votes} {option.votes === 1 ? "vote" : "votes"}
