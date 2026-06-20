@@ -1,13 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { createBrowserClient } from "@/lib/supabase/browser";
 import type { EventState } from "@/lib/types";
+
+// Realtime fires once per row change. During active voting that means a burst
+// of events, so we coalesce them into a single refetch instead of one per vote.
+const REALTIME_DEBOUNCE_MS = 500;
+// Realtime is the primary liveness signal; the poll is just a backstop for any
+// missed events, so it can run slowly.
+const SAFETY_POLL_MS = 5000;
 
 export function useLiveEventState(code: string, initialState: EventState) {
   const [state, setState] = useState(initialState);
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
   const [isPending, startTransition] = useTransition();
+  const debounceRef = useRef<number | null>(null);
 
   const refresh = useCallback(async () => {
     const response = await fetch(`/api/events/${code}/state`, {
@@ -23,10 +31,29 @@ export function useLiveEventState(code: string, initialState: EventState) {
     setLastSyncedAt(new Date());
   }, [code]);
 
+  // Coalesce bursts of realtime events into a single trailing refetch.
+  const scheduleRefresh = useCallback(() => {
+    if (debounceRef.current !== null) {
+      window.clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = window.setTimeout(() => {
+      debounceRef.current = null;
+      void refresh();
+    }, REALTIME_DEBOUNCE_MS);
+  }, [refresh]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current !== null) {
+        window.clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const interval = window.setInterval(() => {
       void refresh();
-    }, 2500);
+    }, SAFETY_POLL_MS);
 
     return () => window.clearInterval(interval);
   }, [refresh]);
@@ -43,29 +70,29 @@ export function useLiveEventState(code: string, initialState: EventState) {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "activities" },
-        () => void refresh(),
+        () => scheduleRefresh(),
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "votes" },
-        () => void refresh(),
+        () => scheduleRefresh(),
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "participants" },
-        () => void refresh(),
+        () => scheduleRefresh(),
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "presentation_state" },
-        () => void refresh(),
+        () => scheduleRefresh(),
       )
       .subscribe();
 
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [code, refresh]);
+  }, [code, scheduleRefresh]);
 
   function refreshSoon() {
     startTransition(() => {
