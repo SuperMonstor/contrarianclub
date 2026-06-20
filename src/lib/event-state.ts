@@ -60,14 +60,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
 
   const urls = buildEventUrls(event.code);
 
-  const [
-    { count: participantCount, error: participantsError },
-    { data: presentationState, error: presentationError },
-  ] = await Promise.all([
-    supabase
-      .from("participants")
-      .select("id", { count: "exact", head: true })
-      .eq("event_id", event.id),
+  const [{ data: presentationState, error: presentationError }] = await Promise.all([
     supabase
       .from("presentation_state")
       .select("active_activity_id, mode")
@@ -75,7 +68,6 @@ export async function getEventState(code: string): Promise<EventState | null> {
       .maybeSingle<{ active_activity_id: string | null; mode: PresentationMode }>(),
   ]);
 
-  if (participantsError) throw participantsError;
   if (presentationError) throw presentationError;
 
   const activity =
@@ -93,7 +85,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
       mode: "join",
       options: [],
       totalVotes: 0,
-      participantCount: participantCount ?? 0,
+      participantCount: 0,
       swing: null,
       ...urls,
     };
@@ -133,6 +125,9 @@ export async function getEventState(code: string): Promise<EventState | null> {
     ...option,
     votes: voteCounts.get(option.id) ?? 0,
   }));
+  const participantCount = new Set(
+    (allVotes ?? []).map((vote) => vote.device_id),
+  ).size;
 
   return {
     event,
@@ -141,7 +136,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
     mode: presentationState?.mode ?? "join",
     options: optionResults,
     totalVotes: votes?.length ?? 0,
-    participantCount: participantCount ?? 0,
+    participantCount,
     swing: buildSwingSummary(
       activities,
       groupOptionsByActivity(allOptions),
