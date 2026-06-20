@@ -169,10 +169,11 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
       <section className="club-rise mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
         <header className="club-panel p-5">
           <div className="flex items-center justify-between gap-3">
-            <Logo className="w-36" />
+            <Logo className="w-32" />
             <span className="club-chip club-mono">{state.event.code}</span>
           </div>
-          <h1 className="club-display mt-4 text-3xl leading-tight">
+          <p className="club-eyebrow mt-5">Tonight&rsquo;s motion</p>
+          <h1 className="club-display mt-1.5 text-lg leading-snug text-[color:var(--cc-parchment)] sm:text-xl">
             {state.event.title}
           </h1>
           <p className="mt-3 flex items-center gap-2 text-sm text-[color:var(--cc-muted)]">
@@ -181,27 +182,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           </p>
         </header>
 
-        <div className="club-panel mt-4 flex-1 p-5">
-          <label className="club-label" htmlFor="displayName">
-            Display name optional
-          </label>
-          <input
-            id="displayName"
-            value={displayName}
-            onChange={(event) => setDisplayName(event.target.value)}
-            className="club-input mt-2 px-3.5 py-3 text-base"
-            placeholder="Name or team"
-          />
-
-          <div className="mt-6">
+        <div className="club-panel mt-4 flex-1 p-6">
+          <div>
             <p className="club-kicker">Active question</p>
-            <h2 className="club-display mt-2 text-3xl leading-tight">
+            <h2 className="club-display mt-2.5 text-[1.7rem] leading-[1.12] sm:text-3xl">
               {activity?.prompt ?? "Waiting for the first question"}
             </h2>
           </div>
 
           {activity && (
-            <div className="mt-5 space-y-3">
+            <div className="mt-7 space-y-3">
               {waitingForVoting && (
                 <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
                   Your voting hasn&apos;t opened yet. Please wait for the host to
@@ -246,15 +236,27 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           )}
 
           {canVote && (
-            <button
-              type="button"
-              disabled={!selectedOptionId || isSubmitting}
-              onClick={submitVote}
-              className="club-btn club-btn-primary mt-5 w-full px-4 py-3"
-            >
-              {isSubmitting && <Loader2 className="animate-spin" size={18} />}
-              Submit vote
-            </button>
+            <div className="mt-6 border-t border-[color:var(--cc-line)] pt-5">
+              <label className="club-label" htmlFor="displayName">
+                Display name optional
+              </label>
+              <input
+                id="displayName"
+                value={displayName}
+                onChange={(event) => setDisplayName(event.target.value)}
+                className="club-input mt-2 px-3.5 py-2.5 text-sm"
+                placeholder="Name or team"
+              />
+              <button
+                type="button"
+                disabled={!selectedOptionId || isSubmitting}
+                onClick={submitVote}
+                className="club-btn club-btn-primary mt-4 w-full px-4 py-3"
+              >
+                {isSubmitting && <Loader2 className="animate-spin" size={18} />}
+                Submit vote
+              </button>
+            </div>
           )}
 
           {message && (

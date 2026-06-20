@@ -44,8 +44,10 @@ export function ScaleChoiceScale({
   return (
     <div className={large ? "club-panel-quiet p-6 lg:p-8" : "club-panel-quiet p-4"}>
       <div
-        className={`grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end ${
-          large ? "gap-5 lg:gap-8" : "gap-2 sm:gap-3"
+        className={`grid ${
+          large
+            ? "grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-5 lg:gap-8"
+            : "grid-cols-3 items-start gap-3 sm:gap-4"
         }`}
       >
         <ScaleSideLabel align="left" label={leftLabel} large={large} />
@@ -57,7 +59,7 @@ export function ScaleChoiceScale({
             className={
               large
                 ? "mx-auto mt-1 max-w-40 text-sm font-semibold leading-snug text-[color:var(--cc-muted)]"
-                : "mx-auto max-w-20 text-[0.68rem] font-semibold leading-3 text-[color:var(--cc-muted)] sm:max-w-24"
+                : "mx-auto mt-1 max-w-24 text-[0.7rem] font-semibold leading-snug text-[color:var(--cc-muted)]"
             }
           >
             {centerLabel}
@@ -69,14 +71,14 @@ export function ScaleChoiceScale({
       <div className={large ? "mt-6 lg:mt-8" : "mt-5"}>
         <div
           className={`grid grid-cols-7 ${
-            large ? "gap-1.5 sm:gap-2 lg:gap-3" : "gap-1 sm:gap-1.5"
+            large ? "gap-1.5 sm:gap-2 lg:gap-3" : "gap-1.5 sm:gap-2"
           }`}
         >
           {scaleOptions.map((option) => {
             const selected = selectedOptionId === option.id;
             const buttonClass = large
               ? "min-h-16 text-xl sm:min-h-24 sm:text-3xl lg:min-h-28 lg:text-4xl"
-              : "min-h-14 text-sm sm:text-base";
+              : "min-h-16 text-base sm:text-lg";
             const restingClass = large
               ? "border-[color:var(--cc-line-strong)] bg-[color:var(--cc-ivory)]/[0.05] text-[color:var(--cc-gold-bright)]"
               : "border-[color:var(--cc-line)] bg-[color:var(--cc-black)] text-[color:var(--cc-gold-bright)] hover:border-[color:var(--cc-gold)]";
@@ -192,7 +194,7 @@ function ScaleSideLabel({
       </p>
       <p
         className={`club-display leading-tight text-[color:var(--cc-ivory)] [overflow-wrap:anywhere] ${
-          large ? "mt-1 text-base sm:text-2xl lg:text-3xl" : "text-base sm:text-xl"
+          large ? "mt-1 text-base sm:text-2xl lg:text-3xl" : "mt-1 text-sm leading-snug sm:text-base"
         }`}
       >
         {label}
