@@ -28,8 +28,17 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
   return (
     <main className="club-shell flex min-h-screen">
       <section className="grid min-h-screen w-full grid-cols-[1fr_380px]">
-        <div className="flex flex-col justify-between p-12">
-          <header className="flex items-start justify-between gap-8">
+        <div className="club-art-stage flex flex-col justify-between p-12">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/art/caravaggio-musicians.jpg"
+            alt=""
+            aria-hidden="true"
+            className="club-art"
+          />
+          <div aria-hidden="true" className="club-art-scrim" />
+
+          <header className="relative z-10 flex items-start justify-between gap-8">
             <div>
               <BrandLockup size="md" />
               <h1 className="club-display mt-6 max-w-5xl text-7xl leading-[0.95]">
@@ -41,7 +50,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
             </div>
           </header>
 
-          <div className="py-10">
+          <div className="relative z-10 py-10">
             {!activity || state.mode === "join" ? (
               <div>
                 <p className="club-eyebrow text-lg tracking-[0.28em] text-[color:var(--cc-gold)]">
@@ -89,7 +98,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
             )}
           </div>
 
-          <footer className="club-mono flex items-center justify-between text-sm uppercase tracking-[0.2em] text-[color:var(--cc-muted)]">
+          <footer className="club-mono relative z-10 flex items-center justify-between text-sm uppercase tracking-[0.2em] text-[color:var(--cc-muted)]">
             <span>{state.participantCount} joined</span>
             <span>{state.totalVotes} responses</span>
           </footer>

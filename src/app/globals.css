@@ -362,3 +362,37 @@ textarea {
     animation: none;
   }
 }
+
+/* --- Old-master backdrop ------------------------------------------------- */
+/* A public-domain chiaroscuro painting emerging from shadow on the right,
+   feathered + scrimmed so gold text stays legible over near-black. */
+.club-art-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.club-art {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 70%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 26%;
+  opacity: 0.62;
+  filter: saturate(0.92) contrast(1.04) brightness(0.95);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+}
+
+.club-art-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--cc-black) 14%,
+      rgba(11, 9, 7, 0.55) 52%,
+      rgba(11, 9, 7, 0.12) 100%
+    ),
+    radial-gradient(130% 110% at 100% 0%, transparent 38%, rgba(0, 0, 0, 0.6) 100%);
+}
