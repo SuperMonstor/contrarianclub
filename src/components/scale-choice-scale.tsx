@@ -22,6 +22,14 @@ export function ScaleChoiceScale({
   const rightLabel = getScaleSideLabel(scaleOptions, 2, "Proposition");
   const centerLabel = getScaleSideLabel(scaleOptions, 0, "Too close to call");
   const selectedOption = scaleOptions.find((option) => option.id === selectedOptionId);
+  const selectedLabel = selectedOption
+    ? formatScaleSelection(selectedOption.scale_value, {
+        centerLabel,
+        leftLabel,
+        optionLabel: selectedOption.label,
+        rightLabel,
+      })
+    : null;
 
   return (
     <div className={large ? "club-panel-quiet max-w-5xl p-6" : "club-panel-quiet p-4"}>
@@ -75,11 +83,11 @@ export function ScaleChoiceScale({
         </div>
       </div>
 
-      {selectedOption && (
+      {selectedLabel && (
         <p className="mt-4 border-t border-[color:var(--cc-line)] pt-3 text-sm font-semibold text-[color:var(--cc-parchment)]">
           Selected:{" "}
           <span className="text-[color:var(--cc-gold-bright)]">
-            {selectedOption.label}
+            {selectedLabel}
           </span>
         </p>
       )}
@@ -103,6 +111,30 @@ export function getScaleSideLabel(
   return (
     options.find((option) => option.scale_value === scaleValue)?.label ?? fallback
   );
+}
+
+function formatScaleSelection(
+  scaleValue: number | null,
+  {
+    centerLabel,
+    leftLabel,
+    optionLabel,
+    rightLabel,
+  }: {
+    centerLabel: string;
+    leftLabel: string;
+    optionLabel: string;
+    rightLabel: string;
+  },
+) {
+  if (scaleValue === -3) return `Absolutely sure: ${leftLabel}`;
+  if (scaleValue === -2) return `Agree with ${leftLabel}`;
+  if (scaleValue === -1) return `Leaning towards ${leftLabel}`;
+  if (scaleValue === 0) return centerLabel;
+  if (scaleValue === 1) return `Leaning towards ${rightLabel}`;
+  if (scaleValue === 2) return `Agree with ${rightLabel}`;
+  if (scaleValue === 3) return `Absolutely sure: ${rightLabel}`;
+  return optionLabel;
 }
 
 function ScaleSideLabel({

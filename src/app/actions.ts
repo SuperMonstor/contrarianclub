@@ -43,13 +43,13 @@ function buildScaleOptions(formData: FormData) {
     String(formData.get("scaleCenterLabel") ?? "").trim() || "Too close to call";
 
   return [
-    { label: `Strongly ${leftLabel}`, scale_value: -3 },
-    { label: leftLabel, scale_value: -2 },
-    { label: `Lean ${leftLabel}`, scale_value: -1 },
+    { label: `Absolutely sure: ${leftLabel}`, scale_value: -3 },
+    { label: `Agree with ${leftLabel}`, scale_value: -2 },
+    { label: `Leaning towards ${leftLabel}`, scale_value: -1 },
     { label: centerLabel, scale_value: 0 },
-    { label: `Lean ${rightLabel}`, scale_value: 1 },
-    { label: rightLabel, scale_value: 2 },
-    { label: `Strongly ${rightLabel}`, scale_value: 3 },
+    { label: `Leaning towards ${rightLabel}`, scale_value: 1 },
+    { label: `Agree with ${rightLabel}`, scale_value: 2 },
+    { label: `Absolutely sure: ${rightLabel}`, scale_value: 3 },
   ];
 }
 
