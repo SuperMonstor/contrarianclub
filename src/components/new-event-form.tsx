@@ -53,15 +53,29 @@ export function NewEventForm() {
       </div>
 
       <div>
-        <label className="text-sm font-bold" htmlFor="prompt">
-          First poll question
+        <label className="text-sm font-bold" htmlFor="prePrompt">
+          Pre-debate question
         </label>
         <textarea
-          id="prompt"
-          name="prompt"
+          id="prePrompt"
+          name="prePrompt"
           required
           rows={3}
           defaultValue="Before hearing the debate, which side do you agree with more?"
+          className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-bold" htmlFor="postPrompt">
+          Post-debate question
+        </label>
+        <textarea
+          id="postPrompt"
+          name="postPrompt"
+          required
+          rows={3}
+          defaultValue="After hearing the debate, which side do you agree with more?"
           className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
         />
       </div>

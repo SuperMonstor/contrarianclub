@@ -12,10 +12,14 @@ import {
   RotateCcw,
   Square,
 } from "lucide-react";
-import { controlActivity, updateEventStatus } from "@/app/actions";
+import {
+  controlActivity,
+  setActiveActivity,
+  updateEventStatus,
+} from "@/app/actions";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
-import type { ControlCommand, EventState } from "@/lib/types";
+import type { ActivitySummary, ControlCommand, EventState } from "@/lib/types";
 
 type HostConsoleProps = {
   code: string;
@@ -29,6 +33,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
   );
   const [command, setCommand] = useState<ControlCommand | null>(null);
   const [statusCommand, setStatusCommand] = useState<string | null>(null);
+  const [activeCommand, setActiveCommand] = useState<string | null>(null);
 
   const activity = state.activity;
 
@@ -50,6 +55,16 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
       await updateEventStatus(code, nextStatus);
       refreshSoon();
       setStatusCommand(null);
+    });
+  }
+
+  function makeActive(activityId: string) {
+    setActiveCommand(activityId);
+
+    startTransition(async () => {
+      await setActiveActivity(code, activityId);
+      refreshSoon();
+      setActiveCommand(null);
     });
   }
 
@@ -137,6 +152,18 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
         <section className="space-y-6">
           <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
+            <div className="mb-6 grid gap-3 md:grid-cols-2">
+              {state.activities.map((item) => (
+                <ActivityCard
+                  key={item.id}
+                  activity={item}
+                  active={activity?.id === item.id}
+                  working={activeCommand === item.id}
+                  onSelect={() => makeActive(item.id)}
+                />
+              ))}
+            </div>
+
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -223,10 +250,122 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               </p>
             </div>
           </div>
+
+          {state.swing && (
+            <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
+                    Debate swing
+                  </p>
+                  <h3 className="mt-2 text-3xl font-black">
+                    {state.swing.changedPercent}% changed their vote
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {state.swing.changedVotes} of {state.swing.matchedVotes} matched
+                    voters moved between the pre and post vote.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
+                <div className="border border-slate-950 bg-[#fdfaf1] p-4">
+                  <h4 className="mb-4 font-black">Net movement</h4>
+                  <div className="space-y-3">
+                    {state.swing.optionTotals.map((option) => (
+                      <div
+                        key={option.label}
+                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-slate-300 pb-2 last:border-b-0 last:pb-0"
+                      >
+                        <span className="font-bold">{option.label}</span>
+                        <span className="font-mono font-black">
+                          {option.delta > 0 ? "+" : ""}
+                          {option.delta}
+                        </span>
+                        <span className="text-sm text-slate-600">
+                          before {option.preVotes}
+                        </span>
+                        <span className="text-sm text-slate-600">
+                          after {option.postVotes}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border border-slate-950 bg-[#202c3a] p-4 text-white">
+                  <h4 className="mb-4 font-black">Changed paths</h4>
+                  <div className="space-y-2">
+                    {state.swing.transitions.length === 0 ? (
+                      <p className="text-sm text-white/65">
+                        No matched before/after votes yet.
+                      </p>
+                    ) : (
+                      state.swing.transitions.map((transition) => (
+                        <div
+                          key={`${transition.from}-${transition.to}`}
+                          className="grid grid-cols-[1fr_auto] gap-3 border-b border-white/15 pb-2 text-sm last:border-b-0 last:pb-0"
+                        >
+                          <span>
+                            {transition.from} → {transition.to}
+                          </span>
+                          <span className="font-mono font-black">
+                            {transition.count}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
       </main>
     </div>
   );
+}
+
+function ActivityCard({
+  activity,
+  active,
+  working,
+  onSelect,
+}: {
+  activity: ActivitySummary;
+  active: boolean;
+  working: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      disabled={active || working}
+      className={`border border-slate-950 p-4 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
+        active ? "bg-amber-200" : "bg-[#fdfaf1]"
+      }`}
+    >
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
+        {phaseLabel(activity.phase)}
+      </p>
+      <h3 className="mt-2 line-clamp-2 font-black">{activity.prompt}</h3>
+      <div className="mt-4 flex gap-2 font-mono text-xs uppercase tracking-[0.14em]">
+        <span className="border border-slate-950 bg-white px-2 py-1">
+          {activity.status}
+        </span>
+        <span className="border border-slate-950 bg-white px-2 py-1">
+          {active ? "active" : working ? "working" : "select"}
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function phaseLabel(phase: ActivitySummary["phase"]) {
+  if (phase === "pre_debate") return "pre-vote";
+  if (phase === "post_debate") return "post-vote";
+  return "poll";
 }
 
 function ControlButton({
