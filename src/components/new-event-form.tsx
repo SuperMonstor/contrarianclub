@@ -38,9 +38,9 @@ export function NewEventForm() {
   }
 
   return (
-    <form action={createEvent} className="space-y-4">
+    <form action={createEvent} className="space-y-5">
       <div>
-        <label className="text-sm font-bold" htmlFor="title">
+        <label className="club-label" htmlFor="title">
           Event title
         </label>
         <input
@@ -48,12 +48,12 @@ export function NewEventForm() {
           name="title"
           required
           defaultValue="Contrarian Club Debate"
-          className="salon-input mt-2 w-full px-3 py-3"
+          className="club-input mt-2 px-3.5 py-3"
         />
       </div>
 
       <div>
-        <label className="text-sm font-bold" htmlFor="prePrompt">
+        <label className="club-label" htmlFor="prePrompt">
           Pre-debate question
         </label>
         <textarea
@@ -62,12 +62,12 @@ export function NewEventForm() {
           required
           rows={3}
           defaultValue="Before hearing the debate, which side do you agree with more?"
-          className="salon-input mt-2 w-full resize-none px-3 py-3"
+          className="club-input mt-2 resize-none px-3.5 py-3"
         />
       </div>
 
       <div>
-        <label className="text-sm font-bold" htmlFor="postPrompt">
+        <label className="club-label" htmlFor="postPrompt">
           Post-debate question
         </label>
         <textarea
@@ -76,27 +76,27 @@ export function NewEventForm() {
           required
           rows={3}
           defaultValue="After hearing the debate, which side do you agree with more?"
-          className="salon-input mt-2 w-full resize-none px-3 py-3"
+          className="club-input mt-2 resize-none px-3.5 py-3"
         />
       </div>
 
       <div>
         <div className="flex items-center justify-between gap-3">
-          <label className="text-sm font-bold" htmlFor="option-1">
+          <label className="club-label" htmlFor="option-1">
             Poll options
           </label>
           <button
             type="button"
             onClick={addOption}
             disabled={options.length >= 8}
-            className="salon-button min-h-9 px-3 py-2 text-sm"
+            className="club-btn min-h-9 px-3 py-2 text-sm"
           >
             <Plus size={16} />
             Add
           </button>
         </div>
 
-        <div className="mt-2 space-y-2">
+        <div className="mt-2.5 space-y-2.5">
           {options.map((option, index) => (
             <div key={option.id} className="flex gap-2">
               <input
@@ -105,7 +105,7 @@ export function NewEventForm() {
                 required={index < 2}
                 value={option.value}
                 onChange={(event) => updateOption(option.id, event.target.value)}
-                className="salon-input min-w-0 flex-1 px-3 py-3"
+                className="club-input min-w-0 flex-1 px-3.5 py-3"
                 placeholder={`Option ${index + 1}`}
               />
               <button
@@ -113,7 +113,7 @@ export function NewEventForm() {
                 onClick={() => removeOption(option.id)}
                 disabled={options.length <= 2}
                 aria-label={`Remove option ${index + 1}`}
-                className="salon-button grid aspect-square h-12 min-h-12 place-items-center p-0 hover:bg-red-100"
+                className="club-btn club-btn-danger grid aspect-square h-12 min-h-12 place-items-center p-0"
               >
                 <X size={18} />
               </button>
@@ -124,7 +124,7 @@ export function NewEventForm() {
 
       <button
         type="submit"
-        className="salon-button salon-button-primary w-full px-4 py-3"
+        className="club-btn club-btn-primary w-full px-4 py-3"
       >
         Create event
         <ArrowRight size={18} />

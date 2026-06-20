@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { BrandLockup } from "@/components/brand-lockup";
 import { NewEventForm } from "@/components/new-event-form";
 import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
@@ -11,36 +12,37 @@ export default async function NewEventPage() {
   const eventsHref = await currentAdminPath("/");
 
   return (
-    <main className="salon-page min-h-screen px-5 py-5 text-[#08080d]">
-      <section className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-6xl gap-6 lg:grid-cols-[1fr_440px]">
-        <div className="salon-panel flex flex-col justify-between p-6 lg:p-10">
+    <main className="club-shell min-h-screen px-5 py-6">
+      <section className="club-rise mx-auto grid min-h-[calc(100vh-48px)] w-full max-w-6xl gap-5 lg:grid-cols-[1fr_460px]">
+        <div className="club-panel flex flex-col justify-between p-7 lg:p-10">
           <div>
-            <Link
-              href={eventsHref}
-              className="inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4"
-            >
+            <Link href={eventsHref} className="club-link inline-flex items-center gap-2 text-sm font-medium">
               <ArrowLeft size={16} />
               Back to events
             </Link>
-            <p className="brand-kicker mt-8 text-[#7a6a42]">
-              New event
-            </p>
-            <h1 className="brand-display mt-5 max-w-4xl text-5xl leading-none sm:text-7xl">
-              Create the room before showtime.
+            <div className="mt-10">
+              <BrandLockup size="sm" />
+            </div>
+            <p className="club-kicker mt-8">New event</p>
+            <h1 className="club-display mt-5 max-w-3xl text-5xl leading-[1.04] sm:text-6xl">
+              Set the motion before the house arrives.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4d5561]">
-              This creates a preserved event record with one starter poll. More
+            <p className="mt-6 max-w-xl text-lg leading-8 text-[color:var(--cc-muted)]">
+              This mints a preserved event record with one starter poll. More
               activities can layer on under this event later.
             </p>
           </div>
+
+          <div className="mt-10 hidden items-center gap-3 lg:flex">
+            <span className="club-rule w-12" />
+            <p className="club-eyebrow">Pre-debate &middot; Debate &middot; Post-debate</p>
+          </div>
         </div>
 
-        <aside className="salon-panel p-5">
-          <div className="mb-5">
-            <p className="brand-kicker text-[#7a6a42]">
-              Event setup
-            </p>
-            <h2 className="brand-display mt-2 text-3xl">Start the live loop</h2>
+        <aside className="club-panel p-6 lg:p-7">
+          <div className="mb-6">
+            <p className="club-kicker">Event setup</p>
+            <h2 className="club-display mt-3 text-3xl">Start the live loop</h2>
           </div>
 
           <NewEventForm />
