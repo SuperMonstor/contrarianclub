@@ -34,6 +34,7 @@ Before creating an event, create a Supabase project and run the migrations:
 supabase/migrations/001_phase_one_live_poll.sql
 supabase/migrations/002_admin_events.sql
 supabase/migrations/003_debate_swing.sql
+supabase/migrations/004_harden_vote_integrity.sql
 ```
 
 Then fill in `.env.local`:

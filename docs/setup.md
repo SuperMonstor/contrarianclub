@@ -8,6 +8,7 @@
    - `supabase/migrations/001_phase_one_live_poll.sql`
    - `supabase/migrations/002_admin_events.sql`
    - `supabase/migrations/003_debate_swing.sql`
+   - `supabase/migrations/004_harden_vote_integrity.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
