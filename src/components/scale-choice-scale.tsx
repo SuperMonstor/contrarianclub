@@ -75,12 +75,6 @@ export function ScaleChoiceScale({
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-[1fr_auto_1fr] gap-3 text-[0.68rem] text-[color:var(--cc-faint)]">
-        <span>Strongly {leftLabel}</span>
-        <span className="text-center">{centerLabel}</span>
-        <span className="text-right">Strongly {rightLabel}</span>
-      </div>
-
       {selectedOption && (
         <p className="mt-4 border-t border-[color:var(--cc-line)] pt-3 text-sm font-semibold text-[color:var(--cc-parchment)]">
           Selected:{" "}
