@@ -11,9 +11,9 @@ export default async function NewEventPage() {
   const eventsHref = await currentAdminPath("/");
 
   return (
-    <main className="min-h-screen bg-[#f3ead8] px-5 py-5 text-[#08080d]">
+    <main className="salon-page min-h-screen px-5 py-5 text-[#08080d]">
       <section className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-6xl gap-6 lg:grid-cols-[1fr_440px]">
-        <div className="brand-frame brand-paper flex flex-col justify-between p-6 lg:p-10">
+        <div className="salon-panel flex flex-col justify-between p-6 lg:p-10">
           <div>
             <Link
               href={eventsHref}
@@ -35,7 +35,7 @@ export default async function NewEventPage() {
           </div>
         </div>
 
-        <aside className="brand-frame bg-[#fff9ed] p-5">
+        <aside className="salon-panel p-5">
           <div className="mb-5">
             <p className="brand-kicker text-[#7a6a42]">
               Event setup

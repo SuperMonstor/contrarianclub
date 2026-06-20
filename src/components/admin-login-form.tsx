@@ -55,7 +55,7 @@ export function AdminLoginForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
-          className="brand-input mt-2 w-full px-3 py-3"
+          className="salon-input mt-2 w-full px-3 py-3"
         />
       </div>
       <div>
@@ -68,18 +68,18 @@ export function AdminLoginForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
-          className="brand-input mt-2 w-full px-3 py-3"
+          className="salon-input mt-2 w-full px-3 py-3"
         />
       </div>
       {error && (
-        <p className="border border-red-900 bg-red-100 px-3 py-3 text-sm font-bold text-red-950">
+        <p className="bg-red-100 px-3 py-3 text-sm font-bold text-red-950 ring-1 ring-red-900/25">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-black text-[#fff8e8] transition hover:-translate-y-0.5 hover:bg-[#1e2a35] disabled:cursor-not-allowed disabled:opacity-50"
+        className="salon-button salon-button-primary w-full px-4 py-3"
       >
         {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : null}
         Sign in

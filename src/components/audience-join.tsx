@@ -85,9 +85,9 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }
 
   return (
-    <main className="brand-stage min-h-screen px-4 py-5 text-[#fff8e8]">
+    <main className="salon-stage min-h-screen px-4 py-5 text-[#fff8e8]">
       <section className="mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
-        <header className="brand-frame-dark bg-[#08080d]/75 p-4">
+        <header className="salon-panel-dark p-5">
           <p className="brand-kicker text-[#f0d36a]">
             {state.event.code}
           </p>
@@ -97,7 +97,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           <p className="mt-3 text-sm text-[#d8cfbd]">{statusText}</p>
         </header>
 
-        <div className="brand-frame mt-4 flex-1 bg-[#fff9ed] p-4 text-[#08080d]">
+        <div className="salon-panel mt-4 flex-1 p-5 text-[#08080d]">
           <label className="block text-sm font-bold" htmlFor="displayName">
             Display name optional
           </label>
@@ -105,7 +105,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
             id="displayName"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
-            className="brand-input mt-2 w-full px-3 py-3 text-base"
+            className="salon-input mt-2 w-full px-3 py-3 text-base"
             placeholder="Name or team"
           />
 
@@ -129,10 +129,10 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                     type="button"
                     disabled={!canVote}
                     onClick={() => setSelectedOptionId(option.id)}
-                    className={`flex w-full items-center justify-between border px-4 py-4 text-left font-bold transition ${
+                    className={`flex w-full items-center justify-between px-4 py-4 text-left font-bold transition ${
                       selected
-                        ? "border-[#08080d] bg-[#f0d36a]"
-                        : "border-[#b9aa89] bg-white"
+                        ? "salon-panel-gold"
+                        : "bg-white/60 ring-1 ring-[#7a6a42]/18"
                     } disabled:opacity-70`}
                   >
                     <span>{option.label}</span>
@@ -148,7 +148,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
               type="button"
               disabled={!selectedOptionId || isSubmitting}
               onClick={submitVote}
-              className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-black text-[#fff8e8] disabled:cursor-not-allowed disabled:opacity-50"
+              className="salon-button salon-button-primary mt-5 w-full px-4 py-3"
             >
               {isSubmitting && <Loader2 className="animate-spin" size={18} />}
               Submit vote
@@ -156,7 +156,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           )}
 
           {message && (
-            <p className="mt-4 border border-[#08080d] bg-white px-3 py-3 text-sm font-bold">
+            <p className="mt-4 bg-white/65 px-3 py-3 text-sm font-bold ring-1 ring-[#7a6a42]/18">
               {message}
             </p>
           )}

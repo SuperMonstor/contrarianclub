@@ -21,9 +21,9 @@ export default async function AdminEventsPage() {
   if (error) throw error;
 
   return (
-    <main className="min-h-screen bg-[#f3ead8] px-5 py-5 text-[#08080d]">
+    <main className="salon-page min-h-screen px-5 py-5 text-[#08080d]">
       <section className="mx-auto w-full max-w-6xl">
-        <header className="brand-frame brand-paper flex flex-wrap items-center justify-between gap-4 p-5">
+        <header className="salon-panel flex flex-wrap items-center justify-between gap-4 p-6">
           <div>
             <p className="brand-kicker text-[#7a6a42]">
               Admin events
@@ -34,7 +34,7 @@ export default async function AdminEventsPage() {
           <div className="flex flex-wrap gap-2">
             <Link
               href={adminPath("/events/new", hostname)}
-              className="flex min-h-11 items-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-bold text-[#fff8e8]"
+              className="salon-button salon-button-primary px-4 py-3"
             >
               <CalendarPlus size={18} />
               New event
@@ -42,7 +42,7 @@ export default async function AdminEventsPage() {
             <form action={signOutAdmin}>
               <button
                 type="submit"
-                className="flex min-h-11 items-center gap-2 border border-[#08080d] bg-[#fff9ed] px-4 py-3 font-bold"
+                className="salon-button px-4 py-3"
               >
                 <LogOut size={18} />
                 Sign out
@@ -53,7 +53,7 @@ export default async function AdminEventsPage() {
 
         <div className="mt-6 grid gap-4">
           {(events ?? []).length === 0 ? (
-            <div className="brand-frame bg-[#fff9ed] p-6">
+            <div className="salon-panel p-6">
               <h2 className="brand-display text-3xl">No events yet</h2>
               <p className="mt-2 text-[#4d5561]">
                 Create the first event to get a room code, QR link, and presenter
@@ -65,7 +65,7 @@ export default async function AdminEventsPage() {
               <Link
                 href={adminPath(`/events/${event.code}`, hostname)}
                 key={event.id}
-                className="grid gap-4 border border-[#08080d] bg-[#fff9ed] p-5 shadow-[0_16px_36px_rgba(8,8,13,0.12)] transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
+                className="salon-panel grid gap-4 p-5 transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
               >
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
@@ -105,7 +105,7 @@ function StatusBadge({ status }: { status: EventSummary["status"] }) {
 
   return (
     <span
-      className={`border border-[#08080d] px-2 py-1 font-mono text-xs uppercase tracking-[0.16em] ${tone}`}
+      className={`salon-chip ${tone}`}
     >
       {status}
     </span>

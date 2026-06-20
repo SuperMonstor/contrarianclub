@@ -25,7 +25,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
   }, [code]);
 
   return (
-    <main className="brand-stage flex min-h-screen text-[#fff8e8]">
+    <main className="salon-stage flex min-h-screen text-[#fff8e8]">
       <section className="grid min-h-screen w-full grid-cols-[1fr_360px]">
         <div className="flex flex-col justify-between p-12">
           <header className="flex items-start justify-between gap-8">
@@ -37,7 +37,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 {state.event.title}
               </h1>
             </div>
-            <div className="border border-[#c8a24a]/55 bg-[#08080d]/35 px-4 py-3 font-mono text-xl font-black text-[#f0d36a]">
+            <div className="bg-[#08080d]/35 px-4 py-3 font-mono text-xl font-black text-[#f0d36a] ring-1 ring-[#c8a24a]/35">
               {state.event.code}
             </div>
           </header>
@@ -80,7 +80,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                   {state.options.map((option) => (
                     <div
                       key={option.id}
-                      className="border border-[#c8a24a]/35 bg-[#fff8e8]/8 px-6 py-5 text-3xl font-bold"
+                      className="bg-[#fff8e8]/8 px-6 py-5 text-3xl font-bold ring-1 ring-[#c8a24a]/25"
                     >
                       {option.label}
                     </div>
@@ -96,12 +96,12 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
           </footer>
         </div>
 
-        <aside className="brand-paper flex flex-col justify-between border-l border-[#c8a24a]/35 p-8 text-[#08080d]">
+        <aside className="salon-panel flex flex-col justify-between border-y-0 border-r-0 p-8 text-[#08080d]">
           <div>
             <p className="brand-kicker text-[#7a6a42]">
               Audience link
             </p>
-            <div className="mt-5 border border-[#08080d] bg-white p-5">
+            <div className="mt-5 bg-white p-5 ring-1 ring-[#7a6a42]/20">
               <QRCodeCanvas value={joinUrl} size={270} marginSize={1} />
             </div>
             <p className="mt-5 break-all font-mono text-sm">{joinUrl}</p>

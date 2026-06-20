@@ -5,9 +5,9 @@ import { EventCodeEntry } from "@/components/event-code-entry";
 
 export default function Home() {
   return (
-    <main className="brand-stage min-h-screen text-[#fff8e8]">
+    <main className="salon-stage min-h-screen text-[#fff8e8]">
       <section className="mx-auto grid min-h-screen w-full max-w-6xl gap-6 px-5 py-5 lg:grid-cols-[1fr_420px]">
-        <div className="brand-frame-dark flex flex-col justify-between bg-[#0b0b10]/82 p-6 lg:p-10">
+        <div className="salon-panel-dark flex flex-col justify-between p-6 lg:p-10">
           <div>
             <p className="brand-kicker text-[#c8a24a]">
               Contrarian Club Live
@@ -27,7 +27,7 @@ export default function Home() {
           </div>
         </div>
 
-        <aside className="brand-frame brand-paper p-5 text-[#08080d]">
+        <aside className="salon-panel p-5 text-[#08080d]">
           <div className="mb-5">
             <p className="brand-kicker text-[#7a6a42]">
               Audience entry
@@ -49,7 +49,7 @@ export default function Home() {
 
 function Feature({ icon, label }: { icon: ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-3 border border-[#c8a24a]/45 bg-[#fff8e8]/8 px-4 py-4 font-bold text-[#fff8e8]">
+    <div className="flex items-center gap-3 bg-[#fff8e8]/8 px-4 py-4 font-bold text-[#fff8e8] ring-1 ring-[#c8a24a]/25">
       {icon}
       {label}
     </div>
