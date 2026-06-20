@@ -31,6 +31,10 @@ type ActivityVoteRow = VoteRow & {
 
 type ActivityOptions = Record<string, PollOptionRow[]>;
 type ActivityVotes = Record<string, VoteRow[]>;
+type ActivityBaseRow = Omit<
+  ActivitySummary,
+  "scale_left_label" | "scale_center_label" | "scale_right_label"
+>;
 
 export async function getEventState(code: string): Promise<EventState | null> {
   noStore();
@@ -52,18 +56,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
     return null;
   }
 
-  const { data: activities, error: activityError } = await supabase
-    .from("activities")
-    .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at",
-    )
-    .eq("event_id", event.id)
-    .order("created_at", { ascending: true })
-    .returns<ActivitySummary[]>();
-
-  if (activityError) {
-    throw activityError;
-  }
+  const activities = await getActivitiesForEvent(supabase, event.id);
 
   const urls = buildEventUrls(event.code);
 
@@ -106,7 +99,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
     };
   }
 
-  const activityIds = (activities ?? []).map((item) => item.id);
+  const activityIds = activities.map((item) => item.id);
 
   const [
     options,
@@ -143,19 +136,59 @@ export async function getEventState(code: string): Promise<EventState | null> {
 
   return {
     event,
-    activities: activities ?? [],
+    activities,
     activity,
     mode: presentationState?.mode ?? "join",
     options: optionResults,
     totalVotes: votes?.length ?? 0,
     participantCount: participantCount ?? 0,
     swing: buildSwingSummary(
-      activities ?? [],
+      activities,
       groupOptionsByActivity(allOptions),
       groupVotesByActivity(allVotes ?? []),
     ),
     ...urls,
   };
+}
+
+async function getActivitiesForEvent(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+) {
+  const withLabels = await supabase
+    .from("activities")
+    .select(
+      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label",
+    )
+    .eq("event_id", eventId)
+    .order("created_at", { ascending: true })
+    .returns<ActivitySummary[]>();
+
+  if (!withLabels.error) {
+    return withLabels.data ?? [];
+  }
+
+  if (withLabels.error.code !== "42703") {
+    throw withLabels.error;
+  }
+
+  const withoutLabels = await supabase
+    .from("activities")
+    .select(
+      "id, event_id, type, phase, prompt, status, results_visibility, created_at",
+    )
+    .eq("event_id", eventId)
+    .order("created_at", { ascending: true })
+    .returns<ActivityBaseRow[]>();
+
+  if (withoutLabels.error) throw withoutLabels.error;
+
+  return (withoutLabels.data ?? []).map((activity) => ({
+    ...activity,
+    scale_center_label: null,
+    scale_left_label: null,
+    scale_right_label: null,
+  }));
 }
 
 async function getPollOptionsForActivity(
@@ -342,9 +375,15 @@ function buildSwingSummary(
       ? null
       : roundScaleAverage(averagePost - averagePre);
   const scaleLeftLabel =
-    format === "scale" ? getScaleSideLabel(postOptions, -2, "Opposition") : null;
+    format === "scale"
+      ? (postActivity.scale_left_label ??
+        getScaleSideLabel(postOptions, -2, "Opposition"))
+      : null;
   const scaleRightLabel =
-    format === "scale" ? getScaleSideLabel(postOptions, 2, "Proposition") : null;
+    format === "scale"
+      ? (postActivity.scale_right_label ??
+        getScaleSideLabel(postOptions, 2, "Proposition"))
+      : null;
   const swingWinnerLabel =
     netSwing === null || netSwing === 0
       ? null
@@ -401,9 +440,19 @@ function getScaleSideLabel(
   scaleValue: number,
   fallback: string,
 ) {
-  return (
-    options.find((option) => option.scale_value === scaleValue)?.label ?? fallback
-  );
+  const label = options.find((option) => option.scale_value === scaleValue)?.label;
+  if (!label) return fallback;
+  return cleanScaleSideLabel(label);
+}
+
+function cleanScaleSideLabel(label: string) {
+  return label
+    .replace(/^Absolutely sure:\s*/i, "")
+    .replace(/^Agree with\s+/i, "")
+    .replace(/^Leaning towards\s+/i, "")
+    .replace(/^Strongly\s+/i, "")
+    .replace(/^Lean\s+/i, "")
+    .trim();
 }
 
 function countVotesByLabel(votes: VoteRow[], optionLabels: Map<string, string>) {

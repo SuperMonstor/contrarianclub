@@ -104,7 +104,9 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                   <div className="mt-6 max-w-4xl sm:mt-8">
                     {isScale ? (
                       <ScaleResults
+                        leftLabel={activity.scale_left_label}
                         options={state.options}
+                        rightLabel={activity.scale_right_label}
                         totalVotes={state.totalVotes}
                         large
                       />
@@ -124,7 +126,14 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                   </p>
                   {isScale ? (
                     <div className="mt-6 sm:mt-8">
-                      <ScaleChoiceScale options={state.options} disabled large />
+                      <ScaleChoiceScale
+                        centerLabel={activity.scale_center_label}
+                        leftLabel={activity.scale_left_label}
+                        options={state.options}
+                        rightLabel={activity.scale_right_label}
+                        disabled
+                        large
+                      />
                     </div>
                   ) : (
                     <div className="mt-6 grid max-w-4xl gap-3 sm:mt-8 sm:gap-4">

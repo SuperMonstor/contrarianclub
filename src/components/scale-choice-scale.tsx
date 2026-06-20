@@ -6,21 +6,31 @@ type ScaleChoiceScaleProps = {
   options: PollOptionResult[];
   selectedOptionId?: string;
   disabled?: boolean;
+  centerLabel?: string | null;
   large?: boolean;
+  leftLabel?: string | null;
   onSelect?: (optionId: string) => void;
+  rightLabel?: string | null;
 };
 
 export function ScaleChoiceScale({
+  centerLabel: providedCenterLabel,
   options,
   selectedOptionId,
   disabled = false,
   large = false,
+  leftLabel: providedLeftLabel,
   onSelect,
+  rightLabel: providedRightLabel,
 }: ScaleChoiceScaleProps) {
   const scaleOptions = getScaleOptions(options);
-  const leftLabel = getScaleSideLabel(scaleOptions, -2, "Opposition");
-  const rightLabel = getScaleSideLabel(scaleOptions, 2, "Proposition");
-  const centerLabel = getScaleSideLabel(scaleOptions, 0, "Too close to call");
+  const leftLabel =
+    providedLeftLabel ?? getScaleSideLabel(scaleOptions, -2, "Opposition");
+  const rightLabel =
+    providedRightLabel ?? getScaleSideLabel(scaleOptions, 2, "Proposition");
+  const centerLabel =
+    providedCenterLabel ??
+    getScaleSideLabel(scaleOptions, 0, "Too close to call");
   const selectedOption = scaleOptions.find((option) => option.id === selectedOptionId);
   const selectedLabel = selectedOption
     ? formatScaleSelection(selectedOption.scale_value, {
@@ -123,9 +133,19 @@ export function getScaleSideLabel(
   scaleValue: number,
   fallback: string,
 ) {
-  return (
-    options.find((option) => option.scale_value === scaleValue)?.label ?? fallback
-  );
+  const label = options.find((option) => option.scale_value === scaleValue)?.label;
+  if (!label) return fallback;
+  return cleanScaleSideLabel(label);
+}
+
+function cleanScaleSideLabel(label: string) {
+  return label
+    .replace(/^Absolutely sure:\s*/i, "")
+    .replace(/^Agree with\s+/i, "")
+    .replace(/^Leaning towards\s+/i, "")
+    .replace(/^Strongly\s+/i, "")
+    .replace(/^Lean\s+/i, "")
+    .trim();
 }
 
 function formatScaleSelection(

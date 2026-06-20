@@ -210,7 +210,10 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
               )}
               {isScale ? (
                 <ScaleChoiceScale
+                  centerLabel={activity.scale_center_label}
+                  leftLabel={activity.scale_left_label}
                   options={state.options}
+                  rightLabel={activity.scale_right_label}
                   selectedOptionId={selectedOptionId}
                   disabled={!canVote}
                   onSelect={setSelectedOptionId}
@@ -269,7 +272,12 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                 </span>
               </div>
               {isScale ? (
-                <ScaleResults options={state.options} totalVotes={state.totalVotes} />
+                <ScaleResults
+                  leftLabel={activity?.scale_left_label}
+                  options={state.options}
+                  rightLabel={activity?.scale_right_label}
+                  totalVotes={state.totalVotes}
+                />
               ) : (
                 <ResultBars options={state.options} totalVotes={state.totalVotes} />
               )}

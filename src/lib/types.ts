@@ -1,6 +1,6 @@
 export type ActivityStatus = "draft" | "open" | "closed";
 export type ResultsVisibility = "hidden" | "revealed";
-export type PresentationMode = "join" | "poll" | "results";
+export type PresentationMode = "join" | "poll" | "results" | "swing";
 export type ActivityPhase = "general" | "pre_debate" | "post_debate";
 export type ActivityType = "multiple_choice" | "scale";
 
@@ -22,6 +22,9 @@ export type ActivitySummary = {
   status: ActivityStatus;
   results_visibility: ResultsVisibility;
   created_at: string;
+  scale_left_label?: string | null;
+  scale_center_label?: string | null;
+  scale_right_label?: string | null;
 };
 
 export type PollOptionResult = {

@@ -4,10 +4,14 @@ type ScaleResultsProps = {
   options: PollOptionResult[];
   totalVotes: number;
   large?: boolean;
+  leftLabel?: string | null;
+  rightLabel?: string | null;
 };
 
 export function ScaleResults({
+  leftLabel,
   options,
+  rightLabel,
   totalVotes,
   large = false,
 }: ScaleResultsProps) {
@@ -22,6 +26,10 @@ export function ScaleResults({
   );
   const average =
     totalVotes === 0 ? null : Math.round((weightedTotal / totalVotes) * 10) / 10;
+  const axisLeftLabel =
+    leftLabel ?? getScaleResultSideLabel(scaleOptions, -2, "Opposition");
+  const axisRightLabel =
+    rightLabel ?? getScaleResultSideLabel(scaleOptions, 2, "Proposition");
 
   return (
     <div className="space-y-4">
@@ -39,8 +47,8 @@ export function ScaleResults({
           </p>
         </div>
         <div className="text-right text-xs text-[color:var(--cc-muted)]">
-          <p>Opposition</p>
-          <p>to Proposition</p>
+          <p>{axisLeftLabel}</p>
+          <p>to {axisRightLabel}</p>
         </div>
       </div>
 
@@ -85,4 +93,20 @@ export function ScaleResults({
 export function formatSignedValue(value: number) {
   if (value > 0) return `+${value}`;
   return String(value);
+}
+
+function getScaleResultSideLabel(
+  options: PollOptionResult[],
+  scaleValue: number,
+  fallback: string,
+) {
+  const label = options.find((option) => option.scale_value === scaleValue)?.label;
+  if (!label) return fallback;
+  return label
+    .replace(/^Absolutely sure:\s*/i, "")
+    .replace(/^Agree with\s+/i, "")
+    .replace(/^Leaning towards\s+/i, "")
+    .replace(/^Strongly\s+/i, "")
+    .replace(/^Lean\s+/i, "")
+    .trim();
 }

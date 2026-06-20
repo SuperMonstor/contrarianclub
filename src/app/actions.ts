@@ -34,22 +34,27 @@ function getEventFormat(formData: FormData): ActivityType {
   return formData.get("eventFormat") === "scale" ? "scale" : "multiple_choice";
 }
 
-function buildScaleOptions(formData: FormData) {
-  const leftLabel =
-    String(formData.get("scaleLeftLabel") ?? "").trim() || "Opposition";
-  const rightLabel =
-    String(formData.get("scaleRightLabel") ?? "").trim() || "Proposition";
-  const centerLabel =
-    String(formData.get("scaleCenterLabel") ?? "").trim() || "Too close to call";
+function getScaleLabels(formData: FormData) {
+  return {
+    centerLabel:
+      String(formData.get("scaleCenterLabel") ?? "").trim() ||
+      "Too close to call",
+    leftLabel:
+      String(formData.get("scaleLeftLabel") ?? "").trim() || "Opposition",
+    rightLabel:
+      String(formData.get("scaleRightLabel") ?? "").trim() || "Proposition",
+  };
+}
 
+function buildScaleOptions(labels: ReturnType<typeof getScaleLabels>) {
   return [
-    { label: `Absolutely sure: ${leftLabel}`, scale_value: -3 },
-    { label: `Agree with ${leftLabel}`, scale_value: -2 },
-    { label: `Leaning towards ${leftLabel}`, scale_value: -1 },
-    { label: centerLabel, scale_value: 0 },
-    { label: `Leaning towards ${rightLabel}`, scale_value: 1 },
-    { label: `Agree with ${rightLabel}`, scale_value: 2 },
-    { label: `Absolutely sure: ${rightLabel}`, scale_value: 3 },
+    { label: `Absolutely sure: ${labels.leftLabel}`, scale_value: -3 },
+    { label: `Agree with ${labels.leftLabel}`, scale_value: -2 },
+    { label: `Leaning towards ${labels.leftLabel}`, scale_value: -1 },
+    { label: labels.centerLabel, scale_value: 0 },
+    { label: `Leaning towards ${labels.rightLabel}`, scale_value: 1 },
+    { label: `Agree with ${labels.rightLabel}`, scale_value: 2 },
+    { label: `Absolutely sure: ${labels.rightLabel}`, scale_value: 3 },
   ];
 }
 
@@ -207,16 +212,20 @@ async function insertPollOptions(
 async function assertScaleSchemaReady(
   supabase: ReturnType<typeof createServiceClient>,
 ) {
-  const { error } = await supabase
-    .from("poll_options")
-    .select("scale_value")
-    .limit(1);
+  const [{ error: optionError }, { error: activityError }] = await Promise.all([
+    supabase.from("poll_options").select("scale_value").limit(1),
+    supabase
+      .from("activities")
+      .select("scale_left_label, scale_center_label, scale_right_label")
+      .limit(1),
+  ]);
 
+  const error = optionError ?? activityError;
   if (!error) return;
 
   if (error.code === "42703") {
     throw new Error(
-      "Scale events require Supabase migration 005_scale_poll_format.sql.",
+      "Scale events require Supabase migrations 005_scale_poll_format.sql and 007_scale_activity_labels.sql.",
     );
   }
 
@@ -232,6 +241,7 @@ export async function createEvent(formData: FormData) {
   const postPrompt = String(formData.get("postPrompt") ?? "").trim();
   const eventFormat = getEventFormat(formData);
   const options = cleanOptions(formData);
+  const scaleLabels = getScaleLabels(formData);
 
   if (
     !title ||
@@ -258,28 +268,58 @@ export async function createEvent(formData: FormData) {
 
   if (eventError) throw eventError;
 
-  const { data: activities, error: activityError } = await supabase
-    .from("activities")
-    .insert([
-      {
-        event_id: event.id,
-        prompt: prePrompt,
-        phase: "pre_debate",
-        type: eventFormat,
-        status: "draft",
-        results_visibility: "hidden",
-      },
-      {
-        event_id: event.id,
-        prompt: postPrompt,
-        phase: "post_debate",
-        type: eventFormat,
-        status: "draft",
-        results_visibility: "hidden",
-      },
-    ])
-    .select("id, phase")
-    .returns<{ id: string; phase: "pre_debate" | "post_debate" }[]>();
+  const { data: activities, error: activityError } =
+    eventFormat === "scale"
+      ? await supabase
+          .from("activities")
+          .insert([
+            {
+              event_id: event.id,
+              phase: "pre_debate",
+              prompt: prePrompt,
+              results_visibility: "hidden",
+              scale_center_label: scaleLabels.centerLabel,
+              scale_left_label: scaleLabels.leftLabel,
+              scale_right_label: scaleLabels.rightLabel,
+              status: "draft",
+              type: eventFormat,
+            },
+            {
+              event_id: event.id,
+              phase: "post_debate",
+              prompt: postPrompt,
+              results_visibility: "hidden",
+              scale_center_label: scaleLabels.centerLabel,
+              scale_left_label: scaleLabels.leftLabel,
+              scale_right_label: scaleLabels.rightLabel,
+              status: "draft",
+              type: eventFormat,
+            },
+          ])
+          .select("id, phase")
+          .returns<{ id: string; phase: "pre_debate" | "post_debate" }[]>()
+      : await supabase
+          .from("activities")
+          .insert([
+            {
+              event_id: event.id,
+              prompt: prePrompt,
+              phase: "pre_debate",
+              type: eventFormat,
+              status: "draft",
+              results_visibility: "hidden",
+            },
+            {
+              event_id: event.id,
+              prompt: postPrompt,
+              phase: "post_debate",
+              type: eventFormat,
+              status: "draft",
+              results_visibility: "hidden",
+            },
+          ])
+          .select("id, phase")
+          .returns<{ id: string; phase: "pre_debate" | "post_debate" }[]>();
 
   if (activityError) throw activityError;
 
@@ -290,7 +330,7 @@ export async function createEvent(formData: FormData) {
 
   const eventOptions =
     eventFormat === "scale"
-      ? buildScaleOptions(formData)
+      ? buildScaleOptions(scaleLabels)
       : options.map((label) => ({ label, scale_value: null }));
 
   await insertPollOptions(
