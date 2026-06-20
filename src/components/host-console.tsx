@@ -1,12 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { startTransition, useState } from "react";
 import {
+  ChevronLeft,
+  ChevronRight,
   Eye,
   EyeOff,
-  Flag,
+  Gavel,
+  Mic,
   Monitor,
+  Pencil,
+  PencilLine,
   Play,
   QrCode,
   RotateCcw,
@@ -15,6 +21,7 @@ import {
 import {
   controlActivity,
   setActiveActivity,
+  setPresenterMode,
   updateEventStatus,
 } from "@/app/actions";
 import { Logo } from "@/components/logo";
@@ -35,6 +42,7 @@ import type {
 
 type HostConsoleProps = {
   code: string;
+  editHref: string;
   initialState: EventState;
 };
 
@@ -44,7 +52,7 @@ const PHASE_ORDER = {
   general: 2,
 } as const;
 
-export function HostConsole({ code, initialState }: HostConsoleProps) {
+export function HostConsole({ code, editHref, initialState }: HostConsoleProps) {
   const { state, refreshSoon, isPending, lastSyncedAt } = useLiveEventState(
     code,
     initialState,
@@ -104,9 +112,22 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
     });
   }
 
+  function showPresenterMode(nextMode: "swing" | "results") {
+    if (!activity) return;
+
+    startTransition(async () => {
+      await setPresenterMode(code, activity.id, nextMode);
+      refreshSoon();
+    });
+  }
+
   const isOpen = activity?.status === "open";
   const isRevealed = activity?.results_visibility === "revealed";
   const isScale = activity?.type === "scale";
+  const isPostDebate = activity?.phase === "post_debate";
+  const swingReady = (state.swing?.matchedVotes ?? 0) > 0;
+  const canShowSwing = isPostDebate && isRevealed && swingReady;
+  const swingActive = state.mode === "swing";
 
   return (
     <div className="club-shell min-h-screen">
@@ -139,12 +160,14 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           <div className="mt-4 grid grid-cols-3 gap-2">
             <StatusButton
               label="Draft"
+              icon={<PencilLine size={14} />}
               current={state.event.status === "draft"}
               disabled={statusCommand !== null}
               onClick={() => changeEventStatus("draft")}
             />
             <StatusButton
               label="Live"
+              icon={<Mic size={14} />}
               gold
               current={state.event.status === "live"}
               disabled={statusCommand !== null}
@@ -152,6 +175,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             />
             <StatusButton
               label="End"
+              icon={<Gavel size={14} />}
               current={state.event.status === "ended"}
               disabled={statusCommand !== null}
               onClick={() => changeEventStatus("ended")}
@@ -159,6 +183,13 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
 
           <div className="mt-6 space-y-2">
+            <Link
+              href={editHref}
+              className="club-btn w-full justify-between px-4 py-3"
+            >
+              <span>Edit event</span>
+              <Pencil size={18} />
+            </Link>
             <a
               href={`/present/${state.event.code}`}
               target="_blank"
@@ -249,6 +280,35 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                 onClick={() => runCommand("reset")}
               />
             </div>
+
+            {canShowSwing && (
+              <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-[color:var(--cc-line)] pt-4">
+                <p className="club-eyebrow flex-1">
+                  Post-debate reveal &middot; show the room the swing
+                </p>
+                {swingActive ? (
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => showPresenterMode("results")}
+                    className="club-btn px-4 py-2.5"
+                  >
+                    <ChevronLeft size={16} />
+                    Back to results
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => showPresenterMode("swing")}
+                    className="club-btn club-btn-primary px-4 py-2.5"
+                  >
+                    Next: the swing
+                    <ChevronRight size={16} />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
@@ -414,12 +474,14 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
 function StatusButton({
   label,
+  icon,
   current,
   gold,
   disabled,
   onClick,
 }: {
   label: string;
+  icon: ReactNode;
   current: boolean;
   gold?: boolean;
   disabled: boolean;
@@ -435,7 +497,7 @@ function StatusButton({
         current ? (gold ? "club-btn-primary" : "border-[color:var(--cc-line-strong)] bg-[color:var(--cc-gold)]/12 text-[color:var(--cc-gold-bright)]") : ""
       }`}
     >
-      <Flag size={14} />
+      {icon}
       {label}
     </button>
   );
