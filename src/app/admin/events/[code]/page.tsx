@@ -15,11 +15,13 @@ export default async function AdminEventPage({
 
   if (!state) {
     return (
-      <main className="salon-page grid min-h-screen place-items-center px-5">
-        <div className="salon-panel max-w-lg p-6">
-          <h1 className="brand-display text-3xl">Event not found</h1>
-          <p className="mt-3 text-[#4d5561]">
-            No event exists for code <span className="font-mono">{code}</span>.
+      <main className="club-shell grid min-h-screen place-items-center px-5">
+        <div className="club-panel club-rise max-w-lg p-8 text-center">
+          <p className="club-kicker">404</p>
+          <h1 className="club-display mt-3 text-3xl">Event not found</h1>
+          <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
+            No event exists for code{" "}
+            <span className="club-mono text-[color:var(--cc-gold)]">{code}</span>.
           </p>
         </div>
       </main>

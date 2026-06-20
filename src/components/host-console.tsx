@@ -17,6 +17,7 @@ import {
   setActiveActivity,
   updateEventStatus,
 } from "@/app/actions";
+import { BrandLockup } from "@/components/brand-lockup";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { ActivitySummary, ControlCommand, EventState } from "@/lib/types";
@@ -72,69 +73,64 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
     });
   }
 
+  const isOpen = activity?.status === "open";
+  const isRevealed = activity?.results_visibility === "revealed";
+
   return (
-    <div className="salon-stage min-h-screen text-[#08080d]">
-      <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-5 py-5 lg:grid-cols-[340px_1fr]">
-        <aside className="salon-panel-dark p-6 text-[#fff8e8]">
-          <p className="brand-kicker text-[#c8a24a]">
-            Host control
-          </p>
-          <h1 className="brand-display mt-4 text-4xl leading-tight text-[#fff8e8]">
+    <div className="club-shell min-h-screen">
+      <main className="club-rise mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-5 py-6 lg:grid-cols-[360px_1fr]">
+        <aside className="club-panel flex flex-col p-6">
+          <BrandLockup size="sm" />
+          <div className="mt-5 flex items-center gap-3">
+            <p className="club-kicker">Host Control</p>
+            <span className="club-rule flex-1" />
+          </div>
+          <h1 className="club-display mt-4 text-3xl leading-tight">
             {state.event.title}
           </h1>
-          <div className="salon-hairline my-6" />
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-[#fff8e8]/8 p-4 ring-1 ring-[#f0d36a]/15">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#d8cfbd]/70">
-                code
-              </p>
-              <p className="mt-2 font-mono text-3xl font-black text-[#fff8e8]">
+
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="club-tile p-4">
+              <p className="club-label text-[0.65rem]">code</p>
+              <p className="club-mono mt-2 text-3xl font-bold text-[color:var(--cc-gold-bright)]">
                 {state.event.code}
               </p>
             </div>
-            <div className="bg-[#fff8e8]/8 p-4 ring-1 ring-[#f0d36a]/15">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#d8cfbd]/70">
-                status
-              </p>
-              <p className="mt-2 font-mono text-3xl font-black text-[#fff8e8]">
+            <div className="club-tile p-4">
+              <p className="club-label text-[0.65rem]">status</p>
+              <p className="mt-2 font-[family-name:var(--cc-font-display)] text-3xl font-bold capitalize text-[color:var(--cc-ivory)]">
                 {state.event.status}
               </p>
             </div>
           </div>
+
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <button
-              type="button"
+            <StatusButton
+              label="Draft"
+              current={state.event.status === "draft"}
+              disabled={statusCommand !== null}
               onClick={() => changeEventStatus("draft")}
+            />
+            <StatusButton
+              label="Live"
+              gold
+              current={state.event.status === "live"}
               disabled={statusCommand !== null}
-              className="salon-button px-2 py-2 text-xs uppercase tracking-[0.12em]"
-            >
-              <Flag size={14} />
-              Draft
-            </button>
-            <button
-              type="button"
               onClick={() => changeEventStatus("live")}
+            />
+            <StatusButton
+              label="End"
+              current={state.event.status === "ended"}
               disabled={statusCommand !== null}
-              className="salon-button salon-button-gold px-2 py-2 text-xs uppercase tracking-[0.12em]"
-            >
-              <Flag size={14} />
-              Live
-            </button>
-            <button
-              type="button"
               onClick={() => changeEventStatus("ended")}
-              disabled={statusCommand !== null}
-              className="salon-button px-2 py-2 text-xs uppercase tracking-[0.12em]"
-            >
-              <Flag size={14} />
-              End
-            </button>
+            />
           </div>
-          <div className="mt-6 space-y-2 text-sm">
+
+          <div className="mt-6 space-y-2">
             <a
               href={`/present/${state.event.code}`}
               target="_blank"
-              className="salon-button salon-button-primary w-full justify-between px-4 py-3"
+              className="club-btn club-btn-primary w-full justify-between px-4 py-3"
             >
               <span>Open presenter</span>
               <Monitor size={18} />
@@ -142,21 +138,22 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             <a
               href={`/join/${state.event.code}`}
               target="_blank"
-              className="salon-button w-full justify-between px-4 py-3"
+              className="club-btn w-full justify-between px-4 py-3"
             >
               <span>Open audience join</span>
               <QrCode size={18} />
             </a>
           </div>
-          <p className="mt-6 text-xs leading-5 text-[#d8cfbd]/70">
+
+          <p className="mt-6 text-xs leading-5 text-[color:var(--cc-faint)]">
             Realtime is backed by Supabase. This screen also refreshes with the
             fallback poller so the host can recover after refreshes or missed
             events.
           </p>
         </aside>
 
-        <section className="space-y-6">
-          <div className="salon-panel p-6">
+        <section className="space-y-5">
+          <div className="club-panel p-6">
             <div className="mb-6 grid gap-3 md:grid-cols-2">
               {state.activities.map((item) => (
                 <ActivityCard
@@ -169,20 +166,18 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="brand-kicker text-[#7a6a42]">
-                  Current poll
-                </p>
-                <h2 className="brand-display mt-3 max-w-4xl text-4xl leading-tight">
+                <p className="club-kicker">Current poll</p>
+                <h2 className="club-display mt-3 max-w-3xl text-3xl leading-tight sm:text-4xl">
                   {activity?.prompt ?? "No poll configured"}
                 </h2>
               </div>
               <div className="flex gap-2">
-                <span className="salon-chip">
+                <span className={`club-chip ${isOpen ? "club-chip-live club-chip-dot" : ""}`}>
                   {activity?.status ?? "missing"}
                 </span>
-                <span className="salon-chip bg-[#f0d36a]/70 text-[#08080d]">
+                <span className={`club-chip ${isRevealed ? "club-chip-live" : ""}`}>
                   {activity?.results_visibility ?? "hidden"}
                 </span>
               </div>
@@ -190,16 +185,11 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <ControlButton
-                icon={
-                  submissionCommand === "open" ? (
-                    <Play size={18} />
-                  ) : (
-                    <Square size={18} />
-                  )
-                }
+                icon={isOpen ? <Square size={18} /> : <Play size={18} />}
                 label={submissionCommand === "open" ? "Open voting" : "Close voting"}
                 disabled={!activity || isPending}
                 active={command === submissionCommand}
+                primary={submissionCommand === "open"}
                 onClick={() => runCommand(submissionCommand)}
               />
               <ControlButton
@@ -225,46 +215,41 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             </div>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1fr_320px]">
-            <div className="salon-panel p-6">
+          <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
+            <div className="club-panel p-6">
               <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="brand-display text-2xl">Live results</h3>
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]">
+                <h3 className="club-display text-2xl">Live results</h3>
+                <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
                   {state.totalVotes} responses
                 </span>
               </div>
               <ResultBars options={state.options} totalVotes={state.totalVotes} />
             </div>
-            <div className="salon-panel-dark p-6 text-[#fff8e8]">
-              <p className="brand-kicker text-[#d8cfbd]/65">
-                sync
-              </p>
-              <p className="brand-display mt-4 text-6xl">
+            <div className="club-panel-gold p-6">
+              <p className="club-eyebrow">Sync</p>
+              <p className="club-display mt-3 text-6xl text-[color:var(--cc-gold-bright)]">
                 {state.participantCount}
               </p>
-              <p className="mt-1 text-sm text-[#d8cfbd]">
+              <p className="mt-1 text-sm text-[color:var(--cc-parchment)]">
                 joined participant{state.participantCount === 1 ? "" : "s"}
               </p>
-              <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-[#d8cfbd]/65">
-                Last sync
-              </p>
-              <p className="mt-2 text-sm">
+              <div className="club-rule my-5" />
+              <p className="club-label text-[0.65rem]">Last sync</p>
+              <p className="club-mono mt-2 text-sm text-[color:var(--cc-ivory)]">
                 {lastSyncedAt ? lastSyncedAt.toLocaleTimeString() : "waiting"}
               </p>
             </div>
           </div>
 
           {state.swing && (
-            <div className="salon-panel p-6">
+            <div className="club-panel p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="brand-kicker text-[#7a6a42]">
-                    Debate swing
-                  </p>
-                  <h3 className="brand-display mt-2 text-4xl">
+                  <p className="club-kicker">Debate swing</p>
+                  <h3 className="club-display mt-2 text-3xl sm:text-4xl">
                     {state.swing.changedPercent}% changed their vote
                   </h3>
-                  <p className="mt-2 text-sm text-[#4d5561]">
+                  <p className="mt-2 text-sm text-[color:var(--cc-muted)]">
                     {state.swing.changedVotes} of {state.swing.matchedVotes} matched
                     voters moved between the pre and post vote.
                   </p>
@@ -272,23 +257,33 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-                <div className="bg-[#eadbc0]/50 p-5 ring-1 ring-[#7a6a42]/18">
-                  <h4 className="brand-display mb-4 text-2xl">Net movement</h4>
+                <div className="club-panel-quiet p-5">
+                  <h4 className="club-display mb-4 text-2xl">Net movement</h4>
                   <div className="space-y-3">
                     {state.swing.optionTotals.map((option) => (
                       <div
                         key={option.label}
-                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-[#cbbd9b] pb-2 last:border-b-0 last:pb-0"
+                        className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 border-b border-[color:var(--cc-line)] pb-2.5 last:border-b-0 last:pb-0"
                       >
-                        <span className="font-bold">{option.label}</span>
-                        <span className="font-mono font-black">
+                        <span className="font-semibold text-[color:var(--cc-ivory)]">
+                          {option.label}
+                        </span>
+                        <span
+                          className={`club-mono font-bold ${
+                            option.delta > 0
+                              ? "text-[color:var(--cc-gold-bright)]"
+                              : option.delta < 0
+                                ? "text-[color:var(--cc-wine-bright)]"
+                                : "text-[color:var(--cc-muted)]"
+                          }`}
+                        >
                           {option.delta > 0 ? "+" : ""}
                           {option.delta}
                         </span>
-                        <span className="text-sm text-[#4d5561]">
+                        <span className="text-sm text-[color:var(--cc-faint)]">
                           before {option.preVotes}
                         </span>
-                        <span className="text-sm text-[#4d5561]">
+                        <span className="text-right text-sm text-[color:var(--cc-faint)]">
                           after {option.postVotes}
                         </span>
                       </div>
@@ -296,23 +291,23 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   </div>
                 </div>
 
-                <div className="bg-[#1e2a35] p-5 text-[#fff8e8] ring-1 ring-[#f0d36a]/15">
-                  <h4 className="brand-display mb-4 text-2xl">Changed paths</h4>
+                <div className="club-panel-quiet p-5">
+                  <h4 className="club-display mb-4 text-2xl">Changed paths</h4>
                   <div className="space-y-2">
                     {state.swing.transitions.length === 0 ? (
-                      <p className="text-sm text-[#d8cfbd]">
+                      <p className="text-sm text-[color:var(--cc-muted)]">
                         No matched before/after votes yet.
                       </p>
                     ) : (
                       state.swing.transitions.map((transition) => (
                         <div
                           key={`${transition.from}-${transition.to}`}
-                          className="grid grid-cols-[1fr_auto] gap-3 border-b border-white/15 pb-2 text-sm last:border-b-0 last:pb-0"
+                          className="grid grid-cols-[1fr_auto] gap-3 border-b border-[color:var(--cc-line)] pb-2 text-sm last:border-b-0 last:pb-0"
                         >
-                          <span>
-                            {transition.from} → {transition.to}
+                          <span className="text-[color:var(--cc-parchment)]">
+                            {transition.from} <span className="text-[color:var(--cc-gold)]">&rarr;</span> {transition.to}
                           </span>
-                          <span className="font-mono font-black">
+                          <span className="club-mono font-bold text-[color:var(--cc-gold-bright)]">
                             {transition.count}
                           </span>
                         </div>
@@ -326,6 +321,35 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
         </section>
       </main>
     </div>
+  );
+}
+
+function StatusButton({
+  label,
+  current,
+  gold,
+  disabled,
+  onClick,
+}: {
+  label: string;
+  current: boolean;
+  gold?: boolean;
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={current}
+      className={`club-btn px-2 py-2 text-xs uppercase tracking-[0.12em] ${
+        current ? (gold ? "club-btn-primary" : "border-[color:var(--cc-line-strong)] bg-[color:var(--cc-gold)]/12 text-[color:var(--cc-gold-bright)]") : ""
+      }`}
+    >
+      <Flag size={14} />
+      {label}
+    </button>
   );
 }
 
@@ -347,21 +371,19 @@ function ActivityCard({
       disabled={active || working}
       className={`p-5 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
         active
-          ? "salon-panel-gold"
-          : "bg-[#efe4cf]/70 ring-1 ring-[#7a6a42]/18 hover:bg-[#fff9ed]/80"
+          ? "club-panel-gold"
+          : "club-tile hover:border-[color:var(--cc-line-strong)]"
       }`}
     >
-      <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#7a6a42]">
+      <p className="club-eyebrow text-[color:var(--cc-gold)]">
         {phaseLabel(activity.phase)}
       </p>
-      <h3 className="brand-display mt-2 line-clamp-2 text-xl leading-tight">
+      <h3 className="club-display mt-2 line-clamp-2 text-xl leading-tight">
         {activity.prompt}
       </h3>
-      <div className="mt-4 flex gap-2 font-mono text-xs uppercase tracking-[0.14em]">
-        <span className="salon-chip">
-          {activity.status}
-        </span>
-        <span className="salon-chip">
+      <div className="mt-4 flex gap-2">
+        <span className="club-chip">{activity.status}</span>
+        <span className="club-chip">
           {active ? "active" : working ? "working" : "select"}
         </span>
       </div>
@@ -380,12 +402,14 @@ function ControlButton({
   label,
   disabled,
   active,
+  primary,
   onClick,
 }: {
   icon: ReactNode;
   label: string;
   disabled: boolean;
   active: boolean;
+  primary?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -393,7 +417,9 @@ function ControlButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="salon-button min-h-12 px-4 py-3"
+      className={`club-btn min-h-12 px-4 py-3 ${primary ? "club-btn-primary" : ""} ${
+        active ? "ring-2 ring-[color:var(--cc-gold-bright)]/40" : ""
+      }`}
     >
       {icon}
       <span>{active ? "Working" : label}</span>

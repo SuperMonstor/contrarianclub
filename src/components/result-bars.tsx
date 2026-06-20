@@ -20,7 +20,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
                 className={
                   large
                     ? "text-xl font-semibold text-white"
-                    : "text-sm font-semibold text-[#08080d]"
+                    : "text-sm font-semibold text-[color:var(--cc-parchment)]"
                 }
               >
                 {option.label}
@@ -29,7 +29,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
                 className={
                   large
                     ? "font-mono text-2xl text-[#f0d36a]"
-                    : "font-mono text-sm text-[#7a6a42]"
+                    : "club-mono text-sm font-semibold text-[color:var(--cc-gold-bright)]"
                 }
               >
                 {percentage}%
@@ -39,14 +39,14 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               className={
                   large
                     ? "h-7 overflow-hidden rounded-sm bg-white/10"
-                    : "h-4 overflow-hidden rounded-sm bg-[#e1d5bd]"
+                    : "h-4 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]"
               }
             >
               <div
                 className={
                   large
                     ? "h-full rounded-sm bg-[#f0d36a] transition-all duration-700"
-                    : "h-full rounded-sm bg-[#08080d] transition-all duration-500"
+                    : "h-full rounded-[3px] bg-gradient-to-r from-[#c8a24a] to-[#f0d36a] transition-all duration-500"
                 }
                 style={{ width: `${percentage}%` }}
               />
@@ -55,7 +55,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               className={
                   large
                     ? "font-mono text-sm uppercase tracking-[0.18em] text-[#d8cfbd]/65"
-                    : "font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]/70"
+                    : "club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-faint)]"
               }
             >
               {option.votes} {option.votes === 1 ? "vote" : "votes"}
