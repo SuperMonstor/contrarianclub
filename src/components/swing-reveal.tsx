@@ -5,10 +5,11 @@ type SwingRevealProps = {
   swing: DebateSwingSummary;
 };
 
-// Map a -3..+3 scale position to a 0..100% offset along the axis.
+// Map a -3..+3 scale position to a padded offset along the axis so markers
+// at the extremes (+/-3) stay inside the track instead of clipping the edge.
 function axisPercent(value: number) {
   const clamped = Math.max(-3, Math.min(3, value));
-  return ((clamped + 3) / 6) * 100;
+  return 6 + ((clamped + 3) / 6) * 88;
 }
 
 export function SwingReveal({ swing }: SwingRevealProps) {
@@ -121,7 +122,7 @@ function BeforeAfterAxis({
   const width = Math.abs(afterPct - beforePct);
 
   return (
-    <div className="relative h-20 sm:h-24">
+    <div className="relative h-24 sm:h-28">
       {/* track */}
       <div className="absolute left-0 right-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[color:var(--cc-ivory)]/[0.08]" />
       {/* center (neutral) tick */}
@@ -131,10 +132,10 @@ function BeforeAfterAxis({
         className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-gradient-to-r from-[#8a6c2c] to-[#f0d36a]"
         style={{ left: `${left}%`, width: `${width}%` }}
       />
-      {/* before marker */}
-      <AxisMarker pct={beforePct} value={before} label="Before" muted />
-      {/* after marker */}
-      <AxisMarker pct={afterPct} value={after} label="After" />
+      {/* before marker (label above the line) */}
+      <AxisMarker pct={beforePct} value={before} label="Before" placement="above" muted />
+      {/* after marker (label below the line) */}
+      <AxisMarker pct={afterPct} value={after} label="After" placement="below" />
     </div>
   );
 }
@@ -143,42 +144,59 @@ function AxisMarker({
   pct,
   value,
   label,
+  placement,
   muted = false,
 }: {
   pct: number;
   value: number;
   label: string;
+  placement: "above" | "below";
   muted?: boolean;
 }) {
+  const text = (
+    <div className="flex flex-col items-center whitespace-nowrap">
+      <span
+        className={`club-label text-[0.55rem] ${
+          muted ? "text-[color:var(--cc-faint)]" : "text-[color:var(--cc-gold)]"
+        }`}
+      >
+        {label}
+      </span>
+      <span
+        className={`club-mono text-sm font-bold sm:text-base ${
+          muted
+            ? "text-[color:var(--cc-muted)]"
+            : "text-[color:var(--cc-gold-bright)]"
+        }`}
+      >
+        {formatSignedValue(value)}
+      </span>
+    </div>
+  );
+
   return (
     <div
       className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${pct}%` }}
     >
-      <div className="flex flex-col items-center">
-        <span
-          className={`club-label text-[0.55rem] ${
-            muted ? "text-[color:var(--cc-faint)]" : "text-[color:var(--cc-gold)]"
-          }`}
-        >
-          {label}
-        </span>
+      <div className="relative flex items-center justify-center">
+        {placement === "above" && (
+          <div className="absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2">
+            {text}
+          </div>
+        )}
         <div
-          className={`mt-1 h-6 w-6 rounded-full border-2 sm:h-7 sm:w-7 ${
+          className={`h-6 w-6 rounded-full border-2 sm:h-7 sm:w-7 ${
             muted
               ? "border-[color:var(--cc-muted)] bg-[color:var(--cc-char)]"
               : "border-[color:var(--cc-gold-bright)] bg-[color:var(--cc-gold)] shadow-[0_0_0_4px_rgba(240,211,106,0.18)]"
           }`}
         />
-        <span
-          className={`club-mono mt-1 text-sm font-bold sm:text-base ${
-            muted
-              ? "text-[color:var(--cc-muted)]"
-              : "text-[color:var(--cc-gold-bright)]"
-          }`}
-        >
-          {formatSignedValue(value)}
-        </span>
+        {placement === "below" && (
+          <div className="absolute top-full left-1/2 mt-1.5 -translate-x-1/2">
+            {text}
+          </div>
+        )}
       </div>
     </div>
   );
