@@ -2,23 +2,96 @@
 
 import { useState } from "react";
 import { ArrowRight, Plus, X } from "lucide-react";
-import { createEvent } from "@/app/actions";
+import { createEvent, updateEvent } from "@/app/actions";
+import type { ActivityType } from "@/lib/types";
 
 type PollOption = {
   id: number;
   value: string;
 };
 
-const initialOptions: PollOption[] = [
+export type EventFormValues = {
+  title: string;
+  eventFormat: ActivityType;
+  options: string[];
+  scaleLeftLabel: string;
+  scaleCenterLabel: string;
+  scaleRightLabel: string;
+  prePrompt: string;
+  postPrompt: string;
+};
+
+type NewEventFormProps = {
+  eventCode?: string;
+  initialValues?: EventFormValues;
+};
+
+const defaultValues: EventFormValues = {
+  title: "Contrarian Club Debate",
+  eventFormat: "multiple_choice",
+  options: ["Proposition", "Opposition", "Too close to call"],
+  scaleLeftLabel: "Opposition",
+  scaleCenterLabel: "Too close to call",
+  scaleRightLabel: "Proposition",
+  prePrompt: "Before hearing the debate, which side do you agree with more?",
+  postPrompt: "After hearing the debate, which side do you agree with more?",
+};
+
+const fallbackOptions: PollOption[] = [
   { id: 1, value: "Proposition" },
   { id: 2, value: "Opposition" },
   { id: 3, value: "Too close to call" },
 ];
 
-export function NewEventForm() {
-  const [options, setOptions] = useState(initialOptions);
-  const [eventFormat, setEventFormat] = useState<"multiple_choice" | "scale">(
-    "multiple_choice",
+function makeOptions(values: string[]) {
+  const options = values.length >= 2 ? values : defaultValues.options;
+
+  return options.slice(0, 8).map((value, index) => ({
+    id: index + 1,
+    value,
+  }));
+}
+
+export function NewEventForm({ eventCode, initialValues }: NewEventFormProps) {
+  const values = initialValues ?? defaultValues;
+  const formAction = eventCode ? updateEvent.bind(null, eventCode) : createEvent;
+  const submitLabel = eventCode ? "Save changes" : "Create event";
+  const formKey = [
+    eventCode ?? "new",
+    values.eventFormat,
+    values.title,
+    values.prePrompt,
+    values.postPrompt,
+    values.scaleLeftLabel,
+    values.scaleCenterLabel,
+    values.scaleRightLabel,
+    values.options.join("|"),
+  ].join("|");
+
+  return (
+    <EventFormFields
+      key={formKey}
+      formAction={formAction}
+      submitLabel={submitLabel}
+      values={values}
+    />
+  );
+}
+
+function EventFormFields({
+  formAction,
+  submitLabel,
+  values,
+}: {
+  formAction: (formData: FormData) => Promise<void>;
+  submitLabel: string;
+  values: EventFormValues;
+}) {
+  const [options, setOptions] = useState<PollOption[]>(
+    values.options.length > 0 ? makeOptions(values.options) : fallbackOptions,
+  );
+  const [eventFormat, setEventFormat] = useState<ActivityType>(
+    values.eventFormat,
   );
 
   function updateOption(id: number, value: string) {
@@ -41,7 +114,7 @@ export function NewEventForm() {
   }
 
   return (
-    <form action={createEvent} className="space-y-5">
+    <form action={formAction} className="space-y-5">
       <input type="hidden" name="eventFormat" value={eventFormat} />
 
       <div>
@@ -52,7 +125,7 @@ export function NewEventForm() {
           id="title"
           name="title"
           required
-          defaultValue="Contrarian Club Debate"
+          defaultValue={values.title}
           className="club-input mt-2 px-3.5 py-3"
         />
       </div>
@@ -94,7 +167,7 @@ export function NewEventForm() {
               <input
                 id="scaleLeftLabel"
                 name="scaleLeftLabel"
-                defaultValue="Opposition"
+                defaultValue={values.scaleLeftLabel}
                 className="club-input px-3.5 py-3"
                 placeholder="Opposition side"
               />
@@ -106,7 +179,7 @@ export function NewEventForm() {
               <input
                 id="scaleRightLabel"
                 name="scaleRightLabel"
-                defaultValue="Proposition"
+                defaultValue={values.scaleRightLabel}
                 className="club-input px-3.5 py-3"
                 placeholder="Proposition side"
               />
@@ -118,7 +191,7 @@ export function NewEventForm() {
           <input
             id="scaleCenterLabel"
             name="scaleCenterLabel"
-            defaultValue="Too close to call"
+            defaultValue={values.scaleCenterLabel}
             className="club-input mt-2.5 px-3.5 py-3"
             placeholder="Center label"
           />
@@ -176,7 +249,7 @@ export function NewEventForm() {
           name="prePrompt"
           required
           rows={3}
-          defaultValue="Before hearing the debate, which side do you agree with more?"
+          defaultValue={values.prePrompt}
           className="club-input mt-2 resize-none px-3.5 py-3"
         />
       </div>
@@ -190,7 +263,7 @@ export function NewEventForm() {
           name="postPrompt"
           required
           rows={3}
-          defaultValue="After hearing the debate, which side do you agree with more?"
+          defaultValue={values.postPrompt}
           className="club-input mt-2 resize-none px-3.5 py-3"
         />
       </div>
@@ -199,7 +272,7 @@ export function NewEventForm() {
         type="submit"
         className="club-btn club-btn-primary w-full px-4 py-3"
       >
-        Create event
+        {submitLabel}
         <ArrowRight size={18} />
       </button>
     </form>

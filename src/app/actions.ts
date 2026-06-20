@@ -15,6 +15,18 @@ const PHASE_ORDER = {
   general: 2,
 } as const;
 
+type EditableActivity = {
+  id: string;
+  event_id: string;
+  phase: "pre_debate" | "post_debate" | "general";
+};
+
+type EditablePollOption = {
+  id: string;
+  activity_id: string;
+  sort_order: number;
+};
+
 function makeEventCode(length = 6) {
   return Array.from({ length }, () =>
     CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)],
@@ -209,6 +221,101 @@ async function insertPollOptions(
   if (fallbackError) throw fallbackError;
 }
 
+async function getDebateActivities(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+) {
+  const { data: activities, error } = await supabase
+    .from("activities")
+    .select("id, event_id, phase")
+    .eq("event_id", eventId)
+    .in("phase", ["pre_debate", "post_debate"])
+    .returns<EditableActivity[]>();
+
+  if (error) throw error;
+
+  const preActivity = activities.find(
+    (activity) => activity.phase === "pre_debate",
+  );
+  const postActivity = activities.find(
+    (activity) => activity.phase === "post_debate",
+  );
+
+  if (!preActivity || !postActivity) {
+    throw new Error("This event is missing its pre/post debate activities.");
+  }
+
+  return [preActivity, postActivity];
+}
+
+async function syncPollOptions(
+  supabase: ReturnType<typeof createServiceClient>,
+  activityId: string,
+  eventOptions: { label: string; scale_value: number | null }[],
+  eventFormat: ActivityType,
+) {
+  const { data: existingOptions, error } = await supabase
+    .from("poll_options")
+    .select("id, activity_id, sort_order")
+    .eq("activity_id", activityId)
+    .order("sort_order", { ascending: true })
+    .returns<EditablePollOption[]>();
+
+  if (error) throw error;
+
+  const reusableOptions = existingOptions.slice(0, eventOptions.length);
+  const extraOptionIds = existingOptions
+    .slice(eventOptions.length)
+    .map((option) => option.id);
+
+  for (const [sort_order, option] of eventOptions.entries()) {
+    const existingOption = reusableOptions[sort_order];
+
+    if (!existingOption) continue;
+
+    const update =
+      eventFormat === "scale"
+        ? {
+            label: option.label,
+            sort_order,
+            scale_value: option.scale_value,
+          }
+        : {
+            label: option.label,
+            sort_order,
+          };
+
+    const { error: updateError } = await supabase
+      .from("poll_options")
+      .update(update)
+      .eq("id", existingOption.id);
+
+    if (updateError) throw updateError;
+  }
+
+  const rowsToInsert = eventOptions
+    .slice(reusableOptions.length)
+    .map((option, index) => ({
+      activity_id: activityId,
+      label: option.label,
+      sort_order: reusableOptions.length + index,
+      scale_value: option.scale_value,
+    }));
+
+  if (rowsToInsert.length > 0) {
+    await insertPollOptions(supabase, rowsToInsert, eventFormat);
+  }
+
+  if (extraOptionIds.length > 0) {
+    const { error: deleteError } = await supabase
+      .from("poll_options")
+      .delete()
+      .in("id", extraOptionIds);
+
+    if (deleteError) throw deleteError;
+  }
+}
+
 async function assertScaleSchemaReady(
   supabase: ReturnType<typeof createServiceClient>,
 ) {
@@ -360,6 +467,94 @@ export async function createEvent(formData: FormData) {
   redirect(await currentAdminPath(`/events/${event.code}`));
 }
 
+export async function updateEvent(code: string, formData: FormData) {
+  await requireAdminUser();
+
+  const normalizedCode = code.trim().toUpperCase();
+  const supabase = createServiceClient();
+  const title = String(formData.get("title") ?? "").trim();
+  const prePrompt = String(formData.get("prePrompt") ?? "").trim();
+  const postPrompt = String(formData.get("postPrompt") ?? "").trim();
+  const eventFormat = getEventFormat(formData);
+  const options = cleanOptions(formData);
+  const scaleLabels = getScaleLabels(formData);
+
+  if (
+    !title ||
+    !prePrompt ||
+    !postPrompt ||
+    (eventFormat === "multiple_choice" && options.length < 2)
+  ) {
+    throw new Error(
+      "Title, pre/post prompts, and at least two options are required.",
+    );
+  }
+
+  if (eventFormat === "scale") {
+    await assertScaleSchemaReady(supabase);
+  }
+
+  const { data: event, error: eventError } = await supabase
+    .from("events")
+    .select("id, code")
+    .eq("code", normalizedCode)
+    .single<{ id: string; code: string }>();
+
+  if (eventError) throw eventError;
+
+  const debateActivities = await getDebateActivities(supabase, event.id);
+
+  const { error: updateEventError } = await supabase
+    .from("events")
+    .update({ title })
+    .eq("id", event.id);
+
+  if (updateEventError) throw updateEventError;
+
+  for (const activity of debateActivities) {
+    const prompt =
+      activity.phase === "pre_debate" ? prePrompt : postPrompt;
+    const activityUpdate =
+      eventFormat === "scale"
+        ? {
+            prompt,
+            type: eventFormat,
+            scale_center_label: scaleLabels.centerLabel,
+            scale_left_label: scaleLabels.leftLabel,
+            scale_right_label: scaleLabels.rightLabel,
+          }
+        : {
+            prompt,
+            type: eventFormat,
+          };
+
+    const { error: activityError } = await supabase
+      .from("activities")
+      .update(activityUpdate)
+      .eq("id", activity.id);
+
+    if (activityError) throw activityError;
+  }
+
+  const eventOptions =
+    eventFormat === "scale"
+      ? buildScaleOptions(scaleLabels)
+      : options.map((label) => ({ label, scale_value: null }));
+
+  for (const activity of debateActivities) {
+    await syncPollOptions(supabase, activity.id, eventOptions, eventFormat);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/events/${event.code}`);
+  revalidatePath(`/admin/events/${event.code}/edit`);
+  revalidatePath(`/host/${event.code}`);
+  revalidatePath(`/join/${event.code}`);
+  revalidatePath(`/present/${event.code}`);
+  redirect(await currentAdminPath(`/events/${event.code}`));
+}
+
 export async function controlActivity(
   code: string,
   activityId: string,
@@ -466,6 +661,32 @@ export async function setActiveActivity(code: string, activityId: string) {
       event_id: activity.event_id,
       active_activity_id: activityId,
       mode: "poll",
+      updated_at: new Date().toISOString(),
+    });
+
+  if (stateError) throw stateError;
+
+  revalidatePath(`/admin/events/${code}`);
+  revalidatePath(`/join/${code}`);
+  revalidatePath(`/present/${code}`);
+}
+
+export async function setPresenterMode(
+  code: string,
+  activityId: string,
+  mode: PresentationMode,
+) {
+  await requireAdminUser();
+
+  const supabase = createServiceClient();
+  const activity = await getActivityForEvent(supabase, code, activityId);
+
+  const { error: stateError } = await supabase
+    .from("presentation_state")
+    .upsert({
+      event_id: activity.event_id,
+      active_activity_id: activityId,
+      mode,
       updated_at: new Date().toISOString(),
     });
 

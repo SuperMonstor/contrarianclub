@@ -1,4 +1,5 @@
 import { HostConsole } from "@/components/host-console";
+import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { getEventState } from "@/lib/event-state";
 
@@ -12,6 +13,9 @@ export default async function AdminEventPage({
   await requireAdminUser();
   const { code } = await params;
   const state = await getEventState(code);
+  const editHref = await currentAdminPath(
+    `/events/${state?.event.code ?? code}/edit`,
+  );
 
   if (!state) {
     return (
@@ -28,5 +32,11 @@ export default async function AdminEventPage({
     );
   }
 
-  return <HostConsole code={state.event.code} initialState={state} />;
+  return (
+    <HostConsole
+      code={state.event.code}
+      editHref={editHref}
+      initialState={state}
+    />
+  );
 }

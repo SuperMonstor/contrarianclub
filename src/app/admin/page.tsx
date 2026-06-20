@@ -4,6 +4,7 @@ import {
   CalendarPlus,
   LogOut,
   Monitor,
+  Pencil,
   Radio,
   Star,
   StarOff,
@@ -168,6 +169,13 @@ export default async function AdminEventsPage() {
                       </button>
                     </form>
                   ) : null}
+                  <Link
+                    href={adminPath(`/events/${event.code}/edit`, hostname)}
+                    className="club-btn min-h-10 px-3 py-2 text-xs"
+                  >
+                    <Pencil size={15} className="text-[color:var(--cc-gold)]" />
+                    Edit
+                  </Link>
                   <Link
                     href={adminPath(`/events/${event.code}`, hostname)}
                     className="club-btn min-h-10 px-3 py-2 text-xs"
