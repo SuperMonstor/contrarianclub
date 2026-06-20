@@ -9,6 +9,11 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { ControlCommand, PresentationMode } from "@/lib/types";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const PHASE_ORDER = {
+  pre_debate: 0,
+  post_debate: 1,
+  general: 2,
+} as const;
 
 function makeEventCode(length = 6) {
   return Array.from({ length }, () =>
@@ -41,6 +46,106 @@ async function createUniqueCode() {
   }
 
   throw new Error("Could not generate a unique event code.");
+}
+
+async function getActivityForEvent(
+  supabase: ReturnType<typeof createServiceClient>,
+  code: string,
+  activityId: string,
+) {
+  const normalizedCode = code.trim().toUpperCase();
+  const { data: event, error: eventError } = await supabase
+    .from("events")
+    .select("id")
+    .eq("code", normalizedCode)
+    .single<{ id: string }>();
+
+  if (eventError) throw eventError;
+
+  const { data: activity, error: activityError } = await supabase
+    .from("activities")
+    .select("event_id")
+    .eq("id", activityId)
+    .eq("event_id", event.id)
+    .single<{ event_id: string }>();
+
+  if (activityError) throw activityError;
+
+  return activity;
+}
+
+async function getResetActivityIds(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+  activityId: string,
+) {
+  const { data: activities, error } = await supabase
+    .from("activities")
+    .select("id, phase, created_at")
+    .eq("event_id", eventId)
+    .order("created_at", { ascending: true })
+    .returns<
+      { id: string; phase: keyof typeof PHASE_ORDER; created_at: string }[]
+    >();
+
+  if (error) throw error;
+
+  const orderedActivities = [...activities].sort(
+    (first, second) =>
+      PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
+      first.created_at.localeCompare(second.created_at),
+  );
+
+  const currentIndex = orderedActivities.findIndex(
+    (activity) => activity.id === activityId,
+  );
+  if (currentIndex === -1) {
+    throw new Error("Activity does not belong to this event.");
+  }
+
+  return orderedActivities.slice(currentIndex).map((activity) => activity.id);
+}
+
+async function deleteOrphanParticipants(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+) {
+  const { data: participants, error: participantsError } = await supabase
+    .from("participants")
+    .select("id")
+    .eq("event_id", eventId)
+    .returns<{ id: string }[]>();
+
+  if (participantsError) throw participantsError;
+
+  const participantIds = participants.map((participant) => participant.id);
+  if (participantIds.length === 0) return;
+
+  const { data: remainingVotes, error: votesError } = await supabase
+    .from("votes")
+    .select("participant_id")
+    .in("participant_id", participantIds)
+    .returns<{ participant_id: string | null }[]>();
+
+  if (votesError) throw votesError;
+
+  const retainedParticipantIds = new Set(
+    remainingVotes
+      .map((vote) => vote.participant_id)
+      .filter((participantId): participantId is string => Boolean(participantId)),
+  );
+  const orphanParticipantIds = participantIds.filter(
+    (participantId) => !retainedParticipantIds.has(participantId),
+  );
+
+  if (orphanParticipantIds.length === 0) return;
+
+  const { error: deleteError } = await supabase
+    .from("participants")
+    .delete()
+    .in("id", orphanParticipantIds);
+
+  if (deleteError) throw deleteError;
 }
 
 export async function createEvent(formData: FormData) {
@@ -132,6 +237,7 @@ export async function controlActivity(
   await requireAdminUser();
 
   const supabase = createServiceClient();
+  const activity = await getActivityForEvent(supabase, code, activityId);
 
   const statusByCommand = {
     open: "open",
@@ -164,7 +270,7 @@ export async function controlActivity(
   if (nextStatus) activityUpdate.status = nextStatus;
   if (nextVisibility) activityUpdate.results_visibility = nextVisibility;
 
-  if (Object.keys(activityUpdate).length > 0) {
+  if (Object.keys(activityUpdate).length > 0 && command !== "reset") {
     const { error: activityError } = await supabase
       .from("activities")
       .update(activityUpdate)
@@ -174,21 +280,31 @@ export async function controlActivity(
   }
 
   if (command === "reset") {
+    const resetActivityIds = await getResetActivityIds(
+      supabase,
+      activity.event_id,
+      activityId,
+    );
+
+    const { error: activityError } = await supabase
+      .from("activities")
+      .update({
+        status: "draft",
+        results_visibility: "hidden",
+      })
+      .in("id", resetActivityIds);
+
+    if (activityError) throw activityError;
+
     const { error: votesError } = await supabase
       .from("votes")
       .delete()
-      .eq("activity_id", activityId);
+      .in("activity_id", resetActivityIds);
 
     if (votesError) throw votesError;
+
+    await deleteOrphanParticipants(supabase, activity.event_id);
   }
-
-  const { data: activity, error: lookupError } = await supabase
-    .from("activities")
-    .select("event_id")
-    .eq("id", activityId)
-    .single<{ event_id: string }>();
-
-  if (lookupError) throw lookupError;
 
   const { error: stateError } = await supabase
     .from("presentation_state")
@@ -211,13 +327,7 @@ export async function setActiveActivity(code: string, activityId: string) {
   await requireAdminUser();
 
   const supabase = createServiceClient();
-  const { data: activity, error: lookupError } = await supabase
-    .from("activities")
-    .select("event_id")
-    .eq("id", activityId)
-    .single<{ event_id: string }>();
-
-  if (lookupError) throw lookupError;
+  const activity = await getActivityForEvent(supabase, code, activityId);
 
   const { error: stateError } = await supabase
     .from("presentation_state")

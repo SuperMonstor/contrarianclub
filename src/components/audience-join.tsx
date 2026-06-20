@@ -20,6 +20,10 @@ function makeDeviceId() {
   return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function activityVoteKey(code: string, activityId: string) {
+  return `contrarianclub:${code}:activity:${activityId}:voted`;
+}
+
 export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const { state, refresh } = useLiveEventState(code, initialState);
   const [deviceId, setDeviceId] = useState("");
@@ -39,8 +43,67 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [code]);
 
   const activity = state.activity;
+
+  const activityId = activity?.id;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!activityId) {
+      window.queueMicrotask(() => {
+        if (cancelled) return;
+        setSelectedOptionId("");
+        setHasVoted(false);
+        setMessage("");
+      });
+
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const storedVote = window.localStorage.getItem(
+      activityVoteKey(code, activityId),
+    );
+
+    window.queueMicrotask(() => {
+      if (cancelled) return;
+      setSelectedOptionId("");
+      setHasVoted(storedVote === "true");
+      setMessage(storedVote === "true" ? "Vote submitted." : "");
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activityId, code]);
+
+  useEffect(() => {
+    if (!activityId || state.totalVotes !== 0) {
+      return;
+    }
+
+    const key = activityVoteKey(code, activityId);
+    const storedVote = window.localStorage.getItem(key);
+    if (storedVote !== "true") return;
+
+    let cancelled = false;
+    window.localStorage.removeItem(key);
+    window.queueMicrotask(() => {
+      if (cancelled) return;
+      setSelectedOptionId("");
+      setHasVoted(false);
+      setMessage("");
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activityId, code, state.totalVotes]);
+
   const canVote = activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";
+  const waitingForVoting = activity?.status === "draft";
 
   const statusText = useMemo(() => {
     if (!activity) return "Waiting for the host";
@@ -54,7 +117,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [activity, hasVoted, resultsVisible]);
 
   async function submitVote() {
-    if (!selectedOptionId || !deviceId) return;
+    if (!activity || !selectedOptionId || !deviceId) return;
 
     setIsSubmitting(true);
     setMessage("");
@@ -74,11 +137,24 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     const body = (await response.json()) as { error?: string };
 
     if (!response.ok) {
+      if (
+        response.status === 409 &&
+        body.error?.toLowerCase().includes("already voted")
+      ) {
+        window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
+        setHasVoted(true);
+        setMessage("Vote submitted.");
+        setIsSubmitting(false);
+        await refresh();
+        return;
+      }
+
       setMessage(body.error ?? "Unable to submit vote.");
       setIsSubmitting(false);
       return;
     }
 
+    window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
     setHasVoted(true);
     setMessage("Vote submitted.");
     setIsSubmitting(false);
@@ -123,6 +199,12 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
 
           {activity && (
             <div className="mt-5 space-y-3">
+              {waitingForVoting && (
+                <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
+                  Your voting hasn&apos;t opened yet. Please wait for the host to
+                  start this vote.
+                </p>
+              )}
               {state.options.map((option) => {
                 const selected = selectedOptionId === option.id;
 
