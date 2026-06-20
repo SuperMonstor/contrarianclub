@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { CalendarPlus, LogOut, Monitor, Radio } from "lucide-react";
+import { ArrowUpRight, CalendarPlus, LogOut, Monitor, Radio } from "lucide-react";
 import { signOutAdmin } from "@/app/actions";
+import { BrandLockup } from "@/components/brand-lockup";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -20,30 +21,33 @@ export default async function AdminEventsPage() {
 
   if (error) throw error;
 
+  const list = events ?? [];
+
   return (
-    <main className="salon-page min-h-screen px-5 py-5 text-[#08080d]">
-      <section className="mx-auto w-full max-w-6xl">
-        <header className="salon-panel flex flex-wrap items-center justify-between gap-4 p-6">
+    <main className="club-shell min-h-screen px-5 py-6">
+      <section className="club-rise mx-auto w-full max-w-6xl">
+        <header className="club-panel flex flex-wrap items-end justify-between gap-6 p-6 sm:p-8">
           <div>
-            <p className="brand-kicker text-[#7a6a42]">
-              Admin events
+            <BrandLockup size="sm" />
+            <div className="mt-5 flex items-center gap-3">
+              <p className="club-kicker">The Ledger</p>
+              <span className="club-rule w-16" />
+            </div>
+            <h1 className="club-display mt-3 text-5xl">Events</h1>
+            <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
+              Signed in as <span className="text-[color:var(--cc-parchment)]">{user.email}</span>
             </p>
-            <h1 className="brand-display mt-2 text-5xl">Events</h1>
-            <p className="mt-2 text-sm text-[#4d5561]">{user.email}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             <Link
               href={adminPath("/events/new", hostname)}
-              className="salon-button salon-button-primary px-4 py-3"
+              className="club-btn club-btn-primary px-4 py-3"
             >
               <CalendarPlus size={18} />
               New event
             </Link>
             <form action={signOutAdmin}>
-              <button
-                type="submit"
-                className="salon-button px-4 py-3"
-              >
+              <button type="submit" className="club-btn px-4 py-3">
                 <LogOut size={18} />
                 Sign out
               </button>
@@ -51,40 +55,59 @@ export default async function AdminEventsPage() {
           </div>
         </header>
 
-        <div className="mt-6 grid gap-4">
-          {(events ?? []).length === 0 ? (
-            <div className="salon-panel p-6">
-              <h2 className="brand-display text-3xl">No events yet</h2>
-              <p className="mt-2 text-[#4d5561]">
-                Create the first event to get a room code, QR link, and presenter
-                view.
+        <div className="mt-5 flex items-center justify-between px-1">
+          <p className="club-eyebrow">
+            {list.length} {list.length === 1 ? "event" : "events"} on record
+          </p>
+        </div>
+
+        <div className="mt-3 grid gap-3.5">
+          {list.length === 0 ? (
+            <div className="club-panel p-8 text-center">
+              <h2 className="club-display text-3xl">No events yet</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[color:var(--cc-muted)]">
+                Create the first event to mint a room code, QR link, and
+                presenter view.
               </p>
+              <Link
+                href={adminPath("/events/new", hostname)}
+                className="club-btn club-btn-primary mt-6 inline-flex px-5 py-3"
+              >
+                <CalendarPlus size={18} />
+                Create the first event
+              </Link>
             </div>
           ) : (
-            events?.map((event) => (
+            list.map((event) => (
               <Link
                 href={adminPath(`/events/${event.code}`, hostname)}
                 key={event.id}
-                className="salon-panel grid gap-4 p-5 transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
+                className="club-panel group grid gap-4 p-5 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--cc-line-strong)] md:grid-cols-[1fr_auto] md:items-center"
               >
-                <div>
+                <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="brand-display text-3xl">{event.title}</h2>
+                    <h2 className="club-display truncate text-2xl sm:text-3xl">
+                      {event.title}
+                    </h2>
                     <StatusBadge status={event.status} />
                   </div>
-                  <p className="mt-2 font-mono text-sm uppercase tracking-[0.16em] text-[#7a6a42]">
+                  <p className="club-mono mt-2 text-sm uppercase tracking-[0.22em] text-[color:var(--cc-gold)]">
                     {event.code}
                   </p>
                 </div>
-                <div className="flex items-center gap-4 text-sm font-bold text-[#4d5561]">
+                <div className="flex items-center gap-5 text-sm font-medium text-[color:var(--cc-muted)]">
                   <span className="flex items-center gap-2">
-                    <Radio size={16} />
+                    <Radio size={16} className="text-[color:var(--cc-gold)]" />
                     Manage
                   </span>
                   <span className="flex items-center gap-2">
-                    <Monitor size={16} />
+                    <Monitor size={16} className="text-[color:var(--cc-gold)]" />
                     Present
                   </span>
+                  <ArrowUpRight
+                    size={18}
+                    className="text-[color:var(--cc-faint)] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color:var(--cc-gold)]"
+                  />
                 </div>
               </Link>
             ))
@@ -96,18 +119,14 @@ export default async function AdminEventsPage() {
 }
 
 function StatusBadge({ status }: { status: EventSummary["status"] }) {
+  if (status === "live") {
+    return <span className="club-chip club-chip-live club-chip-dot">live</span>;
+  }
   const tone = {
-    draft: "bg-[#f3ead8] text-[#4d5561]",
-    live: "bg-[#f0d36a] text-[#08080d]",
-    ended: "bg-[#c8a24a] text-[#08080d]",
-    archived: "bg-[#1e2a35] text-[#fff8e8]",
+    draft: "",
+    ended: "border-[color:var(--cc-gold)]/40 bg-[color:var(--cc-gold)]/12 text-[color:var(--cc-gold-bright)]",
+    archived: "opacity-70",
   }[status];
 
-  return (
-    <span
-      className={`salon-chip ${tone}`}
-    >
-      {status}
-    </span>
-  );
+  return <span className={`club-chip ${tone}`}>{status}</span>;
 }
