@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
@@ -17,6 +18,7 @@ type PresenterDisplayProps = {
 export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) {
   const { state } = useLiveEventState(code, initialState);
   const [joinUrl, setJoinUrl] = useState(initialState.joinUrl);
+  const [qrExpanded, setQrExpanded] = useState(false);
   const activity = state.activity;
   const showResults =
     activity?.results_visibility === "revealed" || state.mode === "results";
@@ -46,7 +48,18 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
     });
   }, [code, initialState.joinUrl]);
 
-  return (
+  useEffect(() => {
+    if (!qrExpanded) return;
+
+    function handleKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setQrExpanded(false);
+    }
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [qrExpanded]);
+
+  const body = (
     <main className="club-shell flex min-h-screen">
       <section className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[1fr_380px]">
         <div className="club-art-stage flex flex-col p-8 sm:p-12 lg:p-14">
@@ -140,7 +153,12 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
           <p className="club-kicker">Audience link</p>
           <div className="flex flex-1 flex-col items-center justify-center gap-6 py-8 text-center">
             <p className="club-eyebrow text-[color:var(--cc-gold)]">Scan to join</p>
-            <div className="w-full max-w-[300px] rounded-[3px] bg-[color:var(--cc-ivory)] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <button
+              type="button"
+              onClick={() => setQrExpanded(true)}
+              aria-label="Enlarge QR code to full screen"
+              className="group w-full max-w-[300px] rounded-[3px] bg-[color:var(--cc-ivory)] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition hover:scale-[1.02] hover:shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
+            >
               <QRCodeCanvas
                 value={joinUrl}
                 size={290}
@@ -149,7 +167,10 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 fgColor="#0b0907"
                 className="h-auto w-full"
               />
-            </div>
+            </button>
+            <p className="club-eyebrow text-[0.6rem] text-[color:var(--cc-faint)]">
+              Tap the code to enlarge
+            </p>
             <p className="club-mono max-w-[300px] break-words text-xs text-[color:var(--cc-muted)]">
               {joinUrl}
             </p>
@@ -163,6 +184,51 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
           </div>
         </aside>
       </section>
+
     </main>
+  );
+
+  return (
+    <>
+      {body}
+      {qrExpanded &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Audience QR code"
+            onClick={() => setQrExpanded(false)}
+            className="club-rise fixed inset-0 z-50 flex cursor-zoom-out flex-col items-center justify-center gap-6 bg-[color:var(--cc-black)]/95 p-8 backdrop-blur-sm"
+          >
+            <p className="club-kicker text-[color:var(--cc-gold)]">
+              Scan to join
+            </p>
+            <div className="rounded-[5px] bg-[color:var(--cc-ivory)] p-5 shadow-[0_40px_100px_rgba(0,0,0,0.7)] sm:p-6">
+              <div style={{ height: "64vmin", width: "64vmin" }}>
+                <QRCodeCanvas
+                  value={joinUrl}
+                  size={900}
+                  marginSize={1}
+                  bgColor="#f4ead2"
+                  fgColor="#0b0907"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="club-mono text-3xl font-bold text-[color:var(--cc-gold-bright)] sm:text-4xl">
+                {state.event.code}
+              </p>
+              <p className="club-mono mt-2 break-words text-sm text-[color:var(--cc-muted)]">
+                {joinUrl}
+              </p>
+            </div>
+            <p className="club-eyebrow text-[color:var(--cc-faint)]">
+              Tap anywhere or press Esc to close
+            </p>
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
