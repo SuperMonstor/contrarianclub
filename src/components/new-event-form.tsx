@@ -61,7 +61,7 @@ export function NewEventForm() {
           name="prompt"
           required
           rows={3}
-          defaultValue="Which side made the stronger opening case?"
+          defaultValue="Before hearing the debate, which side do you agree with more?"
           className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
         />
       </div>
