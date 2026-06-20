@@ -77,6 +77,29 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     };
   }, [activityId, code]);
 
+  useEffect(() => {
+    if (!activityId || activity?.status !== "draft" || state.totalVotes !== 0) {
+      return;
+    }
+
+    const key = activityVoteKey(code, activityId);
+    const storedVote = window.localStorage.getItem(key);
+    if (storedVote !== "true") return;
+
+    let cancelled = false;
+    window.localStorage.removeItem(key);
+    window.queueMicrotask(() => {
+      if (cancelled) return;
+      setSelectedOptionId("");
+      setHasVoted(false);
+      setMessage("");
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activityId, activity?.status, code, state.totalVotes]);
+
   const canVote = activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";
   const waitingForVoting = activity?.status === "draft";
