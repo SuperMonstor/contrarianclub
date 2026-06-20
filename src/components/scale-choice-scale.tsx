@@ -32,29 +32,48 @@ export function ScaleChoiceScale({
     : null;
 
   return (
-    <div className={large ? "club-panel-quiet max-w-5xl p-6" : "club-panel-quiet p-4"}>
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2 sm:gap-3">
-        <ScaleSideLabel align="left" label={leftLabel} />
+    <div className={large ? "club-panel-quiet p-6 lg:p-8" : "club-panel-quiet p-4"}>
+      <div
+        className={`grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end ${
+          large ? "gap-5 lg:gap-8" : "gap-2 sm:gap-3"
+        }`}
+      >
+        <ScaleSideLabel align="left" label={leftLabel} large={large} />
         <div className="text-center">
-          <p className="club-label text-[0.58rem]">Neutral</p>
-          <p className="mx-auto max-w-20 text-[0.68rem] font-semibold leading-3 text-[color:var(--cc-muted)] sm:max-w-24">
+          <p className={`club-label ${large ? "text-xs" : "text-[0.58rem]"}`}>
+            Neutral
+          </p>
+          <p
+            className={
+              large
+                ? "mx-auto mt-1 max-w-40 text-sm font-semibold leading-snug text-[color:var(--cc-muted)]"
+                : "mx-auto max-w-20 text-[0.68rem] font-semibold leading-3 text-[color:var(--cc-muted)] sm:max-w-24"
+            }
+          >
             {centerLabel}
           </p>
         </div>
-        <ScaleSideLabel align="right" label={rightLabel} />
+        <ScaleSideLabel align="right" label={rightLabel} large={large} />
       </div>
 
-      <div className="relative mt-5">
+      <div className={large ? "relative mt-6 lg:mt-8" : "relative mt-5"}>
         <div
           aria-hidden="true"
           className="absolute left-4 right-4 top-1/2 h-px -translate-y-1/2 bg-[color:var(--cc-line-strong)]"
         />
-        <div className="relative grid grid-cols-7 gap-1 sm:gap-1.5">
+        <div
+          className={`relative grid grid-cols-7 ${
+            large ? "gap-1.5 sm:gap-2 lg:gap-3" : "gap-1 sm:gap-1.5"
+          }`}
+        >
           {scaleOptions.map((option) => {
             const selected = selectedOptionId === option.id;
             const buttonClass = large
-              ? "min-h-20 text-2xl"
+              ? "min-h-16 text-xl sm:min-h-24 sm:text-3xl lg:min-h-28 lg:text-4xl"
               : "min-h-14 text-sm sm:text-base";
+            const restingClass = large
+              ? "border-[color:var(--cc-line-strong)] bg-[color:var(--cc-ivory)]/[0.05] text-[color:var(--cc-gold-bright)]"
+              : "border-[color:var(--cc-line)] bg-[color:var(--cc-black)] text-[color:var(--cc-gold-bright)] hover:border-[color:var(--cc-gold)]";
 
             return (
               <button
@@ -64,10 +83,10 @@ export function ScaleChoiceScale({
                 onClick={() => onSelect?.(option.id)}
                 aria-pressed={selected}
                 aria-label={option.label}
-                className={`club-mono relative flex items-center justify-center rounded-sm border font-bold transition disabled:cursor-default disabled:opacity-70 ${buttonClass} ${
+                className={`club-mono relative flex items-center justify-center rounded-sm border font-bold transition disabled:cursor-default disabled:opacity-100 ${buttonClass} ${
                   selected
                     ? "border-[color:var(--cc-gold-bright)] bg-[color:var(--cc-gold)] text-[color:var(--cc-black)] shadow-[0_0_0_2px_rgba(240,211,106,0.18)]"
-                    : "border-[color:var(--cc-line)] bg-[color:var(--cc-black)] text-[color:var(--cc-gold-bright)] hover:border-[color:var(--cc-gold)]"
+                    : restingClass
                 }`}
               >
                 {formatSignedValue(option.scale_value ?? 0)}
@@ -140,16 +159,26 @@ function formatScaleSelection(
 function ScaleSideLabel({
   label,
   align,
+  large = false,
 }: {
   label: string;
   align: "left" | "right";
+  large?: boolean;
 }) {
   return (
     <div className={`min-w-0 ${align === "right" ? "text-right" : "text-left"}`}>
-      <p className="club-label text-[0.58rem]">
+      <p
+        className={`club-label ${
+          large ? "text-xs text-[color:var(--cc-gold)]" : "text-[0.58rem]"
+        }`}
+      >
         {align === "right" ? "Right side" : "Left side"}
       </p>
-      <p className="club-display text-base leading-none text-[color:var(--cc-ivory)] [overflow-wrap:anywhere] sm:text-xl">
+      <p
+        className={`club-display leading-tight text-[color:var(--cc-ivory)] [overflow-wrap:anywhere] ${
+          large ? "mt-1 text-base sm:text-2xl lg:text-3xl" : "text-base sm:text-xl"
+        }`}
+      >
         {label}
       </p>
     </div>
