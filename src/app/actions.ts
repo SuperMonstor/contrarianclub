@@ -6,7 +6,7 @@ import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServerAuthClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import type { ControlCommand, PresentationMode } from "@/lib/types";
+import type { ActivityType, ControlCommand, PresentationMode } from "@/lib/types";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const PHASE_ORDER = {
@@ -28,6 +28,29 @@ function cleanOptions(formData: FormData) {
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 8);
+}
+
+function getEventFormat(formData: FormData): ActivityType {
+  return formData.get("eventFormat") === "scale" ? "scale" : "multiple_choice";
+}
+
+function buildScaleOptions(formData: FormData) {
+  const leftLabel =
+    String(formData.get("scaleLeftLabel") ?? "").trim() || "Opposition";
+  const rightLabel =
+    String(formData.get("scaleRightLabel") ?? "").trim() || "Proposition";
+  const centerLabel =
+    String(formData.get("scaleCenterLabel") ?? "").trim() || "Too close to call";
+
+  return [
+    { label: `Strongly ${leftLabel}`, scale_value: -3 },
+    { label: leftLabel, scale_value: -2 },
+    { label: `Lean ${leftLabel}`, scale_value: -1 },
+    { label: centerLabel, scale_value: 0 },
+    { label: `Lean ${rightLabel}`, scale_value: 1 },
+    { label: rightLabel, scale_value: 2 },
+    { label: `Strongly ${rightLabel}`, scale_value: 3 },
+  ];
 }
 
 async function createUniqueCode() {
@@ -148,6 +171,58 @@ async function deleteOrphanParticipants(
   if (deleteError) throw deleteError;
 }
 
+async function insertPollOptions(
+  supabase: ReturnType<typeof createServiceClient>,
+  rows: {
+    activity_id: string;
+    label: string;
+    sort_order: number;
+    scale_value: number | null;
+  }[],
+  eventFormat: ActivityType,
+) {
+  const { error } = await supabase.from("poll_options").insert(rows);
+
+  if (!error) return;
+
+  if (error.code !== "42703") throw error;
+
+  if (eventFormat === "scale") {
+    throw new Error(
+      "Scale events require Supabase migration 005_scale_poll_format.sql.",
+    );
+  }
+
+  const { error: fallbackError } = await supabase.from("poll_options").insert(
+    rows.map(({ activity_id, label, sort_order }) => ({
+      activity_id,
+      label,
+      sort_order,
+    })),
+  );
+
+  if (fallbackError) throw fallbackError;
+}
+
+async function assertScaleSchemaReady(
+  supabase: ReturnType<typeof createServiceClient>,
+) {
+  const { error } = await supabase
+    .from("poll_options")
+    .select("scale_value")
+    .limit(1);
+
+  if (!error) return;
+
+  if (error.code === "42703") {
+    throw new Error(
+      "Scale events require Supabase migration 005_scale_poll_format.sql.",
+    );
+  }
+
+  throw error;
+}
+
 export async function createEvent(formData: FormData) {
   await requireAdminUser();
 
@@ -155,12 +230,22 @@ export async function createEvent(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const prePrompt = String(formData.get("prePrompt") ?? "").trim();
   const postPrompt = String(formData.get("postPrompt") ?? "").trim();
+  const eventFormat = getEventFormat(formData);
   const options = cleanOptions(formData);
 
-  if (!title || !prePrompt || !postPrompt || options.length < 2) {
+  if (
+    !title ||
+    !prePrompt ||
+    !postPrompt ||
+    (eventFormat === "multiple_choice" && options.length < 2)
+  ) {
     throw new Error(
       "Title, pre/post prompts, and at least two options are required.",
     );
+  }
+
+  if (eventFormat === "scale") {
+    await assertScaleSchemaReady(supabase);
   }
 
   const code = await createUniqueCode();
@@ -180,7 +265,7 @@ export async function createEvent(formData: FormData) {
         event_id: event.id,
         prompt: prePrompt,
         phase: "pre_debate",
-        type: "multiple_choice",
+        type: eventFormat,
         status: "draft",
         results_visibility: "hidden",
       },
@@ -188,7 +273,7 @@ export async function createEvent(formData: FormData) {
         event_id: event.id,
         prompt: postPrompt,
         phase: "post_debate",
-        type: "multiple_choice",
+        type: eventFormat,
         status: "draft",
         results_visibility: "hidden",
       },
@@ -203,17 +288,23 @@ export async function createEvent(formData: FormData) {
     throw new Error("Could not create the pre-debate activity.");
   }
 
-  const { error: optionsError } = await supabase.from("poll_options").insert(
+  const eventOptions =
+    eventFormat === "scale"
+      ? buildScaleOptions(formData)
+      : options.map((label) => ({ label, scale_value: null }));
+
+  await insertPollOptions(
+    supabase,
     activities.flatMap((activity) =>
-      options.map((label, sort_order) => ({
+      eventOptions.map((option, sort_order) => ({
         activity_id: activity.id,
-        label,
+        label: option.label,
         sort_order,
+        scale_value: option.scale_value,
       })),
     ),
+    eventFormat,
   );
-
-  if (optionsError) throw optionsError;
 
   const { error: stateError } = await supabase
     .from("presentation_state")

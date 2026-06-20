@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
+import { ScaleResults, formatSignedValue } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
 
@@ -18,6 +19,12 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
   const activity = state.activity;
   const showResults =
     activity?.results_visibility === "revealed" || state.mode === "results";
+  const isScale = activity?.type === "scale";
+  const scaleOptions = [...state.options].sort(
+    (first, second) =>
+      (first.scale_value ?? first.sort_order) -
+      (second.scale_value ?? second.sort_order),
+  );
 
   useEffect(() => {
     window.queueMicrotask(() => {
@@ -78,11 +85,19 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                   {activity.prompt}
                 </h2>
                 <div className="mt-10 max-w-4xl">
-                  <ResultBars
-                    options={state.options}
-                    totalVotes={state.totalVotes}
-                    large
-                  />
+                  {isScale ? (
+                    <ScaleResults
+                      options={state.options}
+                      totalVotes={state.totalVotes}
+                      large
+                    />
+                  ) : (
+                    <ResultBars
+                      options={state.options}
+                      totalVotes={state.totalVotes}
+                      large
+                    />
+                  )}
                 </div>
               </div>
             ) : (
@@ -93,22 +108,40 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 <h2 className="club-display mt-5 max-w-5xl text-7xl leading-tight">
                   {activity.prompt}
                 </h2>
-                <div className="mt-10 grid max-w-4xl gap-4">
-                  {state.options.map((option) => (
-                    <div
-                      key={option.id}
-                      className="club-tile px-6 py-5 text-3xl font-semibold text-[color:var(--cc-ivory)]"
-                    >
-                      {option.label}
-                    </div>
-                  ))}
-                </div>
+                {isScale ? (
+                  <div className="mt-10 grid max-w-5xl grid-cols-7 gap-2">
+                    {scaleOptions.map((option) => (
+                      <div
+                        key={option.id}
+                        className="club-tile flex min-h-36 flex-col items-center justify-between px-3 py-5 text-center text-[color:var(--cc-ivory)]"
+                      >
+                        <span className="club-mono text-2xl font-bold text-[color:var(--cc-gold-bright)]">
+                          {formatSignedValue(option.scale_value ?? 0)}
+                        </span>
+                        <span className="text-sm font-semibold leading-5">
+                          {option.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-10 grid max-w-4xl gap-4">
+                    {state.options.map((option) => (
+                      <div
+                        key={option.id}
+                        className="club-tile px-6 py-5 text-3xl font-semibold text-[color:var(--cc-ivory)]"
+                      >
+                        {option.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
 
           <footer className="club-mono relative z-10 flex items-center justify-between text-sm uppercase tracking-[0.2em] text-[color:var(--cc-muted)]">
-            <span>{state.participantCount} joined</span>
+            <span>{state.participantCount} tracked</span>
             <span>{state.totalVotes} responses</span>
           </footer>
         </div>

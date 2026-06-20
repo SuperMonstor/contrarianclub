@@ -2,6 +2,7 @@ export type ActivityStatus = "draft" | "open" | "closed";
 export type ResultsVisibility = "hidden" | "revealed";
 export type PresentationMode = "join" | "poll" | "results";
 export type ActivityPhase = "general" | "pre_debate" | "post_debate";
+export type ActivityType = "multiple_choice" | "scale";
 
 export type EventSummary = {
   id: string;
@@ -14,7 +15,7 @@ export type EventSummary = {
 export type ActivitySummary = {
   id: string;
   event_id: string;
-  type: "multiple_choice";
+  type: ActivityType;
   phase: ActivityPhase;
   prompt: string;
   status: ActivityStatus;
@@ -27,6 +28,7 @@ export type PollOptionResult = {
   activity_id: string;
   label: string;
   sort_order: number;
+  scale_value: number | null;
   votes: number;
 };
 
@@ -60,11 +62,17 @@ export type SwingTransition = {
 };
 
 export type DebateSwingSummary = {
+  format: ActivityType;
   preActivityId: string;
   postActivityId: string;
   matchedVotes: number;
   changedVotes: number;
   changedPercent: number;
+  crossedVotes: number;
+  crossedPercent: number;
+  averagePre: number | null;
+  averagePost: number | null;
+  netSwing: number | null;
   optionTotals: SwingOptionTotal[];
   transitions: SwingTransition[];
 };

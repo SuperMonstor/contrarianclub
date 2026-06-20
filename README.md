@@ -6,7 +6,7 @@ Phase 1 is the thinnest complete slice:
 
 - create one event
 - join by QR code or event code
-- run one multiple-choice poll
+- run multiple-choice or debate-scale polls
 - submit one vote per audience device
 - show a presenter display
 - hide or reveal results from the host dashboard
@@ -35,6 +35,7 @@ supabase/migrations/001_phase_one_live_poll.sql
 supabase/migrations/002_admin_events.sql
 supabase/migrations/003_debate_swing.sql
 supabase/migrations/004_harden_vote_integrity.sql
+supabase/migrations/005_scale_poll_format.sql
 ```
 
 Then fill in `.env.local`:

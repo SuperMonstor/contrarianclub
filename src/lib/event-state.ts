@@ -15,7 +15,10 @@ type PollOptionRow = {
   activity_id: string;
   label: string;
   sort_order: number;
+  scale_value: number | null;
 };
+
+type PollOptionBaseRow = Omit<PollOptionRow, "scale_value">;
 
 type VoteRow = {
   option_id: string;
@@ -103,39 +106,29 @@ export async function getEventState(code: string): Promise<EventState | null> {
     };
   }
 
+  const activityIds = (activities ?? []).map((item) => item.id);
+
   const [
-    { data: options, error: optionsError },
+    options,
     { data: votes, error: votesError },
-    { data: allOptions, error: allOptionsError },
+    allOptions,
     { data: allVotes, error: allVotesError },
   ] = await Promise.all([
-    supabase
-      .from("poll_options")
-      .select("id, activity_id, label, sort_order")
-      .eq("activity_id", activity.id)
-      .order("sort_order", { ascending: true })
-      .returns<PollOptionRow[]>(),
+    getPollOptionsForActivity(supabase, activity.id),
     supabase
       .from("votes")
       .select("option_id, device_id")
       .eq("activity_id", activity.id)
       .returns<VoteRow[]>(),
-    supabase
-      .from("poll_options")
-      .select("id, activity_id, label, sort_order")
-      .in("activity_id", (activities ?? []).map((item) => item.id))
-      .order("sort_order", { ascending: true })
-      .returns<PollOptionRow[]>(),
+    getPollOptionsForActivities(supabase, activityIds),
     supabase
       .from("votes")
       .select("activity_id, option_id, device_id")
-      .in("activity_id", (activities ?? []).map((item) => item.id))
+      .in("activity_id", activityIds)
       .returns<ActivityVoteRow[]>(),
   ]);
 
-  if (optionsError) throw optionsError;
   if (votesError) throw votesError;
-  if (allOptionsError) throw allOptionsError;
   if (allVotesError) throw allVotesError;
 
   const voteCounts = new Map<string, number>();
@@ -143,7 +136,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
     voteCounts.set(vote.option_id, (voteCounts.get(vote.option_id) ?? 0) + 1);
   }
 
-  const optionResults: PollOptionResult[] = (options ?? []).map((option) => ({
+  const optionResults: PollOptionResult[] = options.map((option) => ({
     ...option,
     votes: voteCounts.get(option.id) ?? 0,
   }));
@@ -158,11 +151,64 @@ export async function getEventState(code: string): Promise<EventState | null> {
     participantCount: participantCount ?? 0,
     swing: buildSwingSummary(
       activities ?? [],
-      groupOptionsByActivity(allOptions ?? []),
+      groupOptionsByActivity(allOptions),
       groupVotesByActivity(allVotes ?? []),
     ),
     ...urls,
   };
+}
+
+async function getPollOptionsForActivity(
+  supabase: ReturnType<typeof createServiceClient>,
+  activityId: string,
+) {
+  return getPollOptions(supabase, { activityId });
+}
+
+async function getPollOptionsForActivities(
+  supabase: ReturnType<typeof createServiceClient>,
+  activityIds: string[],
+) {
+  if (activityIds.length === 0) return [];
+  return getPollOptions(supabase, { activityIds });
+}
+
+async function getPollOptions(
+  supabase: ReturnType<typeof createServiceClient>,
+  filter: { activityId: string } | { activityIds: string[] },
+): Promise<PollOptionRow[]> {
+  const queryWithScale = supabase
+    .from("poll_options")
+    .select("id, activity_id, label, sort_order, scale_value")
+    .order("sort_order", { ascending: true });
+  const withScale =
+    "activityId" in filter
+      ? await queryWithScale.eq("activity_id", filter.activityId)
+      : await queryWithScale.in("activity_id", filter.activityIds);
+
+  if (!withScale.error) {
+    return (withScale.data ?? []) as PollOptionRow[];
+  }
+
+  if (withScale.error.code !== "42703") {
+    throw withScale.error;
+  }
+
+  const queryWithoutScale = supabase
+    .from("poll_options")
+    .select("id, activity_id, label, sort_order")
+    .order("sort_order", { ascending: true });
+  const withoutScale =
+    "activityId" in filter
+      ? await queryWithoutScale.eq("activity_id", filter.activityId)
+      : await queryWithoutScale.in("activity_id", filter.activityIds);
+
+  if (withoutScale.error) throw withoutScale.error;
+
+  return ((withoutScale.data ?? []) as PollOptionBaseRow[]).map((option) => ({
+    ...option,
+    scale_value: null,
+  }));
 }
 
 function groupOptionsByActivity(options: PollOptionRow[]) {
@@ -205,19 +251,35 @@ function buildSwingSummary(
   const postOptionLabels = new Map(
     postOptions.map((option) => [option.id, option.label]),
   );
+  const preOptionValues = new Map(
+    preOptions.map((option) => [option.id, option.scale_value]),
+  );
+  const postOptionValues = new Map(
+    postOptions.map((option) => [option.id, option.scale_value]),
+  );
   const preByDevice = new Map(
     (votesByActivity[preActivity.id] ?? []).map((vote) => [
       vote.device_id,
-      preOptionLabels.get(vote.option_id) ?? "Unknown",
+      {
+        label: preOptionLabels.get(vote.option_id) ?? "Unknown",
+        scaleValue: preOptionValues.get(vote.option_id) ?? null,
+      },
     ]),
   );
   const postByDevice = new Map(
     (votesByActivity[postActivity.id] ?? []).map((vote) => [
       vote.device_id,
-      postOptionLabels.get(vote.option_id) ?? "Unknown",
+      {
+        label: postOptionLabels.get(vote.option_id) ?? "Unknown",
+        scaleValue: postOptionValues.get(vote.option_id) ?? null,
+      },
     ]),
   );
 
+  const format =
+    preActivity.type === "scale" && postActivity.type === "scale"
+      ? "scale"
+      : "multiple_choice";
   const labels = Array.from(
     new Set([...preOptions, ...postOptions].map((option) => option.label)),
   );
@@ -229,25 +291,59 @@ function buildSwingSummary(
   const transitionCounts = new Map<string, number>();
   let matchedVotes = 0;
   let changedVotes = 0;
+  let crossedVotes = 0;
+  let preScaleTotal = 0;
+  let postScaleTotal = 0;
+  let scaleMatchedVotes = 0;
 
-  for (const [deviceId, preLabel] of preByDevice) {
-    const postLabel = postByDevice.get(deviceId);
-    if (!postLabel) continue;
+  for (const [deviceId, preVote] of preByDevice) {
+    const postVote = postByDevice.get(deviceId);
+    if (!postVote) continue;
 
     matchedVotes += 1;
-    if (preLabel !== postLabel) changedVotes += 1;
+    if (preVote.label !== postVote.label) changedVotes += 1;
 
-    const key = `${preLabel}|||${postLabel}`;
+    if (
+      format === "scale" &&
+      preVote.scaleValue !== null &&
+      postVote.scaleValue !== null
+    ) {
+      preScaleTotal += preVote.scaleValue;
+      postScaleTotal += postVote.scaleValue;
+      scaleMatchedVotes += 1;
+
+      if (preVote.scaleValue * postVote.scaleValue < 0) {
+        crossedVotes += 1;
+      }
+    }
+
+    const key = `${preVote.label}|||${postVote.label}`;
     transitionCounts.set(key, (transitionCounts.get(key) ?? 0) + 1);
   }
 
+  const averagePre =
+    scaleMatchedVotes === 0 ? null : roundScaleAverage(preScaleTotal / scaleMatchedVotes);
+  const averagePost =
+    scaleMatchedVotes === 0 ? null : roundScaleAverage(postScaleTotal / scaleMatchedVotes);
+  const netSwing =
+    averagePre === null || averagePost === null
+      ? null
+      : roundScaleAverage(averagePost - averagePre);
+
   return {
+    format,
     preActivityId: preActivity.id,
     postActivityId: postActivity.id,
     matchedVotes,
     changedVotes,
     changedPercent:
       matchedVotes === 0 ? 0 : Math.round((changedVotes / matchedVotes) * 100),
+    crossedVotes,
+    crossedPercent:
+      scaleMatchedVotes === 0 ? 0 : Math.round((crossedVotes / scaleMatchedVotes) * 100),
+    averagePre,
+    averagePost,
+    netSwing,
     optionTotals: labels.map((label) => ({
       label,
       preVotes: preTotals.get(label) ?? 0,
@@ -259,6 +355,10 @@ function buildSwingSummary(
       return { from, to, count };
     }),
   };
+}
+
+function roundScaleAverage(value: number) {
+  return Math.round(value * 10) / 10;
 }
 
 function countVotesByLabel(votes: VoteRow[], optionLabels: Map<string, string>) {

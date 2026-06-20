@@ -19,6 +19,7 @@ import {
 } from "@/app/actions";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
+import { ScaleResults, formatSignedValue } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { ActivitySummary, ControlCommand, EventState } from "@/lib/types";
 
@@ -95,6 +96,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
   const isOpen = activity?.status === "open";
   const isRevealed = activity?.results_visibility === "revealed";
+  const isScale = activity?.type === "scale";
 
   return (
     <div className="club-shell min-h-screen">
@@ -243,7 +245,11 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   {state.totalVotes} responses
                 </span>
               </div>
-              <ResultBars options={state.options} totalVotes={state.totalVotes} />
+              {isScale ? (
+                <ScaleResults options={state.options} totalVotes={state.totalVotes} />
+              ) : (
+                <ResultBars options={state.options} totalVotes={state.totalVotes} />
+              )}
             </div>
             <div className="club-panel-gold p-6">
               <p className="club-eyebrow">Sync</p>
@@ -251,7 +257,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                 {state.participantCount}
               </p>
               <p className="mt-1 text-sm text-[color:var(--cc-parchment)]">
-                joined participant{state.participantCount === 1 ? "" : "s"}
+                tracked voter{state.participantCount === 1 ? "" : "s"}
               </p>
               <div className="club-rule my-5" />
               <p className="club-label text-[0.65rem]">Last sync</p>
@@ -269,49 +275,81 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   <h3 className="club-display mt-2 text-3xl sm:text-4xl">
                     {state.swing.matchedVotes === 0
                       ? "No matched votes yet"
-                      : `${state.swing.changedPercent}% changed their vote`}
+                      : state.swing.format === "scale" && state.swing.netSwing !== null
+                        ? `${formatSignedValue(state.swing.netSwing)} net swing`
+                        : `${state.swing.changedPercent}% changed their vote`}
                   </h3>
                   <p className="mt-2 text-sm text-[color:var(--cc-muted)]">
                     {state.swing.matchedVotes === 0
                       ? "Debate swing appears once the same voters have both pre and post votes."
-                      : `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved between the pre and post vote.`}
+                      : state.swing.format === "scale"
+                        ? `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved on the scale. ${state.swing.crossedVotes} crossed sides.`
+                        : `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved between the pre and post vote.`}
                   </p>
                 </div>
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
                 <div className="club-panel-quiet p-5">
-                  <h4 className="club-display mb-4 text-2xl">Net movement</h4>
-                  <div className="space-y-3">
-                    {state.swing.optionTotals.map((option) => (
-                      <div
-                        key={option.label}
-                        className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 border-b border-[color:var(--cc-line)] pb-2.5 last:border-b-0 last:pb-0"
-                      >
-                        <span className="font-semibold text-[color:var(--cc-ivory)]">
-                          {option.label}
-                        </span>
-                        <span
-                          className={`club-mono font-bold ${
-                            option.delta > 0
-                              ? "text-[color:var(--cc-gold-bright)]"
-                              : option.delta < 0
-                                ? "text-[color:var(--cc-wine-bright)]"
-                                : "text-[color:var(--cc-muted)]"
-                          }`}
-                        >
-                          {option.delta > 0 ? "+" : ""}
-                          {option.delta}
-                        </span>
-                        <span className="text-sm text-[color:var(--cc-faint)]">
-                          before {option.preVotes}
-                        </span>
-                        <span className="text-right text-sm text-[color:var(--cc-faint)]">
-                          after {option.postVotes}
-                        </span>
+                  {state.swing.format === "scale" ? (
+                    <>
+                      <h4 className="club-display mb-4 text-2xl">Scale movement</h4>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <ScaleMetric
+                          label="Before"
+                          value={state.swing.averagePre}
+                        />
+                        <ScaleMetric
+                          label="After"
+                          value={state.swing.averagePost}
+                        />
+                        <ScaleMetric label="Net" value={state.swing.netSwing} />
+                        <div className="club-tile p-4">
+                          <p className="club-label text-[0.65rem]">Crossed sides</p>
+                          <p className="club-display mt-2 text-3xl text-[color:var(--cc-gold-bright)]">
+                            {state.swing.crossedPercent}%
+                          </p>
+                          <p className="mt-1 text-xs text-[color:var(--cc-muted)]">
+                            {state.swing.crossedVotes} voters
+                          </p>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </>
+                  ) : (
+                    <>
+                      <h4 className="club-display mb-4 text-2xl">Net movement</h4>
+                      <div className="space-y-3">
+                        {state.swing.optionTotals.map((option) => (
+                          <div
+                            key={option.label}
+                            className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 border-b border-[color:var(--cc-line)] pb-2.5 last:border-b-0 last:pb-0"
+                          >
+                            <span className="font-semibold text-[color:var(--cc-ivory)]">
+                              {option.label}
+                            </span>
+                            <span
+                              className={`club-mono font-bold ${
+                                option.delta > 0
+                                  ? "text-[color:var(--cc-gold-bright)]"
+                                  : option.delta < 0
+                                    ? "text-[color:var(--cc-wine-bright)]"
+                                    : "text-[color:var(--cc-muted)]"
+                              }`}
+                            >
+                              {option.delta > 0 ? "+" : ""}
+                              {option.delta}
+                            </span>
+                            <span className="text-sm text-[color:var(--cc-faint)]">
+                              before {option.preVotes}
+                            </span>
+                            <span className="text-right text-sm text-[color:var(--cc-faint)]">
+                              after {option.postVotes}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="club-panel-quiet p-5">
@@ -406,11 +444,29 @@ function ActivityCard({
       </h3>
       <div className="mt-4 flex gap-2">
         <span className="club-chip">{activity.status}</span>
+        <span className="club-chip">{activity.type === "scale" ? "scale" : "choice"}</span>
         <span className="club-chip">
           {active ? "active" : working ? "working" : "select"}
         </span>
       </div>
     </button>
+  );
+}
+
+function ScaleMetric({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | null;
+}) {
+  return (
+    <div className="club-tile p-4">
+      <p className="club-label text-[0.65rem]">{label}</p>
+      <p className="club-display mt-2 text-3xl text-[color:var(--cc-gold-bright)]">
+        {value === null ? "n/a" : formatSignedValue(value)}
+      </p>
+    </div>
   );
 }
 
