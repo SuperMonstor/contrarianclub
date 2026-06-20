@@ -15,7 +15,7 @@ export default async function AdminEventPage({
 
   if (!state) {
     return (
-      <main className="club-shell grid min-h-screen place-items-center px-5">
+      <main className="club-shell flex min-h-screen items-center justify-center px-5">
         <div className="club-panel club-rise max-w-lg p-8 text-center">
           <p className="club-kicker">404</p>
           <h1 className="club-display mt-3 text-3xl">Event not found</h1>

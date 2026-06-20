@@ -3,8 +3,8 @@ import { Logo } from "@/components/logo";
 
 export default function AdminLoginPage() {
   return (
-    <main className="club-shell grid min-h-screen place-items-center px-5 py-10">
-      <section className="club-panel club-rise w-full max-w-md p-8 sm:p-10">
+    <main className="club-shell flex min-h-screen items-center justify-center px-5 py-10">
+      <section className="club-panel club-rise w-full min-w-0 max-w-md p-8 sm:p-10">
         <Logo className="w-52 sm:w-56" />
         <div className="club-rule my-7 w-full" />
         <p className="club-kicker">Members&rsquo; Entrance</p>
