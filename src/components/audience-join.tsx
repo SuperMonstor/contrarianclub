@@ -78,7 +78,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [activityId, code]);
 
   useEffect(() => {
-    if (!activityId || activity?.status !== "draft" || state.totalVotes !== 0) {
+    if (!activityId || state.totalVotes !== 0) {
       return;
     }
 
@@ -98,7 +98,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     return () => {
       cancelled = true;
     };
-  }, [activityId, activity?.status, code, state.totalVotes]);
+  }, [activityId, code, state.totalVotes]);
 
   const canVote = activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";

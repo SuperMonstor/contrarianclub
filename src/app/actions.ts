@@ -43,6 +43,32 @@ async function createUniqueCode() {
   throw new Error("Could not generate a unique event code.");
 }
 
+async function getActivityForEvent(
+  supabase: ReturnType<typeof createServiceClient>,
+  code: string,
+  activityId: string,
+) {
+  const normalizedCode = code.trim().toUpperCase();
+  const { data: event, error: eventError } = await supabase
+    .from("events")
+    .select("id")
+    .eq("code", normalizedCode)
+    .single<{ id: string }>();
+
+  if (eventError) throw eventError;
+
+  const { data: activity, error: activityError } = await supabase
+    .from("activities")
+    .select("event_id")
+    .eq("id", activityId)
+    .eq("event_id", event.id)
+    .single<{ event_id: string }>();
+
+  if (activityError) throw activityError;
+
+  return activity;
+}
+
 export async function createEvent(formData: FormData) {
   await requireAdminUser();
 
@@ -132,6 +158,7 @@ export async function controlActivity(
   await requireAdminUser();
 
   const supabase = createServiceClient();
+  const activity = await getActivityForEvent(supabase, code, activityId);
 
   const statusByCommand = {
     open: "open",
@@ -182,14 +209,6 @@ export async function controlActivity(
     if (votesError) throw votesError;
   }
 
-  const { data: activity, error: lookupError } = await supabase
-    .from("activities")
-    .select("event_id")
-    .eq("id", activityId)
-    .single<{ event_id: string }>();
-
-  if (lookupError) throw lookupError;
-
   const { error: stateError } = await supabase
     .from("presentation_state")
     .upsert({
@@ -211,13 +230,7 @@ export async function setActiveActivity(code: string, activityId: string) {
   await requireAdminUser();
 
   const supabase = createServiceClient();
-  const { data: activity, error: lookupError } = await supabase
-    .from("activities")
-    .select("event_id")
-    .eq("id", activityId)
-    .single<{ event_id: string }>();
-
-  if (lookupError) throw lookupError;
+  const activity = await getActivityForEvent(supabase, code, activityId);
 
   const { error: stateError } = await supabase
     .from("presentation_state")
