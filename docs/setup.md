@@ -9,7 +9,10 @@
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
    - `SUPABASE_SECRET_KEY`
-5. Keep `SUPABASE_SECRET_KEY` server-only. Do not expose it in browser code.
+5. Also set the browser-safe aliases:
+   - `NEXT_PUBLIC_SUPABASE_URL` to the same value as `SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the same value as `SUPABASE_PUBLISHABLE_KEY`
+6. Keep `SUPABASE_SECRET_KEY` server-only. Do not expose it in browser code.
 
 Phase 1 intentionally uses public audience access for joining and voting. Host controls use the service role key through server code. Later phases should add host auth and stricter row-level security.
 
