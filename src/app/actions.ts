@@ -15,9 +15,10 @@ function makeEventCode(length = 6) {
   ).join("");
 }
 
-function cleanOptionLines(value: FormDataEntryValue | null) {
-  return String(value ?? "")
-    .split("\n")
+function cleanOptions(formData: FormData) {
+  return formData
+    .getAll("options")
+    .flatMap((value) => String(value ?? "").split("\n"))
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 8);
@@ -47,7 +48,7 @@ export async function createEvent(formData: FormData) {
   const supabase = createServiceClient();
   const title = String(formData.get("title") ?? "").trim();
   const prompt = String(formData.get("prompt") ?? "").trim();
-  const options = cleanOptionLines(formData.get("options"));
+  const options = cleanOptions(formData);
 
   if (!title || !prompt || options.length < 2) {
     throw new Error("Title, prompt, and at least two options are required.");

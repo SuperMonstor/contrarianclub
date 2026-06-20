@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { createEvent } from "@/app/actions";
+import { ArrowLeft } from "lucide-react";
+import { NewEventForm } from "@/components/new-event-form";
 import { requireAdminUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -41,56 +41,7 @@ export default async function NewEventPage() {
             <h2 className="mt-2 text-2xl font-black">Start the live loop</h2>
           </div>
 
-          <form action={createEvent} className="space-y-4">
-            <div>
-              <label className="text-sm font-bold" htmlFor="title">
-                Event title
-              </label>
-              <input
-                id="title"
-                name="title"
-                required
-                defaultValue="Contrarian Club Debate"
-                className="mt-2 w-full border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-bold" htmlFor="prompt">
-                First poll question
-              </label>
-              <textarea
-                id="prompt"
-                name="prompt"
-                required
-                rows={3}
-                defaultValue="Which side made the stronger opening case?"
-                className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-bold" htmlFor="options">
-                Options one per line
-              </label>
-              <textarea
-                id="options"
-                name="options"
-                required
-                rows={5}
-                defaultValue={"Proposition\nOpposition\nToo close to call"}
-                className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="flex min-h-12 w-full items-center justify-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-black text-white transition hover:-translate-y-0.5"
-            >
-              Create event
-              <ArrowRight size={18} />
-            </button>
-          </form>
+          <NewEventForm />
         </aside>
       </section>
     </main>
