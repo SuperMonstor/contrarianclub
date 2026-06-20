@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
+import { BrandLockup } from "@/components/brand-lockup";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
@@ -85,35 +86,37 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }
 
   return (
-    <main className="salon-stage min-h-screen px-4 py-5 text-[#fff8e8]">
-      <section className="mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
-        <header className="salon-panel-dark p-5">
-          <p className="brand-kicker text-[#f0d36a]">
-            {state.event.code}
-          </p>
-          <h1 className="brand-display mt-3 text-3xl leading-tight">
+    <main className="club-shell min-h-screen px-4 py-5">
+      <section className="club-rise mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
+        <header className="club-panel p-5">
+          <div className="flex items-center justify-between gap-3">
+            <BrandLockup size="sm" />
+            <span className="club-chip club-mono">{state.event.code}</span>
+          </div>
+          <h1 className="club-display mt-4 text-3xl leading-tight">
             {state.event.title}
           </h1>
-          <p className="mt-3 text-sm text-[#d8cfbd]">{statusText}</p>
+          <p className="mt-3 flex items-center gap-2 text-sm text-[color:var(--cc-muted)]">
+            <span className="club-rule w-6" />
+            {statusText}
+          </p>
         </header>
 
-        <div className="salon-panel mt-4 flex-1 p-5 text-[#08080d]">
-          <label className="block text-sm font-bold" htmlFor="displayName">
+        <div className="club-panel mt-4 flex-1 p-5">
+          <label className="club-label" htmlFor="displayName">
             Display name optional
           </label>
           <input
             id="displayName"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
-            className="salon-input mt-2 w-full px-3 py-3 text-base"
+            className="club-input mt-2 px-3.5 py-3 text-base"
             placeholder="Name or team"
           />
 
           <div className="mt-6">
-            <p className="brand-kicker text-[#7a6a42]">
-              Active question
-            </p>
-            <h2 className="brand-display mt-2 text-3xl leading-tight">
+            <p className="club-kicker">Active question</p>
+            <h2 className="club-display mt-2 text-3xl leading-tight">
               {activity?.prompt ?? "Waiting for the first question"}
             </h2>
           </div>
@@ -129,14 +132,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                     type="button"
                     disabled={!canVote}
                     onClick={() => setSelectedOptionId(option.id)}
-                    className={`flex w-full items-center justify-between px-4 py-4 text-left font-bold transition ${
+                    className={`flex w-full items-center justify-between px-4 py-4 text-left font-semibold transition disabled:opacity-60 ${
                       selected
-                        ? "salon-panel-gold"
-                        : "bg-white/60 ring-1 ring-[#7a6a42]/18"
-                    } disabled:opacity-70`}
+                        ? "club-panel-gold text-[color:var(--cc-ivory)]"
+                        : "club-tile text-[color:var(--cc-parchment)] hover:border-[color:var(--cc-line-strong)]"
+                    }`}
                   >
                     <span>{option.label}</span>
-                    {selected && <Check size={18} />}
+                    {selected && (
+                      <Check size={18} className="text-[color:var(--cc-gold-bright)]" />
+                    )}
                   </button>
                 );
               })}
@@ -148,7 +153,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
               type="button"
               disabled={!selectedOptionId || isSubmitting}
               onClick={submitVote}
-              className="salon-button salon-button-primary mt-5 w-full px-4 py-3"
+              className="club-btn club-btn-primary mt-5 w-full px-4 py-3"
             >
               {isSubmitting && <Loader2 className="animate-spin" size={18} />}
               Submit vote
@@ -156,16 +161,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           )}
 
           {message && (
-            <p className="mt-4 bg-white/65 px-3 py-3 text-sm font-bold ring-1 ring-[#7a6a42]/18">
+            <p className="club-panel-quiet mt-4 px-3.5 py-3 text-sm font-medium text-[color:var(--cc-parchment)]">
               {message}
             </p>
           )}
 
           {resultsVisible && (
-            <div className="mt-6 border-t border-[#cbbd9b] pt-5">
+            <div className="mt-6 border-t border-[color:var(--cc-line)] pt-5">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="brand-display text-2xl">Results</h3>
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]">
+                <h3 className="club-display text-2xl">Results</h3>
+                <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
                   {state.totalVotes} votes
                 </span>
               </div>
