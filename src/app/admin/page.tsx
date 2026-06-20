@@ -63,7 +63,7 @@ export default async function AdminEventsPage() {
               <Link
                 href={`events/${event.code}`}
                 key={event.id}
-                className="grid gap-4 border border-[#08080d] bg-[#fff9ed] p-5 shadow-[6px_6px_0_#08080d] transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
+                className="grid gap-4 border border-[#08080d] bg-[#fff9ed] p-5 shadow-[0_16px_36px_rgba(8,8,13,0.12)] transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
               >
                 <div>
                   <div className="flex flex-wrap items-center gap-3">

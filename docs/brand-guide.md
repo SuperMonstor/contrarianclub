@@ -9,7 +9,7 @@ The product should feel like a formal debate salon brought onto a live event scr
 - **Stage first:** Public and presenter screens should feel dark, focused, and dramatic.
 - **Paper for control:** Admin and form surfaces should use parchment tones, as if managing a printed debate program.
 - **Gold as emphasis:** Gold is reserved for action, status, and hierarchy, not used as a full-page wash.
-- **Sharp editorial frames:** Use thin borders, inset panels, and measured shadows. Avoid soft cards and rounded SaaS styling.
+- **Sharp editorial frames:** Use thin borders, inset panels, and soft stage-like shadows. Avoid offset block shadows, soft cards, and rounded SaaS styling.
 - **Serif authority:** Headlines use a classical serif stack. Utility text and codes stay in monospace.
 
 ## Palette
