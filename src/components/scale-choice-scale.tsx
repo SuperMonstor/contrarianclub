@@ -8,6 +8,7 @@ type ScaleChoiceScaleProps = {
   disabled?: boolean;
   centerLabel?: string | null;
   large?: boolean;
+  legendOnly?: boolean;
   leftLabel?: string | null;
   onSelect?: (optionId: string) => void;
   rightLabel?: string | null;
@@ -19,6 +20,7 @@ export function ScaleChoiceScale({
   selectedOptionId,
   disabled = false,
   large = false,
+  legendOnly = false,
   leftLabel: providedLeftLabel,
   onSelect,
   rightLabel: providedRightLabel,
@@ -68,6 +70,16 @@ export function ScaleChoiceScale({
         <ScaleSideLabel align="right" label={rightLabel} large={large} />
       </div>
 
+      {legendOnly ? (
+        <div className={large ? "mt-6 flex items-center gap-3 lg:mt-8" : "mt-5 flex items-center gap-3"}>
+          <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[color:var(--cc-gold)]" />
+          <span className="club-rule flex-1" />
+          <span className="h-2 w-2 shrink-0 rounded-full bg-[color:var(--cc-muted)]" />
+          <span className="club-rule flex-1" />
+          <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[color:var(--cc-gold)]" />
+        </div>
+      ) : (
+        <>
       <div className={large ? "mt-6 lg:mt-8" : "mt-5"}>
         <div
           className={`grid grid-cols-7 ${
@@ -117,6 +129,8 @@ export function ScaleChoiceScale({
             {selectedLabel}
           </span>
         </p>
+      )}
+        </>
       )}
     </div>
   );
