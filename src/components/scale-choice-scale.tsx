@@ -56,13 +56,9 @@ export function ScaleChoiceScale({
         <ScaleSideLabel align="right" label={rightLabel} large={large} />
       </div>
 
-      <div className={large ? "relative mt-6 lg:mt-8" : "relative mt-5"}>
+      <div className={large ? "mt-6 lg:mt-8" : "mt-5"}>
         <div
-          aria-hidden="true"
-          className="absolute left-4 right-4 top-1/2 h-px -translate-y-1/2 bg-[color:var(--cc-line-strong)]"
-        />
-        <div
-          className={`relative grid grid-cols-7 ${
+          className={`grid grid-cols-7 ${
             large ? "gap-1.5 sm:gap-2 lg:gap-3" : "gap-1 sm:gap-1.5"
           }`}
         >
