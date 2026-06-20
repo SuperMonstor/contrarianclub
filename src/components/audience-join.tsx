@@ -19,6 +19,10 @@ function makeDeviceId() {
   return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function activityVoteKey(code: string, activityId: string) {
+  return `contrarianclub:${code}:activity:${activityId}:voted`;
+}
+
 export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const { state, refresh } = useLiveEventState(code, initialState);
   const [deviceId, setDeviceId] = useState("");
@@ -38,6 +42,41 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [code]);
 
   const activity = state.activity;
+
+  const activityId = activity?.id;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!activityId) {
+      window.queueMicrotask(() => {
+        if (cancelled) return;
+        setSelectedOptionId("");
+        setHasVoted(false);
+        setMessage("");
+      });
+
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const storedVote = window.localStorage.getItem(
+      activityVoteKey(code, activityId),
+    );
+
+    window.queueMicrotask(() => {
+      if (cancelled) return;
+      setSelectedOptionId("");
+      setHasVoted(storedVote === "true");
+      setMessage(storedVote === "true" ? "Vote submitted." : "");
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activityId, code]);
+
   const canVote = activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";
 
@@ -53,7 +92,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [activity, hasVoted, resultsVisible]);
 
   async function submitVote() {
-    if (!selectedOptionId || !deviceId) return;
+    if (!activity || !selectedOptionId || !deviceId) return;
 
     setIsSubmitting(true);
     setMessage("");
@@ -73,11 +112,24 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     const body = (await response.json()) as { error?: string };
 
     if (!response.ok) {
+      if (
+        response.status === 409 &&
+        body.error?.toLowerCase().includes("already voted")
+      ) {
+        window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
+        setHasVoted(true);
+        setMessage("Vote submitted.");
+        setIsSubmitting(false);
+        await refresh();
+        return;
+      }
+
       setMessage(body.error ?? "Unable to submit vote.");
       setIsSubmitting(false);
       return;
     }
 
+    window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
     setHasVoted(true);
     setMessage("Vote submitted.");
     setIsSubmitting(false);
