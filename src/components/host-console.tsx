@@ -19,6 +19,10 @@ import {
 } from "@/app/actions";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
+import {
+  getScaleOptions,
+  getScaleSideLabel,
+} from "@/components/scale-choice-scale";
 import { ScaleResults, formatSignedValue } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type {
@@ -26,6 +30,7 @@ import type {
   ControlCommand,
   DebateSwingSummary,
   EventState,
+  PollOptionResult,
 } from "@/lib/types";
 
 type HostConsoleProps = {
@@ -209,6 +214,8 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                 </span>
               </div>
             </div>
+
+            {isScale && <ScaleMeaningKey options={state.options} />}
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <ControlButton
@@ -463,6 +470,61 @@ function ActivityCard({
         </span>
       </div>
     </button>
+  );
+}
+
+function ScaleMeaningKey({ options }: { options: PollOptionResult[] }) {
+  const scaleOptions = getScaleOptions(options);
+  const againstLabel = getScaleSideLabel(scaleOptions, -2, "Opposition");
+  const neutralLabel = getScaleSideLabel(scaleOptions, 0, "Too close to call");
+  const forLabel = getScaleSideLabel(scaleOptions, 2, "Proposition");
+
+  return (
+    <div className="mt-5 grid gap-3 lg:grid-cols-[1fr_auto_1fr]">
+      <ScaleMeaningTile
+        eyebrow="Against"
+        range="-3 to -1"
+        label={againstLabel}
+      />
+      <ScaleMeaningTile eyebrow="Neutral" range="0" label={neutralLabel} center />
+      <ScaleMeaningTile eyebrow="For" range="+1 to +3" label={forLabel} alignRight />
+    </div>
+  );
+}
+
+function ScaleMeaningTile({
+  eyebrow,
+  range,
+  label,
+  alignRight = false,
+  center = false,
+}: {
+  eyebrow: string;
+  range: string;
+  label: string;
+  alignRight?: boolean;
+  center?: boolean;
+}) {
+  return (
+    <div
+      className={`club-tile p-4 ${
+        alignRight ? "text-right" : center ? "text-center" : "text-left"
+      }`}
+    >
+      <div
+        className={`flex flex-wrap items-center gap-2 ${
+          alignRight ? "justify-end" : center ? "justify-center" : ""
+        }`}
+      >
+        <p className="club-label text-[0.62rem]">{eyebrow}</p>
+        <span className="club-mono text-xs font-bold text-[color:var(--cc-gold-bright)]">
+          {range}
+        </span>
+      </div>
+      <p className="club-display mt-2 text-2xl leading-tight text-[color:var(--cc-ivory)]">
+        {label}
+      </p>
+    </div>
   );
 }
 
