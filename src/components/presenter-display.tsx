@@ -94,10 +94,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               </span>
               {hasActiveQuestion && activity ? (
                 <>
-                  <p className="club-display mt-4 text-xl leading-snug text-[color:var(--cc-parchment)] sm:text-2xl lg:text-[2rem] lg:leading-[1.1]">
+                  <p className="club-kicker mt-5">The motion</p>
+                  <p className="club-display mt-1.5 text-base leading-snug text-[color:var(--cc-parchment)] sm:text-lg lg:text-xl">
                     {state.event.title}
                   </p>
-                  <h1 className="club-display mt-4 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.04] lg:text-6xl">
+                  <h1 className="club-display mt-6 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.04] lg:text-6xl">
                     {activity.prompt}
                   </h1>
                 </>
