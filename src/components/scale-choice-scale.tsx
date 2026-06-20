@@ -33,11 +33,11 @@ export function ScaleChoiceScale({
 
   return (
     <div className={large ? "club-panel-quiet max-w-5xl p-6" : "club-panel-quiet p-4"}>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2 sm:gap-3">
         <ScaleSideLabel align="left" label={leftLabel} />
         <div className="text-center">
           <p className="club-label text-[0.58rem]">Neutral</p>
-          <p className="max-w-24 text-[0.68rem] font-semibold leading-3 text-[color:var(--cc-muted)]">
+          <p className="mx-auto max-w-20 text-[0.68rem] font-semibold leading-3 text-[color:var(--cc-muted)] sm:max-w-24">
             {centerLabel}
           </p>
         </div>
@@ -49,12 +49,12 @@ export function ScaleChoiceScale({
           aria-hidden="true"
           className="absolute left-4 right-4 top-1/2 h-px -translate-y-1/2 bg-[color:var(--cc-line-strong)]"
         />
-        <div className="relative grid grid-cols-7 gap-1.5">
+        <div className="relative grid grid-cols-7 gap-1 sm:gap-1.5">
           {scaleOptions.map((option) => {
             const selected = selectedOptionId === option.id;
             const buttonClass = large
               ? "min-h-20 text-2xl"
-              : "min-h-14 text-base";
+              : "min-h-14 text-sm sm:text-base";
 
             return (
               <button
@@ -145,11 +145,11 @@ function ScaleSideLabel({
   align: "left" | "right";
 }) {
   return (
-    <div className={align === "right" ? "text-right" : "text-left"}>
+    <div className={`min-w-0 ${align === "right" ? "text-right" : "text-left"}`}>
       <p className="club-label text-[0.58rem]">
         {align === "right" ? "Right side" : "Left side"}
       </p>
-      <p className="club-display text-xl leading-none text-[color:var(--cc-ivory)]">
+      <p className="club-display text-base leading-none text-[color:var(--cc-ivory)] [overflow-wrap:anywhere] sm:text-xl">
         {label}
       </p>
     </div>
