@@ -22,6 +22,10 @@ type VoteRow = {
   device_id: string;
 };
 
+type ActivityVoteRow = VoteRow & {
+  activity_id: string;
+};
+
 type ActivityOptions = Record<string, PollOptionRow[]>;
 type ActivityVotes = Record<string, VoteRow[]>;
 
@@ -124,9 +128,9 @@ export async function getEventState(code: string): Promise<EventState | null> {
       .returns<PollOptionRow[]>(),
     supabase
       .from("votes")
-      .select("option_id, device_id, poll_options!inner(activity_id)")
-      .in("poll_options.activity_id", (activities ?? []).map((item) => item.id))
-      .returns<(VoteRow & { poll_options: { activity_id: string } })[]>(),
+      .select("activity_id, option_id, device_id")
+      .in("activity_id", (activities ?? []).map((item) => item.id))
+      .returns<ActivityVoteRow[]>(),
   ]);
 
   if (optionsError) throw optionsError;
@@ -169,11 +173,9 @@ function groupOptionsByActivity(options: PollOptionRow[]) {
   }, {});
 }
 
-function groupVotesByActivity(
-  votes: (VoteRow & { poll_options: { activity_id: string } })[],
-) {
+function groupVotesByActivity(votes: ActivityVoteRow[]) {
   return votes.reduce<ActivityVotes>((grouped, vote) => {
-    const activityId = vote.poll_options.activity_id;
+    const activityId = vote.activity_id;
     grouped[activityId] = grouped[activityId] ?? [];
     grouped[activityId].push({
       option_id: vote.option_id,
