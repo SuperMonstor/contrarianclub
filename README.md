@@ -28,10 +28,11 @@ npm install
 npm run dev
 ```
 
-Before creating an event, create a Supabase project and run:
+Before creating an event, create a Supabase project and run the migrations:
 
 ```text
 supabase/migrations/001_phase_one_live_poll.sql
+supabase/migrations/002_admin_events.sql
 ```
 
 Then fill in `.env.local`:
@@ -47,10 +48,14 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 More setup notes are in `docs/setup.md`.
 
+Create an admin user in Supabase Auth, then sign in at `/admin/login`.
+
 ## Routes
 
-- `/` creates the first live event.
-- `/host/[code]` controls the poll.
+- `/` lets audience members enter an event code.
+- `/admin` lists events for authenticated admins.
+- `/admin/events/new` creates an event.
+- `/admin/events/[code]` controls the poll.
 - `/join/[code]` is the audience mobile view.
 - `/present/[code]` is the projector view.
 

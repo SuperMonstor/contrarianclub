@@ -4,7 +4,9 @@
 
 1. Create a Supabase project.
 2. Open the SQL editor.
-3. Run `supabase/migrations/001_phase_one_live_poll.sql`.
+3. Run these migrations in order:
+   - `supabase/migrations/001_phase_one_live_poll.sql`
+   - `supabase/migrations/002_admin_events.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
@@ -14,7 +16,19 @@
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the same value as `SUPABASE_PUBLISHABLE_KEY`
 6. Keep `SUPABASE_SECRET_KEY` server-only. Do not expose it in browser code.
 
-Phase 1 intentionally uses public audience access for joining and voting. Host controls use the service role key through server code. Later phases should add host auth and stricter row-level security.
+Phase 1 intentionally uses public audience access for joining and voting. Admin controls require Supabase Auth and then use the service role key through server code. Later phases should add stricter row-level security.
+
+## Admin Auth
+
+Create an admin user in Supabase:
+
+1. Open **Authentication**.
+2. Open **Users**.
+3. Click **Add user**.
+4. Use an email and password you control.
+5. Keep **Auto Confirm User** enabled if Supabase shows that option.
+
+Use that email and password at `/admin/login`.
 
 ## Local Development
 
@@ -24,7 +38,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`, create an event, open the host link, and use the presenter and join links from the host dashboard.
+Open `http://localhost:3000`, sign in at `/admin`, create an event, and use the presenter and join links from the event dashboard.
 
 ## Vercel
 
