@@ -19,7 +19,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               <span
                 className={
                   large
-                    ? "text-xl font-semibold text-white"
+                    ? "text-xl font-semibold text-[color:var(--cc-ivory)]"
                     : "text-sm font-semibold text-[color:var(--cc-parchment)]"
                 }
               >
@@ -28,7 +28,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               <span
                 className={
                   large
-                    ? "font-mono text-2xl text-[#f0d36a]"
+                    ? "club-mono text-2xl font-semibold text-[color:var(--cc-gold-bright)]"
                     : "club-mono text-sm font-semibold text-[color:var(--cc-gold-bright)]"
                 }
               >
@@ -38,23 +38,19 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
             <div
               className={
                   large
-                    ? "h-7 overflow-hidden rounded-sm bg-white/10"
+                    ? "h-7 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]"
                     : "h-4 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]"
               }
             >
               <div
-                className={
-                  large
-                    ? "h-full rounded-sm bg-[#f0d36a] transition-all duration-700"
-                    : "h-full rounded-[3px] bg-gradient-to-r from-[#c8a24a] to-[#f0d36a] transition-all duration-500"
-                }
+                className="h-full rounded-[3px] bg-gradient-to-r from-[#c8a24a] to-[#f0d36a] transition-all duration-700"
                 style={{ width: `${percentage}%` }}
               />
             </div>
             <div
               className={
                   large
-                    ? "font-mono text-sm uppercase tracking-[0.18em] text-[#d8cfbd]/65"
+                    ? "club-mono text-sm uppercase tracking-[0.18em] text-[color:var(--cc-muted)]"
                     : "club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-faint)]"
               }
             >

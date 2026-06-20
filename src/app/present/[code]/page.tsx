@@ -26,10 +26,12 @@ export default async function PresentPage({
 
 function MissingSetup() {
   return (
-    <main className="salon-stage grid min-h-screen place-items-center px-8 text-[#fff8e8]">
-      <div className="salon-panel-dark p-8">
-        <h1 className="brand-display text-6xl">Supabase missing</h1>
-        <p className="mt-4 text-[#d8cfbd]">Configure env vars before showtime.</p>
+    <main className="club-shell grid min-h-screen place-items-center px-8">
+      <div className="club-panel club-rise p-10 text-center">
+        <h1 className="club-display text-6xl">Supabase missing</h1>
+        <p className="mt-4 text-[color:var(--cc-muted)]">
+          Configure env vars before showtime.
+        </p>
       </div>
     </main>
   );
@@ -37,11 +39,12 @@ function MissingSetup() {
 
 function MissingEvent({ code }: { code: string }) {
   return (
-    <main className="salon-stage grid min-h-screen place-items-center px-8 text-[#fff8e8]">
-      <div className="salon-panel-dark p-8">
-        <h1 className="brand-display text-6xl">Event not found</h1>
-        <p className="mt-4 text-[#d8cfbd]">
-          No live room exists for <span className="font-mono">{code}</span>.
+    <main className="club-shell grid min-h-screen place-items-center px-8">
+      <div className="club-panel club-rise p-10 text-center">
+        <h1 className="club-display text-6xl">Event not found</h1>
+        <p className="mt-4 text-[color:var(--cc-muted)]">
+          No live room exists for{" "}
+          <span className="club-mono text-[color:var(--cc-gold)]">{code}</span>.
         </p>
       </div>
     </main>
