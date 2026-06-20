@@ -35,28 +35,28 @@ export function EventCodeEntry() {
   return (
     <form onSubmit={submitCode} className="space-y-4">
       <div>
-        <label className="text-sm font-bold" htmlFor="code">
+        <label className="club-label" htmlFor="code">
           Event code
         </label>
         <input
           id="code"
           value={code}
           onChange={(event) => setCode(event.target.value)}
-          className="salon-input mt-2 w-full px-4 py-4 font-mono text-3xl font-black uppercase tracking-[0.16em]"
+          className="club-input club-mono mt-2 px-4 py-4 text-3xl font-bold uppercase tracking-[0.18em] text-[color:var(--cc-gold-bright)] placeholder:text-[color:var(--cc-faint)]"
           placeholder="ABC123"
           autoComplete="off"
           inputMode="text"
         />
       </div>
       {error && (
-        <p className="bg-red-100 px-3 py-3 text-sm font-bold text-red-950 ring-1 ring-red-900/25">
+        <p className="rounded-[2px] border border-[color:var(--cc-wine-bright)]/40 bg-[color:var(--cc-wine)]/20 px-3.5 py-3 text-sm font-medium text-[#f0c9c4]">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={isChecking || !code.trim()}
-        className="salon-button salon-button-primary w-full px-4 py-3"
+        className="club-btn club-btn-primary w-full px-4 py-3"
       >
         {isChecking ? <Loader2 className="animate-spin" size={18} /> : null}
         Join event
