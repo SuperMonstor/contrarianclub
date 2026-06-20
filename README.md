@@ -45,6 +45,8 @@ SUPABASE_SECRET_KEY=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+PUBLIC_HOST=thecontrarian.club
+ADMIN_HOST=admin.thecontrarian.club
 ```
 
 More setup notes are in `docs/setup.md`.

@@ -46,6 +46,8 @@ Open `http://localhost:3000`, sign in at `/admin`, create an event, and use the 
 1. Create a Vercel project from this repository.
 2. Add the same environment variables from `.env.example`.
 3. Set `NEXT_PUBLIC_SITE_URL` to the deployed production URL.
-4. Deploy.
+4. Set `PUBLIC_HOST` to `thecontrarian.club`.
+5. Set `ADMIN_HOST` to `admin.thecontrarian.club`.
+6. Deploy.
 
 Preview deployments can use the same Supabase project during Phase 1. Before a real event, freeze changes and use the production deployment only.

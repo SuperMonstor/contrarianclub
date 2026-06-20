@@ -31,7 +31,7 @@ export default async function AdminEventsPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/admin/events/new"
+              href="events/new"
               className="flex min-h-11 items-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-bold text-white"
             >
               <CalendarPlus size={18} />
@@ -61,7 +61,7 @@ export default async function AdminEventsPage() {
           ) : (
             events?.map((event) => (
               <Link
-                href={`/admin/events/${event.code}`}
+                href={`events/${event.code}`}
                 key={event.id}
                 className="grid gap-4 border border-slate-950 bg-white p-5 shadow-[6px_6px_0_#111827] transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
               >
