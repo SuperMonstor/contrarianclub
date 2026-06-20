@@ -7,6 +7,7 @@ import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
 import { ScaleResults } from "@/components/scale-results";
+import { SwingReveal } from "@/components/swing-reveal";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
 
@@ -23,15 +24,20 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
   const showResults =
     activity?.results_visibility === "revealed" || state.mode === "results";
   const isScale = activity?.type === "scale";
-  const isJoinMode = !activity || state.mode === "join";
-  const isLive = isJoinMode || showResults || activity?.status === "open";
-  const statusLabel = isJoinMode
-    ? "Open to join"
-    : showResults
-      ? "Results live"
-      : activity?.status === "open"
-        ? "Voting open"
-        : "Voting closed";
+  const isSwingStage = state.mode === "swing" && state.swing !== null;
+  const isJoinMode = !isSwingStage && (!activity || state.mode === "join");
+  const hasActiveQuestion = Boolean(activity) && !isSwingStage && !isJoinMode;
+  const isLive =
+    isSwingStage || isJoinMode || showResults || activity?.status === "open";
+  const statusLabel = isSwingStage
+    ? "The swing"
+    : isJoinMode
+      ? "Open to join"
+      : showResults
+        ? "Results live"
+        : activity?.status === "open"
+          ? "Voting open"
+          : "Voting closed";
 
   useEffect(() => {
     window.queueMicrotask(() => {
@@ -86,69 +92,76 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               >
                 {statusLabel}
               </span>
-              <h1 className="club-display mt-5 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.02] lg:text-6xl">
-                {state.event.title}
-              </h1>
+              {hasActiveQuestion && activity ? (
+                <>
+                  <p className="club-display mt-4 text-xl leading-snug text-[color:var(--cc-parchment)] sm:text-2xl lg:text-[2rem] lg:leading-[1.1]">
+                    {state.event.title}
+                  </p>
+                  <h1 className="club-display mt-4 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.04] lg:text-6xl">
+                    {activity.prompt}
+                  </h1>
+                </>
+              ) : (
+                <h1
+                  className={`club-display mt-5 leading-[1.04] ${
+                    isSwingStage
+                      ? "text-2xl sm:text-3xl sm:leading-[1.1] lg:text-4xl"
+                      : "text-3xl sm:text-5xl sm:leading-[1.02] lg:text-6xl"
+                  }`}
+                >
+                  {state.event.title}
+                </h1>
+              )}
             </div>
 
             <div className="max-w-5xl">
-              {isJoinMode ? (
+              {isSwingStage && state.swing ? (
+                <SwingReveal swing={state.swing} />
+              ) : isJoinMode ? (
                 <p className="club-display text-3xl leading-tight text-[color:var(--cc-gold-bright)] sm:text-4xl lg:text-5xl">
                   Scan the code to cast your vote.
                 </p>
-              ) : showResults ? (
-                <>
-                  <p className="text-lg leading-snug text-[color:var(--cc-parchment)] sm:text-2xl lg:text-3xl">
-                    {activity.prompt}
-                  </p>
-                  <div className="mt-6 max-w-4xl sm:mt-8">
-                    {isScale ? (
-                      <ScaleResults
-                        leftLabel={activity.scale_left_label}
-                        options={state.options}
-                        rightLabel={activity.scale_right_label}
-                        totalVotes={state.totalVotes}
-                        large
-                      />
-                    ) : (
-                      <ResultBars
-                        options={state.options}
-                        totalVotes={state.totalVotes}
-                        large
-                      />
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-lg leading-snug text-[color:var(--cc-parchment)] sm:text-2xl lg:text-3xl">
-                    {activity.prompt}
-                  </p>
+              ) : showResults && activity ? (
+                <div className="max-w-4xl">
                   {isScale ? (
-                    <div className="mt-6 sm:mt-8">
-                      <ScaleChoiceScale
-                        centerLabel={activity.scale_center_label}
-                        leftLabel={activity.scale_left_label}
-                        options={state.options}
-                        rightLabel={activity.scale_right_label}
-                        disabled
-                        large
-                      />
-                    </div>
+                    <ScaleResults
+                      leftLabel={activity.scale_left_label}
+                      options={state.options}
+                      rightLabel={activity.scale_right_label}
+                      totalVotes={state.totalVotes}
+                      large
+                    />
                   ) : (
-                    <div className="mt-6 grid max-w-4xl gap-3 sm:mt-8 sm:gap-4">
-                      {state.options.map((option) => (
-                        <div
-                          key={option.id}
-                          className="club-tile px-4 py-4 text-xl font-semibold text-[color:var(--cc-ivory)] sm:px-6 sm:py-5 sm:text-2xl lg:text-3xl"
-                        >
-                          {option.label}
-                        </div>
-                      ))}
-                    </div>
+                    <ResultBars
+                      options={state.options}
+                      totalVotes={state.totalVotes}
+                      large
+                    />
                   )}
-                </>
-              )}
+                </div>
+              ) : activity ? (
+                isScale ? (
+                  <ScaleChoiceScale
+                    centerLabel={activity.scale_center_label}
+                    leftLabel={activity.scale_left_label}
+                    options={state.options}
+                    rightLabel={activity.scale_right_label}
+                    large
+                    legendOnly
+                  />
+                ) : (
+                  <div className="grid max-w-4xl gap-3 sm:gap-4">
+                    {state.options.map((option) => (
+                      <div
+                        key={option.id}
+                        className="club-tile px-4 py-4 text-xl font-semibold text-[color:var(--cc-ivory)] sm:px-6 sm:py-5 sm:text-2xl lg:text-3xl"
+                      >
+                        {option.label}
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : null}
             </div>
           </div>
 
