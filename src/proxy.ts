@@ -8,8 +8,18 @@ export function proxy(request: NextRequest) {
   const hostname = request.headers.get("host")?.split(":")[0] ?? "";
   const isAdminHost = hostname === ADMIN_HOST;
   const isPublicHost = hostname === PUBLIC_HOST || hostname === `www.${PUBLIC_HOST}`;
+  const isPublicEventPath =
+    url.pathname === "/join" ||
+    url.pathname.startsWith("/join/") ||
+    url.pathname === "/present" ||
+    url.pathname.startsWith("/present/");
 
   if (isAdminHost) {
+    if (isPublicEventPath) {
+      const publicUrl = new URL(`${url.pathname}${url.search}`, `https://${PUBLIC_HOST}`);
+      return NextResponse.redirect(publicUrl);
+    }
+
     if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) {
       const cleanPath = url.pathname.replace(/^\/admin/, "") || "/";
       const cleanUrl = new URL(cleanPath, url);
@@ -24,9 +34,7 @@ export function proxy(request: NextRequest) {
 
   if (isPublicHost && (url.pathname === "/admin" || url.pathname.startsWith("/admin/"))) {
     const cleanPath = url.pathname.replace(/^\/admin/, "") || "/";
-    const adminUrl = new URL(cleanPath, url);
-    adminUrl.hostname = ADMIN_HOST;
-    adminUrl.protocol = "https:";
+    const adminUrl = new URL(cleanPath, `https://${ADMIN_HOST}`);
     adminUrl.search = url.search;
     return NextResponse.redirect(adminUrl);
   }
