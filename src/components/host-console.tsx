@@ -71,7 +71,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
           <div className="mt-5 space-y-2 text-sm">
             <a
-              href={state.presenterUrl}
+              href={`/present/${state.event.code}`}
               target="_blank"
               className="flex items-center justify-between border border-slate-950 bg-slate-950 px-3 py-3 font-bold text-white"
             >
@@ -79,7 +79,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               <Monitor size={18} />
             </a>
             <a
-              href={state.joinUrl}
+              href={`/join/${state.event.code}`}
               target="_blank"
               className="flex items-center justify-between border border-slate-950 bg-white px-3 py-3 font-bold"
             >
