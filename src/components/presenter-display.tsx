@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { BrandLockup } from "@/components/brand-lockup";
+import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
@@ -40,7 +40,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
 
           <header className="relative z-10 flex items-start justify-between gap-8">
             <div>
-              <BrandLockup size="md" />
+              <Logo className="w-72" />
               <h1 className="club-display mt-6 max-w-5xl text-7xl leading-[0.95]">
                 {state.event.title}
               </h1>

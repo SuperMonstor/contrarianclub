@@ -17,7 +17,7 @@ import {
   setActiveActivity,
   updateEventStatus,
 } from "@/app/actions";
-import { BrandLockup } from "@/components/brand-lockup";
+import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { ActivitySummary, ControlCommand, EventState } from "@/lib/types";
@@ -80,7 +80,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
     <div className="club-shell min-h-screen">
       <main className="club-rise mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-5 py-6 lg:grid-cols-[360px_1fr]">
         <aside className="club-panel flex flex-col p-6">
-          <BrandLockup size="sm" />
+          <Logo className="w-44" />
           <div className="mt-5 flex items-center gap-3">
             <p className="club-kicker">Host Control</p>
             <span className="club-rule flex-1" />

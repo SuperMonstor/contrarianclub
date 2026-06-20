@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarPlus, LogOut, Monitor, Radio } from "lucide-react";
 import { signOutAdmin } from "@/app/actions";
-import { BrandLockup } from "@/components/brand-lockup";
+import { Logo } from "@/components/logo";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -28,7 +28,7 @@ export default async function AdminEventsPage() {
       <section className="club-rise mx-auto w-full max-w-6xl">
         <header className="club-panel flex flex-wrap items-end justify-between gap-6 p-6 sm:p-8">
           <div>
-            <BrandLockup size="sm" />
+            <Logo className="w-44" />
             <div className="mt-5 flex items-center gap-3">
               <p className="club-kicker">The Ledger</p>
               <span className="club-rule w-16" />

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
-import { BrandLockup } from "@/components/brand-lockup";
+import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
@@ -90,7 +90,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
       <section className="club-rise mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
         <header className="club-panel p-5">
           <div className="flex items-center justify-between gap-3">
-            <BrandLockup size="sm" />
+            <Logo className="w-36" />
             <span className="club-chip club-mono">{state.event.code}</span>
           </div>
           <h1 className="club-display mt-4 text-3xl leading-tight">

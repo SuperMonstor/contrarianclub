@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { BrandLockup } from "@/components/brand-lockup";
+import { Logo } from "@/components/logo";
 import { NewEventForm } from "@/components/new-event-form";
 import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
@@ -21,7 +21,7 @@ export default async function NewEventPage() {
               Back to events
             </Link>
             <div className="mt-10">
-              <BrandLockup size="sm" />
+              <Logo className="w-44" />
             </div>
             <p className="club-kicker mt-8">New event</p>
             <h1 className="club-display mt-5 max-w-3xl text-5xl leading-[1.04] sm:text-6xl">
