@@ -79,6 +79,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
 
   const canVote = activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";
+  const waitingForVoting = activity?.status === "draft";
 
   const statusText = useMemo(() => {
     if (!activity) return "Waiting for the host";
@@ -172,6 +173,12 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
 
           {activity && (
             <div className="mt-5 space-y-3">
+              {waitingForVoting && (
+                <p className="border border-slate-950 bg-amber-100 px-4 py-4 text-sm font-bold">
+                  Your voting hasn&apos;t opened yet. Please wait for the host to
+                  start this vote.
+                </p>
+              )}
               {state.options.map((option) => {
                 const selected = selectedOptionId === option.id;
 
