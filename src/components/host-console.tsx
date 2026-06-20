@@ -21,7 +21,12 @@ import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { ScaleResults, formatSignedValue } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
-import type { ActivitySummary, ControlCommand, EventState } from "@/lib/types";
+import type {
+  ActivitySummary,
+  ControlCommand,
+  DebateSwingSummary,
+  EventState,
+} from "@/lib/types";
 
 type HostConsoleProps = {
   code: string;
@@ -275,15 +280,17 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   <h3 className="club-display mt-2 text-3xl sm:text-4xl">
                     {state.swing.matchedVotes === 0
                       ? "No matched votes yet"
-                      : state.swing.format === "scale" && state.swing.netSwing !== null
-                        ? `${formatSignedValue(state.swing.netSwing)} net swing`
+                      : state.swing.format === "scale"
+                        ? state.swing.swingWinnerLabel
+                          ? `${state.swing.swingWinnerLabel} won the swing`
+                          : "No clear swing winner"
                         : `${state.swing.changedPercent}% changed their vote`}
                   </h3>
                   <p className="mt-2 text-sm text-[color:var(--cc-muted)]">
                     {state.swing.matchedVotes === 0
                       ? "Debate swing appears once the same voters have both pre and post votes."
                       : state.swing.format === "scale"
-                        ? `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved on the scale. ${state.swing.crossedVotes} crossed sides.`
+                        ? `${formatNetSwing(state.swing)} across ${state.swing.matchedVotes} matched voters. ${state.swing.crossedVotes} crossed sides.`
                         : `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved between the pre and post vote.`}
                   </p>
                 </div>
@@ -353,28 +360,34 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                 </div>
 
                 <div className="club-panel-quiet p-5">
-                  <h4 className="club-display mb-4 text-2xl">Changed paths</h4>
-                  <div className="space-y-2">
-                    {state.swing.transitions.length === 0 ? (
-                      <p className="text-sm text-[color:var(--cc-muted)]">
-                        No matched before/after votes yet.
-                      </p>
-                    ) : (
-                      state.swing.transitions.map((transition) => (
-                        <div
-                          key={`${transition.from}-${transition.to}`}
-                          className="grid grid-cols-[1fr_auto] gap-3 border-b border-[color:var(--cc-line)] pb-2 text-sm last:border-b-0 last:pb-0"
-                        >
-                          <span className="text-[color:var(--cc-parchment)]">
-                            {transition.from} <span className="text-[color:var(--cc-gold)]">&rarr;</span> {transition.to}
-                          </span>
-                          <span className="club-mono font-bold text-[color:var(--cc-gold-bright)]">
-                            {transition.count}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
+                  {state.swing.format === "scale" ? (
+                    <ScaleOutcomePanel swing={state.swing} />
+                  ) : (
+                    <>
+                      <h4 className="club-display mb-4 text-2xl">Changed paths</h4>
+                      <div className="space-y-2">
+                        {state.swing.transitions.length === 0 ? (
+                          <p className="text-sm text-[color:var(--cc-muted)]">
+                            No matched before/after votes yet.
+                          </p>
+                        ) : (
+                          state.swing.transitions.map((transition) => (
+                            <div
+                              key={`${transition.from}-${transition.to}`}
+                              className="grid grid-cols-[1fr_auto] gap-3 border-b border-[color:var(--cc-line)] pb-2 text-sm last:border-b-0 last:pb-0"
+                            >
+                              <span className="text-[color:var(--cc-parchment)]">
+                                {transition.from} <span className="text-[color:var(--cc-gold)]">&rarr;</span> {transition.to}
+                              </span>
+                              <span className="club-mono font-bold text-[color:var(--cc-gold-bright)]">
+                                {transition.count}
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -468,6 +481,113 @@ function ScaleMetric({
       </p>
     </div>
   );
+}
+
+function ScaleOutcomePanel({ swing }: { swing: DebateSwingSummary }) {
+  const leftLabel = swing.scaleLeftLabel ?? "Opposition";
+  const rightLabel = swing.scaleRightLabel ?? "Proposition";
+
+  return (
+    <>
+      <h4 className="club-display mb-4 text-2xl">Debate outcome</h4>
+      <div className="grid gap-3">
+        <div className="club-tile p-4">
+          <p className="club-label text-[0.65rem]">Swing winner</p>
+          <p className="club-display mt-2 text-3xl text-[color:var(--cc-gold-bright)]">
+            {swing.swingWinnerLabel ?? "No clear winner"}
+          </p>
+          <p className="mt-1 text-xs text-[color:var(--cc-muted)]">
+            {formatNetSwing(swing)}
+          </p>
+        </div>
+        <div className="club-tile p-4">
+          <p className="club-label text-[0.65rem]">Final room lean</p>
+          <p className="club-display mt-2 text-3xl text-[color:var(--cc-ivory)]">
+            {swing.finalLeaderLabel ?? "Evenly split"}
+          </p>
+          <p className="mt-1 text-xs text-[color:var(--cc-muted)]">
+            Final average {formatNullableSignedValue(swing.averagePost)}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-3">
+        <MovementRow
+          label={`Toward ${rightLabel}`}
+          count={swing.movedTowardRight}
+          total={swing.matchedVotes}
+          tone="gold"
+        />
+        <MovementRow
+          label={`Toward ${leftLabel}`}
+          count={swing.movedTowardLeft}
+          total={swing.matchedVotes}
+          tone="wine"
+        />
+        <MovementRow
+          label="No movement"
+          count={swing.unchangedVotes}
+          total={swing.matchedVotes}
+          tone="muted"
+        />
+      </div>
+    </>
+  );
+}
+
+function MovementRow({
+  label,
+  count,
+  total,
+  tone,
+}: {
+  label: string;
+  count: number;
+  total: number;
+  tone: "gold" | "wine" | "muted";
+}) {
+  const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
+  const fillClass =
+    tone === "gold"
+      ? "bg-[color:var(--cc-gold-bright)]"
+      : tone === "wine"
+        ? "bg-[color:var(--cc-wine-bright)]"
+        : "bg-[color:var(--cc-muted)]";
+
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
+        <span className="font-semibold text-[color:var(--cc-parchment)]">
+          {label}
+        </span>
+        <span className="club-mono text-[color:var(--cc-gold-bright)]">
+          {count} / {total}
+        </span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
+        <div
+          className={`h-full rounded-[3px] transition-all duration-700 ${fillClass}`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function formatNetSwing(swing: DebateSwingSummary) {
+  if (swing.netSwing === null) return "No matched scale votes yet.";
+  if (swing.netSwing === 0) return "No net movement between before and after.";
+
+  const direction =
+    swing.netSwing > 0
+      ? (swing.scaleRightLabel ?? "Proposition")
+      : (swing.scaleLeftLabel ?? "Opposition");
+
+  return `${formatSignedValue(swing.netSwing)} net swing toward ${direction}`;
+}
+
+function formatNullableSignedValue(value: number | null) {
+  return value === null ? "n/a" : formatSignedValue(value);
 }
 
 function phaseLabel(phase: ActivitySummary["phase"]) {

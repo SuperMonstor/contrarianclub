@@ -295,6 +295,9 @@ function buildSwingSummary(
   let preScaleTotal = 0;
   let postScaleTotal = 0;
   let scaleMatchedVotes = 0;
+  let movedTowardLeft = 0;
+  let movedTowardRight = 0;
+  let unchangedVotes = 0;
 
   for (const [deviceId, preVote] of preByDevice) {
     const postVote = postByDevice.get(deviceId);
@@ -311,6 +314,15 @@ function buildSwingSummary(
       preScaleTotal += preVote.scaleValue;
       postScaleTotal += postVote.scaleValue;
       scaleMatchedVotes += 1;
+
+      const movement = postVote.scaleValue - preVote.scaleValue;
+      if (movement > 0) {
+        movedTowardRight += 1;
+      } else if (movement < 0) {
+        movedTowardLeft += 1;
+      } else {
+        unchangedVotes += 1;
+      }
 
       if (preVote.scaleValue * postVote.scaleValue < 0) {
         crossedVotes += 1;
@@ -329,6 +341,22 @@ function buildSwingSummary(
     averagePre === null || averagePost === null
       ? null
       : roundScaleAverage(averagePost - averagePre);
+  const scaleLeftLabel =
+    format === "scale" ? getScaleSideLabel(postOptions, -2, "Opposition") : null;
+  const scaleRightLabel =
+    format === "scale" ? getScaleSideLabel(postOptions, 2, "Proposition") : null;
+  const swingWinnerLabel =
+    netSwing === null || netSwing === 0
+      ? null
+      : netSwing > 0
+        ? scaleRightLabel
+        : scaleLeftLabel;
+  const finalLeaderLabel =
+    averagePost === null || averagePost === 0
+      ? null
+      : averagePost > 0
+        ? scaleRightLabel
+        : scaleLeftLabel;
 
   return {
     format,
@@ -341,9 +369,16 @@ function buildSwingSummary(
     crossedVotes,
     crossedPercent:
       scaleMatchedVotes === 0 ? 0 : Math.round((crossedVotes / scaleMatchedVotes) * 100),
+    movedTowardLeft,
+    movedTowardRight,
+    unchangedVotes,
     averagePre,
     averagePost,
     netSwing,
+    scaleLeftLabel,
+    scaleRightLabel,
+    swingWinnerLabel,
+    finalLeaderLabel,
     optionTotals: labels.map((label) => ({
       label,
       preVotes: preTotals.get(label) ?? 0,
@@ -359,6 +394,16 @@ function buildSwingSummary(
 
 function roundScaleAverage(value: number) {
   return Math.round(value * 10) / 10;
+}
+
+function getScaleSideLabel(
+  options: PollOptionRow[],
+  scaleValue: number,
+  fallback: string,
+) {
+  return (
+    options.find((option) => option.scale_value === scaleValue)?.label ?? fallback
+  );
 }
 
 function countVotesByLabel(votes: VoteRow[], optionLabels: Map<string, string>) {

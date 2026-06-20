@@ -70,9 +70,16 @@ export type DebateSwingSummary = {
   changedPercent: number;
   crossedVotes: number;
   crossedPercent: number;
+  movedTowardLeft: number;
+  movedTowardRight: number;
+  unchangedVotes: number;
   averagePre: number | null;
   averagePost: number | null;
   netSwing: number | null;
+  scaleLeftLabel: string | null;
+  scaleRightLabel: string | null;
+  swingWinnerLabel: string | null;
+  finalLeaderLabel: string | null;
   optionTotals: SwingOptionTotal[];
   transitions: SwingTransition[];
 };
