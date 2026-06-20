@@ -73,26 +73,26 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f6f1e7] text-slate-950">
+    <div className="min-h-screen bg-[#f3ead8] text-[#08080d]">
       <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-5 py-5 lg:grid-cols-[360px_1fr]">
-        <aside className="border border-slate-950 bg-[#fdfaf1] p-5 shadow-[8px_8px_0_#111827]">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
+        <aside className="brand-frame brand-paper p-5">
+          <p className="brand-kicker text-[#7a6a42]">
             Host control
           </p>
-          <h1 className="mt-4 text-3xl font-black tracking-tight">
+          <h1 className="brand-display mt-4 text-4xl leading-tight">
             {state.event.title}
           </h1>
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="border border-slate-950 bg-white p-3">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
+            <div className="border border-[#08080d] bg-[#fff9ed] p-3">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#7a6a42]">
                 code
               </p>
               <p className="mt-1 font-mono text-3xl font-black">
                 {state.event.code}
               </p>
             </div>
-            <div className="border border-slate-950 bg-white p-3">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
+            <div className="border border-[#08080d] bg-[#fff9ed] p-3">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#7a6a42]">
                 status
               </p>
               <p className="mt-1 font-mono text-3xl font-black">
@@ -105,7 +105,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               type="button"
               onClick={() => changeEventStatus("draft")}
               disabled={statusCommand !== null}
-              className="flex items-center justify-center gap-1 border border-slate-950 bg-white px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+              className="flex items-center justify-center gap-1 border border-[#08080d] bg-[#fff9ed] px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               Draft
@@ -114,7 +114,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               type="button"
               onClick={() => changeEventStatus("live")}
               disabled={statusCommand !== null}
-              className="flex items-center justify-center gap-1 border border-slate-950 bg-emerald-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+              className="flex items-center justify-center gap-1 border border-[#08080d] bg-[#f0d36a] px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               Live
@@ -123,7 +123,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               type="button"
               onClick={() => changeEventStatus("ended")}
               disabled={statusCommand !== null}
-              className="flex items-center justify-center gap-1 border border-slate-950 bg-amber-200 px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
+              className="flex items-center justify-center gap-1 border border-[#08080d] bg-[#c8a24a] px-2 py-2 text-xs font-black uppercase tracking-[0.12em] disabled:opacity-50"
             >
               <Flag size={14} />
               End
@@ -133,7 +133,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             <a
               href={`/present/${state.event.code}`}
               target="_blank"
-              className="flex items-center justify-between border border-slate-950 bg-slate-950 px-3 py-3 font-bold text-white"
+              className="flex items-center justify-between border border-[#08080d] bg-[#08080d] px-3 py-3 font-bold text-[#fff8e8]"
             >
               <span>Open presenter</span>
               <Monitor size={18} />
@@ -141,13 +141,13 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
             <a
               href={`/join/${state.event.code}`}
               target="_blank"
-              className="flex items-center justify-between border border-slate-950 bg-white px-3 py-3 font-bold"
+              className="flex items-center justify-between border border-[#08080d] bg-[#fff9ed] px-3 py-3 font-bold"
             >
               <span>Open audience join</span>
               <QrCode size={18} />
             </a>
           </div>
-          <p className="mt-5 text-xs leading-5 text-slate-600">
+          <p className="mt-5 text-xs leading-5 text-[#4d5561]">
             Realtime is backed by Supabase. This screen also refreshes with the
             fallback poller so the host can recover after refreshes or missed
             events.
@@ -155,7 +155,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
         </aside>
 
         <section className="space-y-6">
-          <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
+          <div className="brand-frame bg-[#fff9ed] p-5">
             <div className="mb-6 grid gap-3 md:grid-cols-2">
               {state.activities.map((item) => (
                 <ActivityCard
@@ -170,18 +170,18 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
+                <p className="brand-kicker text-[#7a6a42]">
                   Current poll
                 </p>
-                <h2 className="mt-2 text-3xl font-black tracking-tight">
+                <h2 className="brand-display mt-2 text-4xl leading-tight">
                   {activity?.prompt ?? "No poll configured"}
                 </h2>
               </div>
               <div className="flex gap-2 font-mono text-xs uppercase tracking-[0.16em]">
-                <span className="border border-slate-950 px-3 py-2">
+                <span className="border border-[#08080d] px-3 py-2">
                   {activity?.status ?? "missing"}
                 </span>
-                <span className="border border-slate-950 bg-amber-200 px-3 py-2">
+                <span className="border border-[#08080d] bg-[#f0d36a] px-3 py-2">
                   {activity?.results_visibility ?? "hidden"}
                 </span>
               </div>
@@ -225,26 +225,26 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-[1fr_320px]">
-            <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
+            <div className="brand-frame bg-[#fff9ed] p-5">
               <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="text-xl font-black">Live results</h3>
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
+                <h3 className="brand-display text-2xl">Live results</h3>
+                <span className="font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]">
                   {state.totalVotes} responses
                 </span>
               </div>
               <ResultBars options={state.options} totalVotes={state.totalVotes} />
             </div>
-            <div className="border border-slate-950 bg-[#202c3a] p-5 text-white shadow-[8px_8px_0_#111827]">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/55">
+            <div className="brand-frame-dark bg-[#1e2a35] p-5 text-[#fff8e8]">
+              <p className="brand-kicker text-[#d8cfbd]/65">
                 sync
               </p>
-              <p className="mt-4 text-5xl font-black">
+              <p className="brand-display mt-4 text-6xl">
                 {state.participantCount}
               </p>
-              <p className="mt-1 text-sm text-white/70">
+              <p className="mt-1 text-sm text-[#d8cfbd]">
                 joined participant{state.participantCount === 1 ? "" : "s"}
               </p>
-              <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-white/55">
+              <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-[#d8cfbd]/65">
                 Last sync
               </p>
               <p className="mt-2 text-sm">
@@ -254,16 +254,16 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
           </div>
 
           {state.swing && (
-            <div className="border border-slate-950 bg-white p-5 shadow-[8px_8px_0_#111827]">
+            <div className="brand-frame bg-[#fff9ed] p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
+                  <p className="brand-kicker text-[#7a6a42]">
                     Debate swing
                   </p>
-                  <h3 className="mt-2 text-3xl font-black">
+                  <h3 className="brand-display mt-2 text-4xl">
                     {state.swing.changedPercent}% changed their vote
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-[#4d5561]">
                     {state.swing.changedVotes} of {state.swing.matchedVotes} matched
                     voters moved between the pre and post vote.
                   </p>
@@ -271,23 +271,23 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-                <div className="border border-slate-950 bg-[#fdfaf1] p-4">
-                  <h4 className="mb-4 font-black">Net movement</h4>
+                <div className="border border-[#08080d] bg-[#f3ead8] p-4">
+                  <h4 className="brand-display mb-4 text-2xl">Net movement</h4>
                   <div className="space-y-3">
                     {state.swing.optionTotals.map((option) => (
                       <div
                         key={option.label}
-                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-slate-300 pb-2 last:border-b-0 last:pb-0"
+                        className="grid grid-cols-[1fr_auto] gap-3 border-b border-[#cbbd9b] pb-2 last:border-b-0 last:pb-0"
                       >
                         <span className="font-bold">{option.label}</span>
                         <span className="font-mono font-black">
                           {option.delta > 0 ? "+" : ""}
                           {option.delta}
                         </span>
-                        <span className="text-sm text-slate-600">
+                        <span className="text-sm text-[#4d5561]">
                           before {option.preVotes}
                         </span>
-                        <span className="text-sm text-slate-600">
+                        <span className="text-sm text-[#4d5561]">
                           after {option.postVotes}
                         </span>
                       </div>
@@ -295,11 +295,11 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                   </div>
                 </div>
 
-                <div className="border border-slate-950 bg-[#202c3a] p-4 text-white">
-                  <h4 className="mb-4 font-black">Changed paths</h4>
+                <div className="border border-[#08080d] bg-[#1e2a35] p-4 text-[#fff8e8]">
+                  <h4 className="brand-display mb-4 text-2xl">Changed paths</h4>
                   <div className="space-y-2">
                     {state.swing.transitions.length === 0 ? (
-                      <p className="text-sm text-white/65">
+                      <p className="text-sm text-[#d8cfbd]">
                         No matched before/after votes yet.
                       </p>
                     ) : (
@@ -344,19 +344,21 @@ function ActivityCard({
       type="button"
       onClick={onSelect}
       disabled={active || working}
-      className={`border border-slate-950 p-4 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
-        active ? "bg-amber-200" : "bg-[#fdfaf1]"
+      className={`border border-[#08080d] p-4 text-left transition hover:-translate-y-0.5 disabled:cursor-default ${
+        active ? "bg-[#f0d36a]" : "bg-[#f3ead8]"
       }`}
     >
-      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#7a6a42]">
         {phaseLabel(activity.phase)}
       </p>
-      <h3 className="mt-2 line-clamp-2 font-black">{activity.prompt}</h3>
+      <h3 className="brand-display mt-2 line-clamp-2 text-xl leading-tight">
+        {activity.prompt}
+      </h3>
       <div className="mt-4 flex gap-2 font-mono text-xs uppercase tracking-[0.14em]">
-        <span className="border border-slate-950 bg-white px-2 py-1">
+        <span className="border border-[#08080d] bg-[#fff9ed] px-2 py-1">
           {activity.status}
         </span>
-        <span className="border border-slate-950 bg-white px-2 py-1">
+        <span className="border border-[#08080d] bg-[#fff9ed] px-2 py-1">
           {active ? "active" : working ? "working" : "select"}
         </span>
       </div>
@@ -388,7 +390,7 @@ function ControlButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="flex min-h-12 items-center justify-center gap-2 border border-slate-950 bg-[#fdfaf1] px-4 py-3 font-bold transition hover:-translate-y-0.5 hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex min-h-12 items-center justify-center gap-2 border border-[#08080d] bg-[#f3ead8] px-4 py-3 font-bold transition hover:-translate-y-0.5 hover:bg-[#f0d36a] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {icon}
       <span>{active ? "Working" : label}</span>

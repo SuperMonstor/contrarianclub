@@ -42,7 +42,7 @@ export function EventCodeEntry() {
           id="code"
           value={code}
           onChange={(event) => setCode(event.target.value)}
-          className="mt-2 w-full border border-slate-950 bg-[#fdfaf1] px-4 py-4 font-mono text-3xl font-black uppercase tracking-[0.16em] outline-none focus:bg-amber-100"
+          className="brand-input mt-2 w-full px-4 py-4 font-mono text-3xl font-black uppercase tracking-[0.16em]"
           placeholder="ABC123"
           autoComplete="off"
           inputMode="text"
@@ -56,7 +56,7 @@ export function EventCodeEntry() {
       <button
         type="submit"
         disabled={isChecking || !code.trim()}
-        className="flex min-h-12 w-full items-center justify-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-black text-[#fff8e8] transition hover:-translate-y-0.5 hover:bg-[#1e2a35] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isChecking ? <Loader2 className="animate-spin" size={18} /> : null}
         Join event

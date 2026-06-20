@@ -26,10 +26,10 @@ export default async function PresentPage({
 
 function MissingSetup() {
   return (
-    <main className="grid min-h-screen place-items-center bg-[#10151c] px-8 text-white">
-      <div className="border border-white/20 bg-white/10 p-8">
-        <h1 className="text-5xl font-black">Supabase missing</h1>
-        <p className="mt-4 text-white/65">Configure env vars before showtime.</p>
+    <main className="brand-stage grid min-h-screen place-items-center px-8 text-[#fff8e8]">
+      <div className="brand-frame-dark bg-[#08080d]/75 p-8">
+        <h1 className="brand-display text-6xl">Supabase missing</h1>
+        <p className="mt-4 text-[#d8cfbd]">Configure env vars before showtime.</p>
       </div>
     </main>
   );
@@ -37,10 +37,10 @@ function MissingSetup() {
 
 function MissingEvent({ code }: { code: string }) {
   return (
-    <main className="grid min-h-screen place-items-center bg-[#10151c] px-8 text-white">
-      <div className="border border-white/20 bg-white/10 p-8">
-        <h1 className="text-5xl font-black">Event not found</h1>
-        <p className="mt-4 text-white/65">
+    <main className="brand-stage grid min-h-screen place-items-center px-8 text-[#fff8e8]">
+      <div className="brand-frame-dark bg-[#08080d]/75 p-8">
+        <h1 className="brand-display text-6xl">Event not found</h1>
+        <p className="mt-4 text-[#d8cfbd]">
           No live room exists for <span className="font-mono">{code}</span>.
         </p>
       </div>

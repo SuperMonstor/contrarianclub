@@ -48,7 +48,7 @@ export function NewEventForm() {
           name="title"
           required
           defaultValue="Contrarian Club Debate"
-          className="mt-2 w-full border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
+          className="brand-input mt-2 w-full px-3 py-3"
         />
       </div>
 
@@ -62,7 +62,7 @@ export function NewEventForm() {
           required
           rows={3}
           defaultValue="Before hearing the debate, which side do you agree with more?"
-          className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
+          className="brand-input mt-2 w-full resize-none px-3 py-3"
         />
       </div>
 
@@ -76,7 +76,7 @@ export function NewEventForm() {
           required
           rows={3}
           defaultValue="After hearing the debate, which side do you agree with more?"
-          className="mt-2 w-full resize-none border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
+          className="brand-input mt-2 w-full resize-none px-3 py-3"
         />
       </div>
 
@@ -89,7 +89,7 @@ export function NewEventForm() {
             type="button"
             onClick={addOption}
             disabled={options.length >= 8}
-            className="inline-flex min-h-9 items-center gap-2 border border-slate-950 bg-white px-3 py-2 text-sm font-black transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-9 items-center gap-2 border border-[#08080d] bg-[#fff9ed] px-3 py-2 text-sm font-black transition hover:bg-[#fff4cf] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Plus size={16} />
             Add
@@ -105,7 +105,7 @@ export function NewEventForm() {
                 required={index < 2}
                 value={option.value}
                 onChange={(event) => updateOption(option.id, event.target.value)}
-                className="min-w-0 flex-1 border border-slate-950 bg-[#fdfaf1] px-3 py-3 outline-none focus:bg-amber-100"
+                className="brand-input min-w-0 flex-1 px-3 py-3"
                 placeholder={`Option ${index + 1}`}
               />
               <button
@@ -113,7 +113,7 @@ export function NewEventForm() {
                 onClick={() => removeOption(option.id)}
                 disabled={options.length <= 2}
                 aria-label={`Remove option ${index + 1}`}
-                className="grid aspect-square h-12 place-items-center border border-slate-950 bg-white transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid aspect-square h-12 place-items-center border border-[#08080d] bg-[#fff9ed] transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <X size={18} />
               </button>
@@ -124,7 +124,7 @@ export function NewEventForm() {
 
       <button
         type="submit"
-        className="flex min-h-12 w-full items-center justify-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-black text-white transition hover:-translate-y-0.5"
+        className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-black text-[#fff8e8] transition hover:-translate-y-0.5 hover:bg-[#1e2a35]"
       >
         Create event
         <ArrowRight size={18} />

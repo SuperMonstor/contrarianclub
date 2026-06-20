@@ -26,10 +26,10 @@ export default async function JoinPage({
 
 function MissingSetup() {
   return (
-    <main className="grid min-h-screen place-items-center bg-[#10151c] px-5 text-white">
-      <div className="max-w-sm border border-white/20 bg-white/10 p-5">
-        <h1 className="text-2xl font-black">Room unavailable</h1>
-        <p className="mt-3 text-white/65">Supabase is not configured yet.</p>
+    <main className="brand-stage grid min-h-screen place-items-center px-5 text-[#fff8e8]">
+      <div className="brand-frame-dark max-w-sm bg-[#08080d]/75 p-5">
+        <h1 className="brand-display text-3xl">Room unavailable</h1>
+        <p className="mt-3 text-[#d8cfbd]">Supabase is not configured yet.</p>
       </div>
     </main>
   );
@@ -37,10 +37,10 @@ function MissingSetup() {
 
 function MissingEvent({ code }: { code: string }) {
   return (
-    <main className="grid min-h-screen place-items-center bg-[#10151c] px-5 text-white">
-      <div className="max-w-sm border border-white/20 bg-white/10 p-5">
-        <h1 className="text-2xl font-black">Room not found</h1>
-        <p className="mt-3 text-white/65">
+    <main className="brand-stage grid min-h-screen place-items-center px-5 text-[#fff8e8]">
+      <div className="brand-frame-dark max-w-sm bg-[#08080d]/75 p-5">
+        <h1 className="brand-display text-3xl">Room not found</h1>
+        <p className="mt-3 text-[#d8cfbd]">
           Check the event code <span className="font-mono">{code}</span>.
         </p>
       </div>

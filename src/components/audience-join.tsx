@@ -85,19 +85,19 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#10151c] px-4 py-5 text-white">
+    <main className="brand-stage min-h-screen px-4 py-5 text-[#fff8e8]">
       <section className="mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
-        <header className="border border-white/15 bg-white/8 p-4">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-200">
+        <header className="brand-frame-dark bg-[#08080d]/75 p-4">
+          <p className="brand-kicker text-[#f0d36a]">
             {state.event.code}
           </p>
-          <h1 className="mt-3 text-2xl font-black tracking-tight">
+          <h1 className="brand-display mt-3 text-3xl leading-tight">
             {state.event.title}
           </h1>
-          <p className="mt-3 text-sm text-white/60">{statusText}</p>
+          <p className="mt-3 text-sm text-[#d8cfbd]">{statusText}</p>
         </header>
 
-        <div className="mt-4 flex-1 border border-white/15 bg-[#fdfaf1] p-4 text-slate-950">
+        <div className="brand-frame mt-4 flex-1 bg-[#fff9ed] p-4 text-[#08080d]">
           <label className="block text-sm font-bold" htmlFor="displayName">
             Display name optional
           </label>
@@ -105,15 +105,15 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
             id="displayName"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
-            className="mt-2 w-full border border-slate-950 bg-white px-3 py-3 text-base outline-none focus:bg-amber-100"
+            className="brand-input mt-2 w-full px-3 py-3 text-base"
             placeholder="Name or team"
           />
 
           <div className="mt-6">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
+            <p className="brand-kicker text-[#7a6a42]">
               Active question
             </p>
-            <h2 className="mt-2 text-2xl font-black leading-tight">
+            <h2 className="brand-display mt-2 text-3xl leading-tight">
               {activity?.prompt ?? "Waiting for the first question"}
             </h2>
           </div>
@@ -131,8 +131,8 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                     onClick={() => setSelectedOptionId(option.id)}
                     className={`flex w-full items-center justify-between border px-4 py-4 text-left font-bold transition ${
                       selected
-                        ? "border-slate-950 bg-amber-200"
-                        : "border-slate-300 bg-white"
+                        ? "border-[#08080d] bg-[#f0d36a]"
+                        : "border-[#b9aa89] bg-white"
                     } disabled:opacity-70`}
                   >
                     <span>{option.label}</span>
@@ -148,7 +148,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
               type="button"
               disabled={!selectedOptionId || isSubmitting}
               onClick={submitVote}
-              className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 border border-slate-950 bg-slate-950 px-4 py-3 font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-black text-[#fff8e8] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting && <Loader2 className="animate-spin" size={18} />}
               Submit vote
@@ -156,16 +156,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           )}
 
           {message && (
-            <p className="mt-4 border border-slate-950 bg-white px-3 py-3 text-sm font-bold">
+            <p className="mt-4 border border-[#08080d] bg-white px-3 py-3 text-sm font-bold">
               {message}
             </p>
           )}
 
           {resultsVisible && (
-            <div className="mt-6 border-t border-slate-300 pt-5">
+            <div className="mt-6 border-t border-[#cbbd9b] pt-5">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-black">Results</h3>
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-slate-500">
+                <h3 className="brand-display text-2xl">Results</h3>
+                <span className="font-mono text-xs uppercase tracking-[0.16em] text-[#7a6a42]">
                   {state.totalVotes} votes
                 </span>
               </div>
