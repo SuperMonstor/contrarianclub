@@ -26,6 +26,12 @@ type HostConsoleProps = {
   initialState: EventState;
 };
 
+const PHASE_ORDER = {
+  pre_debate: 0,
+  post_debate: 1,
+  general: 2,
+} as const;
+
 export function HostConsole({ code, initialState }: HostConsoleProps) {
   const { state, refreshSoon, isPending, lastSyncedAt } = useLiveEventState(
     code,
@@ -43,6 +49,20 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
 
   function runCommand(nextCommand: ControlCommand) {
     if (!activity) return;
+
+    if (nextCommand === "reset") {
+      const resetScope = getResetScope(state.activities, activity.id);
+      if (resetScope.length > 1) {
+        const [, ...futureSteps] = resetScope;
+        const futureLabels = futureSteps.map((item) => phaseLabel(item.phase)).join(", ");
+        const confirmed = window.confirm(
+          `Resetting this step will also clear later step data: ${futureLabels}. Debate swing results will be recalculated from the remaining votes. Continue?`,
+        );
+
+        if (!confirmed) return;
+      }
+    }
+
     setCommand(nextCommand);
 
     startTransition(async () => {
@@ -216,7 +236,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               />
               <ControlButton
                 icon={<RotateCcw size={18} />}
-                label="Reset"
+                label="Reset step"
                 disabled={!activity || isPending}
                 active={command === "reset"}
                 onClick={() => runCommand("reset")}
@@ -242,7 +262,7 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                 {state.participantCount}
               </p>
               <p className="mt-1 text-sm text-white/70">
-                joined participant{state.participantCount === 1 ? "" : "s"}
+                tracked voter{state.participantCount === 1 ? "" : "s"}
               </p>
               <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-white/55">
                 Last sync
@@ -261,11 +281,14 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
                     Debate swing
                   </p>
                   <h3 className="mt-2 text-3xl font-black">
-                    {state.swing.changedPercent}% changed their vote
+                    {state.swing.matchedVotes === 0
+                      ? "No matched votes yet"
+                      : `${state.swing.changedPercent}% changed their vote`}
                   </h3>
                   <p className="mt-2 text-sm text-slate-600">
-                    {state.swing.changedVotes} of {state.swing.matchedVotes} matched
-                    voters moved between the pre and post vote.
+                    {state.swing.matchedVotes === 0
+                      ? "Debate swing appears once the same voters have both pre and post votes."
+                      : `${state.swing.changedVotes} of ${state.swing.matchedVotes} matched voters moved between the pre and post vote.`}
                   </p>
                 </div>
               </div>
@@ -368,6 +391,19 @@ function phaseLabel(phase: ActivitySummary["phase"]) {
   if (phase === "pre_debate") return "pre-vote";
   if (phase === "post_debate") return "post-vote";
   return "poll";
+}
+
+function getResetScope(activities: ActivitySummary[], activityId: string) {
+  const orderedActivities = [...activities].sort(
+    (first, second) =>
+      PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
+      first.created_at.localeCompare(second.created_at),
+  );
+  const currentIndex = orderedActivities.findIndex(
+    (activity) => activity.id === activityId,
+  );
+  if (currentIndex === -1) return [];
+  return orderedActivities.slice(currentIndex);
 }
 
 function ControlButton({

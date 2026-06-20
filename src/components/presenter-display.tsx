@@ -100,7 +100,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
           </div>
 
           <footer className="flex items-center justify-between font-mono text-sm uppercase tracking-[0.2em] text-white/45">
-            <span>{state.participantCount} joined</span>
+            <span>{state.participantCount} tracked</span>
             <span>{state.totalVotes} responses</span>
           </footer>
         </div>
