@@ -36,6 +36,10 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
   const [activeCommand, setActiveCommand] = useState<string | null>(null);
 
   const activity = state.activity;
+  const submissionCommand: ControlCommand =
+    activity?.status === "open" ? "close" : "open";
+  const visibilityCommand: ControlCommand =
+    activity?.results_visibility === "revealed" ? "hide" : "reveal";
 
   function runCommand(nextCommand: ControlCommand) {
     if (!activity) return;
@@ -183,34 +187,32 @@ export function HostConsole({ code, initialState }: HostConsoleProps) {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <ControlButton
-                icon={<Play size={18} />}
-                label="Open"
+                icon={
+                  submissionCommand === "open" ? (
+                    <Play size={18} />
+                  ) : (
+                    <Square size={18} />
+                  )
+                }
+                label={submissionCommand === "open" ? "Open voting" : "Close voting"}
                 disabled={!activity || isPending}
-                active={command === "open"}
-                onClick={() => runCommand("open")}
+                active={command === submissionCommand}
+                onClick={() => runCommand(submissionCommand)}
               />
               <ControlButton
-                icon={<Square size={18} />}
-                label="Close"
+                icon={
+                  visibilityCommand === "reveal" ? (
+                    <Eye size={18} />
+                  ) : (
+                    <EyeOff size={18} />
+                  )
+                }
+                label={visibilityCommand === "reveal" ? "Reveal results" : "Hide results"}
                 disabled={!activity || isPending}
-                active={command === "close"}
-                onClick={() => runCommand("close")}
-              />
-              <ControlButton
-                icon={<Eye size={18} />}
-                label="Reveal"
-                disabled={!activity || isPending}
-                active={command === "reveal"}
-                onClick={() => runCommand("reveal")}
-              />
-              <ControlButton
-                icon={<EyeOff size={18} />}
-                label="Hide"
-                disabled={!activity || isPending}
-                active={command === "hide"}
-                onClick={() => runCommand("hide")}
+                active={command === visibilityCommand}
+                onClick={() => runCommand(visibilityCommand)}
               />
               <ControlButton
                 icon={<RotateCcw size={18} />}
