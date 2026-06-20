@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { currentAdminPath } from "@/lib/admin-routes";
 import { createServerAuthClient } from "@/lib/supabase/server";
 
 export async function getAdminUser() {
@@ -19,7 +20,7 @@ export async function requireAdminUser() {
   const user = await getAdminUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect(await currentAdminPath("/login"));
   }
 
   return user;

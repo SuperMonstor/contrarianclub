@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SUPABASE_ANON_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
       process.env.SUPABASE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_ADMIN_HOST:
+      process.env.NEXT_PUBLIC_ADMIN_HOST ||
+      process.env.ADMIN_HOST ||
+      "admin.thecontrarian.club",
   },
 };
 

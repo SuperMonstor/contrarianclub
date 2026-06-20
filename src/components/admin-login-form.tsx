@@ -7,6 +7,8 @@ import { createBrowserClient } from "@/lib/supabase/browser";
 
 export function AdminLoginForm() {
   const router = useRouter();
+  const adminHost =
+    process.env.NEXT_PUBLIC_ADMIN_HOST || "admin.thecontrarian.club";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,7 +37,9 @@ export function AdminLoginForm() {
       return;
     }
 
-    router.replace("/admin");
+    const nextPath =
+      window.location.hostname === adminHost ? "/" : "/admin";
+    router.replace(nextPath);
     router.refresh();
   }
 

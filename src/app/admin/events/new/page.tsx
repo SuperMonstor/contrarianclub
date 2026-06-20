@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { NewEventForm } from "@/components/new-event-form";
+import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewEventPage() {
   await requireAdminUser();
+  const eventsHref = await currentAdminPath("/");
 
   return (
     <main className="min-h-screen bg-[#f3ead8] px-5 py-5 text-[#08080d]">
@@ -14,7 +16,7 @@ export default async function NewEventPage() {
         <div className="brand-frame brand-paper flex flex-col justify-between p-6 lg:p-10">
           <div>
             <Link
-              href="../.."
+              href={eventsHref}
               className="inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4"
             >
               <ArrowLeft size={16} />

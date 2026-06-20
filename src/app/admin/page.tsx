@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CalendarPlus, LogOut, Monitor, Radio } from "lucide-react";
 import { signOutAdmin } from "@/app/actions";
+import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { EventSummary } from "@/lib/types";
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminEventsPage() {
   const user = await requireAdminUser();
+  const hostname = await currentHostname();
   const supabase = createServiceClient();
   const { data: events, error } = await supabase
     .from("events")
@@ -31,7 +33,7 @@ export default async function AdminEventsPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              href="events/new"
+              href={adminPath("/events/new", hostname)}
               className="flex min-h-11 items-center gap-2 border border-[#08080d] bg-[#08080d] px-4 py-3 font-bold text-[#fff8e8]"
             >
               <CalendarPlus size={18} />
@@ -61,7 +63,7 @@ export default async function AdminEventsPage() {
           ) : (
             events?.map((event) => (
               <Link
-                href={`events/${event.code}`}
+                href={adminPath(`/events/${event.code}`, hostname)}
                 key={event.id}
                 className="grid gap-4 border border-[#08080d] bg-[#fff9ed] p-5 shadow-[0_16px_36px_rgba(8,8,13,0.12)] transition hover:-translate-y-0.5 md:grid-cols-[1fr_auto]"
               >

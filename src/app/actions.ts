@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServerAuthClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -120,7 +121,7 @@ export async function createEvent(formData: FormData) {
   if (stateError) throw stateError;
 
   revalidatePath("/");
-  redirect(`/admin/events/${event.code}`);
+  redirect(await currentAdminPath(`/events/${event.code}`));
 }
 
 export async function controlActivity(
@@ -257,5 +258,5 @@ export async function updateEventStatus(
 export async function signOutAdmin() {
   const supabase = await createServerAuthClient();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect(await currentAdminPath("/login"));
 }
