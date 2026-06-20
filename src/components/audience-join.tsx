@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
-import { ScaleResults, formatSignedValue } from "@/components/scale-results";
+import { ScaleChoiceScale } from "@/components/scale-choice-scale";
+import { ScaleResults } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type { EventState } from "@/lib/types";
 
@@ -106,11 +107,6 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const resultsVisible = activity?.results_visibility === "revealed";
   const waitingForVoting = activity?.status === "draft";
   const isScale = activity?.type === "scale";
-  const scaleOptions = [...state.options].sort(
-    (first, second) =>
-      (first.scale_value ?? first.sort_order) -
-      (second.scale_value ?? second.sort_order),
-  );
 
   const statusText = useMemo(() => {
     if (!activity) return "Waiting for the host";
@@ -213,39 +209,12 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                 </p>
               )}
               {isScale ? (
-                <div className="club-panel-quiet p-3">
-                  <div className="grid grid-cols-7 gap-1.5">
-                    {scaleOptions.map((option) => {
-                      const selected = selectedOptionId === option.id;
-
-                      return (
-                        <button
-                          key={option.id}
-                          type="button"
-                          disabled={!canVote}
-                          onClick={() => setSelectedOptionId(option.id)}
-                          className={`flex min-h-24 min-w-0 flex-col items-center justify-between rounded-sm border px-1.5 py-2 text-center transition disabled:opacity-60 ${
-                            selected
-                              ? "border-[color:var(--cc-gold-bright)] bg-[color:var(--cc-gold)]/25 text-[color:var(--cc-ivory)]"
-                              : "border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.04] text-[color:var(--cc-parchment)]"
-                          }`}
-                        >
-                          <span className="club-mono text-sm font-bold text-[color:var(--cc-gold-bright)]">
-                            {formatSignedValue(option.scale_value ?? 0)}
-                          </span>
-                          <span className="line-clamp-3 text-[0.66rem] leading-3">
-                            {option.label}
-                          </span>
-                          {selected ? (
-                            <Check size={16} className="text-[color:var(--cc-gold-bright)]" />
-                          ) : (
-                            <span className="h-4" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <ScaleChoiceScale
+                  options={state.options}
+                  selectedOptionId={selectedOptionId}
+                  disabled={!canVote}
+                  onSelect={setSelectedOptionId}
+                />
               ) : (
                 state.options.map((option) => {
                   const selected = selectedOptionId === option.id;
