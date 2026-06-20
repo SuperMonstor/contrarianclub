@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-ui",
+});
+
 export const metadata: Metadata = {
-  title: "Contrarian Club Live",
-  description: "A Menti-style live audience room for debate events.",
+  title: "The Contrarian Debate Club",
+  description: "A live audience room for the Contrarian Debate Club.",
 };
 
 export default function RootLayout({
@@ -12,7 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html
+      lang="en"
+      className={`${playfair.variable} ${inter.variable} h-full antialiased`}
+    >
       <body className="min-h-full">{children}</body>
     </html>
   );

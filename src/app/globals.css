@@ -179,3 +179,342 @@ textarea {
   background: var(--brand-gold-bright);
   color: var(--brand-ink);
 }
+
+/* ==========================================================================
+   THE CONTRARIAN DEBATE CLUB — dark-first design system ("club-*")
+   A gallery-at-night aesthetic: warm near-black, gold leaf, old-master grain.
+   Lives alongside the legacy "salon-*" layer; admin surfaces use this one.
+   ========================================================================== */
+
+:root {
+  /* Surfaces — warm, soot-and-bitumen blacks pulled from the reference art */
+  --cc-black: #0b0907;
+  --cc-pitch: #0e0b08;
+  --cc-obsidian: #14100b;
+  --cc-char: #1b160f;
+  --cc-raise: #221b12;
+
+  /* Gold leaf */
+  --cc-gold: #c8a24a;
+  --cc-gold-bright: #f0d36a;
+  --cc-gold-deep: #8a6c2c;
+
+  /* Light & text — candlelit ivory and aged parchment */
+  --cc-ivory: #f4ead2;
+  --cc-parchment: #ddceac;
+  --cc-muted: #9d9079;
+  --cc-faint: #6f6450;
+
+  /* Accents */
+  --cc-wine: #7a221d;
+  --cc-wine-bright: #b8443c;
+
+  /* Hairlines */
+  --cc-line: rgba(200, 162, 74, 0.18);
+  --cc-line-strong: rgba(200, 162, 74, 0.42);
+
+  --cc-font-display: var(--font-display), Georgia, "Times New Roman", serif;
+  --cc-font-ui: var(--font-ui), "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* --- Full-bleed canvas with vignette + film grain ------------------------ */
+.club-shell {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(115% 75% at 50% -8%, rgba(200, 162, 74, 0.12), transparent 60%),
+    radial-gradient(120% 90% at 85% 8%, rgba(122, 34, 29, 0.1), transparent 55%),
+    linear-gradient(180deg, #0c0a07 0%, #0a0806 55%, #08060400 100%),
+    var(--cc-black);
+  color: var(--cc-ivory);
+  font-family: var(--cc-font-ui);
+}
+
+.club-shell::before {
+  /* film grain */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.club-shell::after {
+  /* vignette */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(125% 95% at 50% 28%, transparent 52%, rgba(0, 0, 0, 0.62) 100%);
+}
+
+.club-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Typography ---------------------------------------------------------- */
+.club-display {
+  font-family: var(--cc-font-display);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: -0.012em;
+  color: var(--cc-ivory);
+}
+
+.club-kicker {
+  font-family: var(--cc-font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--cc-gold);
+}
+
+.club-eyebrow {
+  font-family: var(--cc-font-ui);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cc-muted);
+}
+
+.club-mono {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--cc-font-ui);
+  letter-spacing: 0.04em;
+}
+
+/* --- Brand lockup -------------------------------------------------------- */
+.club-mark {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.club-mark-top {
+  font-family: var(--cc-font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--cc-gold);
+}
+
+.club-mark-main {
+  font-family: var(--cc-font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #f3d877 0%, #c8a24a 70%, #a07f33 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Rules & texture helpers --------------------------------------------- */
+.club-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--cc-line-strong), transparent);
+}
+
+.club-rule-vertical {
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(180deg, transparent, var(--cc-line-strong), transparent);
+}
+
+/* --- Panels -------------------------------------------------------------- */
+.club-panel {
+  position: relative;
+  border: 1px solid var(--cc-line);
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(27, 22, 15, 0.92), rgba(13, 11, 8, 0.94)),
+    radial-gradient(120% 60% at 0% 0%, rgba(200, 162, 74, 0.08), transparent 60%);
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(244, 234, 210, 0.05);
+}
+
+.club-panel-quiet {
+  border: 1px solid rgba(200, 162, 74, 0.1);
+  border-radius: 3px;
+  background: rgba(244, 234, 210, 0.025);
+}
+
+.club-panel-gold {
+  border: 1px solid rgba(240, 211, 106, 0.45);
+  border-radius: 3px;
+  background:
+    linear-gradient(165deg, rgba(240, 211, 106, 0.16), rgba(200, 162, 74, 0.05)),
+    rgba(13, 11, 8, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(240, 211, 106, 0.08),
+    0 24px 56px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Stat / data tiles --------------------------------------------------- */
+.club-tile {
+  border: 1px solid rgba(200, 162, 74, 0.14);
+  border-radius: 2px;
+  background: rgba(244, 234, 210, 0.03);
+}
+
+/* --- Buttons ------------------------------------------------------------- */
+.club-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--cc-line);
+  border-radius: 2px;
+  background: rgba(244, 234, 210, 0.035);
+  color: var(--cc-ivory);
+  font-family: var(--cc-font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.club-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--cc-line-strong);
+  background: rgba(200, 162, 74, 0.1);
+}
+
+.club-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.club-btn-primary {
+  border-color: rgba(240, 211, 106, 0.5);
+  background: linear-gradient(180deg, var(--cc-gold-bright), var(--cc-gold));
+  color: #1c1405;
+  font-weight: 700;
+  box-shadow: 0 10px 26px rgba(200, 162, 74, 0.18);
+}
+
+.club-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f5dd82, #d3ad53);
+  border-color: rgba(240, 211, 106, 0.7);
+}
+
+.club-btn-danger:hover:not(:disabled) {
+  border-color: rgba(184, 68, 60, 0.6);
+  background: rgba(122, 34, 29, 0.22);
+  color: #f0c9c4;
+}
+
+/* --- Chips --------------------------------------------------------------- */
+.club-chip {
+  display: inline-flex;
+  min-height: 1.7rem;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--cc-line);
+  border-radius: 999px;
+  background: rgba(200, 162, 74, 0.07);
+  padding: 0.18rem 0.65rem;
+  color: var(--cc-parchment);
+  font-family: var(--cc-font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.club-chip-live {
+  border-color: rgba(240, 211, 106, 0.55);
+  background: rgba(240, 211, 106, 0.16);
+  color: var(--cc-gold-bright);
+}
+
+.club-chip-dot::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(240, 211, 106, 0.16);
+}
+
+/* --- Inputs -------------------------------------------------------------- */
+.club-input {
+  width: 100%;
+  border: 1px solid rgba(200, 162, 74, 0.2);
+  border-radius: 2px;
+  background: rgba(8, 6, 4, 0.55);
+  color: var(--cc-ivory);
+  font-family: var(--cc-font-ui);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.club-input::placeholder {
+  color: rgba(157, 144, 121, 0.55);
+}
+
+.club-input:focus {
+  outline: none;
+  border-color: rgba(200, 162, 74, 0.75);
+  background: rgba(8, 6, 4, 0.8);
+  box-shadow: 0 0 0 3px rgba(200, 162, 74, 0.15);
+}
+
+.club-label {
+  font-family: var(--cc-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cc-muted);
+}
+
+/* --- Links --------------------------------------------------------------- */
+.club-link {
+  color: var(--cc-gold);
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(200, 162, 74, 0.4);
+  transition: color 160ms ease;
+}
+
+.club-link:hover {
+  color: var(--cc-gold-bright);
+}
+
+/* Staggered entrance for page-load reveals */
+@keyframes club-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.club-rise {
+  animation: club-rise 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .club-rise {
+    animation: none;
+  }
+}
