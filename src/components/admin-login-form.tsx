@@ -44,9 +44,9 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={signIn} className="space-y-4">
+    <form onSubmit={signIn} className="space-y-5">
       <div>
-        <label className="text-sm font-bold" htmlFor="email">
+        <label className="club-label" htmlFor="email">
           Email
         </label>
         <input
@@ -55,11 +55,11 @@ export function AdminLoginForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
-          className="salon-input mt-2 w-full px-3 py-3"
+          className="club-input mt-2 px-3.5 py-3"
         />
       </div>
       <div>
-        <label className="text-sm font-bold" htmlFor="password">
+        <label className="club-label" htmlFor="password">
           Password
         </label>
         <input
@@ -68,18 +68,18 @@ export function AdminLoginForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
-          className="salon-input mt-2 w-full px-3 py-3"
+          className="club-input mt-2 px-3.5 py-3"
         />
       </div>
       {error && (
-        <p className="bg-red-100 px-3 py-3 text-sm font-bold text-red-950 ring-1 ring-red-900/25">
+        <p className="rounded-[2px] border border-[color:var(--cc-wine-bright)]/40 bg-[color:var(--cc-wine)]/20 px-3.5 py-3 text-sm font-medium text-[#f0c9c4]">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="salon-button salon-button-primary w-full px-4 py-3"
+        className="club-btn club-btn-primary w-full px-4 py-3"
       >
         {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : null}
         Sign in

@@ -1,17 +1,21 @@
 import { AdminLoginForm } from "@/components/admin-login-form";
+import { BrandLockup } from "@/components/brand-lockup";
 
 export default function AdminLoginPage() {
   return (
-    <main className="salon-stage grid min-h-screen place-items-center px-5 text-[#08080d]">
-      <section className="salon-panel w-full max-w-md p-6">
-        <p className="brand-kicker text-[#7a6a42]">
-          Admin
-        </p>
-        <h1 className="brand-display mt-3 text-4xl">Sign in</h1>
-        <p className="mt-3 text-sm leading-6 text-[#4d5561]">
-          Use the admin account created in Supabase Auth.
-        </p>
-        <div className="mt-6">
+    <main className="club-shell grid min-h-screen place-items-center px-5 py-10">
+      <section className="club-panel club-rise w-full max-w-md p-8 sm:p-10">
+        <div className="flex flex-col items-center text-center">
+          <BrandLockup size="md" align="center" />
+          <div className="club-rule my-7 w-full" />
+          <p className="club-kicker">Members&rsquo; Entrance</p>
+          <h1 className="club-display mt-4 text-4xl">Sign in</h1>
+          <p className="mt-3 max-w-xs text-sm leading-6 text-[color:var(--cc-muted)]">
+            Reserved for the house. Use the admin account provisioned in
+            Supabase Auth.
+          </p>
+        </div>
+        <div className="mt-8">
           <AdminLoginForm />
         </div>
       </section>
