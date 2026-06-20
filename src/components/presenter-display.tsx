@@ -20,9 +20,18 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
 
   useEffect(() => {
     window.queueMicrotask(() => {
-      setJoinUrl(`${window.location.origin}/join/${code}`);
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname === "::1";
+
+      setJoinUrl(
+        isLocalhost
+          ? initialState.joinUrl
+          : `${window.location.origin}/join/${code}`,
+      );
     });
-  }, [code]);
+  }, [code, initialState.joinUrl]);
 
   return (
     <main className="flex min-h-screen bg-[#10151c] text-white">
