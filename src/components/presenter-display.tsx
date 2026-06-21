@@ -102,14 +102,8 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                     {activity.prompt}
                   </h1>
                 </>
-              ) : (
-                <h1
-                  className={`club-display mt-5 leading-[1.04] ${
-                    isSwingStage
-                      ? "text-2xl sm:text-3xl sm:leading-[1.1] lg:text-4xl"
-                      : "text-3xl sm:text-5xl sm:leading-[1.02] lg:text-6xl"
-                  }`}
-                >
+              ) : isSwingStage ? null : (
+                <h1 className="club-display mt-5 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.02] lg:text-6xl">
                   {state.event.title}
                 </h1>
               )}
@@ -180,7 +174,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               type="button"
               onClick={() => setQrExpanded(true)}
               aria-label="Enlarge QR code to full screen"
-              className="group w-full max-w-[300px] rounded-[3px] bg-[color:var(--cc-ivory)] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition hover:scale-[1.02] hover:shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
+              className="group w-full max-w-[300px] rounded-[3px] bg-[color:var(--cc-ivory)] p-3 shadow-md transition hover:scale-[1.02] hover:shadow-lg"
             >
               <QRCodeCanvas
                 value={joinUrl}

@@ -47,9 +47,6 @@ function ScaleSwing({ swing }: { swing: DebateSwingSummary }) {
 
   return (
     <div>
-      <p className="club-eyebrow text-sm tracking-[0.28em] text-[color:var(--cc-gold)] sm:text-lg">
-        The swing
-      </p>
       <h2 className="club-display mt-3 max-w-5xl text-4xl leading-[1.04] sm:mt-4 sm:text-6xl lg:text-7xl">
         {verdict}
       </h2>
@@ -210,9 +207,6 @@ function ChoiceSwing({ swing }: { swing: DebateSwingSummary }) {
 
   return (
     <div>
-      <p className="club-eyebrow text-sm tracking-[0.28em] text-[color:var(--cc-gold)] sm:text-lg">
-        The swing
-      </p>
       <h2 className="club-display mt-3 max-w-5xl text-4xl leading-[1.04] sm:mt-4 sm:text-6xl lg:text-7xl">
         {swing.changedPercent}% changed their vote.
       </h2>
