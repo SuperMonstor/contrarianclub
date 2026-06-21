@@ -182,7 +182,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 marginSize={1}
                 bgColor="#f4ead2"
                 fgColor="#0b0907"
-                className="h-auto w-full"
+                style={{ width: "100%", height: "auto", display: "block" }}
               />
             </button>
             <p className="club-eyebrow text-[0.6rem] text-[color:var(--cc-faint)]">
