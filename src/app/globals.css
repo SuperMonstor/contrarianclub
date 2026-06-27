@@ -109,6 +109,31 @@ textarea {
   color: var(--cc-ivory);
 }
 
+/* Display type scale — pair with .club-display. One responsive step per
+   semantic role so headings stop drifting across ad-hoc text-Nxl sizes.
+   (Numeric stat readouts keep their own explicit sizes — different role.) */
+.club-d-hero {
+  font-size: clamp(2rem, 0.9rem + 5.4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+.club-d-title {
+  font-size: clamp(1.75rem, 1.25rem + 2.2vw, 2.5rem);
+  line-height: 1.1;
+}
+.club-d-card {
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+.club-d-item {
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+.club-d-lead {
+  font-size: clamp(1.0625rem, 0.9rem + 0.7vw, 1.3125rem);
+  line-height: 1.45;
+}
+
 .club-kicker {
   font-family: var(--cc-font-ui);
   font-size: 0.7rem;
