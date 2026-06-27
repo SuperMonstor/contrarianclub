@@ -43,7 +43,7 @@ export function ResultBars({ options, totalVotes, large = false }: ResultBarsPro
               }
             >
               <div
-                className="h-full rounded-[3px] bg-gradient-to-r from-[#c8a24a] to-[#f0d36a] transition-all duration-700"
+                className="h-full rounded-[3px] bg-[color:var(--cc-gold)] transition-all duration-700"
                 style={{ width: `${percentage}%` }}
               />
             </div>

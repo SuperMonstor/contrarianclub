@@ -245,14 +245,14 @@ textarea {
 
 .club-btn-primary {
   border-color: rgba(240, 211, 106, 0.5);
-  background: linear-gradient(180deg, var(--cc-gold-bright), var(--cc-gold));
+  background: var(--cc-gold);
   color: #1c1405;
   font-weight: 700;
   box-shadow: 0 10px 26px rgba(200, 162, 74, 0.18);
 }
 
 .club-btn-primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #f5dd82, #d3ad53);
+  background: var(--cc-gold-bright);
   border-color: rgba(240, 211, 106, 0.7);
 }
 

@@ -278,7 +278,7 @@ function BeforeAfterBar({
           className={`h-full rounded-[3px] transition-all duration-700 ${
             muted
               ? "bg-[color:var(--cc-muted)]/60"
-              : "bg-gradient-to-r from-[#c8a24a] to-[#f0d36a]"
+              : "bg-[color:var(--cc-gold)]"
           }`}
           style={{ width: `${percent}%` }}
         />
