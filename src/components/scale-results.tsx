@@ -30,6 +30,10 @@ export function ScaleResults({
     leftLabel ?? getScaleResultSideLabel(scaleOptions, -2, "Opposition");
   const axisRightLabel =
     rightLabel ?? getScaleResultSideLabel(scaleOptions, 2, "Proposition");
+  const maxVotes = scaleOptions.reduce(
+    (top, option) => Math.max(top, option.votes),
+    0,
+  );
 
   return (
     <div className="space-y-4">
@@ -54,10 +58,13 @@ export function ScaleResults({
 
       <div className="grid grid-cols-7 gap-1.5">
         {scaleOptions.map((option) => {
-          const percentage =
-            totalVotes === 0 ? 0 : Math.round((option.votes / totalVotes) * 100);
+          // Scale each bar against the leading option so the tallest bar
+          // fills its cell and distinct vote counts stay distinguishable
+          // (a small floor keeps an empty option visible as a hairline).
           const height =
-            totalVotes === 0 ? 8 : Math.min(100, Math.max(12, percentage * 1.6));
+            maxVotes === 0
+              ? 0
+              : Math.max(option.votes === 0 ? 0 : 4, (option.votes / maxVotes) * 100);
 
           return (
             <div key={option.id} className="flex min-w-0 flex-col items-center gap-2">
