@@ -126,7 +126,7 @@ function BeforeAfterAxis({
       <div className="absolute left-1/2 top-1/2 h-5 w-px -translate-x-1/2 -translate-y-1/2 bg-[color:var(--cc-line-strong)]" />
       {/* shift segment */}
       <div
-        className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-gradient-to-r from-[#8a6c2c] to-[#f0d36a]"
+        className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-[color:var(--cc-gold)]"
         style={{ left: `${left}%`, width: `${width}%` }}
       />
       {/* before marker (label above the line) */}
