@@ -22,7 +22,7 @@ export default async function AdminEventPage({
       <main className="club-shell flex min-h-screen items-center justify-center px-5">
         <div className="club-panel club-rise max-w-lg p-8 text-center">
           <p className="club-kicker">404</p>
-          <h1 className="club-display mt-3 text-3xl">Event not found</h1>
+          <h1 className="club-display club-d-title mt-3">Event not found</h1>
           <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
             No event exists for code{" "}
             <span className="club-mono text-[color:var(--cc-gold)]">{code}</span>.

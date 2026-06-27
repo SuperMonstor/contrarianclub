@@ -138,7 +138,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             <p className="club-kicker">Host Control</p>
             <span className="club-rule flex-1" />
           </div>
-          <h1 className="club-display mt-4 text-3xl leading-tight">
+          <h1 className="club-display club-d-title mt-4">
             {state.event.title}
           </h1>
 
@@ -232,7 +232,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="club-kicker">Current poll</p>
-                <h2 className="club-display mt-3 max-w-3xl text-3xl leading-tight sm:text-4xl">
+                <h2 className="club-display club-d-title mt-3 max-w-3xl">
                   {activity?.prompt ?? "No poll configured"}
                 </h2>
               </div>
@@ -314,7 +314,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
           <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
             <div className="club-panel p-6">
               <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="club-display text-2xl">Live results</h3>
+                <h3 className="club-display club-d-card">Live results</h3>
                 <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
                   {state.totalVotes} responses
                 </span>
@@ -351,7 +351,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="club-kicker">Debate swing</p>
-                  <h3 className="club-display mt-2 text-3xl sm:text-4xl">
+                  <h3 className="club-display club-d-title mt-2">
                     {state.swing.matchedVotes === 0
                       ? "No matched votes yet"
                       : state.swing.format === "scale"
@@ -374,7 +374,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                 <div className="club-panel-quiet p-5">
                   {state.swing.format === "scale" ? (
                     <>
-                      <h4 className="club-display mb-4 text-2xl">Scale movement</h4>
+                      <h4 className="club-display club-d-card mb-4">Scale movement</h4>
                       <div className="grid gap-3 sm:grid-cols-2">
                         <ScaleMetric
                           label="Before"
@@ -398,7 +398,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                     </>
                   ) : (
                     <>
-                      <h4 className="club-display mb-4 text-2xl">Net movement</h4>
+                      <h4 className="club-display club-d-card mb-4">Net movement</h4>
                       <div className="space-y-3">
                         {state.swing.optionTotals.map((option) => (
                           <div
@@ -438,7 +438,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                     <ScaleOutcomePanel swing={state.swing} />
                   ) : (
                     <>
-                      <h4 className="club-display mb-4 text-2xl">Changed paths</h4>
+                      <h4 className="club-display club-d-card mb-4">Changed paths</h4>
                       <div className="space-y-2">
                         {state.swing.transitions.length === 0 ? (
                           <p className="text-sm text-[color:var(--cc-muted)]">
@@ -528,7 +528,7 @@ function ActivityCard({
       <p className="club-eyebrow text-[color:var(--cc-gold)]">
         {phaseLabel(activity.phase)}
       </p>
-      <h3 className="club-display mt-2 line-clamp-2 text-xl leading-tight">
+      <h3 className="club-display club-d-item mt-2 line-clamp-2">
         {activity.prompt}
       </h3>
       <div className="mt-4 flex gap-2">
@@ -600,7 +600,7 @@ function ScaleMeaningTile({
           {range}
         </span>
       </div>
-      <p className="club-display mt-2 text-2xl leading-tight text-[color:var(--cc-ivory)]">
+      <p className="club-display club-d-card mt-2 text-[color:var(--cc-ivory)]">
         {label}
       </p>
     </div>
@@ -630,7 +630,7 @@ function ScaleOutcomePanel({ swing }: { swing: DebateSwingSummary }) {
 
   return (
     <>
-      <h4 className="club-display mb-4 text-2xl">Debate outcome</h4>
+      <h4 className="club-display club-d-card mb-4">Debate outcome</h4>
       <div className="grid gap-3">
         <div className="club-tile p-4">
           <p className="club-label text-[0.65rem]">Swing winner</p>

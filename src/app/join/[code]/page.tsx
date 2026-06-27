@@ -28,7 +28,7 @@ function MissingSetup() {
   return (
     <main className="club-shell grid min-h-screen place-items-center px-5">
       <div className="club-panel club-rise max-w-sm p-6 text-center">
-        <h1 className="club-display text-3xl">Room unavailable</h1>
+        <h1 className="club-display club-d-title">Room unavailable</h1>
         <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
           Supabase is not configured yet.
         </p>
@@ -41,7 +41,7 @@ function MissingEvent({ code }: { code: string }) {
   return (
     <main className="club-shell grid min-h-screen place-items-center px-5">
       <div className="club-panel club-rise max-w-sm p-6 text-center">
-        <h1 className="club-display text-3xl">Room not found</h1>
+        <h1 className="club-display club-d-title">Room not found</h1>
         <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
           Check the event code{" "}
           <span className="club-mono text-[color:var(--cc-gold)]">{code}</span>.

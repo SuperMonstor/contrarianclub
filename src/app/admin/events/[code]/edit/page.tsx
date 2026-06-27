@@ -175,7 +175,7 @@ export default async function EditEventPage({
       <main className="club-shell flex min-h-screen items-center justify-center px-5">
         <div className="club-panel club-rise max-w-lg p-8 text-center">
           <p className="club-kicker">404</p>
-          <h1 className="club-display mt-3 text-3xl">Event not found</h1>
+          <h1 className="club-display club-d-title mt-3">Event not found</h1>
           <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
             No event exists for code{" "}
             <span className="club-mono text-[color:var(--cc-gold)]">
@@ -216,7 +216,7 @@ export default async function EditEventPage({
               <Logo className="w-44" />
             </div>
             <p className="club-kicker mt-8">Edit event</p>
-            <h1 className="club-display mt-5 max-w-3xl text-5xl leading-[1.04] sm:text-6xl">
+            <h1 className="club-display club-d-hero mt-5 max-w-3xl">
               Revise the room before the vote moves.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-[color:var(--cc-muted)]">
@@ -239,7 +239,7 @@ export default async function EditEventPage({
         <aside className="club-panel p-6 lg:p-7">
           <div className="mb-6">
             <p className="club-kicker">Event setup</p>
-            <h2 className="club-display mt-3 text-3xl">Update live loop</h2>
+            <h2 className="club-display club-d-title mt-3">Update live loop</h2>
           </div>
 
           <NewEventForm

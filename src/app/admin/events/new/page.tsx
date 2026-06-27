@@ -24,7 +24,7 @@ export default async function NewEventPage() {
               <Logo className="w-44" />
             </div>
             <p className="club-kicker mt-8">New event</p>
-            <h1 className="club-display mt-5 max-w-3xl text-5xl leading-[1.04] sm:text-6xl">
+            <h1 className="club-display club-d-hero mt-5 max-w-3xl">
               Set the motion before the house arrives.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-[color:var(--cc-muted)]">
@@ -42,7 +42,7 @@ export default async function NewEventPage() {
         <aside className="club-panel p-6 lg:p-7">
           <div className="mb-6">
             <p className="club-kicker">Event setup</p>
-            <h2 className="club-display mt-3 text-3xl">Start the live loop</h2>
+            <h2 className="club-display club-d-title mt-3">Start the live loop</h2>
           </div>
 
           <NewEventForm />

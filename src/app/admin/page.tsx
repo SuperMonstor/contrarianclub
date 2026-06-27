@@ -66,7 +66,7 @@ export default async function AdminEventsPage() {
               <p className="club-kicker">The Ledger</p>
               <span className="club-rule w-16" />
             </div>
-            <h1 className="club-display mt-3 text-5xl">Events</h1>
+            <h1 className="club-display club-d-hero mt-3">Events</h1>
             <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
               Signed in as <span className="text-[color:var(--cc-parchment)]">{user.email}</span>
             </p>
@@ -106,7 +106,7 @@ export default async function AdminEventsPage() {
         <div className="mt-3 grid gap-3.5">
           {list.length === 0 ? (
             <div className="club-panel p-8 text-center">
-              <h2 className="club-display text-3xl">No events yet</h2>
+              <h2 className="club-display club-d-title">No events yet</h2>
               <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[color:var(--cc-muted)]">
                 Create the first event to mint a room code, QR link, and
                 presenter view.
@@ -131,7 +131,7 @@ export default async function AdminEventsPage() {
                       href={adminPath(`/events/${event.code}`, hostname)}
                       className="min-w-0"
                     >
-                      <h2 className="club-display truncate text-2xl transition hover:text-[color:var(--cc-gold-bright)] sm:text-3xl">
+                      <h2 className="club-display club-d-card truncate transition hover:text-[color:var(--cc-gold-bright)]">
                         {event.title}
                       </h2>
                     </Link>
