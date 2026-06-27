@@ -37,23 +37,17 @@ export function ScaleResults({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="club-label text-[0.65rem]">Average position</p>
-          <p
-            className={
-              large
-                ? "club-display mt-1 text-5xl text-[color:var(--cc-gold-bright)]"
-                : "club-display mt-1 text-3xl text-[color:var(--cc-gold-bright)]"
-            }
-          >
-            {average === null ? "No votes" : formatSignedValue(average)}
-          </p>
-        </div>
-        <div className="text-right text-xs text-[color:var(--cc-muted)]">
-          <p>{axisLeftLabel}</p>
-          <p>to {axisRightLabel}</p>
-        </div>
+      <div>
+        <p className="club-label text-[0.65rem]">Average position</p>
+        <p
+          className={
+            large
+              ? "club-display mt-1 text-5xl text-[color:var(--cc-gold-bright)]"
+              : "club-display mt-1 text-3xl text-[color:var(--cc-gold-bright)]"
+          }
+        >
+          {average === null ? "No votes" : formatSignedValue(average)}
+        </p>
       </div>
 
       <div className="grid grid-cols-7 gap-1.5">
@@ -83,15 +77,17 @@ export function ScaleResults({
               <span className="club-mono text-xs font-bold text-[color:var(--cc-gold-bright)]">
                 {formatSignedValue(option.scale_value ?? 0)}
               </span>
-              <span className="line-clamp-2 min-h-8 text-center text-[0.68rem] leading-4 text-[color:var(--cc-muted)]">
-                {option.label}
-              </span>
               <span className="club-mono text-[0.65rem] uppercase tracking-[0.12em] text-[color:var(--cc-faint)]">
                 {option.votes}
               </span>
             </div>
           );
         })}
+      </div>
+
+      <div className="flex items-start justify-between gap-6 text-xs text-[color:var(--cc-muted)]">
+        <span className="max-w-[45%] leading-5">{axisLeftLabel}</span>
+        <span className="max-w-[45%] text-right leading-5">{axisRightLabel}</span>
       </div>
     </div>
   );
