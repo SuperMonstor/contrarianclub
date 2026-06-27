@@ -95,15 +95,15 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               {hasActiveQuestion && activity ? (
                 <>
                   <p className="club-kicker mt-5">The motion</p>
-                  <p className="club-display mt-1.5 text-base leading-snug text-[color:var(--cc-parchment)] sm:text-lg lg:text-xl">
+                  <p className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
                     {state.event.title}
                   </p>
-                  <h1 className="club-display mt-6 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.04] lg:text-6xl">
+                  <h1 className="club-display club-d-hero mt-6">
                     {activity.prompt}
                   </h1>
                 </>
               ) : isSwingStage ? null : (
-                <h1 className="club-display mt-5 text-3xl leading-[1.04] sm:text-5xl sm:leading-[1.02] lg:text-6xl">
+                <h1 className="club-display club-d-hero mt-5">
                   {state.event.title}
                 </h1>
               )}
@@ -113,7 +113,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               {isSwingStage && state.swing ? (
                 <SwingReveal swing={state.swing} />
               ) : isJoinMode ? (
-                <p className="club-display text-3xl leading-tight text-[color:var(--cc-gold-bright)] sm:text-4xl lg:text-5xl">
+                <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
                   Scan the code to cast your vote.
                 </p>
               ) : showResults && activity ? (

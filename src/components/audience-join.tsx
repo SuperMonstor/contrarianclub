@@ -173,7 +173,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
             <span className="club-chip club-mono">{state.event.code}</span>
           </div>
           <p className="club-eyebrow mt-5">Tonight&rsquo;s motion</p>
-          <h1 className="club-display mt-1.5 text-lg leading-snug text-[color:var(--cc-parchment)] sm:text-xl">
+          <h1 className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
             {state.event.title}
           </h1>
           <p className="mt-3 flex items-center gap-2 text-sm text-[color:var(--cc-muted)]">
@@ -185,7 +185,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
         <div className="club-panel mt-4 p-6">
           <div>
             <p className="club-kicker">Active question</p>
-            <h2 className="club-display mt-2.5 text-[1.7rem] leading-[1.12] sm:text-3xl">
+            <h2 className="club-display club-d-title mt-2.5">
               {activity?.prompt ?? "Waiting for the first question"}
             </h2>
           </div>
@@ -268,7 +268,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           {resultsVisible && (
             <div className="mt-6 border-t border-[color:var(--cc-line)] pt-5">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="club-display text-2xl">Results</h3>
+                <h3 className="club-display club-d-card">Results</h3>
                 <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
                   {state.totalVotes} votes
                 </span>

@@ -8,7 +8,7 @@ export default function AdminLoginPage() {
         <Logo className="w-52 sm:w-56" />
         <div className="club-rule my-7 w-full" />
         <p className="club-kicker">Members&rsquo; Entrance</p>
-        <h1 className="club-display mt-4 text-4xl">Sign in</h1>
+        <h1 className="club-display club-d-title mt-4">Sign in</h1>
         <p className="mt-3 max-w-sm text-sm leading-6 text-[color:var(--cc-muted)]">
           Reserved for the house. Use the admin account provisioned in
           Supabase Auth.

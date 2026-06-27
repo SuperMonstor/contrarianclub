@@ -36,7 +36,7 @@ export default async function Home() {
           <Logo variant="center" className="w-56 sm:w-64" />
           <div className="club-rule my-7 w-full" />
           <p className="club-kicker">Live Salon</p>
-          <h1 className="club-display mt-4 text-3xl leading-[1.06] sm:text-4xl">
+          <h1 className="club-display club-d-title mt-4">
             Enter the event code to join the room.
           </h1>
           <p className="mt-4 max-w-md text-[15px] leading-7 text-[color:var(--cc-muted)]">

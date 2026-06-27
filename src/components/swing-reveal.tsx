@@ -16,7 +16,7 @@ export function SwingReveal({ swing }: SwingRevealProps) {
   if (swing.matchedVotes === 0) {
     return (
       <div>
-        <p className="club-display text-3xl leading-tight text-[color:var(--cc-parchment)] sm:text-5xl lg:text-6xl">
+        <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
           Not enough matched votes to measure the swing yet.
         </p>
         <p className="mt-4 text-base text-[color:var(--cc-muted)] sm:text-lg">
@@ -47,7 +47,7 @@ function ScaleSwing({ swing }: { swing: DebateSwingSummary }) {
 
   return (
     <div>
-      <h2 className="club-display mt-3 max-w-5xl text-4xl leading-[1.04] sm:mt-4 sm:text-6xl lg:text-7xl">
+      <h2 className="club-display club-d-hero mt-3 max-w-5xl sm:mt-4">
         {verdict}
       </h2>
       {swing.netSwing !== null && swing.netSwing !== 0 && (
@@ -61,10 +61,10 @@ function ScaleSwing({ swing }: { swing: DebateSwingSummary }) {
       {hasAverages && (
         <div className="mt-8 max-w-4xl sm:mt-12">
           <div className="mb-3 flex items-baseline justify-between gap-4">
-            <span className="club-display text-lg text-[color:var(--cc-ivory)] sm:text-2xl">
+            <span className="club-display club-d-card text-[color:var(--cc-ivory)]">
               {leftLabel}
             </span>
-            <span className="club-display text-lg text-[color:var(--cc-ivory)] sm:text-2xl">
+            <span className="club-display club-d-card text-[color:var(--cc-ivory)]">
               {rightLabel}
             </span>
           </div>
@@ -207,7 +207,7 @@ function ChoiceSwing({ swing }: { swing: DebateSwingSummary }) {
 
   return (
     <div>
-      <h2 className="club-display mt-3 max-w-5xl text-4xl leading-[1.04] sm:mt-4 sm:text-6xl lg:text-7xl">
+      <h2 className="club-display club-d-hero mt-3 max-w-5xl sm:mt-4">
         {swing.changedPercent}% changed their vote.
       </h2>
       <p className="mt-3 text-lg text-[color:var(--cc-parchment)] sm:text-2xl">
