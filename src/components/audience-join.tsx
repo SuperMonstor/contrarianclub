@@ -166,7 +166,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
 
   return (
     <main className="club-shell min-h-screen px-4 py-5">
-      <section className="club-rise mx-auto flex min-h-[calc(100vh-40px)] max-w-md flex-col">
+      <section className="club-rise mx-auto flex w-full max-w-md flex-col">
         <header className="club-panel p-5">
           <div className="flex items-center justify-between gap-3">
             <Logo className="w-32" />
@@ -182,7 +182,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           </p>
         </header>
 
-        <div className="club-panel mt-4 flex-1 p-6">
+        <div className="club-panel mt-4 p-6">
           <div>
             <p className="club-kicker">Active question</p>
             <h2 className="club-display mt-2.5 text-[1.7rem] leading-[1.12] sm:text-3xl">
