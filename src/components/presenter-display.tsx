@@ -167,9 +167,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
         </div>
 
         <aside className="club-panel flex flex-col border-x-0 border-b-0 p-8 sm:p-10 lg:border-y-0 lg:border-l lg:border-r-0">
-          <p className="club-kicker">Audience link</p>
           <div className="flex flex-1 flex-col items-center justify-center gap-6 py-8 text-center">
-            <p className="club-eyebrow text-[color:var(--cc-gold)]">Scan to join</p>
+            <div>
+              <p className="club-kicker text-[color:var(--cc-gold)]">Audience link</p>
+              <p className="club-eyebrow mt-2">Scan to join</p>
+            </div>
             <button
               type="button"
               onClick={() => setQrExpanded(true)}
