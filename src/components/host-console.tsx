@@ -208,7 +208,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             </a>
           </div>
 
-          <p className="mt-6 text-xs leading-5 text-[color:var(--cc-faint)]">
+          <p className="mt-6 text-xs leading-5 text-[color:var(--cc-faint)] lg:mt-auto lg:pt-8">
             Realtime is backed by Supabase. This screen also refreshes with the
             fallback poller so the host can recover after refreshes or missed
             events.
@@ -330,7 +330,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                 <ResultBars options={state.options} totalVotes={state.totalVotes} />
               )}
             </div>
-            <div className="club-panel-gold p-6">
+            <div className="club-panel-gold self-start p-6">
               <p className="club-eyebrow">Sync</p>
               <p className="club-display mt-3 text-6xl text-[color:var(--cc-gold-bright)]">
                 {state.participantCount}
