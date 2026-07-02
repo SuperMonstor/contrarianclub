@@ -12,6 +12,8 @@
    - `supabase/migrations/005_scale_poll_format.sql`
    - `supabase/migrations/006_default_event.sql`
    - `supabase/migrations/007_scale_activity_labels.sql`
+   - `supabase/migrations/008_presenter_swing_stage.sql`
+   - `supabase/migrations/009_vote_indexes.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`

@@ -38,6 +38,8 @@ supabase/migrations/004_harden_vote_integrity.sql
 supabase/migrations/005_scale_poll_format.sql
 supabase/migrations/006_default_event.sql
 supabase/migrations/007_scale_activity_labels.sql
+supabase/migrations/008_presenter_swing_stage.sql
+supabase/migrations/009_vote_indexes.sql
 ```
 
 Then fill in `.env.local`:
