@@ -16,10 +16,20 @@ export async function POST(
 ) {
   try {
     const { code } = await params;
-    const body = (await request.json()) as VoteBody;
+
+    let body: VoteBody;
+    try {
+      body = (await request.json()) as VoteBody;
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 },
+      );
+    }
+
     const deviceId = body.deviceId?.trim();
     const optionId = body.optionId?.trim();
-    const displayName = body.displayName?.trim() || null;
+    const displayName = body.displayName?.trim().slice(0, 80);
 
     if (!deviceId || !optionId) {
       return NextResponse.json(
@@ -52,16 +62,24 @@ export async function POST(
 
     const supabase = createServiceClient();
 
+    const participantPayload: {
+      event_id: string;
+      device_id: string;
+      display_name?: string;
+    } = {
+      event_id: state.event.id,
+      device_id: deviceId,
+    };
+
+    // Only set display_name when a non-empty name was provided, so a later
+    // vote with an empty name field does not wipe a previously-stored name.
+    if (displayName) {
+      participantPayload.display_name = displayName;
+    }
+
     const { data: participant, error: participantError } = await supabase
       .from("participants")
-      .upsert(
-        {
-          event_id: state.event.id,
-          device_id: deviceId,
-          display_name: displayName,
-        },
-        { onConflict: "event_id,device_id" },
-      )
+      .upsert(participantPayload, { onConflict: "event_id,device_id" })
       .select("id")
       .single<{ id: string }>();
 
