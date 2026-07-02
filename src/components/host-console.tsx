@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { startTransition, useState } from "react";
+import { useState, useTransition } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -60,6 +60,8 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
   const [command, setCommand] = useState<ControlCommand | null>(null);
   const [statusCommand, setStatusCommand] = useState<string | null>(null);
   const [activeCommand, setActiveCommand] = useState<string | null>(null);
+  const [isActing, startTransition] = useTransition();
+  const busy = isPending || isActing;
 
   const activity = state.activity;
   const submissionCommand: ControlCommand =
@@ -254,7 +256,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
               <ControlButton
                 icon={isOpen ? <Square size={18} /> : <Play size={18} />}
                 label={submissionCommand === "open" ? "Open voting" : "Close voting"}
-                disabled={!activity || isPending}
+                disabled={!activity || busy}
                 active={command === submissionCommand}
                 primary={submissionCommand === "open"}
                 onClick={() => runCommand(submissionCommand)}
@@ -268,14 +270,14 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                   )
                 }
                 label={visibilityCommand === "reveal" ? "Reveal results" : "Hide results"}
-                disabled={!activity || isPending}
+                disabled={!activity || busy}
                 active={command === visibilityCommand}
                 onClick={() => runCommand(visibilityCommand)}
               />
               <ControlButton
                 icon={<RotateCcw size={18} />}
                 label="Reset step"
-                disabled={!activity || isPending}
+                disabled={!activity || busy}
                 active={command === "reset"}
                 onClick={() => runCommand("reset")}
               />
@@ -289,7 +291,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                 {swingActive ? (
                   <button
                     type="button"
-                    disabled={isPending}
+                    disabled={busy}
                     onClick={() => showPresenterMode("results")}
                     className="club-btn px-4 py-2.5"
                   >
@@ -299,7 +301,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                 ) : (
                   <button
                     type="button"
-                    disabled={isPending}
+                    disabled={busy}
                     onClick={() => showPresenterMode("swing")}
                     className="club-btn club-btn-primary px-4 py-2.5"
                   >
