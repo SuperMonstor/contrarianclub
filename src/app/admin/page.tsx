@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { signOutAdmin, updateDefaultEvent } from "@/app/actions";
 import { Logo } from "@/components/logo";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -80,10 +81,10 @@ export default async function AdminEventsPage() {
               New event
             </Link>
             <form action={signOutAdmin}>
-              <button type="submit" className="club-btn px-4 py-3">
+              <PendingSubmitButton className="club-btn px-4 py-3">
                 <LogOut size={18} />
                 Sign out
-              </button>
+              </PendingSubmitButton>
             </form>
           </div>
         </header>
@@ -156,8 +157,7 @@ export default async function AdminEventsPage() {
                         name="isDefault"
                         value={event.is_default ? "false" : "true"}
                       />
-                      <button
-                        type="submit"
+                      <PendingSubmitButton
                         className={`club-btn min-h-10 px-3 py-2 text-xs ${
                           event.is_default
                             ? "border-[color:var(--cc-line)] text-[color:var(--cc-muted)]"
@@ -166,7 +166,7 @@ export default async function AdminEventsPage() {
                       >
                         {event.is_default ? <StarOff size={15} /> : <Star size={15} />}
                         {event.is_default ? "Unmark default" : "Make default"}
-                      </button>
+                      </PendingSubmitButton>
                     </form>
                   ) : null}
                   <Link

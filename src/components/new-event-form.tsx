@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Plus, X } from "lucide-react";
 import { createEvent, updateEvent } from "@/app/actions";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 import type { ActivityType } from "@/lib/types";
 
 type PollOption = {
@@ -268,13 +269,10 @@ function EventFormFields({
         />
       </div>
 
-      <button
-        type="submit"
-        className="club-btn club-btn-primary w-full px-4 py-3"
-      >
+      <PendingSubmitButton className="club-btn club-btn-primary w-full px-4 py-3">
         {submitLabel}
         <ArrowRight size={18} />
-      </button>
+      </PendingSubmitButton>
     </form>
   );
 }
