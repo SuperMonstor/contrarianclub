@@ -55,7 +55,7 @@ export function ScaleChoiceScale({
       >
         <ScaleSideLabel align="left" label={leftLabel} large={large} />
         <div className="text-center">
-          <p className={`club-label ${large ? "text-xs" : "text-[0.58rem]"}`}>
+          <p className="club-label text-xs">
             Neutral
           </p>
           <p
