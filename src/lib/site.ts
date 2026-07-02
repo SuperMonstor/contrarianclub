@@ -43,6 +43,5 @@ export function buildEventUrls(code: string) {
   return {
     joinUrl: `${baseUrl}/join/${code}`,
     presenterUrl: `${baseUrl}/present/${code}`,
-    hostUrl: `${baseUrl}/host/${code}`,
   };
 }

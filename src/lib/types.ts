@@ -47,7 +47,6 @@ export type EventState = {
   swing: DebateSwingSummary | null;
   joinUrl: string;
   presenterUrl: string;
-  hostUrl: string;
 };
 
 export type ControlCommand = "open" | "close" | "reveal" | "hide" | "reset";
