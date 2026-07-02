@@ -187,7 +187,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 style={{ width: "100%", height: "auto", display: "block" }}
               />
             </button>
-            <p className="club-eyebrow text-[0.6rem] text-[color:var(--cc-faint)]">
+            <p className="club-eyebrow text-xs text-[color:var(--cc-muted)]">
               Tap the code to enlarge
             </p>
             <p className="club-mono max-w-[300px] break-words text-xs text-[color:var(--cc-muted)]">
