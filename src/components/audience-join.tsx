@@ -7,6 +7,7 @@ import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
 import { ScaleResults } from "@/components/scale-results";
 import { useLiveEventState } from "@/components/use-live-event-state";
+import { createBrowserClient } from "@/lib/supabase/browser";
 import type { EventState } from "@/lib/types";
 
 type AudienceJoinProps = {
@@ -14,34 +15,68 @@ type AudienceJoinProps = {
   initialState: EventState;
 };
 
-function makeDeviceId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-
-  return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
 function activityVoteKey(code: string, activityId: string) {
   return `contrarianclub:${code}:activity:${activityId}:voted`;
 }
 
+// Maps the machine-readable reason a cast_vote failure raises onto copy for the
+// voter. Unknown reasons fall through to a generic message.
+function voteErrorMessage(reason: string) {
+  if (reason.includes("poll_not_open")) return "This poll is not open.";
+  if (reason.includes("invalid_option")) {
+    return "That option is not part of this poll.";
+  }
+  if (reason.includes("event_not_active")) return "This event has ended.";
+  if (reason.includes("invalid_token") || reason.includes("activity_not_found")) {
+    return "Please refresh the page and try again.";
+  }
+  return "Unable to submit vote.";
+}
+
 export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const { state, refresh } = useLiveEventState(code, initialState);
-  const [deviceId, setDeviceId] = useState("");
+  const [voteToken, setVoteToken] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [selectedOptionId, setSelectedOptionId] = useState("");
   const [hasVoted, setHasVoted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
 
+  // Reuse a previously-minted token so a device keeps one identity across
+  // reloads; only mint on first join. The device id lives inside the token,
+  // assigned by the server.
   useEffect(() => {
-    const storageKey = `contrarianclub:${code}:device`;
+    const storageKey = `contrarianclub:${code}:token`;
     const existing = window.localStorage.getItem(storageKey);
-    const nextDeviceId = existing ?? makeDeviceId();
 
-    window.localStorage.setItem(storageKey, nextDeviceId);
-    window.queueMicrotask(() => setDeviceId(nextDeviceId));
+    if (existing) {
+      window.queueMicrotask(() => setVoteToken(existing));
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const response = await fetch(`/api/events/${code}/token`, {
+          method: "POST",
+        });
+
+        if (!response.ok) return;
+
+        const body = (await response.json()) as { token?: string };
+        if (!body.token || cancelled) return;
+
+        window.localStorage.setItem(storageKey, body.token);
+        setVoteToken(body.token);
+      } catch {
+        // Non-fatal: the submit button stays disabled until a token arrives.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [code]);
 
   const activity = state.activity;
@@ -120,31 +155,29 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   }, [activity, hasVoted, resultsVisible]);
 
   async function submitVote() {
-    if (!activity || !selectedOptionId || !deviceId) return;
+    if (!activity || !selectedOptionId || !voteToken) return;
+
+    const supabase = createBrowserClient();
+    if (!supabase) {
+      setMessage("Voting is unavailable right now.");
+      return;
+    }
 
     setIsSubmitting(true);
     setMessage("");
 
     try {
-      const response = await fetch(`/api/events/${code}/vote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          deviceId,
-          displayName,
-          optionId: selectedOptionId,
-        }),
+      const { error } = await supabase.rpc("cast_vote", {
+        p_token: voteToken,
+        p_activity_id: activity.id,
+        p_option_id: selectedOptionId,
+        p_display_name: displayName || null,
       });
 
-      const body = (await response.json()) as { error?: string };
-
-      if (!response.ok) {
-        if (
-          response.status === 409 &&
-          body.error?.toLowerCase().includes("already voted")
-        ) {
+      if (error) {
+        // A duplicate vote is a success from the voter's point of view — record
+        // it locally so the UI settles into the "voted" state.
+        if (error.message.includes("already_voted")) {
           window.localStorage.setItem(
             activityVoteKey(code, activity.id),
             "true",
@@ -155,7 +188,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           return;
         }
 
-        setMessage(body.error ?? "Unable to submit vote.");
+        setMessage(voteErrorMessage(error.message));
         return;
       }
 
@@ -258,7 +291,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
               />
               <button
                 type="button"
-                disabled={!selectedOptionId || isSubmitting}
+                disabled={!selectedOptionId || isSubmitting || !voteToken}
                 onClick={submitVote}
                 className="club-btn club-btn-primary mt-4 w-full px-4 py-3"
               >
