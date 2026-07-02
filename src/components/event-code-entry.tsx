@@ -19,17 +19,22 @@ export function EventCodeEntry() {
     setIsChecking(true);
     setError("");
 
-    const response = await fetch(`/api/events/${normalizedCode}/state`, {
-      cache: "no-store",
-    });
+    try {
+      const response = await fetch(`/api/events/${normalizedCode}/state`, {
+        cache: "no-store",
+      });
 
-    if (!response.ok) {
-      setError("No event found for that code.");
+      if (!response.ok) {
+        setError("No event found for that code.");
+        return;
+      }
+
+      router.push(`/join/${normalizedCode}`);
+    } catch {
+      setError("Couldn't reach the club. Check your connection and try again.");
+    } finally {
       setIsChecking(false);
-      return;
     }
-
-    router.push(`/join/${normalizedCode}`);
   }
 
   return (
