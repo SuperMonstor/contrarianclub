@@ -225,6 +225,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
                       key={option.id}
                       type="button"
                       disabled={!canVote}
+                      aria-pressed={selected}
                       onClick={() => setSelectedOptionId(option.id)}
                       className={`flex w-full items-center justify-between px-4 py-4 text-left font-semibold transition disabled:opacity-60 ${
                         selected
