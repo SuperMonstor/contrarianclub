@@ -1,4 +1,4 @@
-import { unstable_noStore as noStore } from "next/cache";
+import { connection } from "next/server";
 import { buildEventUrls } from "@/lib/site";
 import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -38,7 +38,7 @@ type ActivityBaseRow = Omit<
 >;
 
 export async function getEventState(code: string): Promise<EventState | null> {
-  noStore();
+  await connection();
 
   const supabase = createServiceClient();
   const normalizedCode = code.trim().toUpperCase();
