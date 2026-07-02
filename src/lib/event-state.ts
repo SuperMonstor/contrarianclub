@@ -122,27 +122,41 @@ export async function getEventState(code: string): Promise<EventState | null> {
     voteCounts.set(vote.option_id, (voteCounts.get(vote.option_id) ?? 0) + 1);
   }
 
+  const mode: PresentationMode = presentationState?.mode ?? "join";
+  // Per-option counts and swing are the outcome. Withhold them from the public
+  // state until the host actually reveals — matching the presenter's own
+  // visibility rules — so a client polling the endpoint can't read live results
+  // early. The aggregate totalVotes stays available: it leaks no distribution
+  // and the audience's reset heuristic keys off it going to zero.
+  const resultsRevealed =
+    activity.results_visibility === "revealed" || mode === "results";
+
   const optionResults: PollOptionResult[] = options.map((option) => ({
     ...option,
-    votes: voteCounts.get(option.id) ?? 0,
+    votes: resultsRevealed ? (voteCounts.get(option.id) ?? 0) : 0,
   }));
   const participantCount = new Set(
     (allVotes ?? []).map((vote) => vote.device_id),
   ).size;
 
+  const swing =
+    mode === "swing"
+      ? buildSwingSummary(
+          activities,
+          groupOptionsByActivity(allOptions),
+          groupVotesByActivity(allVotes ?? []),
+        )
+      : null;
+
   return {
     event,
     activities,
     activity,
-    mode: presentationState?.mode ?? "join",
+    mode,
     options: optionResults,
     totalVotes: votes?.length ?? 0,
     participantCount,
-    swing: buildSwingSummary(
-      activities,
-      groupOptionsByActivity(allOptions),
-      groupVotesByActivity(allVotes ?? []),
-    ),
+    swing,
     ...urls,
   };
 }
