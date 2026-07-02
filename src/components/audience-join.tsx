@@ -125,43 +125,51 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     setIsSubmitting(true);
     setMessage("");
 
-    const response = await fetch(`/api/events/${code}/vote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        deviceId,
-        displayName,
-        optionId: selectedOptionId,
-      }),
-    });
+    try {
+      const response = await fetch(`/api/events/${code}/vote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          deviceId,
+          displayName,
+          optionId: selectedOptionId,
+        }),
+      });
 
-    const body = (await response.json()) as { error?: string };
+      const body = (await response.json()) as { error?: string };
 
-    if (!response.ok) {
-      if (
-        response.status === 409 &&
-        body.error?.toLowerCase().includes("already voted")
-      ) {
-        window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
-        setHasVoted(true);
-        setMessage("Vote submitted.");
-        setIsSubmitting(false);
-        await refresh();
+      if (!response.ok) {
+        if (
+          response.status === 409 &&
+          body.error?.toLowerCase().includes("already voted")
+        ) {
+          window.localStorage.setItem(
+            activityVoteKey(code, activity.id),
+            "true",
+          );
+          setHasVoted(true);
+          setMessage("Vote submitted.");
+          await refresh();
+          return;
+        }
+
+        setMessage(body.error ?? "Unable to submit vote.");
         return;
       }
 
-      setMessage(body.error ?? "Unable to submit vote.");
+      window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
+      setHasVoted(true);
+      setMessage("Vote submitted.");
+      await refresh();
+    } catch {
+      setMessage(
+        "Couldn't reach the room. Check your connection and try again.",
+      );
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
-    setHasVoted(true);
-    setMessage("Vote submitted.");
-    setIsSubmitting(false);
-    await refresh();
   }
 
   return (
