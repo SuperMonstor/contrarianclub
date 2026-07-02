@@ -6,6 +6,7 @@ import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServerAuthClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { buildScaleOptions } from "@/lib/scale";
 import type { ActivityType, ControlCommand, PresentationMode } from "@/lib/types";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -56,18 +57,6 @@ function getScaleLabels(formData: FormData) {
     rightLabel:
       String(formData.get("scaleRightLabel") ?? "").trim() || "Proposition",
   };
-}
-
-function buildScaleOptions(labels: ReturnType<typeof getScaleLabels>) {
-  return [
-    { label: `Absolutely sure: ${labels.leftLabel}`, scale_value: -3 },
-    { label: `Agree with ${labels.leftLabel}`, scale_value: -2 },
-    { label: `Leaning towards ${labels.leftLabel}`, scale_value: -1 },
-    { label: labels.centerLabel, scale_value: 0 },
-    { label: `Leaning towards ${labels.rightLabel}`, scale_value: 1 },
-    { label: `Agree with ${labels.rightLabel}`, scale_value: 2 },
-    { label: `Absolutely sure: ${labels.rightLabel}`, scale_value: 3 },
-  ];
 }
 
 async function createUniqueCode() {

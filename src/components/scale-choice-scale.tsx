@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import type { PollOptionResult } from "@/lib/types";
 import { formatSignedValue } from "@/components/scale-results";
+import { buildScaleOptionLabel, scaleSideLabel } from "@/lib/scale";
 
 type ScaleChoiceScaleProps = {
   options: PollOptionResult[];
@@ -144,24 +145,14 @@ export function getScaleOptions(options: PollOptionResult[]) {
   );
 }
 
+// Re-exported so external importers (e.g. host-console) keep a stable entry
+// point; the implementation now lives in @/lib/scale.
 export function getScaleSideLabel(
   options: PollOptionResult[],
   scaleValue: number,
   fallback: string,
 ) {
-  const label = options.find((option) => option.scale_value === scaleValue)?.label;
-  if (!label) return fallback;
-  return cleanScaleSideLabel(label);
-}
-
-function cleanScaleSideLabel(label: string) {
-  return label
-    .replace(/^Absolutely sure:\s*/i, "")
-    .replace(/^Agree with\s+/i, "")
-    .replace(/^Leaning towards\s+/i, "")
-    .replace(/^Strongly\s+/i, "")
-    .replace(/^Lean\s+/i, "")
-    .trim();
+  return scaleSideLabel(options, scaleValue, fallback);
 }
 
 function formatScaleSelection(
@@ -178,14 +169,11 @@ function formatScaleSelection(
     rightLabel: string;
   },
 ) {
-  if (scaleValue === -3) return `Absolutely sure: ${leftLabel}`;
-  if (scaleValue === -2) return `Agree with ${leftLabel}`;
-  if (scaleValue === -1) return `Leaning towards ${leftLabel}`;
-  if (scaleValue === 0) return centerLabel;
-  if (scaleValue === 1) return `Leaning towards ${rightLabel}`;
-  if (scaleValue === 2) return `Agree with ${rightLabel}`;
-  if (scaleValue === 3) return `Absolutely sure: ${rightLabel}`;
-  return optionLabel;
+  const label =
+    scaleValue === null
+      ? null
+      : buildScaleOptionLabel(scaleValue, { leftLabel, centerLabel, rightLabel });
+  return label ?? optionLabel;
 }
 
 function ScaleSideLabel({

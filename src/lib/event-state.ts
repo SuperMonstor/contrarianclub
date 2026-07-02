@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { buildEventUrls } from "@/lib/site";
+import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
 import { createServiceClient } from "@/lib/supabase/server";
 import type {
   ActivitySummary,
@@ -372,12 +373,12 @@ function buildSwingSummary(
   const scaleLeftLabel =
     format === "scale"
       ? (postActivity.scale_left_label ??
-        getScaleSideLabel(postOptions, -2, "Opposition"))
+        scaleSideLabel(postOptions, -2, "Opposition"))
       : null;
   const scaleRightLabel =
     format === "scale"
       ? (postActivity.scale_right_label ??
-        getScaleSideLabel(postOptions, 2, "Proposition"))
+        scaleSideLabel(postOptions, 2, "Proposition"))
       : null;
   const swingWinnerLabel =
     netSwing === null || netSwing === 0
@@ -424,30 +425,6 @@ function buildSwingSummary(
       return { from, to, count };
     }),
   };
-}
-
-function roundScaleAverage(value: number) {
-  return Math.round(value * 10) / 10;
-}
-
-function getScaleSideLabel(
-  options: PollOptionRow[],
-  scaleValue: number,
-  fallback: string,
-) {
-  const label = options.find((option) => option.scale_value === scaleValue)?.label;
-  if (!label) return fallback;
-  return cleanScaleSideLabel(label);
-}
-
-function cleanScaleSideLabel(label: string) {
-  return label
-    .replace(/^Absolutely sure:\s*/i, "")
-    .replace(/^Agree with\s+/i, "")
-    .replace(/^Leaning towards\s+/i, "")
-    .replace(/^Strongly\s+/i, "")
-    .replace(/^Lean\s+/i, "")
-    .trim();
 }
 
 function countVotesByLabel(votes: VoteRow[], optionLabels: Map<string, string>) {

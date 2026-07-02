@@ -1,4 +1,5 @@
 import type { PollOptionResult } from "@/lib/types";
+import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
 
 type ScaleResultsProps = {
   options: PollOptionResult[];
@@ -25,11 +26,11 @@ export function ScaleResults({
     0,
   );
   const average =
-    totalVotes === 0 ? null : Math.round((weightedTotal / totalVotes) * 10) / 10;
+    totalVotes === 0 ? null : roundScaleAverage(weightedTotal / totalVotes);
   const axisLeftLabel =
-    leftLabel ?? getScaleResultSideLabel(scaleOptions, -2, "Opposition");
+    leftLabel ?? scaleSideLabel(scaleOptions, -2, "Opposition");
   const axisRightLabel =
-    rightLabel ?? getScaleResultSideLabel(scaleOptions, 2, "Proposition");
+    rightLabel ?? scaleSideLabel(scaleOptions, 2, "Proposition");
   const maxVotes = scaleOptions.reduce(
     (top, option) => Math.max(top, option.votes),
     0,
@@ -96,20 +97,4 @@ export function ScaleResults({
 export function formatSignedValue(value: number) {
   if (value > 0) return `+${value}`;
   return String(value);
-}
-
-function getScaleResultSideLabel(
-  options: PollOptionResult[],
-  scaleValue: number,
-  fallback: string,
-) {
-  const label = options.find((option) => option.scale_value === scaleValue)?.label;
-  if (!label) return fallback;
-  return label
-    .replace(/^Absolutely sure:\s*/i, "")
-    .replace(/^Agree with\s+/i, "")
-    .replace(/^Leaning towards\s+/i, "")
-    .replace(/^Strongly\s+/i, "")
-    .replace(/^Lean\s+/i, "")
-    .trim();
 }

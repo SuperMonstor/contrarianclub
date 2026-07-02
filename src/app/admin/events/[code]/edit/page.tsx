@@ -5,6 +5,7 @@ import { NewEventForm, type EventFormValues } from "@/components/new-event-form"
 import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 import { createServiceClient } from "@/lib/supabase/server";
+import { cleanScaleSideLabel } from "@/lib/scale";
 import type { ActivitySummary, EventSummary } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -109,13 +110,7 @@ function getScaleLabel(
 
   if (!option?.label) return fallback;
 
-  return option.label
-    .replace(/^Absolutely sure:\s*/i, "")
-    .replace(/^Agree with\s+/i, "")
-    .replace(/^Leaning towards\s+/i, "")
-    .replace(/^Strongly\s+/i, "")
-    .replace(/^Lean\s+/i, "")
-    .trim();
+  return cleanScaleSideLabel(option.label);
 }
 
 async function getEditableActivities(
