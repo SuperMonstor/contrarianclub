@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, LogIn } from "lucide-react";
 import { createBrowserClient } from "@/lib/supabase/browser";
+import { DEFAULT_ADMIN_HOST } from "@/lib/admin-routes";
 
 export function AdminLoginForm() {
   const router = useRouter();
   const adminHost =
-    process.env.NEXT_PUBLIC_ADMIN_HOST || "admin.thecontrarian.club";
+    process.env.NEXT_PUBLIC_ADMIN_HOST || DEFAULT_ADMIN_HOST;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

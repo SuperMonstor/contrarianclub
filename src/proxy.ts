@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-
-const ADMIN_HOST = process.env.ADMIN_HOST || "admin.thecontrarian.club";
-const PUBLIC_HOST = process.env.PUBLIC_HOST || "thecontrarian.club";
+import { ADMIN_HOST, PUBLIC_HOST } from "@/lib/admin-routes";
 
 export function proxy(request: NextRequest) {
   const url = request.nextUrl;

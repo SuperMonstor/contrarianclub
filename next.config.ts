@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { DEFAULT_ADMIN_HOST } from "@/lib/admin-routes";
 
 const nextConfig: NextConfig = {
   env: {
@@ -10,7 +11,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_ADMIN_HOST:
       process.env.NEXT_PUBLIC_ADMIN_HOST ||
       process.env.ADMIN_HOST ||
-      "admin.thecontrarian.club",
+      DEFAULT_ADMIN_HOST,
   },
 };
 
