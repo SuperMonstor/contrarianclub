@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
+import { ChallengeVote } from "@/components/challenge-vote";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
@@ -118,9 +119,15 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const activity = state.activity;
 
   const activityId = activity?.id;
+  // The challenge manages its own per-round joined/voted state, so the
+  // per-activity voted key and the totalVotes-reset heuristic must not run
+  // for it.
+  const isChallenge = activity?.phase === "speaker_challenge";
 
   useEffect(() => {
     let cancelled = false;
+
+    if (isChallenge) return;
 
     if (!activityId) {
       window.queueMicrotask(() => {
@@ -147,10 +154,10 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     return () => {
       cancelled = true;
     };
-  }, [activityId, code]);
+  }, [activityId, code, isChallenge]);
 
   useEffect(() => {
-    if (!activityId || state.totalVotes !== 0) {
+    if (isChallenge || !activityId || state.totalVotes !== 0) {
       return;
     }
 
@@ -170,15 +177,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     return () => {
       cancelled = true;
     };
-  }, [activityId, code, state.totalVotes]);
+  }, [activityId, code, isChallenge, state.totalVotes]);
 
-  const canVote = activity?.status === "open" && !hasVoted;
+  const canVote = !isChallenge && activity?.status === "open" && !hasVoted;
   const resultsVisible = activity?.results_visibility === "revealed";
   const waitingForVoting = activity?.status === "draft";
   const isScale = activity?.type === "scale";
 
   const statusText = useMemo(() => {
     if (!activity) return "Waiting for the host";
+    if (isChallenge) return "Speaker challenge";
     if (activity.status === "draft") return "The poll has not opened yet";
     if (activity.status === "closed" && !resultsVisible) {
       return "Voting is closed. Results are hidden.";
@@ -186,7 +194,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     if (hasVoted && !resultsVisible) return "Vote received";
     if (resultsVisible) return "Results are live";
     return "Voting is open";
-  }, [activity, hasVoted, resultsVisible]);
+  }, [activity, hasVoted, isChallenge, resultsVisible]);
 
   async function submitVote() {
     if (!activity || !selectedOptionId || !voteToken) return;
@@ -262,7 +270,18 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
             </h2>
           </div>
 
-          {activity && (
+          {activity && isChallenge && state.challenge && (
+            <ChallengeVote
+              code={code}
+              activity={activity}
+              challenge={state.challenge}
+              nextSpeakerOptionId={state.options[0]?.id ?? null}
+              voteToken={voteToken}
+              refresh={refresh}
+            />
+          )}
+
+          {activity && !isChallenge && (
             <div className="mt-7 space-y-3">
               {waitingForVoting && (
                 <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
