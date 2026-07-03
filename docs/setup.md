@@ -26,6 +26,8 @@
 
 Phase 1 intentionally uses public audience access for joining and voting. Admin controls require Supabase Auth and then use the service role key through server code. Later phases should add stricter row-level security.
 
+Keep public self-service signups disabled. During this phase, every Supabase Auth user is treated as an admin, so only create Auth users you intend to trust with the host/admin console. Before adding Google login, attendee login, invite-based signup, or any non-admin Auth users, reintroduce an explicit admin allowlist.
+
 ## Admin Auth
 
 Create an admin user in Supabase:
@@ -36,7 +38,7 @@ Create an admin user in Supabase:
 4. Use an email and password you control.
 5. Keep **Auto Confirm User** enabled if Supabase shows that option.
 
-Use that email and password at `/admin/login`.
+No app metadata or raw JSON edits are required. Use that email and password at `/admin/login`.
 
 ## Local Development
 

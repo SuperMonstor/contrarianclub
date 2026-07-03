@@ -58,7 +58,9 @@ ADMIN_HOST=admin.thecontrarian.club
 
 More setup notes are in `docs/setup.md`.
 
-Create an admin user in Supabase Auth, then sign in at `/admin/login`.
+Create admin users manually in Supabase Auth, then sign in at `/admin/login`.
+Keep public self-service signups disabled; every Auth user is treated as an
+admin until attendee/user auth is added.
 
 ## Routes
 
