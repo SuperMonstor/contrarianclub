@@ -127,7 +127,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
   const isRevealed = activity?.results_visibility === "revealed";
   const isScale = activity?.type === "scale";
   const isPostDebate = activity?.phase === "post_debate";
-  const swingReady = (state.swing?.matchedVotes ?? 0) > 0;
+  const swingReady = state.totalVotes > 0 || (state.swing?.matchedVotes ?? 0) > 0;
   const canShowSwing = isPostDebate && isRevealed && swingReady;
   const swingActive = state.mode === "swing";
 
