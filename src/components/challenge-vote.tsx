@@ -275,17 +275,10 @@ export function ChallengeVote({
 }
 
 // Live threshold meter for the voting phase. Counts ride the ~5s safety poll,
-// so the bar steps rather than glides; the width transition smooths it.
+// so the bar steps rather than glides; the width transition smooths it. The
+// meter always renders — below minimum turnout it still fills, with a note
+// that the round cannot produce a verdict yet.
 function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
-  if (!challenge.turnoutMet) {
-    return (
-      <p className="club-panel-quiet px-4 py-3 text-xs text-[color:var(--cc-muted)]">
-        {challenge.joiners} joined this round — at least {challenge.minTurnout}{" "}
-        needed for a verdict.
-      </p>
-    );
-  }
-
   const progress = Math.min(
     100,
     Math.round((challenge.nextVotes / challenge.votesNeeded) * 100),
@@ -307,6 +300,11 @@ function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
           style={{ width: `${progress}%` }}
         />
       </div>
+      <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
+        A majority of this round&apos;s joiners brings in the next speaker.
+        {!challenge.turnoutMet &&
+          ` At least ${challenge.minTurnout} must join for the round to count — ${challenge.joiners} so far.`}
+      </p>
     </div>
   );
 }
