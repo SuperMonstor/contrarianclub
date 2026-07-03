@@ -19,6 +19,35 @@ function activityVoteKey(code: string, activityId: string) {
   return `contrarianclub:${code}:activity:${activityId}:voted`;
 }
 
+// localStorage can throw on access (Safari Private Browsing, hardened/blocked
+// storage settings, some mobile in-app browsers reached via the QR code).
+// Voter identity must survive that, so every access is best-effort: a failure
+// degrades to "no persistence this session" rather than crashing the effect
+// that reads it. The in-memory React state is the real source of truth.
+function readStored(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStored(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Best-effort cache only; the value already lives in component state.
+  }
+}
+
+function removeStored(key: string) {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // Best-effort.
+  }
+}
+
 // Maps the machine-readable reason a cast_vote failure raises onto copy for the
 // voter. Unknown reasons fall through to a generic message.
 function voteErrorMessage(reason: string) {
@@ -47,7 +76,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   // assigned by the server.
   useEffect(() => {
     const storageKey = `contrarianclub:${code}:token`;
-    const existing = window.localStorage.getItem(storageKey);
+    const existing = readStored(storageKey);
 
     if (existing) {
       window.queueMicrotask(() => setVoteToken(existing));
@@ -62,15 +91,22 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           method: "POST",
         });
 
-        if (!response.ok) return;
+        if (!response.ok) throw new Error("mint_failed");
 
         const body = (await response.json()) as { token?: string };
-        if (!body.token || cancelled) return;
+        if (cancelled) return;
+        if (!body.token) throw new Error("mint_failed");
 
-        window.localStorage.setItem(storageKey, body.token);
+        // Set state before caching: the in-memory token is what gates voting,
+        // so a blocked localStorage write must never discard a minted token.
         setVoteToken(body.token);
+        writeStored(storageKey, body.token);
       } catch {
-        // Non-fatal: the submit button stays disabled until a token arrives.
+        // Surface the failure instead of leaving the submit button silently
+        // disabled with no explanation.
+        if (!cancelled) {
+          setMessage("Couldn't set up voting. Please refresh and try again.");
+        }
       }
     })();
 
@@ -99,9 +135,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
       };
     }
 
-    const storedVote = window.localStorage.getItem(
-      activityVoteKey(code, activityId),
-    );
+    const storedVote = readStored(activityVoteKey(code, activityId));
 
     window.queueMicrotask(() => {
       if (cancelled) return;
@@ -121,11 +155,11 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
     }
 
     const key = activityVoteKey(code, activityId);
-    const storedVote = window.localStorage.getItem(key);
+    const storedVote = readStored(key);
     if (storedVote !== "true") return;
 
     let cancelled = false;
-    window.localStorage.removeItem(key);
+    removeStored(key);
     window.queueMicrotask(() => {
       if (cancelled) return;
       setSelectedOptionId("");
@@ -178,10 +212,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
         // A duplicate vote is a success from the voter's point of view — record
         // it locally so the UI settles into the "voted" state.
         if (error.message.includes("already_voted")) {
-          window.localStorage.setItem(
-            activityVoteKey(code, activity.id),
-            "true",
-          );
+          writeStored(activityVoteKey(code, activity.id), "true");
           setHasVoted(true);
           setMessage("Vote submitted.");
           await refresh();
@@ -192,7 +223,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
         return;
       }
 
-      window.localStorage.setItem(activityVoteKey(code, activity.id), "true");
+      writeStored(activityVoteKey(code, activity.id), "true");
       setHasVoted(true);
       setMessage("Vote submitted.");
       await refresh();
