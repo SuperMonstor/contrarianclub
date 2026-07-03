@@ -249,7 +249,7 @@ export function ChallengeVote({
                   ) : (
                     <Megaphone size={18} />
                   )}
-                  Get the next speaker in
+                  Vote out the speaker
                 </button>
                 <p className="text-center text-xs text-[color:var(--cc-muted)]">
                   Or do nothing to keep the current speaker.
@@ -288,7 +288,7 @@ function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
     <div className="club-panel-quiet px-4 py-3">
       <div className="mb-2 flex items-center justify-between gap-3 text-xs">
         <span className="font-semibold text-[color:var(--cc-parchment)]">
-          {challenge.nextVotes} of {challenge.votesNeeded} to change
+          {challenge.nextVotes} of {challenge.votesNeeded} to vote out
         </span>
         <span className="text-[color:var(--cc-muted)]">
           {challenge.joiners} in this round
@@ -301,9 +301,7 @@ function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
         />
       </div>
       <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
-        A majority of this round&apos;s joiners brings in the next speaker.
-        {!challenge.turnoutMet &&
-          ` At least ${challenge.minTurnout} must join for the round to count — ${challenge.joiners} so far.`}
+        A majority of this round&apos;s joiners votes the speaker out.
       </p>
     </div>
   );

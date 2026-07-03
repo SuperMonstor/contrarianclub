@@ -17,8 +17,8 @@ const PHASE_ORDER = {
   speaker_challenge: 3,
 } as const;
 
-const CHALLENGE_PROMPT = "Call for the next speaker";
-const CHALLENGE_OPTION_LABEL = "Next speaker";
+const CHALLENGE_PROMPT = "Vote out the current speaker?";
+const CHALLENGE_OPTION_LABEL = "Vote out the speaker";
 const CHALLENGE_BUFFER_DEFAULT = 90;
 const CHALLENGE_BUFFER_MIN = 10;
 const CHALLENGE_BUFFER_MAX = 600;

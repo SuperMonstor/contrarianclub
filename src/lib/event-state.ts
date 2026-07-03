@@ -12,10 +12,6 @@ import type {
   PresentationMode,
 } from "@/lib/types";
 
-// A challenge round can only declare "speaker out" once at least this many
-// people joined it — a sleepy round of three phones shouldn't rotate a speaker.
-const CHALLENGE_MIN_TURNOUT = 5;
-
 type PollOptionRow = {
   id: string;
   activity_id: string;
@@ -208,7 +204,6 @@ async function buildChallengeSummary(
   const joinWindowOpen = started && opensInSeconds > 0;
   const votingOpen = started && opensInSeconds === 0;
   const votesNeeded = Math.floor(joiners / 2) + 1;
-  const turnoutMet = joiners >= CHALLENGE_MIN_TURNOUT;
 
   return {
     round,
@@ -219,11 +214,10 @@ async function buildChallengeSummary(
     joiners,
     nextVotes,
     votesNeeded,
-    minTurnout: CHALLENGE_MIN_TURNOUT,
-    turnoutMet,
     // The verdict stands once crossed, including after the host closes the
-    // challenge — closing does not un-decide a round.
-    speakerOut: turnoutMet && nextVotes >= votesNeeded,
+    // challenge — closing does not un-decide a round. Majority of joiners
+    // decides at any room size; the verdict is advisory and the host acts.
+    speakerOut: joiners > 0 && nextVotes >= votesNeeded,
   };
 }
 

@@ -48,8 +48,6 @@ export type ChallengeSummary = {
   joiners: number;
   nextVotes: number;
   votesNeeded: number;
-  minTurnout: number;
-  turnoutMet: boolean;
   speakerOut: boolean;
 };
 

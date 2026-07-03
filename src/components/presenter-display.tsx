@@ -358,10 +358,7 @@ function ChallengeStage({
             />
           </div>
           <p className="club-eyebrow mt-3 text-[color:var(--cc-muted)]">
-            A majority of the round&apos;s joiners decides
-            {challenge.turnoutMet
-              ? ""
-              : ` — at least ${challenge.minTurnout} must join for a verdict`}
+            A majority of the round&apos;s joiners votes the speaker out
           </p>
         </div>
       </div>

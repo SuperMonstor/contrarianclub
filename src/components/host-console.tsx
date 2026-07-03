@@ -887,13 +887,6 @@ function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
         </div>
       </div>
 
-      {!challenge.turnoutMet && (
-        <p className="mt-4 text-sm text-[color:var(--cc-muted)]">
-          At least {challenge.minTurnout} people must join a round before it can
-          rotate the speaker.
-        </p>
-      )}
-
       {challenge.speakerOut && (
         <div className="club-panel-gold mt-4 px-4 py-4 text-center">
           <p className="club-eyebrow">The room has spoken</p>
