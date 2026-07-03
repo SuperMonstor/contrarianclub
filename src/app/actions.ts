@@ -14,7 +14,14 @@ const PHASE_ORDER = {
   pre_debate: 0,
   post_debate: 1,
   general: 2,
+  speaker_challenge: 3,
 } as const;
+
+const CHALLENGE_PROMPT = "Call for the next speaker";
+const CHALLENGE_OPTION_LABEL = "Next speaker";
+const CHALLENGE_BUFFER_DEFAULT = 90;
+const CHALLENGE_BUFFER_MIN = 10;
+const CHALLENGE_BUFFER_MAX = 600;
 
 type EditableActivity = {
   id: string;
@@ -45,6 +52,63 @@ function cleanOptions(formData: FormData) {
 
 function getEventFormat(formData: FormData): ActivityType {
   return formData.get("eventFormat") === "scale" ? "scale" : "multiple_choice";
+}
+
+function getChallengeSettings(formData: FormData) {
+  const enabled = formData.get("enableChallenge") === "on";
+  const parsedBuffer = Number.parseInt(
+    String(formData.get("challengeBufferSeconds") ?? ""),
+    10,
+  );
+  const bufferSeconds = Number.isFinite(parsedBuffer)
+    ? Math.min(CHALLENGE_BUFFER_MAX, Math.max(CHALLENGE_BUFFER_MIN, parsedBuffer))
+    : CHALLENGE_BUFFER_DEFAULT;
+
+  return { enabled, bufferSeconds };
+}
+
+// Inserting the challenge activity is the first statement that needs the 011
+// schema, so translate its failure into an actionable message.
+function withChallengeMigrationHint(error: { code?: string; message?: string }) {
+  if (error.code === "42703" || error.code === "23514" || error.code === "42P01") {
+    return new Error(
+      "Speaker challenges require Supabase migration 011_speaker_challenge.sql.",
+    );
+  }
+
+  return error;
+}
+
+async function insertChallengeActivity(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+  bufferSeconds: number,
+) {
+  const { data: activity, error: activityError } = await supabase
+    .from("activities")
+    .insert({
+      event_id: eventId,
+      phase: "speaker_challenge",
+      type: "multiple_choice",
+      prompt: CHALLENGE_PROMPT,
+      status: "draft",
+      results_visibility: "hidden",
+      challenge_buffer_seconds: bufferSeconds,
+    })
+    .select("id")
+    .single<{ id: string }>();
+
+  if (activityError) throw withChallengeMigrationHint(activityError);
+
+  const { error: optionError } = await supabase.from("poll_options").insert({
+    activity_id: activity.id,
+    label: CHALLENGE_OPTION_LABEL,
+    sort_order: 0,
+  });
+
+  if (optionError) throw optionError;
+
+  return activity;
 }
 
 function getScaleLabels(formData: FormData) {
@@ -93,10 +157,10 @@ async function getActivityForEvent(
 
   const { data: activity, error: activityError } = await supabase
     .from("activities")
-    .select("event_id")
+    .select("event_id, phase")
     .eq("id", activityId)
     .eq("event_id", event.id)
-    .single<{ event_id: string }>();
+    .single<{ event_id: string; phase: keyof typeof PHASE_ORDER }>();
 
   if (activityError) throw activityError;
 
@@ -119,11 +183,15 @@ async function getResetActivityIds(
 
   if (error) throw error;
 
-  const orderedActivities = [...activities].sort(
-    (first, second) =>
-      PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
-      first.created_at.localeCompare(second.created_at),
-  );
+  // The speaker challenge sits outside the pre → post flow: its rounds are
+  // append-only history, so it never joins the cascading reset.
+  const orderedActivities = activities
+    .filter((activity) => activity.phase !== "speaker_challenge")
+    .sort(
+      (first, second) =>
+        PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
+        first.created_at.localeCompare(second.created_at),
+    );
 
   const currentIndex = orderedActivities.findIndex(
     (activity) => activity.id === activityId,
@@ -237,6 +305,74 @@ async function getDebateActivities(
   return [preActivity, postActivity];
 }
 
+async function syncChallengeActivity(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+  challenge: { enabled: boolean; bufferSeconds: number },
+  debateActivities: EditableActivity[],
+) {
+  const { data: existing, error } = await supabase
+    .from("activities")
+    .select("id")
+    .eq("event_id", eventId)
+    .eq("phase", "speaker_challenge")
+    .maybeSingle<{ id: string }>();
+
+  if (error) throw error;
+
+  if (challenge.enabled && !existing) {
+    await insertChallengeActivity(supabase, eventId, challenge.bufferSeconds);
+    return;
+  }
+
+  if (challenge.enabled && existing) {
+    const { error: updateError } = await supabase
+      .from("activities")
+      .update({ challenge_buffer_seconds: challenge.bufferSeconds })
+      .eq("id", existing.id);
+
+    if (updateError) throw withChallengeMigrationHint(updateError);
+    return;
+  }
+
+  if (!existing) return;
+
+  // Disabling removes the activity (options, votes, and joins cascade). If the
+  // presenter was parked on it, hand the stage back to the pre-debate poll
+  // first so the audience doesn't land on a deleted activity.
+  const preActivity = debateActivities.find(
+    (activity) => activity.phase === "pre_debate",
+  );
+
+  const { data: presentation, error: presentationError } = await supabase
+    .from("presentation_state")
+    .select("active_activity_id")
+    .eq("event_id", eventId)
+    .maybeSingle<{ active_activity_id: string | null }>();
+
+  if (presentationError) throw presentationError;
+
+  if (presentation?.active_activity_id === existing.id && preActivity) {
+    const { error: repointError } = await supabase
+      .from("presentation_state")
+      .update({
+        active_activity_id: preActivity.id,
+        mode: "join",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("event_id", eventId);
+
+    if (repointError) throw repointError;
+  }
+
+  const { error: deleteError } = await supabase
+    .from("activities")
+    .delete()
+    .eq("id", existing.id);
+
+  if (deleteError) throw deleteError;
+}
+
 async function syncPollOptions(
   supabase: ReturnType<typeof createServiceClient>,
   activityId: string,
@@ -338,6 +474,7 @@ export async function createEvent(formData: FormData) {
   const eventFormat = getEventFormat(formData);
   const options = cleanOptions(formData);
   const scaleLabels = getScaleLabels(formData);
+  const challenge = getChallengeSettings(formData);
 
   if (
     !title ||
@@ -442,6 +579,10 @@ export async function createEvent(formData: FormData) {
     eventFormat,
   );
 
+  if (challenge.enabled) {
+    await insertChallengeActivity(supabase, event.id, challenge.bufferSeconds);
+  }
+
   const { error: stateError } = await supabase
     .from("presentation_state")
     .insert({
@@ -467,6 +608,7 @@ export async function updateEvent(code: string, formData: FormData) {
   const eventFormat = getEventFormat(formData);
   const options = cleanOptions(formData);
   const scaleLabels = getScaleLabels(formData);
+  const challenge = getChallengeSettings(formData);
 
   if (
     !title ||
@@ -534,6 +676,8 @@ export async function updateEvent(code: string, formData: FormData) {
     await syncPollOptions(supabase, activity.id, eventOptions, eventFormat);
   }
 
+  await syncChallengeActivity(supabase, event.id, challenge, debateActivities);
+
   revalidatePath("/");
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${event.code}`);
@@ -553,6 +697,11 @@ export async function controlActivity(
 
   const supabase = createServiceClient();
   const activity = await getActivityForEvent(supabase, code, activityId);
+
+  // Challenge rounds are append-only history; there is nothing to reset.
+  if (command === "reset" && activity.phase === "speaker_challenge") {
+    throw new Error("The speaker challenge cannot be reset.");
+  }
 
   const statusByCommand = {
     open: "open",
@@ -627,6 +776,67 @@ export async function controlActivity(
       event_id: activity.event_id,
       active_activity_id: activityId,
       mode: modeByCommand[command],
+      updated_at: new Date().toISOString(),
+    });
+
+  if (stateError) throw stateError;
+
+  revalidatePath(`/host/${code}`);
+  revalidatePath(`/admin/events/${code}`);
+  revalidatePath(`/join/${code}`);
+  revalidatePath(`/present/${code}`);
+}
+
+// Starts the challenge (first press) or moves to the next speaker (later
+// presses). Either way a fresh join window opens: the round number advances
+// unless the activity was still a draft, and voting_opens_at is stamped
+// buffer_seconds into the future. Prior rounds' joins and votes are untouched.
+export async function advanceChallengeRound(code: string, activityId: string) {
+  await requireAdminUser();
+
+  const supabase = createServiceClient();
+  const activity = await getActivityForEvent(supabase, code, activityId);
+
+  if (activity.phase !== "speaker_challenge") {
+    throw new Error("Only a speaker challenge has rounds.");
+  }
+
+  const { data: current, error: currentError } = await supabase
+    .from("activities")
+    .select("status, challenge_round, challenge_buffer_seconds")
+    .eq("id", activityId)
+    .single<{
+      status: string;
+      challenge_round: number;
+      challenge_buffer_seconds: number;
+    }>();
+
+  if (currentError) throw withChallengeMigrationHint(currentError);
+
+  const nextRound =
+    current.status === "draft"
+      ? current.challenge_round
+      : current.challenge_round + 1;
+  const bufferSeconds =
+    current.challenge_buffer_seconds ?? CHALLENGE_BUFFER_DEFAULT;
+
+  const { error: updateError } = await supabase
+    .from("activities")
+    .update({
+      status: "open",
+      challenge_round: nextRound,
+      voting_opens_at: new Date(Date.now() + bufferSeconds * 1000).toISOString(),
+    })
+    .eq("id", activityId);
+
+  if (updateError) throw updateError;
+
+  const { error: stateError } = await supabase
+    .from("presentation_state")
+    .upsert({
+      event_id: activity.event_id,
+      active_activity_id: activityId,
+      mode: "poll",
       updated_at: new Date().toISOString(),
     });
 
