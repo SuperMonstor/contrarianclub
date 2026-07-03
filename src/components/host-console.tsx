@@ -19,6 +19,7 @@ import {
   Square,
 } from "lucide-react";
 import {
+  advanceChallengeRound,
   controlActivity,
   setActiveActivity,
   setPresenterMode,
@@ -31,9 +32,14 @@ import {
   getScaleSideLabel,
 } from "@/components/scale-choice-scale";
 import { ScaleResults, formatSignedValue } from "@/components/scale-results";
+import {
+  formatClock,
+  useChallengeCountdown,
+} from "@/components/use-challenge-countdown";
 import { useLiveEventState } from "@/components/use-live-event-state";
 import type {
   ActivitySummary,
+  ChallengeSummary,
   ControlCommand,
   DebateSwingSummary,
   EventState,
@@ -124,6 +130,19 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     });
   }
 
+  function startNextRound() {
+    if (!activity) return;
+
+    setCommand("open");
+
+    startTransition(async () => {
+      await advanceChallengeRound(code, activity.id);
+      refreshSoon();
+      setCommand(null);
+    });
+  }
+
+  const isChallenge = activity?.phase === "speaker_challenge";
   const isOpen = activity?.status === "open";
   const isRevealed = activity?.results_visibility === "revealed";
   const isScale = activity?.type === "scale";
@@ -253,36 +272,60 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
               <ScaleMeaningKey activity={activity} options={state.options} />
             )}
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <ControlButton
-                icon={isOpen ? <Square size={18} /> : <Play size={18} />}
-                label={submissionCommand === "open" ? "Open voting" : "Close voting"}
-                disabled={!activity || busy}
-                active={command === submissionCommand}
-                primary={submissionCommand === "open"}
-                onClick={() => runCommand(submissionCommand)}
-              />
-              <ControlButton
-                icon={
-                  visibilityCommand === "reveal" ? (
-                    <Eye size={18} />
-                  ) : (
-                    <EyeOff size={18} />
-                  )
-                }
-                label={visibilityCommand === "reveal" ? "Reveal results" : "Hide results"}
-                disabled={!activity || busy}
-                active={command === visibilityCommand}
-                onClick={() => runCommand(visibilityCommand)}
-              />
-              <ControlButton
-                icon={<RotateCcw size={18} />}
-                label="Reset step"
-                disabled={!activity || busy}
-                active={command === "reset"}
-                onClick={() => runCommand("reset")}
-              />
-            </div>
+            {isChallenge ? (
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <ControlButton
+                  icon={<Play size={18} />}
+                  label={
+                    activity?.status === "open"
+                      ? "Next speaker · new round"
+                      : "Start round"
+                  }
+                  disabled={!activity || busy}
+                  active={command === "open"}
+                  primary
+                  onClick={startNextRound}
+                />
+                <ControlButton
+                  icon={<Square size={18} />}
+                  label="Close challenge"
+                  disabled={!activity || !isOpen || busy}
+                  active={command === "close"}
+                  onClick={() => runCommand("close")}
+                />
+              </div>
+            ) : (
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <ControlButton
+                  icon={isOpen ? <Square size={18} /> : <Play size={18} />}
+                  label={submissionCommand === "open" ? "Open voting" : "Close voting"}
+                  disabled={!activity || busy}
+                  active={command === submissionCommand}
+                  primary={submissionCommand === "open"}
+                  onClick={() => runCommand(submissionCommand)}
+                />
+                <ControlButton
+                  icon={
+                    visibilityCommand === "reveal" ? (
+                      <Eye size={18} />
+                    ) : (
+                      <EyeOff size={18} />
+                    )
+                  }
+                  label={visibilityCommand === "reveal" ? "Reveal results" : "Hide results"}
+                  disabled={!activity || busy}
+                  active={command === visibilityCommand}
+                  onClick={() => runCommand(visibilityCommand)}
+                />
+                <ControlButton
+                  icon={<RotateCcw size={18} />}
+                  label="Reset step"
+                  disabled={!activity || busy}
+                  active={command === "reset"}
+                  onClick={() => runCommand("reset")}
+                />
+              </div>
+            )}
 
             {canShowSwing && (
               <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-[color:var(--cc-line)] pt-4">
@@ -316,21 +359,27 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
 
           <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
             <div className="club-panel p-6">
-              <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="club-display club-d-card">Live results</h3>
-                <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
-                  {state.totalVotes} responses
-                </span>
-              </div>
-              {isScale ? (
-                <ScaleResults
-                  leftLabel={activity?.scale_left_label}
-                  options={state.options}
-                  rightLabel={activity?.scale_right_label}
-                  totalVotes={state.totalVotes}
-                />
+              {isChallenge && state.challenge ? (
+                <ChallengeHostPanel challenge={state.challenge} />
               ) : (
-                <ResultBars options={state.options} totalVotes={state.totalVotes} />
+                <>
+                  <div className="mb-5 flex items-center justify-between gap-3">
+                    <h3 className="club-display club-d-card">Live results</h3>
+                    <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
+                      {state.totalVotes} responses
+                    </span>
+                  </div>
+                  {isScale ? (
+                    <ScaleResults
+                      leftLabel={activity?.scale_left_label}
+                      options={state.options}
+                      rightLabel={activity?.scale_right_label}
+                      totalVotes={state.totalVotes}
+                    />
+                  ) : (
+                    <ResultBars options={state.options} totalVotes={state.totalVotes} />
+                  )}
+                </>
               )}
             </div>
             <div className="club-panel-gold self-start p-6">
@@ -737,11 +786,75 @@ function formatNullableSignedValue(value: number | null) {
 function phaseLabel(phase: ActivitySummary["phase"]) {
   if (phase === "pre_debate") return "pre-vote";
   if (phase === "post_debate") return "post-vote";
+  if (phase === "speaker_challenge") return "speaker challenge";
   return "poll";
 }
 
+function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
+  const remaining = useChallengeCountdown(challenge.opensInSeconds);
+  const joinWindow = challenge.joinWindowOpen && remaining > 0;
+
+  const phaseText = joinWindow
+    ? `Join window · voting opens in ${formatClock(remaining)}`
+    : challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0)
+      ? "Voting open"
+      : "Waiting for the next round";
+
+  return (
+    <>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <h3 className="club-display club-d-card">Speaker challenge</h3>
+        <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
+          Round {challenge.round}
+        </span>
+      </div>
+
+      <p className="club-eyebrow">{phaseText}</p>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="club-tile p-4">
+          <p className="club-label text-[0.65rem]">Joined this round</p>
+          <p className="club-display mt-2 text-3xl text-[color:var(--cc-gold-bright)]">
+            {challenge.joiners}
+          </p>
+        </div>
+        <div className="club-tile p-4">
+          <p className="club-label text-[0.65rem]">Next-speaker votes</p>
+          <p className="club-display mt-2 text-3xl text-[color:var(--cc-ivory)]">
+            {challenge.nextVotes}
+          </p>
+        </div>
+        <div className="club-tile p-4">
+          <p className="club-label text-[0.65rem]">Needed</p>
+          <p className="club-display mt-2 text-3xl text-[color:var(--cc-ivory)]">
+            {challenge.votesNeeded}
+          </p>
+        </div>
+      </div>
+
+      {!challenge.turnoutMet && (
+        <p className="mt-4 text-sm text-[color:var(--cc-muted)]">
+          At least {challenge.minTurnout} people must join a round before it can
+          rotate the speaker.
+        </p>
+      )}
+
+      {challenge.speakerOut && (
+        <div className="club-panel-gold mt-4 px-4 py-4 text-center">
+          <p className="club-eyebrow">The room has spoken</p>
+          <p className="club-display club-d-card mt-1 text-[color:var(--cc-ivory)]">
+            Bring in the next speaker
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
 function getResetScope(activities: ActivitySummary[], activityId: string) {
-  const orderedActivities = [...activities].sort(
+  const orderedActivities = activities
+    .filter((activity) => activity.phase !== "speaker_challenge")
+    .sort(
     (first, second) =>
       PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
       first.created_at.localeCompare(second.created_at),
