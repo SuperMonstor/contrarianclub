@@ -8,8 +8,12 @@ import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
 import { ScaleResults } from "@/components/scale-results";
 import { SwingReveal } from "@/components/swing-reveal";
+import {
+  formatClock,
+  useChallengeCountdown,
+} from "@/components/use-challenge-countdown";
 import { useLiveEventState } from "@/components/use-live-event-state";
-import type { EventState } from "@/lib/types";
+import type { ChallengeSummary, EventState } from "@/lib/types";
 
 type PresenterDisplayProps = {
   code: string;
@@ -26,6 +30,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
   const isScale = activity?.type === "scale";
   const isSwingStage = state.mode === "swing" && state.swing !== null;
   const isJoinMode = !isSwingStage && (!activity || state.mode === "join");
+  const isChallengeStage =
+    !isSwingStage &&
+    !isJoinMode &&
+    activity?.phase === "speaker_challenge" &&
+    state.challenge !== null;
   const hasActiveQuestion = Boolean(activity) && !isSwingStage && !isJoinMode;
   const isLive =
     isSwingStage || isJoinMode || showResults || activity?.status === "open";
@@ -33,11 +42,19 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
     ? "The swing"
     : isJoinMode
       ? "Open to join"
-      : showResults
-        ? "Results live"
-        : activity?.status === "open"
-          ? "Voting open"
-          : "Voting closed";
+      : isChallengeStage
+        ? state.challenge?.speakerOut
+          ? "Next speaker"
+          : state.challenge?.joinWindowOpen
+            ? "Join window open"
+            : state.challenge?.votingOpen
+              ? "Challenge vote live"
+              : "Speaker challenge"
+        : showResults
+          ? "Results live"
+          : activity?.status === "open"
+            ? "Voting open"
+            : "Voting closed";
 
   useEffect(() => {
     window.queueMicrotask(() => {
@@ -116,6 +133,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
                   Scan the code to cast your vote.
                 </p>
+              ) : isChallengeStage && state.challenge ? (
+                <ChallengeStage
+                  challenge={state.challenge}
+                  status={activity?.status ?? "draft"}
+                />
               ) : showResults && activity ? (
                 <div className="max-w-4xl">
                   {isScale ? (
@@ -249,5 +271,83 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
           document.body,
         )}
     </>
+  );
+}
+
+function ChallengeStage({
+  challenge,
+  status,
+}: {
+  challenge: ChallengeSummary;
+  status: string;
+}) {
+  const remaining = useChallengeCountdown(challenge.opensInSeconds);
+  const joinWindow = challenge.joinWindowOpen && remaining > 0;
+  const votingOpen =
+    challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0);
+
+  if (challenge.speakerOut) {
+    return (
+      <div>
+        <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
+          Next speaker.
+        </p>
+        <p className="club-eyebrow mt-4">
+          The room has spoken &middot; {challenge.nextVotes} of{" "}
+          {challenge.joiners} called for the change
+        </p>
+      </div>
+    );
+  }
+
+  if (status === "draft") {
+    return (
+      <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
+        The challenge is coming.
+      </p>
+    );
+  }
+
+  if (status === "closed") {
+    return (
+      <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
+        The speaker holds the floor.
+      </p>
+    );
+  }
+
+  if (joinWindow) {
+    return (
+      <div>
+        <p className="club-eyebrow">The speaker has the floor</p>
+        <p className="club-display club-d-hero mt-3 text-[color:var(--cc-gold-bright)]">
+          {formatClock(remaining)}
+        </p>
+        <p className="club-eyebrow mt-4">
+          Join now to take part &middot; {challenge.joiners} in so far
+        </p>
+      </div>
+    );
+  }
+
+  if (votingOpen) {
+    return (
+      <div>
+        <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
+          The room may call for the next speaker.
+        </p>
+        <p className="club-eyebrow mt-5">
+          {challenge.turnoutMet
+            ? `${challenge.nextVotes} of ${challenge.votesNeeded} votes needed`
+            : `${challenge.joiners} joined — at least ${challenge.minTurnout} needed for a verdict`}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
+      Waiting for the next round.
+    </p>
   );
 }
