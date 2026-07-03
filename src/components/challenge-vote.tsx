@@ -229,6 +229,7 @@ export function ChallengeVote({
 
       {votePhase && !challenge.speakerOut && (
         <div className="space-y-3">
+          <ChallengeMeter challenge={challenge} />
           {hasJoined ? (
             hasVoted ? (
               <p className="club-panel-quiet flex items-center gap-2 px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
@@ -269,6 +270,43 @@ export function ChallengeVote({
           {message}
         </p>
       )}
+    </div>
+  );
+}
+
+// Live threshold meter for the voting phase. Counts ride the ~5s safety poll,
+// so the bar steps rather than glides; the width transition smooths it.
+function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
+  if (!challenge.turnoutMet) {
+    return (
+      <p className="club-panel-quiet px-4 py-3 text-xs text-[color:var(--cc-muted)]">
+        {challenge.joiners} joined this round — at least {challenge.minTurnout}{" "}
+        needed for a verdict.
+      </p>
+    );
+  }
+
+  const progress = Math.min(
+    100,
+    Math.round((challenge.nextVotes / challenge.votesNeeded) * 100),
+  );
+
+  return (
+    <div className="club-panel-quiet px-4 py-3">
+      <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+        <span className="font-semibold text-[color:var(--cc-parchment)]">
+          {challenge.nextVotes} of {challenge.votesNeeded} to change
+        </span>
+        <span className="text-[color:var(--cc-muted)]">
+          {challenge.joiners} in this round
+        </span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
+        <div
+          className="h-full rounded-[3px] bg-[color:var(--cc-gold-bright)] transition-all duration-700"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </div>
   );
 }

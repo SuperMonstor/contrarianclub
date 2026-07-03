@@ -331,16 +331,42 @@ function ChallengeStage({
   }
 
   if (votingOpen) {
+    const progress = challenge.turnoutMet
+      ? Math.min(
+          100,
+          Math.round((challenge.nextVotes / challenge.votesNeeded) * 100),
+        )
+      : 0;
+
     return (
       <div>
         <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
           The room may call for the next speaker.
         </p>
-        <p className="club-eyebrow mt-5">
-          {challenge.turnoutMet
-            ? `${challenge.nextVotes} of ${challenge.votesNeeded} votes needed`
-            : `${challenge.joiners} joined — at least ${challenge.minTurnout} needed for a verdict`}
-        </p>
+        {challenge.turnoutMet ? (
+          <div className="mt-8 max-w-3xl">
+            <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
+              <span className="club-eyebrow">
+                {challenge.nextVotes} of {challenge.votesNeeded} called for the
+                next speaker
+              </span>
+              <span className="club-mono text-sm uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
+                {challenge.joiners} in this round
+              </span>
+            </div>
+            <div className="h-5 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
+              <div
+                className="h-full rounded-[3px] bg-[color:var(--cc-gold-bright)] transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        ) : (
+          <p className="club-eyebrow mt-5">
+            {challenge.joiners} joined — at least {challenge.minTurnout} needed
+            for a verdict
+          </p>
+        )}
       </div>
     );
   }
