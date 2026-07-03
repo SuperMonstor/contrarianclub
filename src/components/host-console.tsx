@@ -50,6 +50,7 @@ const PHASE_ORDER = {
   pre_debate: 0,
   post_debate: 1,
   general: 2,
+  speaker_challenge: 3,
 } as const;
 
 export function HostConsole({ code, editHref, initialState }: HostConsoleProps) {

@@ -4,12 +4,17 @@ import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
 import { createServiceClient } from "@/lib/supabase/server";
 import type {
   ActivitySummary,
+  ChallengeSummary,
   DebateSwingSummary,
   EventState,
   EventSummary,
   PollOptionResult,
   PresentationMode,
 } from "@/lib/types";
+
+// A challenge round can only declare "speaker out" once at least this many
+// people joined it — a sleepy round of three phones shouldn't rotate a speaker.
+const CHALLENGE_MIN_TURNOUT = 5;
 
 type PollOptionRow = {
   id: string;
@@ -88,11 +93,21 @@ export async function getEventState(code: string): Promise<EventState | null> {
       totalVotes: 0,
       participantCount: 0,
       swing: null,
+      challenge: null,
       ...urls,
     };
   }
 
   const activityIds = activities.map((item) => item.id);
+  const isChallenge = activity.phase === "speaker_challenge";
+  const challengeRound = activity.challenge_round ?? 1;
+
+  // For the challenge, only the current round is "live" — earlier rounds are
+  // history and must not leak into tallies or the audience's voted state.
+  const activityVotesQuery = supabase
+    .from("votes")
+    .select("option_id, device_id")
+    .eq("activity_id", activity.id);
 
   const [
     options,
@@ -101,11 +116,10 @@ export async function getEventState(code: string): Promise<EventState | null> {
     { data: allVotes, error: allVotesError },
   ] = await Promise.all([
     getPollOptionsForActivity(supabase, activity.id),
-    supabase
-      .from("votes")
-      .select("option_id, device_id")
-      .eq("activity_id", activity.id)
-      .returns<VoteRow[]>(),
+    (isChallenge
+      ? activityVotesQuery.eq("round", challengeRound)
+      : activityVotesQuery
+    ).returns<VoteRow[]>(),
     getPollOptionsForActivities(supabase, activityIds),
     supabase
       .from("votes")
@@ -148,6 +162,10 @@ export async function getEventState(code: string): Promise<EventState | null> {
         )
       : null;
 
+  const challenge = isChallenge
+    ? await buildChallengeSummary(supabase, activity, votes?.length ?? 0)
+    : null;
+
   return {
     event,
     activities,
@@ -157,7 +175,55 @@ export async function getEventState(code: string): Promise<EventState | null> {
     totalVotes: votes?.length ?? 0,
     participantCount,
     swing,
+    challenge,
     ...urls,
+  };
+}
+
+async function buildChallengeSummary(
+  supabase: ReturnType<typeof createServiceClient>,
+  activity: ActivitySummary,
+  nextVotes: number,
+): Promise<ChallengeSummary> {
+  const round = activity.challenge_round ?? 1;
+  const bufferSeconds = activity.challenge_buffer_seconds ?? 90;
+
+  const { count, error } = await supabase
+    .from("challenge_joins")
+    .select("id", { count: "exact", head: true })
+    .eq("activity_id", activity.id)
+    .eq("round", round);
+
+  if (error) throw error;
+
+  const joiners = count ?? 0;
+  const opensAtMs = activity.voting_opens_at
+    ? Date.parse(activity.voting_opens_at)
+    : null;
+  const started = activity.status === "open" && opensAtMs !== null;
+  const opensInSeconds =
+    started && opensAtMs !== null
+      ? Math.max(0, Math.ceil((opensAtMs - Date.now()) / 1000))
+      : 0;
+  const joinWindowOpen = started && opensInSeconds > 0;
+  const votingOpen = started && opensInSeconds === 0;
+  const votesNeeded = Math.floor(joiners / 2) + 1;
+  const turnoutMet = joiners >= CHALLENGE_MIN_TURNOUT;
+
+  return {
+    round,
+    bufferSeconds,
+    opensInSeconds,
+    joinWindowOpen,
+    votingOpen,
+    joiners,
+    nextVotes,
+    votesNeeded,
+    minTurnout: CHALLENGE_MIN_TURNOUT,
+    turnoutMet,
+    // The verdict stands once crossed, including after the host closes the
+    // challenge — closing does not un-decide a round.
+    speakerOut: turnoutMet && nextVotes >= votesNeeded,
   };
 }
 
@@ -168,7 +234,7 @@ async function getActivitiesForEvent(
   const withLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label",
+      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label, challenge_round, voting_opens_at, challenge_buffer_seconds",
     )
     .eq("event_id", eventId)
     .order("created_at", { ascending: true })
@@ -182,6 +248,8 @@ async function getActivitiesForEvent(
     throw withLabels.error;
   }
 
+  // Missing-column fallback for databases behind on migrations; challenge
+  // activities cannot exist there, so the defaults are inert.
   const withoutLabels = await supabase
     .from("activities")
     .select(
@@ -198,6 +266,9 @@ async function getActivitiesForEvent(
     scale_center_label: null,
     scale_left_label: null,
     scale_right_label: null,
+    challenge_round: 1,
+    voting_opens_at: null,
+    challenge_buffer_seconds: 90,
   }));
 }
 
