@@ -793,12 +793,19 @@ function phaseLabel(phase: ActivitySummary["phase"]) {
 function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
   const remaining = useChallengeCountdown(challenge.opensInSeconds);
   const joinWindow = challenge.joinWindowOpen && remaining > 0;
-
-  const phaseText = joinWindow
-    ? `Join window · voting opens in ${formatClock(remaining)}`
-    : challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0)
-      ? "Voting open"
-      : "Waiting for the next round";
+  const votingOpen =
+    challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0);
+  // The bar shows next-speaker votes as a share of the round's joiners, with
+  // the majority mark at 50%; it turns wine once the majority is crossed.
+  const percent =
+    challenge.joiners === 0
+      ? 0
+      : Math.min(
+          100,
+          Math.round((challenge.nextVotes / challenge.joiners) * 100),
+        );
+  const majority =
+    challenge.joiners > 0 && challenge.nextVotes >= challenge.votesNeeded;
 
   return (
     <>
@@ -809,7 +816,55 @@ function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
         </span>
       </div>
 
-      <p className="club-eyebrow">{phaseText}</p>
+      {joinWindow ? (
+        <div className="club-tile p-5 text-center">
+          <p className="club-label text-[0.65rem]">voting opens in</p>
+          <p className="club-mono mt-2 text-6xl font-bold text-[color:var(--cc-gold-bright)]">
+            {formatClock(remaining)}
+          </p>
+          <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
+            {challenge.joiners} joined so far
+          </p>
+        </div>
+      ) : (
+        <p className="club-eyebrow">
+          {votingOpen ? "Voting open" : "Waiting for the next round"}
+        </p>
+      )}
+
+      {votingOpen && (
+        <div className="mt-4">
+          <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+            <span className="font-semibold text-[color:var(--cc-parchment)]">
+              {challenge.nextVotes} of {challenge.joiners} joiners want the next
+              speaker
+            </span>
+            <span
+              className={`club-mono font-bold ${
+                majority
+                  ? "text-[color:var(--cc-wine-bright)]"
+                  : "text-[color:var(--cc-muted)]"
+              }`}
+            >
+              {majority ? `${percent}% · majority` : `${percent}%`}
+            </span>
+          </div>
+          <div className="relative h-4 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
+            <div
+              className={`h-full rounded-[3px] transition-all duration-700 ${
+                majority
+                  ? "bg-[color:var(--cc-wine-bright)]"
+                  : "bg-[color:var(--cc-gold-bright)]"
+              }`}
+              style={{ width: `${percent}%` }}
+            />
+            <div className="absolute inset-y-0 left-1/2 w-px bg-[color:var(--cc-ivory)]/40" />
+          </div>
+          <p className="mt-1.5 text-xs text-[color:var(--cc-muted)]">
+            Majority at the 50% mark
+          </p>
+        </div>
+      )}
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         <div className="club-tile p-4">
