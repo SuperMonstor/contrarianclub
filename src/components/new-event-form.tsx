@@ -20,6 +20,8 @@ export type EventFormValues = {
   scaleRightLabel: string;
   prePrompt: string;
   postPrompt: string;
+  enableChallenge: boolean;
+  challengeBufferSeconds: number;
 };
 
 type NewEventFormProps = {
@@ -36,6 +38,8 @@ const defaultValues: EventFormValues = {
   scaleRightLabel: "Proposition",
   prePrompt: "Before hearing the debate, which side do you agree with more?",
   postPrompt: "After hearing the debate, which side do you agree with more?",
+  enableChallenge: false,
+  challengeBufferSeconds: 90,
 };
 
 const fallbackOptions: PollOption[] = [
@@ -67,6 +71,8 @@ export function NewEventForm({ eventCode, initialValues }: NewEventFormProps) {
     values.scaleCenterLabel,
     values.scaleRightLabel,
     values.options.join("|"),
+    values.enableChallenge ? "challenge" : "no-challenge",
+    values.challengeBufferSeconds,
   ].join("|");
 
   return (
@@ -93,6 +99,9 @@ function EventFormFields({
   );
   const [eventFormat, setEventFormat] = useState<ActivityType>(
     values.eventFormat,
+  );
+  const [challengeEnabled, setChallengeEnabled] = useState(
+    values.enableChallenge,
   );
 
   function updateOption(id: number, value: string) {
@@ -267,6 +276,48 @@ function EventFormFields({
           defaultValue={values.postPrompt}
           className="club-input mt-2 resize-none px-3.5 py-3"
         />
+      </div>
+
+      <div className="club-panel-quiet px-4 py-4">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            name="enableChallenge"
+            checked={challengeEnabled}
+            onChange={(event) => setChallengeEnabled(event.target.checked)}
+            className="mt-1 h-4 w-4 accent-[color:var(--cc-gold-bright)]"
+          />
+          <span>
+            <span className="block font-semibold text-[color:var(--cc-parchment)]">
+              Enable speaker challenge
+            </span>
+            <span className="mt-1 block text-sm text-[color:var(--cc-muted)]">
+              The room can call for the next speaker in repeating rounds. Each
+              round opens with a join window before voting unlocks.
+            </span>
+          </span>
+        </label>
+
+        {challengeEnabled && (
+          <div className="mt-4">
+            <label className="club-label" htmlFor="challengeBufferSeconds">
+              Join window (seconds)
+            </label>
+            <input
+              id="challengeBufferSeconds"
+              name="challengeBufferSeconds"
+              type="number"
+              min={10}
+              max={600}
+              defaultValue={values.challengeBufferSeconds}
+              className="club-input mt-2 px-3.5 py-3"
+            />
+            <p className="mt-2 text-xs text-[color:var(--cc-faint)]">
+              How long the speaker is protected while the audience joins the
+              round. Voting opens when it ends.
+            </p>
+          </div>
+        )}
       </div>
 
       <PendingSubmitButton className="club-btn club-btn-primary w-full px-4 py-3">

@@ -62,6 +62,7 @@ async function getEditableEvent(code: string) {
 
   if (optionsError) throw optionsError;
 
+  const challengeSettings = await getChallengeSettings(supabase, event.id);
   const derivedScaleLabels = deriveScaleLabels(options ?? []);
   const scaleLeftLabel =
     preActivity.scale_left_label ?? derivedScaleLabels.leftLabel;
@@ -81,9 +82,31 @@ async function getEditableEvent(code: string) {
     scaleRightLabel,
     prePrompt: preActivity.prompt,
     postPrompt: postActivity.prompt,
+    enableChallenge: challengeSettings.enabled,
+    challengeBufferSeconds: challengeSettings.bufferSeconds,
   };
 
   return { event, formValues };
+}
+
+async function getChallengeSettings(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+) {
+  const { data, error } = await supabase
+    .from("activities")
+    .select("challenge_buffer_seconds")
+    .eq("event_id", eventId)
+    .eq("phase", "speaker_challenge")
+    .maybeSingle<{ challenge_buffer_seconds: number | null }>();
+
+  // 42703 means migration 011 has not been applied; no challenge can exist.
+  if (error && error.code !== "42703") throw error;
+
+  return {
+    enabled: Boolean(data),
+    bufferSeconds: data?.challenge_buffer_seconds ?? 90,
+  };
 }
 
 function deriveScaleLabels(options: PollOptionEditRow[]): ScaleLabels {
