@@ -21,6 +21,7 @@ import {
 import {
   advanceChallengeRound,
   controlActivity,
+  resetChallenge,
   setActiveActivity,
   setPresenterMode,
   updateEventStatus,
@@ -137,6 +138,23 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
 
     startTransition(async () => {
       await advanceChallengeRound(code, activity.id);
+      refreshSoon();
+      setCommand(null);
+    });
+  }
+
+  function runChallengeReset() {
+    if (!activity) return;
+
+    const confirmed = window.confirm(
+      "This deletes every round's joins and votes for the speaker challenge and returns it to round 1. Meant for cleaning up after a test run. Continue?",
+    );
+    if (!confirmed) return;
+
+    setCommand("reset");
+
+    startTransition(async () => {
+      await resetChallenge(code, activity.id);
       refreshSoon();
       setCommand(null);
     });
@@ -273,7 +291,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             )}
 
             {isChallenge ? (
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <ControlButton
                   icon={<Play size={18} />}
                   label={
@@ -292,6 +310,13 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                   disabled={!activity || !isOpen || busy}
                   active={command === "close"}
                   onClick={() => runCommand("close")}
+                />
+                <ControlButton
+                  icon={<RotateCcw size={18} />}
+                  label="Reset challenge"
+                  disabled={!activity || busy}
+                  active={command === "reset"}
+                  onClick={runChallengeReset}
                 />
               </div>
             ) : (

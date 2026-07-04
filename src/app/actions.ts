@@ -848,6 +848,65 @@ export async function advanceChallengeRound(code: string, activityId: string) {
   revalidatePath(`/present/${code}`);
 }
 
+// Full clean-slate reset for the challenge, meant for after rehearsals: wipes
+// every round's joins and votes and returns to round 1 as a draft. Deliberately
+// a separate action from controlActivity's reset, which the challenge refuses —
+// advancing rounds during an event never deletes anything; this does.
+export async function resetChallenge(code: string, activityId: string) {
+  await requireAdminUser();
+
+  const supabase = createServiceClient();
+  const activity = await getActivityForEvent(supabase, code, activityId);
+
+  if (activity.phase !== "speaker_challenge") {
+    throw new Error("Only a speaker challenge can be reset this way.");
+  }
+
+  const { error: joinsError } = await supabase
+    .from("challenge_joins")
+    .delete()
+    .eq("activity_id", activityId);
+
+  if (joinsError) throw joinsError;
+
+  const { error: votesError } = await supabase
+    .from("votes")
+    .delete()
+    .eq("activity_id", activityId);
+
+  if (votesError) throw votesError;
+
+  const { error: activityError } = await supabase
+    .from("activities")
+    .update({
+      status: "draft",
+      results_visibility: "hidden",
+      challenge_round: 1,
+      voting_opens_at: null,
+    })
+    .eq("id", activityId);
+
+  if (activityError) throw activityError;
+
+  await deleteOrphanParticipants(supabase, activity.event_id);
+
+  const { error: stateError } = await supabase
+    .from("presentation_state")
+    .upsert({
+      event_id: activity.event_id,
+      active_activity_id: activityId,
+      mode: "join",
+      updated_at: new Date().toISOString(),
+    });
+
+  if (stateError) throw stateError;
+
+  revalidatePath(`/host/${code}`);
+  revalidatePath(`/admin/events/${code}`);
+  revalidatePath(`/join/${code}`);
+  revalidatePath(`/present/${code}`);
+}
+
 export async function setActiveActivity(code: string, activityId: string) {
   await requireAdminUser();
 
