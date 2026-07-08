@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Poster surface + shared blocks. Mirrors the site's .club-shell treatment
+   (warm-black, film grain, vignette, gold hairlines) tuned for a printed-
+   programme feel on heavy stock.
+   ========================================================================== */
+
+/* --- The fixed canvas ---------------------------------------------------- */
+.poster {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--cc-ivory);
+  font-family: var(--cc-font-ui);
+  background:
+    radial-gradient(120% 80% at 50% -8%, rgba(200, 162, 74, 0.1), transparent 55%),
+    linear-gradient(180deg, #0c0a07 0%, #0a0806 58%, #08060400 100%),
+    var(--cc-black);
+}
+
+/* film grain — matches the site's fractal-noise overlay */
+.poster::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* vignette */
+.poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(125% 95% at 50% 30%, transparent 50%, rgba(0, 0, 0, 0.66) 100%);
+}
+
+.poster > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* gold hairline frame, like an engraved border on heavy stock */
+.poster-border {
+  position: absolute;
+  inset: 40px;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid var(--cc-line);
+}
+.poster-border::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(200, 162, 74, 0.1);
+}
+
+/* --- Brand lockup (built from type, mirrors site .club-mark) -------------- */
+.lockup {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.lockup-top {
+  font-family: var(--cc-font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  background: linear-gradient(180deg, #f3d877 0%, #c8a24a 70%, #a07f33 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lockup-main {
+  font-family: var(--cc-font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cc-ivory);
+}
+
+/* --- Type roles ---------------------------------------------------------- */
+.kicker {
+  font-family: var(--cc-font-ui);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--cc-gold);
+}
+.hero {
+  font-family: var(--cc-font-display);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.014em;
+  color: var(--cc-ivory);
+}
+.one-liner {
+  font-family: var(--cc-font-ui);
+  font-weight: 400;
+  color: var(--cc-parchment);
+}
+.label {
+  font-family: var(--cc-font-ui);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--cc-muted);
+}
+.value {
+  font-family: var(--cc-font-display);
+  color: var(--cc-ivory);
+}
+.closing {
+  font-family: var(--cc-font-display);
+  font-style: italic;
+  color: var(--cc-gold);
+}
+
+/* --- Rules --------------------------------------------------------------- */
+.rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--cc-line-strong), transparent);
+}
+.rule-left {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, var(--cc-line-strong), transparent 85%);
+}
+
+/* --- Statement-template treated background image ------------------------- */
+.stmt-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.05) brightness(0.82);
+}
+.stmt-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(11, 9, 7, 0.35) 0%, rgba(11, 9, 7, 0.08) 34%, rgba(11, 9, 7, 0.86) 82%, var(--cc-black) 100%);
+}

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   THE CONTRARIAN DEBATE CLUB — brand tokens
+   Ported verbatim from the website's globals.css so posters and site share
+   one palette. Gallery-at-night: warm near-black, gold leaf, candlelit ivory.
+   Keep in sync manually — this is a deliberate copy to keep the two projects
+   decoupled.
+   ========================================================================== */
+
+:root {
+  /* Surfaces — warm, soot-and-bitumen blacks pulled from the reference art */
+  --cc-black: #0b0907;
+  --cc-pitch: #0e0b08;
+  --cc-obsidian: #14100b;
+  --cc-char: #1b160f;
+  --cc-raise: #221b12;
+
+  /* Gold leaf */
+  --cc-gold: #c8a24a;
+  --cc-gold-bright: #f0d36a;
+  --cc-gold-deep: #8a6c2c;
+
+  /* Light & text — candlelit ivory and aged parchment */
+  --cc-ivory: #f4ead2;
+  --cc-parchment: #ddceac;
+  --cc-muted: #9d9079;
+  --cc-faint: #6f6450;
+
+  /* Accents */
+  --cc-wine: #7a221d;
+  --cc-wine-bright: #b8443c;
+
+  /* Hairlines */
+  --cc-line: rgba(200, 162, 74, 0.18);
+  --cc-line-strong: rgba(200, 162, 74, 0.42);
+
+  /* Type families (see fonts.css for @font-face imports) */
+  --cc-font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --cc-font-ui: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  --cc-font-condensed: "Oswald", "Inter", Arial, sans-serif;
+}
