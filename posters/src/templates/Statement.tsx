@@ -2,7 +2,7 @@ import type { PosterSpec } from "../types";
 import type { Format } from "../formats";
 import { Lockup } from "./Lockup";
 
-// Statement template — full-bleed treated portrait, huge condensed headline,
+// Statement template, full-bleed treated portrait, huge condensed headline,
 // CTA. Matches reference post 16 ("SHOULD TRILLIONAIRES EXIST?").
 
 export function Statement({ spec, format }: { spec: PosterSpec; format: Format }) {
@@ -27,7 +27,9 @@ export function Statement({ spec, format }: { spec: PosterSpec; format: Format }
           textAlign: "center",
           padding: "110px 90px",
           // keep type legible over a busy painting
-          textShadow: spec.image ? "0 2px 28px rgba(0, 0, 0, 0.6)" : undefined,
+          textShadow: spec.image
+            ? "0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 12px rgba(0, 0, 0, 0.8), 0 4px 36px rgba(0, 0, 0, 0.7)"
+            : undefined,
         }}
       >
         <Lockup width={260} align="center" />

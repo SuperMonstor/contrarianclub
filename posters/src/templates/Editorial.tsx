@@ -2,7 +2,7 @@ import type { PosterSpec } from "../types";
 import type { Format } from "../formats";
 import { Lockup } from "./Lockup";
 
-// Editorial template — a printed-programme feel: logotype up top, hero title,
+// Editorial template, a printed-programme feel: logotype up top, hero title,
 // one-liner, supporting points, a details block, ceremonial closing.
 // Matches reference posts 13 & 14. Text-forward; image optional.
 
@@ -26,7 +26,7 @@ export function Editorial({ spec, format }: { spec: PosterSpec; format: Format }
         <Lockup width={300} />
       </header>
 
-      {/* Body — vertically centered between header and footer */}
+      {/* Body, vertically centered between header and footer */}
       <div
         style={{
           flex: 1,
@@ -106,7 +106,7 @@ export function Editorial({ spec, format }: { spec: PosterSpec; format: Format }
         )}
       </div>
 
-      {/* Footer — details + closing */}
+      {/* Footer, details + closing */}
       <footer style={{ display: "flex", flexDirection: "column", gap: tall ? 44 : 34 }}>
         <hr className="rule" />
         {spec.details && spec.details.length > 0 && (
