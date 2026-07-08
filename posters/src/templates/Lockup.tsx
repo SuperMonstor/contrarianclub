@@ -1,28 +1,32 @@
-// The brand lockup — "THE CONTRARIAN / DEBATE CLUB" — built from live type so
-// it stays crisp at any size and matches the website's .club-mark exactly.
+import logoDark from "../brand/logo-dark.svg"; // gold + white, for dark bg
+import logoLight from "../brand/logo-light.svg"; // gold + black, for light bg
+
+// The real brand lockup ("THE / CONTRARIAN / DEBATE CLUB" with a gold rule),
+// rendered from the original SVG artwork. Dark variant is the default since
+// posters sit on near-black.
+const NATURAL_RATIO = 745 / 346; // dark logo viewBox
 
 export function Lockup({
-  size = 1,
+  width = 300,
+  variant = "dark",
   align = "start",
 }: {
-  /** multiplier on the base sizes */
-  size?: number;
+  /** rendered width in px */
+  width?: number;
+  variant?: "dark" | "light";
   align?: "start" | "center";
 }) {
   return (
-    <div
-      className="lockup"
-      style={{ alignItems: align === "center" ? "center" : "flex-start" }}
-    >
-      <span className="lockup-top" style={{ fontSize: 22 * size }}>
-        The Contrarian
-      </span>
-      <span
-        className="lockup-main"
-        style={{ fontSize: 34 * size, marginTop: 6 * size }}
-      >
-        Debate Club
-      </span>
-    </div>
+    <img
+      src={variant === "light" ? logoLight : logoDark}
+      alt="The Contrarian Debate Club"
+      width={width}
+      height={width / NATURAL_RATIO}
+      style={{
+        display: "block",
+        marginLeft: align === "center" ? "auto" : undefined,
+        marginRight: align === "center" ? "auto" : undefined,
+      }}
+    />
   );
 }

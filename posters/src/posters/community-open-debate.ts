@@ -7,7 +7,7 @@ export const communityOpenDebate: PosterSpec = {
   id: "community-open-debate",
   template: "editorial",
 
-  kicker: "The Contrarian Debate Club · Invite Only",
+  kicker: "Invite Only",
   title: "Community Open Debate",
   oneLiner:
     "An invite-only night built to get more people debating — two or three topics picked on the spot, with the floor open to everyone in the room.",

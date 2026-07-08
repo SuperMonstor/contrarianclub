@@ -23,7 +23,7 @@ export function Editorial({ spec, format }: { spec: PosterSpec; format: Format }
     >
       {/* Header */}
       <header>
-        <Lockup size={1.05} />
+        <Lockup width={300} />
       </header>
 
       {/* Body — vertically centered between header and footer */}

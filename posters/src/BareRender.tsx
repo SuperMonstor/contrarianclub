@@ -20,7 +20,14 @@ export function BareRender({
   useEffect(() => {
     document.body.style.margin = "0";
     document.body.style.background = "#0b0907";
-    document.fonts.ready.then(() => {
+    // Wait for fonts AND images (logo SVG, background art) before signalling.
+    const imagesReady = () =>
+      Promise.all(
+        Array.from(document.images).map((img) =>
+          img.complete ? Promise.resolve() : img.decode().catch(() => undefined),
+        ),
+      );
+    Promise.all([document.fonts.ready, imagesReady()]).then(() => {
       document.body.setAttribute("data-ready", "true");
     });
   }, []);
