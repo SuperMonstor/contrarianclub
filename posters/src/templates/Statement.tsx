@@ -12,6 +12,7 @@ export function Statement({ spec, format }: { spec: PosterSpec; format: Format }
       {spec.image && (
         <>
           <img className="stmt-img" src={spec.image.src} alt="" />
+          <div className="stmt-tone" />
           <div className="stmt-scrim" />
         </>
       )}
@@ -25,9 +26,11 @@ export function Statement({ spec, format }: { spec: PosterSpec; format: Format }
           alignItems: "center",
           textAlign: "center",
           padding: "110px 90px",
+          // keep type legible over a busy painting
+          textShadow: spec.image ? "0 2px 28px rgba(0, 0, 0, 0.6)" : undefined,
         }}
       >
-        <Lockup size={0.92} align="center" />
+        <Lockup width={260} align="center" />
 
         <div
           style={{
@@ -77,6 +80,15 @@ export function Statement({ spec, format }: { spec: PosterSpec; format: Format }
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+          {spec.closing && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, marginTop: 6 }}>
+              <hr className="rule" style={{ width: 70 }} />
+              <span className="closing" style={{ fontSize: 22 }}>
+                {spec.closing}
+              </span>
+              <hr className="rule" style={{ width: 70 }} />
             </div>
           )}
         </div>
