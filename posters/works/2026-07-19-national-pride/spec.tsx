@@ -8,16 +8,14 @@ import qingming from "./assets/qingming.jpg";
 import sorrow from "./assets/sorrow.jpg";
 import mountains from "./assets/mountains.jpg";
 import wanderer from "./assets/wanderer.jpg";
+import { Beat, ChapterOpen, Conflict, Hook, Invite } from "./slides";
 
-// Instagram carousel for the 19 July debate. See copy.md for the copy
-// decisions and the rejected motion wordings.
+// Instagram carousel for the 19 July debate. Copy decisions and the rejected
+// motion wordings are in copy.md; the design reasoning is in slides.tsx.
 //
-// Two rules the piece is built on.
-//
-// It reads as one argument spoken aloud. Each side opens with a slide that
-// walks you into the reasoning, then the slides that follow just continue the
-// thought with no label on them. Nobody talks in bullet points, and nobody
-// says "the case for" three times in a row.
+// Nine slides, hand-built. It reads as one argument spoken aloud: each side
+// opens with a slide that walks you into the reasoning, and the slides after
+// it carry no label, they just continue the thought.
 //
 // The art comes from everywhere, because the debate is about whether to look
 // beyond your own borders. Illustrating that from a single canon would be an
@@ -26,7 +24,7 @@ import wanderer from "./assets/wanderer.jpg";
 //   1  liberty      Delacroix, France      pride at its most seductive
 //   2  observatory  Ottoman miniature      measuring yourself against the sky
 //   3  cockaigne    Bruegel, Flanders      lying stuffed and idle, done running
-//   4  babel        Bruegel, Flanders      the monument to self-regard that never finished
+//   4  babel        Bruegel, Flanders      the monument to self-regard, unfinished
 //   5  akbar        Akbarnama, Mughal      building the thing you believe in
 //   6  qingming     Song dynasty, China    a city held up by the people in it
 //   7  sorrow       Van Gogh, Netherlands  what measuring yourself against the rich does
@@ -42,70 +40,69 @@ const work: WorkSpec = {
   slides: [
     // 1. The hook. The motion, asked as a question.
     {
-      template: "statement",
+      template: Hook,
       kicker: "Coming Up Next",
       title: "Can too much national pride hold a country back?",
       oneLiner:
         "A question that has divided economists, policymakers and patriots.",
-      image: { src: liberty, treatment: "full" },
+      image: { src: liberty, position: "center 32%" },
     },
 
-    // 2. Opens the case for by walking into the reasoning rather than
-    //    announcing a position.
+    // 2. Chapter I. Walks into the reasoning rather than announcing a position.
     {
-      template: "statement",
+      template: (p) => <ChapterOpen spec={p.spec} side="for" numeral="I" />,
       kicker: "The Case For",
-      title: "Start with how anyone gets better at anything",
+      title: "Start with how anyone gets better",
       oneLiner:
         "You find someone doing it better than you, and you study them. So what happens when pride makes that feel like disloyalty?",
-      image: { src: observatory, treatment: "full", position: "center 40%" },
+      image: { src: observatory, position: "center 34%" },
     },
 
     // 3 and 4. The thought continues. No labels.
     {
-      template: "panel",
+      template: (p) => <Beat spec={p.spec} side="for" index={0} total={2} />,
       kicker: "",
       title:
         "Pride quietly changes what you measure. You start judging yourself by how far you have come, not by how far you still have to go.",
-      image: { src: cockaigne, position: "center 52%" },
+      image: { src: cockaigne, position: "center 54%" },
     },
     {
-      template: "panel",
+      template: (p) => <Beat spec={p.spec} side="for" index={1} total={2} />,
       kicker: "",
       title:
         "And once that happens, you celebrate progress instead of chasing excellence. You stop running.",
-      image: { src: babel, position: "center 40%" },
+      image: { src: babel, position: "center 38%" },
     },
 
-    // 5. The other side opens by answering, not by starting over.
+    // 5. Chapter II. The other side answers rather than starting over.
     {
-      template: "statement",
+      template: (p) => <ChapterOpen spec={p.spec} side="against" numeral="II" />,
       kicker: "The Case Against",
       title: "Now try taking the pride away",
       oneLiner:
         "Nobody has ever built anything for a country they were ashamed of. So what exactly would we build with?",
-      image: { src: akbar, treatment: "full", position: "center 42%" },
+      image: { src: akbar, position: "center 38%" },
     },
 
     // 6 and 7.
     {
-      template: "panel",
+      template: (p) => <Beat spec={p.spec} side="against" index={0} total={2} />,
       kicker: "",
       title:
         "Pride is what makes people stay, contribute, and believe the thing can actually work.",
-      image: { src: qingming, position: "center 60%" },
+      image: { src: qingming, position: "center 62%" },
     },
     {
-      template: "panel",
+      template: (p) => <Beat spec={p.spec} side="against" index={1} total={2} />,
       kicker: "",
       title:
         "And measure yourself only against the rich, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
-      image: { src: sorrow, position: "center 30%" },
+      image: { src: sorrow, position: "center 26%" },
     },
 
-    // 8. The core conflict, put as a question rather than a table.
+    // 8. The conflict. The plate splits in two.
     {
-      template: "versus",
+      template: Conflict,
       kicker: "The Core Conflict",
       title: "So where should the standard come from?",
       columns: [
@@ -123,12 +120,12 @@ const work: WorkSpec = {
         },
       ],
       closing: "Come and settle it.",
-      image: { src: mountains, position: "center 8%" },
+      image: { src: mountains, position: "center 10%" },
     },
 
-    // 9. The room. The motion, finally stated as the thing you will vote on.
+    // 9. The room. The motion, finally stated as the thing you vote on.
     {
-      template: "statement",
+      template: Invite,
       kicker: "Next Debate",
       title: "National pride is a barrier to progress",
       oneLiner: "Because it discourages international comparison.",
@@ -139,7 +136,7 @@ const work: WorkSpec = {
         { label: "Where", value: "Underground Comedy Club, Koramangala" },
       ],
       closing: "The side that moves the most minds wins.",
-      image: { src: wanderer, treatment: "full" },
+      image: { src: wanderer, position: "center 40%" },
     },
   ],
 };

@@ -151,6 +151,45 @@
   z-index: 1;
   background: linear-gradient(180deg, rgba(42, 30, 12, 0.28) 0%, rgba(20, 14, 8, 0.16) 45%, rgba(11, 9, 7, 0.3) 100%);
 }
+/* --- Plate: a painting framed as a plate above a caption ----------------- */
+.plate-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.84) contrast(1.05) brightness(0.88) sepia(0.1);
+}
+/* just enough warmth and shading to sit in the palette; the plate carries no
+   type, so it does not need a legibility scrim */
+.plate-tone {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(11, 9, 7, 0.5) 0%, rgba(11, 9, 7, 0.08) 26%, rgba(11, 9, 7, 0.1) 62%, rgba(11, 9, 7, 0.55) 100%),
+    linear-gradient(180deg, rgba(42, 30, 12, 0.2), rgba(20, 14, 8, 0.14));
+}
+
+/* --- Conflict slide: art visible up top, near-black under the two columns - */
+.conflict-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.36) 16%,
+      rgba(11, 9, 7, 0.5) 34%,
+      rgba(11, 9, 7, 0.86) 52%,
+      rgba(11, 9, 7, 0.95) 70%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(120% 80% at 50% 30%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+}
+
 /* --- Panel-template pane (a slice of a painting shared across slides) ----- */
 /* same darken-and-warm as .stmt-img; sizing is inline (pane math) */
 .panel-img {
