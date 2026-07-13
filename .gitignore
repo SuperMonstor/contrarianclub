@@ -43,3 +43,7 @@ next-env.d.ts
 
 # Supabase CLI local link state
 supabase/.temp/
+
+# Deck PDFs are print exports of /partners. The route is the source: regenerate
+# with the Export button rather than committing a snapshot that goes stale.
+/*.pdf

@@ -1,0 +1,262 @@
+import Image from "next/image";
+
+import type { PartnerDeck } from "@/content/partner-decks";
+
+import { ExportPdfButton } from "./export-pdf-button";
+import styles from "./page.module.css";
+
+const instagramUrl = "https://www.instagram.com/contrarianclubblr/";
+
+// The deck. Everything in it is true of the club whoever is reading it. The one
+// partner-specific piece is the proposal card, which is why it is a prop (see
+// src/content/partner-decks.ts). With no partner, this is the general brief.
+export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
+  return (
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <Image
+          className={styles.heroImage}
+          src="/media/speaker-addressing-room.jpg"
+          alt="A Contrarian Debate Club speaker addressing the room"
+          width={1600}
+          height={900}
+          priority
+        />
+        <div className={styles.heroShade} />
+        <nav className={styles.nav} aria-label="Brief navigation">
+          <Image
+            className={styles.logoLight}
+            src="/media/contrarian-logo-light.svg"
+            alt="The Contrarian Debate Club"
+            width={745}
+            height={346}
+            priority
+          />
+        </nav>
+        <div className={styles.heroCopy}>
+          <p className={styles.eyebrow}>Partnership brief</p>
+          <h1>A room built for people who have something to say.</h1>
+          <p className={styles.lead}>
+            Contrarian started as a plan for eight or nine friends to spend an
+            evening arguing well. Two months later, it is becoming a live
+            debate and content platform for sharp ideas, spirited disagreement
+            and conversations that travel far beyond the room.
+          </p>
+          <a className={styles.heroCta} href={instagramUrl} target="_blank" rel="noreferrer">
+            Explore the club on Instagram <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <p className={styles.scrollNote}>Bengaluru, India · 2026</p>
+      </section>
+
+      <div className={styles.tractionPage}>
+        <section className={styles.intro}>
+          <p className={styles.sectionLabel}>The story</p>
+          <div className={styles.storyGrid}>
+            <h2>It was supposed to be a small night out. It became a scene.</h2>
+            <div>
+              <p>
+                We originally planned Contrarian for eight or nine friends. Then
+                we put out our first reel, which reached <strong>80K views</strong>,
+                and saw <strong>demand for 110 tickets in under 12 hours</strong>.
+              </p>
+              <p>
+                In just two months, we have sold out <strong>five shows</strong>.
+                The live debate is the starting point. <mark className={styles.highlight}>We
+                turn the best arguments, prompts and moments into content that
+                brings new people into the conversation</mark>, then back into
+                the next room.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.stats} aria-label="Progress in two months">
+          <p className={styles.statsHeading}>Progress in 2 months</p>
+          <div className={styles.statsGrid}>
+            <article>
+              <strong>&gt;300</strong>
+              <span>live attendees</span>
+            </article>
+            <article>
+              <strong>~350K</strong>
+              <span>views</span>
+            </article>
+            <article>
+              <strong>5</strong>
+              <span>sold-out shows</span>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <section className={styles.elevation}>
+        <div className={styles.elevationAside}>
+          <p className={styles.sectionLabel}>Coming next</p>
+          <div className={styles.elevationLockup} aria-label="Elevation Capital">
+            <span className={styles.elevationMark} aria-hidden="true"><i /><i /></span>
+            <span>Elevation<br />Capital</span>
+          </div>
+          <p className={styles.elevationKicker}>In partnership with</p>
+        </div>
+        <div>
+          <h2>Contrarian Debate Club<br />at Tech Week.</h2>
+          <p>
+            Next month, we are bringing the Contrarian room to Tech Week with
+            Elevation Capital, creating another moment where ambitious people
+            can meet ideas in public. Beyond Bengaluru, we are also planning
+            future live events in more cities, taking the format to the wider
+            community already engaging with our content.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles.audience}>
+        <div className={styles.audienceImageWrap}>
+          <Image
+            className={styles.audienceImage}
+            src="/media/audience-contributing.jpg"
+            alt="An audience member contributing to the debate"
+            width={1600}
+            height={900}
+          />
+        </div>
+        <div className={styles.audienceCopy}>
+          <p className={styles.sectionLabel}>Your potential reach</p>
+          <h2>Bengaluru&apos;s top 1% intellectual community.</h2>
+          <dl className={styles.profileGrid}>
+            <div>
+              <dt>Age</dt>
+              <dd>25–35</dd>
+            </div>
+            <div>
+              <dt>Live events</dt>
+              <dd>Bengaluru</dd>
+            </div>
+            <div>
+              <dt>Content reach</dt>
+              <dd>Bengaluru, Hyderabad, Mumbai and Delhi</dd>
+            </div>
+            <div>
+              <dt>Mindset</dt>
+              <dd>Curious, opinionated, high-agency and AI-fluent</dd>
+            </div>
+            <div>
+              <dt>Spending power</dt>
+              <dd>Well-compensated young professionals</dd>
+            </div>
+            <div>
+              <dt>Work</dt>
+              <dd>Technology, startups, design, consulting and creative fields</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section className={styles.fit}>
+        <p className={styles.sectionLabel}>Why partner with Contrarian</p>
+        <div
+          className={
+            partner ? styles.fitGrid : `${styles.fitGrid} ${styles.fitGridSolo}`
+          }
+        >
+          <div>
+            <h2>One partnership. A live room and a content engine.</h2>
+            <p>
+              Contrarian gives a partner rare access to a high-trust live room,
+              then carries that association into social content around the
+              debate. The result is both lived cultural relevance and a growing
+              library of moments people can discover, share and debate again.
+            </p>
+          </div>
+          {partner && (
+            <div className={styles.proposal}>
+              <p className={styles.proposalLabel}>
+                A {partner.name} partnership thought
+              </p>
+              <h3>
+                {partner.proposal.presents}
+                <br />
+                {partner.proposal.title}
+              </h3>
+              <p>{partner.proposal.body}</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className={styles.socialProof}>
+        <div className={styles.instagramFrame}>
+          <Image
+            src="/media/instagram-post-16.png"
+            alt="A Contrarian Debate Club post from Instagram"
+            width={1080}
+            height={1350}
+          />
+        </div>
+        <div className={styles.socialCopy}>
+          <p className={styles.sectionLabel}>On Instagram</p>
+          <h2>The debate does not end when the room empties.</h2>
+          <p>
+            Our Instagram is both the front door and the afterparty: debate
+            prompts, provocative points of view, event moments and the content
+            that keeps an argument alive between shows.
+          </p>
+          <a className={styles.instagramLink} href={instagramUrl} target="_blank" rel="noreferrer">
+            Review @contrarianclubblr on Instagram <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <section className={styles.gallery}>
+        <div className={styles.galleryHeader}>
+          <div>
+            <p className={styles.sectionLabel}>The room</p>
+            <h2>Ideas land differently when they are live.</h2>
+          </div>
+          <a href={instagramUrl} target="_blank" rel="noreferrer">
+            See more on Instagram <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div className={styles.galleryGrid}>
+          <Image
+            className={styles.galleryWide}
+            src="/media/speaker-and-audience.jpg"
+            alt="A speaker facing a gathered Contrarian Debate Club audience"
+            width={1600}
+            height={900}
+          />
+          <Image
+            className={styles.galleryTall}
+            src="/media/attendees-watching.jpg"
+            alt="Attendees watching the debate closely"
+            width={1600}
+            height={900}
+          />
+        </div>
+      </section>
+
+      <footer className={styles.footer}>
+        <Image
+          className={styles.logoDark}
+          src="/media/contrarian-logo-dark.svg"
+          alt="The Contrarian Debate Club"
+          width={1007}
+          height={417}
+        />
+        <Image
+          className={styles.logoLightFooter}
+          src="/media/contrarian-logo-light.svg"
+          alt="The Contrarian Debate Club"
+          width={745}
+          height={346}
+        />
+        <p>A partnership built around sharper questions.</p>
+        <a href={instagramUrl} target="_blank" rel="noreferrer">
+          @contrarianclubblr <span aria-hidden="true">↗</span>
+        </a>
+      </footer>
+      <ExportPdfButton />
+    </main>
+  );
+}

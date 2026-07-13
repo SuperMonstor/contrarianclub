@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The poster studio is a standalone Vite project with its own toolchain.
+    // Next's rules (next/image and friends) do not apply to it.
+    "posters/**",
   ]),
 ]);
 
