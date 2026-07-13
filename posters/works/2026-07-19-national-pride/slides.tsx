@@ -146,7 +146,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
     <div style={{ position: "absolute", inset: 0 }}>
       {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
       <div className="stmt-tone" />
-      <div className="stmt-scrim" />
+      <div className="invite-scrim" />
 
       <div
         style={{
@@ -157,7 +157,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          padding: "100px 82px 88px",
+          padding: "100px 82px 84px",
           textShadow: SHADOW,
         }}
       >
@@ -170,7 +170,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "center",
-            gap: 22,
+            gap: 20,
           }}
         >
           <span
@@ -180,12 +180,15 @@ export function Invite({ spec }: { spec: SlideSpec }) {
             {spec.kicker}
           </span>
 
-          {/* the motion, finally stated as the thing being voted on */}
+          {/* The motion, in two weights. The because-clause is not a footnote:
+              it is the half of the claim the debate actually turns on, so it
+              is set in the same serif, in ivory, large enough to read at a
+              glance. Gold lost against the pale sky behind it. */}
           <h1
             className="hero"
             style={{
-              fontSize: 82,
-              lineHeight: 1.04,
+              fontSize: 80,
+              lineHeight: 1.03,
               letterSpacing: "-0.018em",
               margin: 0,
               maxWidth: "16ch",
@@ -198,11 +201,12 @@ export function Invite({ spec }: { spec: SlideSpec }) {
               style={{
                 fontFamily: "var(--cc-font-display)",
                 fontStyle: "italic",
-                fontSize: 30,
-                lineHeight: 1.4,
-                color: "var(--cc-gold)",
-                margin: 0,
-                maxWidth: "28ch",
+                fontSize: 48,
+                lineHeight: 1.16,
+                letterSpacing: "-0.012em",
+                color: "var(--cc-ivory)",
+                margin: "2px 0 0",
+                maxWidth: "20ch",
               }}
             >
               {spec.oneLiner}

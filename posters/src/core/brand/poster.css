@@ -172,6 +172,25 @@
     linear-gradient(180deg, rgba(42, 30, 12, 0.2), rgba(20, 14, 8, 0.14));
 }
 
+/* --- Invite slide: the motion and the details must read at a glance, so the
+   art keeps only the top third and the rest goes to near-black ------------- */
+.invite-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.26) 14%,
+      rgba(11, 9, 7, 0.4) 28%,
+      rgba(11, 9, 7, 0.82) 44%,
+      rgba(11, 9, 7, 0.95) 58%,
+      var(--cc-black) 74%
+    ),
+    radial-gradient(120% 80% at 50% 24%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
+
 /* --- Conflict slide: art visible up top, near-black under the two columns - */
 .conflict-scrim {
   position: absolute;

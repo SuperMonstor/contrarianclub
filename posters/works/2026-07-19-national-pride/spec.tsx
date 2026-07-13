@@ -54,7 +54,7 @@ const work: WorkSpec = {
       kicker: "The Case For",
       title: "Start with how anyone gets better",
       oneLiner:
-        "You find someone doing it better than you, and you study them. So what happens when pride makes that feel like disloyalty?",
+        "You find a country doing better than you, and you study them. What happens when pride makes that comparison feel like disloyalty?",
       image: { src: observatory, position: "center 34%" },
     },
 
@@ -96,7 +96,7 @@ const work: WorkSpec = {
       template: (p) => <Beat spec={p.spec} side="against" index={1} total={2} />,
       kicker: "",
       title:
-        "And measure yourself only against the rich, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
+        "Measure yourself against other countries, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
       image: { src: sorrow, position: "center 26%" },
     },
 
@@ -131,7 +131,7 @@ const work: WorkSpec = {
       oneLiner: "Because it discourages international comparison.",
       details: [
         { label: "Date", value: "Sunday, 19 July" },
-        { label: "Time", value: "2:00 pm onwards" },
+        { label: "Time", value: "1:00 pm onwards" },
         { label: "Tickets", value: "On Offlyn" },
         { label: "Where", value: "Underground Comedy Club, Koramangala" },
       ],

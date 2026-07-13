@@ -28,7 +28,7 @@ copy thinking. Where it and `spec.ts` disagree, `spec.ts` is what shipped.
 | | |
 | --- | --- |
 | Date | Sunday, 19 July |
-| Time | 2:00 pm to 5:00 pm |
+| Time | 1:00 pm onwards |
 | Venue | Underground Comedy Club, Koramangala |
 | Tickets | Offlyn |
 
@@ -148,7 +148,7 @@ panel you watch.
 > | | |
 > | --- | --- |
 > | Date | Sunday, 19 July |
-> | Time | 2:00 pm onwards |
+> | Time | 1:00 pm onwards |
 > | Where | Underground Comedy Club, Koramangala |
 > | Tickets | On Offlyn |
 >
@@ -159,10 +159,14 @@ line was cut to its second half: "You vote before. You vote after." is implied
 by "moves the most minds", and the shorter line survives the centered closing
 lockup without wrapping.
 
-Note on the time: the slot runs 2:00 pm to 5:00 pm, but the poster says "2:00 pm
-onwards" the way the last one did. A three hour window on a poster reads like a
-commitment to sit through three hours. The full window still belongs on the
-Offlyn listing, where people are already committing.
+Note on the time: the poster says "1:00 pm onwards" rather than printing an end
+time. A hard window on a flyer reads like a commitment to sit through the whole
+thing, which costs casual yeses. The full window belongs on the Offlyn listing,
+where people are already committing.
+
+The because-clause is not a footnote. It is the half of the claim the debate
+actually turns on, so on the slide it is set in the same serif as the motion, in
+ivory rather than gold: gold lost against the pale sky behind it.
 
 ---
 
