@@ -6,7 +6,7 @@
 
 import type { FormatId } from "./formats";
 
-export type TemplateId = "editorial" | "statement" | "versus";
+export type TemplateId = "editorial" | "statement" | "versus" | "panel";
 
 export interface DetailRow {
   label: string;
@@ -50,6 +50,12 @@ export interface SlideSpec {
     src: string;
     /** how far the image bleeds in from the right (editorial) or fills (statement) */
     treatment?: "duotone" | "scrim" | "full";
+    /** CSS object-position for the crop, e.g. "center 62%". Each painting
+     *  wants its own band; the template default is a sane middle crop. */
+    position?: string;
+    /** Panel slides: this slide shows slice `index` of `of` from one image
+     *  shared across consecutive slides, so swiping pans the painting. */
+    pane?: { index: number; of: number };
   };
 }
 

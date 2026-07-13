@@ -70,15 +70,31 @@ export function Versus({ spec, format }: { spec: SlideSpec; format: Format }) {
   const [left, right] = spec.columns ?? [];
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        padding: tall ? "150px 110px" : "112px 100px",
-      }}
-    >
+    <div style={{ position: "absolute", inset: 0 }}>
+      {spec.image && (
+        <>
+          <img
+            className="versus-img"
+            src={spec.image.src}
+            alt=""
+            style={{ objectPosition: spec.image.position ?? "center 30%" }}
+          />
+          <div className="versus-scrim" />
+        </>
+      )}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          padding: tall ? "150px 110px" : "112px 100px",
+          textShadow: spec.image
+            ? "0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(0, 0, 0, 0.75)"
+            : undefined,
+        }}
+      >
       <header>
         <Lockup width={300} />
       </header>
@@ -98,7 +114,11 @@ export function Versus({ spec, format }: { spec: SlideSpec; format: Format }) {
           </span>
           <h1
             className="hero"
-            style={{ fontSize: 76, margin: 0, maxWidth: "18ch" }}
+            style={{
+              fontSize: spec.title.length > 44 ? 64 : 76,
+              margin: 0,
+              maxWidth: "20ch",
+            }}
           >
             {spec.title}
           </h1>
@@ -174,17 +194,18 @@ export function Versus({ spec, format }: { spec: SlideSpec; format: Format }) {
         )}
       </div>
 
-      <footer style={{ display: "flex", flexDirection: "column", gap: 34 }}>
-        <hr className="rule" />
-        {spec.closing && (
-          <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-            <span className="closing" style={{ fontSize: 27 }}>
-              {spec.closing}
-            </span>
-            <hr className="rule" style={{ flex: 1 }} />
-          </div>
-        )}
-      </footer>
+        <footer style={{ display: "flex", flexDirection: "column", gap: 34 }}>
+          <hr className="rule" />
+          {spec.closing && (
+            <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+              <span className="closing" style={{ fontSize: 27 }}>
+                {spec.closing}
+              </span>
+              <hr className="rule" style={{ flex: 1 }} />
+            </div>
+          )}
+        </footer>
+      </div>
     </div>
   );
 }
