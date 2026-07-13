@@ -2,7 +2,7 @@ import { chromium } from "playwright";
 import { createServer } from "vite";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { FORMATS, type FormatId } from "./src/formats";
+import { FORMATS, type FormatId } from "./src/core/formats";
 import { POSTERS } from "./src/posters";
 
 // Usage: npm run poster <posterId> [format...]

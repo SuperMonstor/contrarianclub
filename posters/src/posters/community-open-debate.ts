@@ -1,4 +1,4 @@
-import type { PosterSpec } from "../types";
+import type { PosterSpec } from "../core/types";
 
 // The Contrarian Debate Club, Community Open Debate
 // Voice: short declaratives, dry and a little ceremonial. No exclamation

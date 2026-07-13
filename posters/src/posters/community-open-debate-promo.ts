@@ -1,4 +1,4 @@
-import type { PosterSpec } from "../types";
+import type { PosterSpec } from "../core/types";
 
 // Image-forward promo for the Community Open Debate, full-bleed statement
 // layout (ref post 16) over a treated public-domain painting of the Roman

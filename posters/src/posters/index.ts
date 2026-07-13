@@ -1,4 +1,4 @@
-import type { PosterSpec } from "../types";
+import type { PosterSpec } from "../core/types";
 import { communityOpenDebate } from "./community-open-debate";
 import { communityOpenDebatePromo } from "./community-open-debate-promo";
 

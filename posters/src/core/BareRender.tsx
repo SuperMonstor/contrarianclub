@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { FORMATS, type FormatId } from "./formats";
-import { POSTERS } from "./posters";
+import { POSTERS } from "../posters";
 import { PosterFrame } from "./templates/PosterFrame";
 import { renderTemplate } from "./templates";
 

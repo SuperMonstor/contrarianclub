@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FORMAT_LIST, FORMATS, type FormatId } from "./formats";
-import { POSTER_LIST } from "./posters";
+import { POSTER_LIST } from "../posters";
 import { PosterFrame } from "./templates/PosterFrame";
 import { renderTemplate } from "./templates";
 

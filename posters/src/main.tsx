@@ -1,13 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import "./brand/fonts";
-import "./brand/tokens.css";
-import "./brand/poster.css";
-import "./studio.css";
+import "./core/brand/fonts";
+import "./core/brand/tokens.css";
+import "./core/brand/poster.css";
+import "./core/studio.css";
 
-import { Studio } from "./studio";
-import { BareRender } from "./BareRender";
+import { Studio } from "./core/studio";
+import { BareRender } from "./core/BareRender";
 
 // Two modes on one app:
 //   ?render=<posterId>&format=<formatId>  → just the poster at exact px (export)
