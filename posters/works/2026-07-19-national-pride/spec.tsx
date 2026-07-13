@@ -96,7 +96,7 @@ const work: WorkSpec = {
       template: (p) => <Beat spec={p.spec} side="against" index={1} total={2} />,
       kicker: "",
       title:
-        "Measure yourself against other countries, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
+        "Measure yourself only against other countries, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
       image: { src: sorrow, position: "center 26%" },
     },
 
@@ -132,7 +132,7 @@ const work: WorkSpec = {
       details: [
         { label: "Date", value: "Sunday, 19 July" },
         { label: "Time", value: "1:00 pm onwards" },
-        { label: "Tickets", value: "On Offlyn" },
+        { label: "Tickets", value: "Offlyn" },
         { label: "Where", value: "Underground Comedy Club, Koramangala" },
       ],
       closing: "The side that moves the most minds wins.",

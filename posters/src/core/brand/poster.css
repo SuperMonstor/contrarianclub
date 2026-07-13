@@ -192,6 +192,17 @@
 }
 
 /* --- Conflict slide: art visible up top, near-black under the two columns - */
+/* dark-ground paintings (ink landscapes) need a lift, not a darkening, or the
+   slide reads as plain black in the feed */
+.conflict-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.02) brightness(1.22) sepia(0.12);
+}
 .conflict-scrim {
   position: absolute;
   inset: 0;
@@ -199,14 +210,14 @@
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.72) 0%,
-      rgba(11, 9, 7, 0.36) 16%,
-      rgba(11, 9, 7, 0.5) 34%,
-      rgba(11, 9, 7, 0.86) 52%,
-      rgba(11, 9, 7, 0.95) 70%,
+      rgba(11, 9, 7, 0.6) 0%,
+      rgba(11, 9, 7, 0.16) 14%,
+      rgba(11, 9, 7, 0.3) 34%,
+      rgba(11, 9, 7, 0.78) 52%,
+      rgba(11, 9, 7, 0.93) 70%,
       var(--cc-black) 100%
     ),
-    radial-gradient(120% 80% at 50% 30%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+    radial-gradient(120% 80% at 50% 26%, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 /* --- Panel-template pane (a slice of a painting shared across slides) ----- */

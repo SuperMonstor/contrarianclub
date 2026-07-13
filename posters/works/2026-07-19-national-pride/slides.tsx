@@ -69,6 +69,18 @@ export function Hook({ spec }: { spec: SlideSpec }) {
       {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
       <div className="stmt-tone" />
       <div className="stmt-scrim" />
+      {/* Delacroix's sky is pale exactly where the lockup sits; deepen the top
+          band a little so gold-on-smoke does not go weak */}
+      <div
+        style={{
+          position: "absolute",
+          inset: "0 0 auto 0",
+          height: "22%",
+          zIndex: 1,
+          background:
+            "linear-gradient(180deg, rgba(11,9,7,0.55), rgba(11,9,7,0.2) 62%, transparent)",
+        }}
+      />
 
       <div
         style={{
@@ -474,15 +486,16 @@ export function Beat({
         <div className="plate-tone" />
       </div>
 
-      {/* the caption */}
+      {/* the caption. Centred in its zone so a three-line sentence does not
+          leave a dead band at the foot of the slide. */}
       <div
         style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           gap: 26,
-          paddingTop: 38,
+          paddingTop: 14,
         }}
       >
         <Rule accent={accent} width="220px" />
@@ -561,7 +574,13 @@ export function Conflict({ spec }: { spec: SlideSpec }): ReactNode {
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
+      {spec.image && (
+        <Art
+          src={spec.image.src}
+          position={spec.image.position}
+          className="conflict-img"
+        />
+      )}
       <div className="stmt-tone" />
       <div className="conflict-scrim" />
 
