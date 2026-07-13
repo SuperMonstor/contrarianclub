@@ -9,13 +9,16 @@ words are right, then it becomes `spec.ts` in this folder.
   concrete.
 - **The two-column compare became the `versus` core template**, general to any
   two-sided slide.
-- **Every slide carries art**, and the two cases run one sentence per slide
-  over a single painting that pans across the swipe (the `panel` template).
-- **Art, all public domain via Wikimedia Commons, in `assets/`:** Delacroix's
-  "Liberty Leading the People" opens; Bruegel's "Tower of Babel" holds the
-  motion; Raphael's "School of Athens" pans across The Case For; Bruegel's
-  "The Harvesters" pans across The Case Against; Rembrandt's "Syndics" sits
-  behind the core conflict; Friedrich's "Wanderer" closes.
+- **Every slide carries art, chosen for what that slide says**, not for period
+  flavour. No panning across one painting: the pictures argue alongside the
+  words.
+- **The interior is prose, not bullets.** It should read as one argument spoken
+  aloud, each sentence handing off to the next.
+- **Art, all public domain via Wikimedia Commons, in `assets/`:** Delacroix
+  (Liberty) opens, Bruegel (Babel) holds the motion, then Rembrandt (Anatomy
+  Lesson), Bruegel (Cockaigne), Hals (Banquet), Ford Madox Brown (Work),
+  Bruegel (Harvesters), Van Gogh (Sorrowing Old Man), Rembrandt (Syndics), and
+  Friedrich (Wanderer) closes.
 
 The built carousel is `spec.ts`; renders are in `out/`. This file records the
 copy thinking. Where it and `spec.ts` disagree, `spec.ts` is what shipped.
@@ -60,7 +63,7 @@ It survives as the core conflict on slide 5, which is where it belongs.
 
 > **COMING UP NEXT**
 >
-> # Can too much national pride become a country's biggest weakness?
+> # Can too much national pride hold a country back?
 >
 > A question that has divided economists, policymakers and patriots.
 
@@ -88,48 +91,49 @@ takes the accusation first and the mechanism second.
 
 ## Slides 3 to 5: The Case For
 
-One sentence per slide, panning left to right across the School of Athens:
+Prose, not bullets. Each slide is a sentence that hands off to the next, and
+each painting is chosen for the sentence it sits under.
 
-> 1. The fastest way to improve is to learn from those doing it better.
-> 2. National pride often encourages people to judge success by how far we've
->    come, rather than how far we still have to go.
-> 3. Without comparing ourselves to the world's best, we risk celebrating
->    progress instead of pursuing excellence.
-
-The middle pane lands Plato and Aristotle dead centre under the lockup.
+> 1. Start here. The fastest way to get better at anything is to study whoever
+>    is already doing it better.
+>    *(Rembrandt, The Anatomy Lesson: students crowding in to learn from a master.)*
+> 2. But pride quietly changes what you measure. You start judging yourself by
+>    how far you have come, not by how far you still have to go.
+>    *(Bruegel, The Land of Cockaigne: men lying stuffed and idle.)*
+> 3. And once that happens, you celebrate progress instead of chasing
+>    excellence. You stop running.
+>    *(Hals, Banquet of the Officers: toasting themselves.)*
 
 ## Slides 6 to 8: The Case Against
 
-Same shape, panning across the Harvesters (crop band dropped to "center 88%"
-so the workers, not the empty hills, carry the slides):
+It answers back rather than starting over. "Then again" is doing the work.
 
-> 1. Progress needs people who believe their country is worth building.
-> 2. National pride gives people a shared identity, a reason to contribute,
->    and confidence that our path can succeed.
-> 3. Constantly measuring yourself against richer countries can create
->    cynicism, resentment, and the belief that you'll never catch up.
-
-The third sentence dropped "or more developed" from the original: it repeats
-"richer" without adding an argument, and the shorter line holds four lines
-instead of five.
+> 1. Then again, nobody builds a country they are ashamed of.
+>    *(Ford Madox Brown, Work: people building the thing they believe in.)*
+> 2. Pride is what makes people stay, contribute, and believe the thing can
+>    actually work.
+>    *(Bruegel, The Harvesters: a country fed by its own hands.)*
+> 3. And if you only ever measure yourself against the rich, you do not learn
+>    ambition. You learn resentment, and the quiet belief that you will never
+>    catch up.
+>    *(Van Gogh, Sorrowing Old Man.)*
 
 ## Slide 9: the core conflict
 
-The versus template over the Syndics, heavily scrimmed.
+Put as a question, with each side answered in one sentence rather than a
+bullet list.
 
 > **THE CORE CONFLICT**
 >
-> ## Where should a country's standard for progress come from?
+> ## So where should the standard come from?
 >
-> **Its own journey**
-> - Respects history and context.
-> - Builds unity and commitment.
-> - Measures how far we've come.
+> **Its own journey.** It respects where we started, it holds people together,
+> and it measures how far we have come.
 >
-> **The world's best**
-> - Sets a higher benchmark.
-> - Encourages learning.
-> - Measures how far we still have to go.
+> **The world's best.** It sets a higher bar, it forces us to learn, and it
+> measures how far we still have to go.
+>
+> *Come and settle it.*
 
 ## Slide 10: the room
 
