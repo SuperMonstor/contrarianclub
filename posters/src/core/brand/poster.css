@@ -186,15 +186,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.7) contrast(1.04) brightness(0.72) sepia(0.14);
+  /* two columns of text sit on this, so it is knocked back further than the
+     statement treatment. Not so far that the painting disappears. */
+  filter: saturate(0.78) contrast(1.06) brightness(0.92) sepia(0.12);
 }
 .versus-scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, rgba(11, 9, 7, 0.88) 0%, rgba(11, 9, 7, 0.7) 30%, rgba(11, 9, 7, 0.84) 60%, rgba(11, 9, 7, 0.96) 100%),
-    radial-gradient(130% 90% at 50% 35%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+    linear-gradient(180deg, rgba(11, 9, 7, 0.72) 0%, rgba(11, 9, 7, 0.42) 26%, rgba(11, 9, 7, 0.62) 52%, rgba(11, 9, 7, 0.82) 76%, rgba(11, 9, 7, 0.93) 100%),
+    radial-gradient(130% 90% at 50% 35%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 /* legibility scrim, soft over the logo, an open window on the room in the

@@ -59,9 +59,12 @@ export function Panel({ spec, format }: { spec: SlideSpec; format: Format }) {
             paddingBottom: 10,
           }}
         >
-          <span className="kicker" style={{ fontSize: 19, letterSpacing: "0.3em" }}>
-            {spec.kicker}
-          </span>
+          {/* a panel that continues a thought carries no label */}
+          {spec.kicker && (
+            <span className="kicker" style={{ fontSize: 19, letterSpacing: "0.3em" }}>
+              {spec.kicker}
+            </span>
+          )}
           <h1
             className="hero"
             style={{

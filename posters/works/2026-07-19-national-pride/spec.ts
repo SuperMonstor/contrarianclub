@@ -1,32 +1,37 @@
 import type { WorkSpec } from "../../src/core/types";
 import liberty from "./assets/liberty.jpg";
-import babel from "./assets/babel.jpg";
-import anatomy from "./assets/anatomy.jpg";
+import observatory from "./assets/observatory.jpg";
 import cockaigne from "./assets/cockaigne.jpg";
-import banquet from "./assets/banquet.jpg";
-import work_ from "./assets/work.jpg";
-import harvesters from "./assets/harvesters.jpg";
+import babel from "./assets/babel.jpg";
+import akbar from "./assets/akbar.jpg";
+import qingming from "./assets/qingming.jpg";
 import sorrow from "./assets/sorrow.jpg";
-import syndics from "./assets/syndics.jpg";
+import mountains from "./assets/mountains.jpg";
 import wanderer from "./assets/wanderer.jpg";
 
 // Instagram carousel for the 19 July debate. See copy.md for the copy
 // decisions and the rejected motion wordings.
 //
-// The interior reads as one argument spoken aloud, not a deck of bullets:
-// each slide is a sentence that hands off to the next, and each painting is
-// chosen for the sentence it sits under rather than for period flavour.
+// Two rules the piece is built on.
 //
-//   1  liberty     Delacroix      pride at its most seductive
-//   2  babel       Bruegel        the monument to pride that never finished
-//   3  anatomy     Rembrandt      students crowding in to learn from a master
-//   4  cockaigne   Bruegel        men lying stuffed and idle, done running
-//   5  banquet     Hals           officers toasting themselves
-//   6  work        Ford Madox Brown  people building the thing they believe in
-//   7  harvesters  Bruegel        a country fed by its own hands
-//   8  sorrow      Van Gogh       what measuring yourself against the rich does
-//   9  syndics     Rembrandt      the table where it gets decided
-//   10 wanderer    Friedrich      one figure choosing what to measure himself against
+// It reads as one argument spoken aloud. Each side opens with a slide that
+// walks you into the reasoning, then the slides that follow just continue the
+// thought with no label on them. Nobody talks in bullet points, and nobody
+// says "the case for" three times in a row.
+//
+// The art comes from everywhere, because the debate is about whether to look
+// beyond your own borders. Illustrating that from a single canon would be an
+// argument against the motion made by accident.
+//
+//   1  liberty      Delacroix, France      pride at its most seductive
+//   2  observatory  Ottoman miniature      measuring yourself against the sky
+//   3  cockaigne    Bruegel, Flanders      lying stuffed and idle, done running
+//   4  babel        Bruegel, Flanders      the monument to self-regard that never finished
+//   5  akbar        Akbarnama, Mughal      building the thing you believe in
+//   6  qingming     Song dynasty, China    a city held up by the people in it
+//   7  sorrow       Van Gogh, Netherlands  what measuring yourself against the rich does
+//   8  mountains    Fan Kuan, China        the scale of what is left to climb
+//   9  wanderer     Friedrich, Germany     one figure choosing what to measure himself against
 //
 // All public domain, via Wikimedia Commons.
 const work: WorkSpec = {
@@ -35,7 +40,7 @@ const work: WorkSpec = {
   formats: ["carousel-slide"],
 
   slides: [
-    // 1. The hook.
+    // 1. The hook. The motion, asked as a question.
     {
       template: "statement",
       kicker: "Coming Up Next",
@@ -45,63 +50,60 @@ const work: WorkSpec = {
       image: { src: liberty, treatment: "full" },
     },
 
-    // 2. The motion, over the tower that pride never finished.
+    // 2. Opens the case for by walking into the reasoning rather than
+    //    announcing a position.
     {
       template: "statement",
-      kicker: "The Motion",
-      title: "National pride is a barrier to progress",
-      oneLiner: "Because it discourages international comparison.",
-      closing: "Nobody thinks pride is worthless. The argument is what it costs.",
-      image: { src: babel, treatment: "full", position: "center 42%" },
+      kicker: "The Case For",
+      title: "Start with how anyone gets better at anything",
+      oneLiner:
+        "You find someone doing it better than you, and you study them. So what happens when pride makes that feel like disloyalty?",
+      image: { src: observatory, treatment: "full", position: "center 40%" },
     },
 
-    // 3 to 5. The case for, one sentence handing off to the next.
+    // 3 and 4. The thought continues. No labels.
     {
       template: "panel",
-      kicker: "The Case For",
+      kicker: "",
       title:
-        "Start here. The fastest way to get better at anything is to study whoever is already doing it better.",
-      image: { src: anatomy, position: "center 46%" },
-    },
-    {
-      template: "panel",
-      kicker: "The Case For",
-      title:
-        "But pride quietly changes what you measure. You start judging yourself by how far you have come, not by how far you still have to go.",
+        "Pride quietly changes what you measure. You start judging yourself by how far you have come, not by how far you still have to go.",
       image: { src: cockaigne, position: "center 52%" },
     },
     {
       template: "panel",
-      kicker: "The Case For",
+      kicker: "",
       title:
         "And once that happens, you celebrate progress instead of chasing excellence. You stop running.",
-      image: { src: banquet, position: "center 40%" },
+      image: { src: babel, position: "center 40%" },
     },
 
-    // 6 to 8. The case against, answering it directly.
+    // 5. The other side opens by answering, not by starting over.
     {
-      template: "panel",
+      template: "statement",
       kicker: "The Case Against",
-      title: "Then again, nobody builds a country they are ashamed of.",
-      // the canvas is arched; crop below the curve so no bare edge shows
-      image: { src: work_, position: "center 55%" },
+      title: "Now try taking the pride away",
+      oneLiner:
+        "Nobody has ever built anything for a country they were ashamed of. So what exactly would we build with?",
+      image: { src: akbar, treatment: "full", position: "center 42%" },
     },
+
+    // 6 and 7.
     {
       template: "panel",
-      kicker: "The Case Against",
+      kicker: "",
       title:
         "Pride is what makes people stay, contribute, and believe the thing can actually work.",
-      image: { src: harvesters, position: "center 86%" },
+      image: { src: qingming, position: "center 60%" },
     },
     {
       template: "panel",
-      kicker: "The Case Against",
+      kicker: "",
       title:
-        "And if you only ever measure yourself against the rich, you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
+        "And measure yourself only against the rich, and you do not learn ambition. You learn resentment, and the quiet belief that you will never catch up.",
       image: { src: sorrow, position: "center 30%" },
     },
 
-    // 9. The core conflict, put as a question rather than a table.
+    // 8. The core conflict, put as a question rather than a table.
     {
       template: "versus",
       kicker: "The Core Conflict",
@@ -121,10 +123,10 @@ const work: WorkSpec = {
         },
       ],
       closing: "Come and settle it.",
-      image: { src: syndics, position: "center 25%" },
+      image: { src: mountains, position: "center 8%" },
     },
 
-    // 10. The room.
+    // 9. The room. The motion, finally stated as the thing you will vote on.
     {
       template: "statement",
       kicker: "Next Debate",
