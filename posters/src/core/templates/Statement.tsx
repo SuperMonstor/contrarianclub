@@ -5,6 +5,15 @@ import { Lockup } from "./Lockup";
 // Statement template, full-bleed treated portrait, huge condensed headline,
 // CTA. Matches reference post 16 ("SHOULD TRILLIONAIRES EXIST?").
 
+// The headline size was tuned for a short provocation ("SHOULD TRILLIONAIRES
+// EXIST?"). A full motion can run to 70+ characters, so long titles step down
+// rather than swallowing the image.
+function titleSize(title: string, short: boolean): number {
+  if (title.length <= 34) return short ? 100 : 128;
+  if (title.length <= 52) return short ? 84 : 104;
+  return short ? 72 : 88;
+}
+
 export function Statement({ spec, format }: { spec: SlideSpec; format: Format }) {
   const short = format.height <= 1080;
   return (
@@ -52,7 +61,7 @@ export function Statement({ spec, format }: { spec: SlideSpec; format: Format })
               fontFamily: "var(--cc-font-condensed)",
               fontWeight: 700,
               textTransform: "uppercase",
-              fontSize: short ? 100 : 128,
+              fontSize: titleSize(spec.title, short),
               lineHeight: 0.94,
               letterSpacing: "-0.005em",
               color: "var(--cc-ivory)",
@@ -71,7 +80,18 @@ export function Statement({ spec, format }: { spec: SlideSpec; format: Format })
             </p>
           )}
           {spec.details && spec.details.length > 0 && (
-            <div style={{ display: "flex", justifyContent: "center", gap: 56, marginTop: 18 }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "26px 56px",
+                marginTop: 18,
+                maxWidth: 780,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
               {spec.details.map((d, i) => (
                 <div key={i} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <span className="label" style={{ fontSize: 14, letterSpacing: "0.2em" }}>

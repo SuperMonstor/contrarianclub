@@ -6,11 +6,17 @@
 
 import type { FormatId } from "./formats";
 
-export type TemplateId = "editorial" | "statement";
+export type TemplateId = "editorial" | "statement" | "versus";
 
 export interface DetailRow {
   label: string;
   value: string;
+}
+
+/** One side of a versus slide. */
+export interface VersusColumn {
+  heading: string;
+  points: string[];
 }
 
 /** One rendered surface. A poster has one of these; a carousel has several. */
@@ -32,6 +38,9 @@ export interface SlideSpec {
 
   /** optional ceremonial closing line */
   closing?: string;
+
+  /** the two sides of a versus slide (exactly two render side by side) */
+  columns?: VersusColumn[];
 
   /** Optional treated background image. Import it from the work's own assets/
    *  folder rather than referencing a shared path:
