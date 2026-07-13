@@ -1,11 +1,11 @@
-import type { PosterSpec } from "../types";
+import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
 import { Lockup } from "./Lockup";
 
 // Statement template, full-bleed treated portrait, huge condensed headline,
 // CTA. Matches reference post 16 ("SHOULD TRILLIONAIRES EXIST?").
 
-export function Statement({ spec, format }: { spec: PosterSpec; format: Format }) {
+export function Statement({ spec, format }: { spec: SlideSpec; format: Format }) {
   const short = format.height <= 1080;
   return (
     <div style={{ position: "absolute", inset: 0 }}>

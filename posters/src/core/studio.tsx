@@ -1,19 +1,19 @@
 import { useMemo, useState } from "react";
 import { FORMAT_LIST, FORMATS, type FormatId } from "./formats";
-import { POSTER_LIST } from "../posters";
+import { WORK_LIST } from "./registry";
 import { PosterFrame } from "./templates/PosterFrame";
 import { renderTemplate } from "./templates";
 
-// Interactive preview. Pick a poster + format; see it at true proportions,
-// scaled to fit. Export happens via the CLI (`npm run poster <id>`).
+// Interactive preview. Pick a work, a slide (carousels have several) and a
+// format; see it at true proportions, scaled to fit. Export happens via the
+// CLI (`npm run poster <id>`).
 export function Studio() {
-  const [posterId, setPosterId] = useState(POSTER_LIST[0]?.id ?? "");
+  const [workId, setWorkId] = useState(WORK_LIST[0]?.id ?? "");
+  const [slide, setSlide] = useState(0);
   const [formatId, setFormatId] = useState<FormatId>("ig-portrait");
 
-  const spec = useMemo(
-    () => POSTER_LIST.find((p) => p.id === posterId),
-    [posterId],
-  );
+  const work = useMemo(() => WORK_LIST.find((w) => w.id === workId), [workId]);
+  const spec = work?.slides[Math.min(slide, work.slides.length - 1)];
   const format = FORMATS[formatId];
 
   // Fit the poster inside the preview stage.
@@ -21,21 +21,43 @@ export function Studio() {
   const maxW = 620;
   const scale = Math.min(maxH / format.height, maxW / format.width);
 
+  function pickWork(id: string) {
+    setWorkId(id);
+    setSlide(0);
+  }
+
   return (
     <div className="studio">
       <aside className="studio-panel">
         <div className="studio-brand">Contrarian · Poster Studio</div>
 
         <label className="studio-field">
-          <span>Poster</span>
-          <select value={posterId} onChange={(e) => setPosterId(e.target.value)}>
-            {POSTER_LIST.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.title}
+          <span>Work</span>
+          <select value={workId} onChange={(e) => pickWork(e.target.value)}>
+            {WORK_LIST.map((w) => (
+              <option key={w.id} value={w.id}>
+                {w.title}
+                {w.slides.length > 1 ? ` (${w.slides.length} slides)` : ""}
               </option>
             ))}
           </select>
         </label>
+
+        {work && work.slides.length > 1 && (
+          <label className="studio-field">
+            <span>Slide</span>
+            <select
+              value={slide}
+              onChange={(e) => setSlide(Number(e.target.value))}
+            >
+              {work.slides.map((s, i) => (
+                <option key={i} value={i}>
+                  {i + 1}. {s.title}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
 
         <label className="studio-field">
           <span>Format</span>
@@ -52,8 +74,8 @@ export function Studio() {
         </label>
 
         <div className="studio-hint">
-          Export all formats:
-          <code>npm run poster {posterId || "&lt;id&gt;"}</code>
+          Export every slide and format:
+          <code>npm run poster {workId || "&lt;id&gt;"}</code>
         </div>
       </aside>
 
@@ -63,7 +85,7 @@ export function Studio() {
             {renderTemplate(spec, format)}
           </PosterFrame>
         ) : (
-          <p>No poster selected.</p>
+          <p>No work selected.</p>
         )}
       </main>
     </div>

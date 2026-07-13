@@ -1,5 +1,10 @@
-// A PosterSpec is the data a template renders. Edit these by hand as .ts files
-// in src/posters/. (Supabase-event wiring can come later.)
+// The data a template renders.
+//
+// One folder under works/ is one Work: a poster is a Work with a single slide,
+// a carousel is a Work with several. Nothing outside that folder needs editing
+// to add one; the registry discovers it.
+
+import type { FormatId } from "./formats";
 
 export type TemplateId = "editorial" | "statement";
 
@@ -8,9 +13,8 @@ export interface DetailRow {
   value: string;
 }
 
-export interface PosterSpec {
-  /** filename-safe id, used by the export CLI: `npm run poster <id>` */
-  id: string;
+/** One rendered surface. A poster has one of these; a carousel has several. */
+export interface SlideSpec {
   template: TemplateId;
 
   /** small gold uppercase tracked-out line above the title */
@@ -29,10 +33,32 @@ export interface PosterSpec {
   /** optional ceremonial closing line */
   closing?: string;
 
-  /** optional treated background image (path under /public or src asset URL) */
+  /** Optional treated background image. Import it from the work's own assets/
+   *  folder rather than referencing a shared path:
+   *    import hero from "./assets/hero.jpg";
+   */
   image?: {
     src: string;
     /** how far the image bleeds in from the right (editorial) or fills (statement) */
     treatment?: "duotone" | "scrim" | "full";
   };
+}
+
+export interface WorkSpec {
+  /** what this is, in the studio picker and in the archive */
+  title: string;
+  /** ISO date of the event or the post. Sorts the archive. */
+  date: string;
+
+  /** One slide is a poster. Several, in order, is a carousel. */
+  slides: SlideSpec[];
+
+  /** Which formats `npm run poster <id>` writes by default. Posters usually
+   *  want the three feed sizes; carousels only want the slide size. */
+  formats?: FormatId[];
+}
+
+/** A WorkSpec plus the id derived from its folder name. */
+export interface Work extends WorkSpec {
+  id: string;
 }

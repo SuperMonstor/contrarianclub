@@ -1,4 +1,4 @@
-import type { PosterSpec } from "../types";
+import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
 import { Lockup } from "./Lockup";
 
@@ -6,7 +6,7 @@ import { Lockup } from "./Lockup";
 // one-liner, supporting points, a details block, ceremonial closing.
 // Matches reference posts 13 & 14. Text-forward; image optional.
 
-export function Editorial({ spec, format }: { spec: PosterSpec; format: Format }) {
+export function Editorial({ spec, format }: { spec: SlideSpec; format: Format }) {
   // A little vertical breathing room scales with the canvas height.
   const tall = format.height >= 1600; // story
   const short = format.height <= 1080; // square

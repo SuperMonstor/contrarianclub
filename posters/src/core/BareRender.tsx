@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { FORMATS, type FormatId } from "./formats";
-import { POSTERS } from "../posters";
+import { WORKS } from "./registry";
 import { PosterFrame } from "./templates/PosterFrame";
 import { renderTemplate } from "./templates";
 
-// Renders ONE poster at exact pixel size, no studio chrome. The export script
+// Renders ONE slide at exact pixel size, no studio chrome. The export script
 // navigates here and screenshots the #poster element. Signals readiness by
 // setting data-ready on <body> once fonts have loaded.
 export function BareRender({
-  posterId,
+  workId,
+  slide = 0,
   formatId,
 }: {
-  posterId: string;
+  workId: string;
+  slide?: number;
   formatId?: string;
 }) {
-  const spec = POSTERS[posterId];
+  const work = WORKS[workId];
+  const spec = work?.slides[slide];
   const format = FORMATS[(formatId as FormatId) ?? "ig-portrait"];
 
   useEffect(() => {
@@ -32,7 +35,13 @@ export function BareRender({
     });
   }, []);
 
-  if (!spec) return <pre style={{ color: "#fff" }}>Unknown poster: {posterId}</pre>;
+  if (!work) return <pre style={{ color: "#fff" }}>Unknown work: {workId}</pre>;
+  if (!spec)
+    return (
+      <pre style={{ color: "#fff" }}>
+        {workId} has no slide {slide}
+      </pre>
+    );
   if (!format) return <pre style={{ color: "#fff" }}>Unknown format: {formatId}</pre>;
 
   return (

@@ -1,33 +1,49 @@
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
 import { createServer } from "vite";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { FORMATS, type FormatId } from "./src/core/formats";
-import { POSTERS } from "./src/posters";
+import type { WorkManifestEntry } from "./src/core/registry";
 
-// Usage: npm run poster <posterId> [format...]
-// Renders the poster at exact pixel size (@2x for crispness) via a headless
-// Chrome and writes PNGs to out/<posterId>/.
+// Usage: npm run poster <workId> [format...]
 //
-// No Chromium download needed — uses your installed Google Chrome (channel).
+// Renders every slide of a work at exact pixel size (@2x for crispness) via a
+// headless Chrome, and writes PNGs into that work's own folder:
+// works/<workId>/out/. The work id is the folder name; any unambiguous
+// substring of it will do.
+//
+// No Chromium download needed. Uses your installed Google Chrome (channel).
 
 const SCALE = 2; // retina export; 1080-wide art ships at 2160-wide pixels
-const DEFAULT_FORMATS: FormatId[] = ["ig-portrait", "ig-square", "ig-story"];
+const FALLBACK_FORMATS: FormatId[] = ["ig-portrait", "ig-square", "ig-story"];
 
-async function main() {
-  const posterId = process.argv[2];
-  if (!posterId || !POSTERS[posterId]) {
+/** The specs import images, which only Vite can resolve, so node cannot read
+ *  them directly. The app publishes what the CLI needs on window instead. */
+async function readManifest(page: Page, base: string): Promise<WorkManifestEntry[]> {
+  await page.goto(`${base}/`, { waitUntil: "networkidle" });
+  return page.evaluate(
+    () =>
+      (window as unknown as { __CONTRARIAN_WORKS__: WorkManifestEntry[] })
+        .__CONTRARIAN_WORKS__,
+  );
+}
+
+function resolveWork(manifest: WorkManifestEntry[], query: string) {
+  const exact = manifest.find((w) => w.id === query);
+  if (exact) return exact;
+  const partial = manifest.filter((w) => w.id.includes(query));
+  if (partial.length === 1) return partial[0];
+  if (partial.length > 1) {
     console.error(
-      `Unknown poster "${posterId ?? ""}". Available: ${Object.keys(POSTERS).join(", ")}`,
+      `"${query}" matches several works:\n  ${partial.map((w) => w.id).join("\n  ")}`,
     );
     process.exit(1);
   }
+  return undefined;
+}
 
-  const wanted = (process.argv.slice(3) as FormatId[]).filter((f) => FORMATS[f]);
-  const formats = wanted.length ? wanted : DEFAULT_FORMATS;
-
-  const outDir = resolve("out", posterId);
-  mkdirSync(outDir, { recursive: true });
+async function main() {
+  const query = process.argv[2];
 
   const server = await createServer({
     configFile: resolve("vite.config.ts"),
@@ -40,22 +56,61 @@ async function main() {
   const browser = await chromium.launch({ channel: "chrome" });
 
   try {
+    const probe = await browser.newPage();
+    const manifest = await readManifest(probe, base);
+    await probe.close();
+
+    const work = query ? resolveWork(manifest, query) : undefined;
+    if (!work) {
+      console.error(
+        `${query ? `Unknown work "${query}".` : "Which work?"} Available:\n  ${manifest
+          .map(
+            (w) =>
+              `${w.id}  (${w.slides.length} slide${w.slides.length > 1 ? "s" : ""})`,
+          )
+          .join("\n  ")}`,
+      );
+      process.exit(1);
+    }
+
+    const asked = (process.argv.slice(3) as FormatId[]).filter((f) => FORMATS[f]);
+    const formats: FormatId[] = asked.length
+      ? asked
+      : ((work.formats as FormatId[] | undefined) ?? FALLBACK_FORMATS);
+
+    const outDir = resolve("works", work.id, "out");
+    mkdirSync(outDir, { recursive: true });
+
     for (const fmtId of formats) {
       const fmt = FORMATS[fmtId];
-      const page = await browser.newPage({
-        viewport: { width: fmt.width, height: fmt.height },
-        deviceScaleFactor: SCALE,
-      });
-      await page.goto(`${base}/?render=${posterId}&format=${fmtId}`, {
-        waitUntil: "networkidle",
-      });
-      await page.waitForSelector('body[data-ready="true"]', { timeout: 15000 });
-      const file = resolve(outDir, `${fmtId}.png`);
-      await page.locator("#poster").screenshot({ path: file });
-      console.log(
-        `  ✓ ${fmtId.padEnd(14)} ${fmt.width * SCALE}×${fmt.height * SCALE}  → ${file}`,
-      );
-      await page.close();
+      for (const [slide, { hasImage }] of work.slides.entries()) {
+        const page = await browser.newPage({
+          viewport: { width: fmt.width, height: fmt.height },
+          deviceScaleFactor: SCALE,
+        });
+        await page.goto(
+          `${base}/?render=${work.id}&slide=${slide}&format=${fmtId}`,
+          { waitUntil: "networkidle" },
+        );
+        await page.waitForSelector('body[data-ready="true"]', { timeout: 15000 });
+
+        // A poster is just <format>.<ext>. A carousel numbers its slides.
+        const ext = hasImage ? "jpg" : "png";
+        const n = String(slide + 1).padStart(2, "0");
+        const name =
+          work.slides.length > 1 ? `${fmtId}-${n}.${ext}` : `${fmtId}.${ext}`;
+        const file = resolve(outDir, name);
+
+        await page.locator("#poster").screenshot(
+          hasImage
+            ? { path: file, type: "jpeg", quality: 92 }
+            : { path: file, type: "png" },
+        );
+        console.log(
+          `  ✓ ${name.padEnd(22)} ${fmt.width * SCALE}×${fmt.height * SCALE}  → ${file}`,
+        );
+        await page.close();
+      }
     }
   } finally {
     await browser.close();
