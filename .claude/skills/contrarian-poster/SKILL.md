@@ -17,19 +17,35 @@ separate from the website). Read `posters/README.md` for commands and file
 layout. This skill is the playbook: what to decide and the tacit craft that is
 not obvious from the code.
 
+## The one structural rule
+
+`posters/src/core/` is the design system: brand, templates, formats. It is
+stable and event-agnostic. `posters/works/` is the archive: one self-contained
+folder per poster or carousel, holding its spec, its own `assets/` and its
+committed `out/`.
+
+**Never edit `src/core/` to solve one event's problem.** If a poster needs
+something the templates cannot do, that is a template change and it has to be
+right for every future poster too. Say so explicitly rather than sneaking a
+one-off in.
+
 ## Workflow
 
 1. **Get the brief**: event name, one-liner, date/time, entry line, any
    supporting points. Fill unknowns with the user, do not invent event facts.
 2. **Pick a template** (see below).
-3. **Write a spec** in `posters/src/posters/<id>.ts` and register it in
-   `posters/src/posters/index.ts`. A spec is plain data (`PosterSpec` in
-   `src/types.ts`).
-4. **Preview and export**: `cd posters && npm run poster <id>` renders every
-   format to `out/<id>/` at 2x. Then **look at the PNG** (Read the image) and
+3. **Make a folder**: `posters/works/<yyyy-mm-dd>-<slug>/` with a `spec.ts`
+   default-exporting a `WorkSpec` (`src/core/types.ts`), and its images in
+   `assets/`. There is nothing to register: the studio and the CLI glob
+   `works/*/spec.ts`. The folder name is the id.
+4. **Preview and export**: `cd posters && npm run poster <id>` renders to
+   `works/<id>/out/` at 2x. Then **look at the exported image** (Read it) and
    iterate. Do not trust the code alone; these are visual artifacts.
-5. Iterate on treatment/spacing until it reads well, then report the output
-   paths.
+5. Iterate on treatment/spacing until it reads well, then commit the spec,
+   assets and `out/` together and report the paths.
+
+A carousel is the same thing with several `slides`, plus
+`formats: ["carousel-slide"]`. A poster is a one-slide work.
 
 ## Voice (non-negotiable)
 
@@ -51,7 +67,7 @@ short provocation or a promo meant to stop the scroll, lean statement.
 
 ## Brand quick reference
 
-Tokens are in `posters/src/brand/tokens.css`. Do not hardcode new colors;
+Tokens are in `posters/src/core/brand/tokens.css`. Do not hardcode new colors;
 use the `--cc-*` variables.
 
 - Warm near-black surfaces, gold leaf (`--cc-gold #c8a24a`), ivory text.
@@ -72,11 +88,12 @@ Sourcing:
 1. Query Wikimedia Commons for a high-res scan (prefer > ~2000px on the long
    edge). Use the API `imageinfo` to get the real file URL and size; the
    convenience redirect URLs are often tiny.
-2. Download, convert to JPG (`sips -s format jpeg`), drop it in
-   `posters/public/`, reference it as `/<file>.jpg`.
+2. Download, convert to JPG (`sips -s format jpeg`), drop it in the work's own
+   `assets/` folder and `import` it in `spec.ts`. Images belong to the work,
+   not to a shared pile.
 3. Downloading art is a file download: only do it for the user's own request.
 
-Treatment (in the `.stmt-*` rules of `posters/src/brand/poster.css`): old-master
+Treatment (in the `.stmt-*` rules of `posters/src/core/brand/poster.css`): old-master
 paintings are usually **too bright** for this dark palette. The tuned recipe:
 - `filter: saturate(~0.82) contrast(~1.05) brightness(~0.86) sepia(~0.1)` to
   darken and warm without crushing the figures. If the image is still too
