@@ -1,12 +1,16 @@
 import type { Work, WorkSpec } from "./types";
 
-// Every folder under works/ that has a spec.ts is a work. There is no list to
+// Every folder under works/ that has a spec is a work. There is no list to
 // maintain: drop the folder in and it shows up in the studio and in the export
 // CLI. The folder name is the id, so works/2026-07-12-open-debate/ is exported
 // with `npm run poster 2026-07-12-open-debate`.
-const modules = import.meta.glob<{ default: WorkSpec }>("../../works/*/spec.ts", {
-  eager: true,
-});
+//
+// spec.tsx when the work renders its own slides, spec.ts when it just names
+// stock templates.
+const modules = import.meta.glob<{ default: WorkSpec }>(
+  "../../works/*/spec.{ts,tsx}",
+  { eager: true },
+);
 
 function idFromPath(path: string): string {
   return path.split("/").at(-2)!;

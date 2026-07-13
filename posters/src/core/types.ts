@@ -6,7 +6,19 @@
 
 import type { FormatId } from "./formats";
 
+
+import type { ReactNode } from "react";
+import type { Format } from "./formats";
+
 export type TemplateId = "editorial" | "statement" | "versus" | "panel";
+
+/** A work can render a slide itself instead of naming a stock template. Use
+ *  this when a piece wants a bespoke layout: it keeps one-off design out of
+ *  src/core, where everything has to be right for every future poster. */
+export type SlideRenderer = (props: {
+  spec: SlideSpec;
+  format: Format;
+}) => ReactNode;
 
 export interface DetailRow {
   label: string;
@@ -21,7 +33,8 @@ export interface VersusColumn {
 
 /** One rendered surface. A poster has one of these; a carousel has several. */
 export interface SlideSpec {
-  template: TemplateId;
+  /** a stock template by name, or the work's own renderer */
+  template: TemplateId | SlideRenderer;
 
   /** small gold uppercase tracked-out line above the title */
   kicker: string;

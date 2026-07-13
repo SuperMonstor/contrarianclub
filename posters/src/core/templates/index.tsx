@@ -16,6 +16,8 @@ const TEMPLATES: Record<
 };
 
 export function renderTemplate(spec: SlideSpec, format: Format) {
-  const Tmpl = TEMPLATES[spec.template];
+  // A work can bring its own renderer instead of naming a stock template.
+  const Tmpl =
+    typeof spec.template === "function" ? spec.template : TEMPLATES[spec.template];
   return <Tmpl spec={spec} format={format} />;
 }

@@ -9,9 +9,13 @@ words are right, then it becomes `spec.ts` in this folder.
   concrete.
 - **The two-column compare became the `versus` core template**, general to any
   two-sided slide.
-- **Art:** Delacroix, "Liberty Leading the People" (1830) opens; Friedrich,
-  "Wanderer above the Sea of Fog" (1818) closes. Both public domain, sourced
-  from Wikimedia Commons, in `assets/`.
+- **Every slide carries art**, and the two cases run one sentence per slide
+  over a single painting that pans across the swipe (the `panel` template).
+- **Art, all public domain via Wikimedia Commons, in `assets/`:** Delacroix's
+  "Liberty Leading the People" opens; Bruegel's "Tower of Babel" holds the
+  motion; Raphael's "School of Athens" pans across The Case For; Bruegel's
+  "The Harvesters" pans across The Case Against; Rembrandt's "Syndics" sits
+  behind the core conflict; Friedrich's "Wanderer" closes.
 
 The built carousel is `spec.ts`; renders are in `out/`. This file records the
 copy thinking. Where it and `spec.ts` disagree, `spec.ts` is what shipped.
@@ -82,47 +86,52 @@ The motion is long for a headline. On the slide it wants to break across two
 weights: the claim large, the `because` clause smaller underneath it, so the eye
 takes the accusation first and the mechanism second.
 
-## Slide 3: for the motion
+## Slides 3 to 5: The Case For
 
-> **FOR**
->
-> ## Look outward.
->
-> - The fastest way to improve is to study whoever is doing it better.
-> - Pride measures how far we have come. Excellence measures how far we have
->   left to go.
-> - Celebrate the distance travelled and you stop running.
+One sentence per slide, panning left to right across the School of Athens:
 
-## Slide 4: against the motion
+> 1. The fastest way to improve is to learn from those doing it better.
+> 2. National pride often encourages people to judge success by how far we've
+>    come, rather than how far we still have to go.
+> 3. Without comparing ourselves to the world's best, we risk celebrating
+>    progress instead of pursuing excellence.
 
-> **AGAINST**
->
-> ## Look inward.
->
-> - Nobody builds a country they are ashamed of.
-> - Pride is what makes people stay, contribute, and believe the thing can work.
-> - Measure yourself only against the rich and you learn resentment, not
->   ambition.
+The middle pane lands Plato and Aristotle dead centre under the lockup.
 
-## Slide 5: the core conflict
+## Slides 6 to 8: The Case Against
 
-The best slide. Kept close to the original.
+Same shape, panning across the Harvesters (crop band dropped to "center 88%"
+so the workers, not the empty hills, carry the slides):
+
+> 1. Progress needs people who believe their country is worth building.
+> 2. National pride gives people a shared identity, a reason to contribute,
+>    and confidence that our path can succeed.
+> 3. Constantly measuring yourself against richer countries can create
+>    cynicism, resentment, and the belief that you'll never catch up.
+
+The third sentence dropped "or more developed" from the original: it repeats
+"richer" without adding an argument, and the shorter line holds four lines
+instead of five.
+
+## Slide 9: the core conflict
+
+The versus template over the Syndics, heavily scrimmed.
 
 > **THE CORE CONFLICT**
 >
-> ## Where should the standard come from?
+> ## Where should a country's standard for progress come from?
 >
 > **Its own journey**
 > - Respects history and context.
 > - Builds unity and commitment.
-> - Measures how far we have come.
+> - Measures how far we've come.
 >
-> **Or the world's best**
+> **The world's best**
 > - Sets a higher benchmark.
-> - Forces learning.
+> - Encourages learning.
 > - Measures how far we still have to go.
 
-## Slide 6: the room
+## Slide 10: the room
 
 The format line is the sell. It says this is an argument you take part in, not a
 panel you watch.
