@@ -17,8 +17,8 @@ const PHASE_ORDER = {
   speaker_challenge: 3,
 } as const;
 
-const CHALLENGE_PROMPT = "Vote out the current speaker?";
-const CHALLENGE_OPTION_LABEL = "Vote out the speaker";
+const CHALLENGE_PROMPT = "Current speaker";
+const CHALLENGE_OPTION_LABEL = "Legacy next-speaker vote";
 const CHALLENGE_BUFFER_DEFAULT = 90;
 const CHALLENGE_BUFFER_MIN = 10;
 const CHALLENGE_BUFFER_MAX = 600;
@@ -72,7 +72,7 @@ function getChallengeSettings(formData: FormData) {
 function withChallengeMigrationHint(error: { code?: string; message?: string }) {
   if (error.code === "42703" || error.code === "23514" || error.code === "42P01") {
     return new Error(
-      "Speaker challenges require Supabase migration 011_speaker_challenge.sql.",
+      "The Audience Section requires Supabase migrations 011 and 012.",
     );
   }
 
@@ -700,7 +700,7 @@ export async function controlActivity(
 
   // Challenge rounds are append-only history; there is nothing to reset.
   if (command === "reset" && activity.phase === "speaker_challenge") {
-    throw new Error("The speaker challenge cannot be reset.");
+    throw new Error("Use the Audience Section rehearsal reset instead.");
   }
 
   const statusByCommand = {
@@ -787,60 +787,27 @@ export async function controlActivity(
   revalidatePath(`/present/${code}`);
 }
 
-// Starts the challenge (first press) or moves to the next speaker (later
-// presses). Either way a fresh join window opens: the round number advances
-// unless the activity was still a draft, and voting_opens_at is stamped
-// buffer_seconds into the future. Prior rounds' joins and votes are untouched.
-export async function advanceChallengeRound(code: string, activityId: string) {
+async function runSpeakerAdminCommand(
+  code: string,
+  activityId: string,
+  rpc:
+    | "admin_start_speaker"
+    | "admin_pause_speaker"
+    | "admin_resume_speaker"
+    | "admin_advance_speaker"
+    | "admin_reset_speaker",
+) {
   await requireAdminUser();
 
   const supabase = createServiceClient();
   const activity = await getActivityForEvent(supabase, code, activityId);
 
   if (activity.phase !== "speaker_challenge") {
-    throw new Error("Only a speaker challenge has rounds.");
+    throw new Error("Only the Audience Section has speaker sessions.");
   }
 
-  const { data: current, error: currentError } = await supabase
-    .from("activities")
-    .select("status, challenge_round, challenge_buffer_seconds")
-    .eq("id", activityId)
-    .single<{
-      status: string;
-      challenge_round: number;
-      challenge_buffer_seconds: number;
-    }>();
-
-  if (currentError) throw withChallengeMigrationHint(currentError);
-
-  const nextRound =
-    current.status === "draft"
-      ? current.challenge_round
-      : current.challenge_round + 1;
-  const bufferSeconds =
-    current.challenge_buffer_seconds ?? CHALLENGE_BUFFER_DEFAULT;
-
-  const { error: updateError } = await supabase
-    .from("activities")
-    .update({
-      status: "open",
-      challenge_round: nextRound,
-      voting_opens_at: new Date(Date.now() + bufferSeconds * 1000).toISOString(),
-    })
-    .eq("id", activityId);
-
-  if (updateError) throw updateError;
-
-  const { error: stateError } = await supabase
-    .from("presentation_state")
-    .upsert({
-      event_id: activity.event_id,
-      active_activity_id: activityId,
-      mode: "poll",
-      updated_at: new Date().toISOString(),
-    });
-
-  if (stateError) throw stateError;
+  const { error } = await supabase.rpc(rpc, { p_activity_id: activityId });
+  if (error) throw withChallengeMigrationHint(error);
 
   revalidatePath(`/host/${code}`);
   revalidatePath(`/admin/events/${code}`);
@@ -848,63 +815,24 @@ export async function advanceChallengeRound(code: string, activityId: string) {
   revalidatePath(`/present/${code}`);
 }
 
-// Full clean-slate reset for the challenge, meant for after rehearsals: wipes
-// every round's joins and votes and returns to round 1 as a draft. Deliberately
-// a separate action from controlActivity's reset, which the challenge refuses —
-// advancing rounds during an event never deletes anything; this does.
+export async function startChallengeSpeaker(code: string, activityId: string) {
+  return runSpeakerAdminCommand(code, activityId, "admin_start_speaker");
+}
+
+export async function pauseChallengeSpeaker(code: string, activityId: string) {
+  return runSpeakerAdminCommand(code, activityId, "admin_pause_speaker");
+}
+
+export async function resumeChallengeSpeaker(code: string, activityId: string) {
+  return runSpeakerAdminCommand(code, activityId, "admin_resume_speaker");
+}
+
+export async function advanceChallengeRound(code: string, activityId: string) {
+  return runSpeakerAdminCommand(code, activityId, "admin_advance_speaker");
+}
+
 export async function resetChallenge(code: string, activityId: string) {
-  await requireAdminUser();
-
-  const supabase = createServiceClient();
-  const activity = await getActivityForEvent(supabase, code, activityId);
-
-  if (activity.phase !== "speaker_challenge") {
-    throw new Error("Only a speaker challenge can be reset this way.");
-  }
-
-  const { error: joinsError } = await supabase
-    .from("challenge_joins")
-    .delete()
-    .eq("activity_id", activityId);
-
-  if (joinsError) throw joinsError;
-
-  const { error: votesError } = await supabase
-    .from("votes")
-    .delete()
-    .eq("activity_id", activityId);
-
-  if (votesError) throw votesError;
-
-  const { error: activityError } = await supabase
-    .from("activities")
-    .update({
-      status: "draft",
-      results_visibility: "hidden",
-      challenge_round: 1,
-      voting_opens_at: null,
-    })
-    .eq("id", activityId);
-
-  if (activityError) throw activityError;
-
-  await deleteOrphanParticipants(supabase, activity.event_id);
-
-  const { error: stateError } = await supabase
-    .from("presentation_state")
-    .upsert({
-      event_id: activity.event_id,
-      active_activity_id: activityId,
-      mode: "join",
-      updated_at: new Date().toISOString(),
-    });
-
-  if (stateError) throw stateError;
-
-  revalidatePath(`/host/${code}`);
-  revalidatePath(`/admin/events/${code}`);
-  revalidatePath(`/join/${code}`);
-  revalidatePath(`/present/${code}`);
+  return runSpeakerAdminCommand(code, activityId, "admin_reset_speaker");
 }
 
 export async function setActiveActivity(code: string, activityId: string) {
@@ -913,14 +841,10 @@ export async function setActiveActivity(code: string, activityId: string) {
   const supabase = createServiceClient();
   const activity = await getActivityForEvent(supabase, code, activityId);
 
-  const { error: stateError } = await supabase
-    .from("presentation_state")
-    .upsert({
-      event_id: activity.event_id,
-      active_activity_id: activityId,
-      mode: "poll",
-      updated_at: new Date().toISOString(),
-    });
+  const { error: stateError } = await supabase.rpc("admin_switch_section", {
+    p_event_id: activity.event_id,
+    p_activity_id: activityId,
+  });
 
   if (stateError) throw stateError;
 
@@ -962,12 +886,20 @@ export async function updateEventStatus(
   await requireAdminUser();
 
   const supabase = createServiceClient();
-  const { error } = await supabase
+  const { data: event, error: eventError } = await supabase
     .from("events")
-    .update({ status })
-    .eq("code", code);
+    .select("id")
+    .eq("code", code.trim().toUpperCase())
+    .single();
 
-  if (error) throw error;
+  if (eventError) throw eventError;
+
+  const { error } = await supabase.rpc("admin_set_event_status", {
+    p_event_id: event.id,
+    p_status: status,
+  });
+
+  if (error) throw withChallengeMigrationHint(error);
 
   revalidatePath("/admin");
   revalidatePath(`/admin/events/${code}`);

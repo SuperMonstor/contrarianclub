@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { buildEventUrls } from "@/lib/site";
 import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
+import { summarizeSpeakerBallots } from "@/lib/speaker-challenge";
 import { createServiceClient } from "@/lib/supabase/server";
 import type {
   ActivitySummary,
@@ -10,6 +11,7 @@ import type {
   EventSummary,
   PollOptionResult,
   PresentationMode,
+  SpeakerBallotChoice,
 } from "@/lib/types";
 
 type PollOptionRow = {
@@ -95,15 +97,10 @@ export async function getEventState(code: string): Promise<EventState | null> {
   }
 
   const activityIds = activities.map((item) => item.id);
+  const pollActivityIds = activities
+    .filter((item) => item.phase !== "speaker_challenge")
+    .map((item) => item.id);
   const isChallenge = activity.phase === "speaker_challenge";
-  const challengeRound = activity.challenge_round ?? 1;
-
-  // For the challenge, only the current round is "live" — earlier rounds are
-  // history and must not leak into tallies or the audience's voted state.
-  const activityVotesQuery = supabase
-    .from("votes")
-    .select("option_id, device_id")
-    .eq("activity_id", activity.id);
 
   const [
     options,
@@ -112,16 +109,21 @@ export async function getEventState(code: string): Promise<EventState | null> {
     { data: allVotes, error: allVotesError },
   ] = await Promise.all([
     getPollOptionsForActivity(supabase, activity.id),
-    (isChallenge
-      ? activityVotesQuery.eq("round", challengeRound)
-      : activityVotesQuery
-    ).returns<VoteRow[]>(),
+    isChallenge
+      ? Promise.resolve({ data: [] as VoteRow[], error: null })
+      : supabase
+          .from("votes")
+          .select("option_id, device_id")
+          .eq("activity_id", activity.id)
+          .returns<VoteRow[]>(),
     getPollOptionsForActivities(supabase, activityIds),
-    supabase
-      .from("votes")
-      .select("activity_id, option_id, device_id")
-      .in("activity_id", activityIds)
-      .returns<ActivityVoteRow[]>(),
+    pollActivityIds.length === 0
+      ? Promise.resolve({ data: [] as ActivityVoteRow[], error: null })
+      : supabase
+          .from("votes")
+          .select("activity_id, option_id, device_id")
+          .in("activity_id", pollActivityIds)
+          .returns<ActivityVoteRow[]>(),
   ]);
 
   if (votesError) throw votesError;
@@ -134,8 +136,8 @@ export async function getEventState(code: string): Promise<EventState | null> {
 
   const mode: PresentationMode = presentationState?.mode ?? "join";
   // Per-option counts and swing are the outcome. Withhold them from the public
-  // state until the host actually reveals — matching the presenter's own
-  // visibility rules — so a client polling the endpoint can't read live results
+  // state until the host actually reveals, matching the presenter's own
+  // visibility rules, so a client polling the endpoint can't read live results
   // early. The aggregate totalVotes stays available: it leaks no distribution
   // and the audience's reset heuristic keys off it going to zero.
   const resultsRevealed =
@@ -159,7 +161,11 @@ export async function getEventState(code: string): Promise<EventState | null> {
       : null;
 
   const challenge = isChallenge
-    ? await buildChallengeSummary(supabase, activity, votes?.length ?? 0)
+    ? await buildChallengeSummary(
+        supabase,
+        activity,
+        event.status !== "ended" && event.status !== "archived",
+      )
     : null;
 
   return {
@@ -179,45 +185,42 @@ export async function getEventState(code: string): Promise<EventState | null> {
 async function buildChallengeSummary(
   supabase: ReturnType<typeof createServiceClient>,
   activity: ActivitySummary,
-  nextVotes: number,
+  eventActive: boolean,
 ): Promise<ChallengeSummary> {
   const round = activity.challenge_round ?? 1;
   const bufferSeconds = activity.challenge_buffer_seconds ?? 90;
 
-  const { count, error } = await supabase
-    .from("challenge_joins")
-    .select("id", { count: "exact", head: true })
+  const { data: ballots, error } = await supabase
+    .from("speaker_ballots")
+    .select("choice")
     .eq("activity_id", activity.id)
-    .eq("round", round);
+    .eq("round", round)
+    .returns<{ choice: SpeakerBallotChoice }[]>();
 
   if (error) throw error;
 
-  const joiners = count ?? 0;
+  const paused = activity.challenge_paused ?? false;
   const opensAtMs = activity.voting_opens_at
     ? Date.parse(activity.voting_opens_at)
     : null;
-  const started = activity.status === "open" && opensAtMs !== null;
-  const opensInSeconds =
-    started && opensAtMs !== null
+  const started = activity.status === "open";
+  const opensInSeconds = paused
+    ? (activity.challenge_paused_remaining_seconds ?? 0)
+    : started && opensAtMs !== null
       ? Math.max(0, Math.ceil((opensAtMs - Date.now()) / 1000))
       : 0;
-  const joinWindowOpen = started && opensInSeconds > 0;
-  const votingOpen = started && opensInSeconds === 0;
-  const votesNeeded = Math.floor(joiners / 2) + 1;
+  const votingOpen = eventActive && started && !paused && opensInSeconds === 0;
+  const totals = summarizeSpeakerBallots(
+    (ballots ?? []).map((ballot) => ballot.choice),
+  );
 
   return {
     round,
     bufferSeconds,
     opensInSeconds,
-    joinWindowOpen,
+    paused,
     votingOpen,
-    joiners,
-    nextVotes,
-    votesNeeded,
-    // The verdict stands once crossed, including after the host closes the
-    // challenge — closing does not un-decide a round. Majority of joiners
-    // decides at any room size; the verdict is advisory and the host acts.
-    speakerOut: joiners > 0 && nextVotes >= votesNeeded,
+    ...totals,
   };
 }
 
@@ -228,7 +231,7 @@ async function getActivitiesForEvent(
   const withLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label, challenge_round, voting_opens_at, challenge_buffer_seconds",
+      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label, challenge_round, voting_opens_at, challenge_buffer_seconds, challenge_paused, challenge_paused_remaining_seconds, challenge_revision",
     )
     .eq("event_id", eventId)
     .order("created_at", { ascending: true })
@@ -263,6 +266,9 @@ async function getActivitiesForEvent(
     challenge_round: 1,
     voting_opens_at: null,
     challenge_buffer_seconds: 90,
+    challenge_paused: false,
+    challenge_paused_remaining_seconds: null,
+    challenge_revision: 0,
   }));
 }
 

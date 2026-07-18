@@ -67,20 +67,29 @@ export function useLiveEventState(code: string, initialState: EventState) {
 
     // The anon key can no longer read votes/participants (they hold voter
     // identity), so we can't subscribe to those tables. We listen on the
-    // non-sensitive tables the host mutates — activities (open/close) and
-    // presentation_state (active question, mode, reveal, reset) — and lean on
-    // the safety poll for vote-by-vote liveness until a dedicated change
-    // channel replaces it.
+    // non-sensitive tables the host mutates: activities and presentation_state.
+    // Speaker ballot mutations increment the activity revision, while the
+    // safety poll remains the fallback for missed events.
     const channel = supabase
       .channel(`event-state-${code}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "activities" },
+        {
+          event: "*",
+          schema: "public",
+          table: "activities",
+          filter: `event_id=eq.${initialState.event.id}`,
+        },
         () => scheduleRefresh(),
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "presentation_state" },
+        {
+          event: "*",
+          schema: "public",
+          table: "presentation_state",
+          filter: `event_id=eq.${initialState.event.id}`,
+        },
         () => scheduleRefresh(),
       )
       .subscribe();
@@ -88,7 +97,7 @@ export function useLiveEventState(code: string, initialState: EventState) {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [code, scheduleRefresh]);
+  }, [code, initialState.event.id, scheduleRefresh]);
 
   function refreshSoon() {
     startTransition(() => {

@@ -7,6 +7,8 @@ export type ActivityPhase =
   | "post_debate"
   | "speaker_challenge";
 export type ActivityType = "multiple_choice" | "scale";
+export type SpeakerBallotChoice = "keep" | "next";
+export type ChallengeLeader = SpeakerBallotChoice | "tie" | "none";
 
 export type EventSummary = {
   id: string;
@@ -32,23 +34,26 @@ export type ActivitySummary = {
   challenge_round?: number;
   voting_opens_at?: string | null;
   challenge_buffer_seconds?: number;
+  challenge_paused?: boolean;
+  challenge_paused_remaining_seconds?: number | null;
+  challenge_revision?: number;
 };
 
 // Live state of the current speaker-challenge round. Tallies here are public
-// by design — the rolling referendum is the spectacle — unlike the debate
+// by design. The rolling referendum is the spectacle, unlike the debate
 // polls, whose per-option counts stay hidden until the host reveals.
 export type ChallengeSummary = {
   round: number;
   bufferSeconds: number;
   // Seconds until voting opens, computed server-side so client clock skew
-  // cannot distort the countdown. 0 once the join window has ended.
+  // cannot distort the countdown. 0 once protected time has ended.
   opensInSeconds: number;
-  joinWindowOpen: boolean;
+  paused: boolean;
   votingOpen: boolean;
-  joiners: number;
+  keepVotes: number;
   nextVotes: number;
-  votesNeeded: number;
-  speakerOut: boolean;
+  totalBallots: number;
+  leader: ChallengeLeader;
 };
 
 export type PollOptionResult = {

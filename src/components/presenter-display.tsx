@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import { ChallengeSplit } from "@/components/challenge-vote";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
@@ -43,13 +44,13 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
     : isJoinMode
       ? "Open to join"
       : isChallengeStage
-        ? state.challenge?.speakerOut
-          ? "Next speaker"
-          : state.challenge?.joinWindowOpen
-            ? "Join window open"
+        ? state.challenge?.paused
+          ? "Audience Section paused"
+          : state.challenge?.opensInSeconds
+            ? "Protected speaking time"
             : state.challenge?.votingOpen
-              ? "Challenge vote live"
-              : "Speaker challenge"
+              ? "Audience ballot live"
+              : "Audience Section"
         : showResults
           ? "Results live"
           : activity?.status === "open"
@@ -116,7 +117,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                     {state.event.title}
                   </p>
                   <h1 className="club-display club-d-hero mt-6">
-                    {activity.prompt}
+                    {isChallengeStage ? "Current speaker" : activity.prompt}
                   </h1>
                 </>
               ) : isSwingStage ? null : (
@@ -184,7 +185,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
 
           <footer className="club-mono relative z-10 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-[color:var(--cc-muted)] sm:text-sm">
             <span>{state.participantCount} tracked</span>
-            <span>{state.totalVotes} responses</span>
+            <span>
+              {isChallengeStage
+                ? `${state.challenge?.totalBallots ?? 0} ballots`
+                : `${state.totalVotes} responses`}
+            </span>
           </footer>
         </div>
 
@@ -282,28 +287,11 @@ function ChallengeStage({
   status: string;
 }) {
   const remaining = useChallengeCountdown(challenge.opensInSeconds);
-  const joinWindow = challenge.joinWindowOpen && remaining > 0;
-  const votingOpen =
-    challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0);
-
-  if (challenge.speakerOut) {
-    return (
-      <div>
-        <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
-          Next speaker.
-        </p>
-        <p className="club-eyebrow mt-4">
-          The room has spoken &middot; {challenge.nextVotes} of{" "}
-          {challenge.joiners} called for the change
-        </p>
-      </div>
-    );
-  }
 
   if (status === "draft") {
     return (
       <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
-        The challenge is coming.
+        The Audience Section is ready.
       </p>
     );
   }
@@ -311,54 +299,43 @@ function ChallengeStage({
   if (status === "closed") {
     return (
       <p className="club-display club-d-hero text-[color:var(--cc-parchment)]">
-        The speaker holds the floor.
+        Waiting for the host.
       </p>
     );
   }
 
-  if (joinWindow) {
+  if (remaining > 0) {
     return (
       <div>
-        <p className="club-eyebrow">The speaker has the floor</p>
+        <p className="club-eyebrow">
+          {challenge.paused ? "Speaker session paused" : "Protected speaking time"}
+        </p>
         <p className="club-display club-d-hero mt-3 text-[color:var(--cc-gold-bright)]">
           {formatClock(remaining)}
         </p>
         <p className="club-eyebrow mt-4">
-          Join now to take part &middot; {challenge.joiners} in so far
+          {challenge.paused
+            ? "The timer will continue when the host resumes"
+            : "The ballot unlocks at zero"}
         </p>
       </div>
     );
   }
 
-  if (votingOpen) {
-    const progress = Math.min(
-      100,
-      Math.round((challenge.nextVotes / challenge.votesNeeded) * 100),
-    );
-
+  if (challenge.votingOpen || challenge.paused) {
     return (
       <div>
         <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
-          The room may call for the next speaker.
+          {challenge.leader === "next"
+            ? "Next speaker leads."
+            : "Keep speaking or next speaker?"}
         </p>
         <div className="mt-8 max-w-3xl">
-          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-            <span className="club-eyebrow">
-              {challenge.nextVotes} of {challenge.votesNeeded} called for the
-              next speaker
-            </span>
-            <span className="club-mono text-sm uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
-              {challenge.joiners} in this round
-            </span>
-          </div>
-          <div className="h-5 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
-            <div
-              className="h-full rounded-[3px] bg-[color:var(--cc-gold-bright)] transition-all duration-700"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <p className="club-eyebrow mt-3 text-[color:var(--cc-muted)]">
-            A majority of the round&apos;s joiners votes the speaker out
+          <ChallengeSplit challenge={challenge} large />
+          <p className="club-eyebrow mt-4 text-[color:var(--cc-muted)]">
+            {challenge.paused
+              ? "Ballot paused"
+              : "The host decides when the speaker changes"}
           </p>
         </div>
       </div>

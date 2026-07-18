@@ -119,9 +119,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
   const activity = state.activity;
 
   const activityId = activity?.id;
-  // The challenge manages its own per-round joined/voted state, so the
-  // per-activity voted key and the totalVotes-reset heuristic must not run
-  // for it.
+  // The Audience Section manages its mutable per-round ballot separately.
   const isChallenge = activity?.phase === "speaker_challenge";
 
   useEffect(() => {
@@ -186,7 +184,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
 
   const statusText = useMemo(() => {
     if (!activity) return "Waiting for the host";
-    if (isChallenge) return "Speaker challenge";
+    if (isChallenge) return "Audience Section";
     if (activity.status === "draft") return "The poll has not opened yet";
     if (activity.status === "closed" && !resultsVisible) {
       return "Voting is closed. Results are hidden.";
@@ -217,7 +215,7 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
       });
 
       if (error) {
-        // A duplicate vote is a success from the voter's point of view — record
+        // A duplicate vote is a success from the voter's point of view. Record
         // it locally so the UI settles into the "voted" state.
         if (error.message.includes("already_voted")) {
           writeStored(activityVoteKey(code, activity.id), "true");
@@ -266,16 +264,16 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
           <div>
             <p className="club-kicker">Active question</p>
             <h2 className="club-display club-d-title mt-2.5">
-              {activity?.prompt ?? "Waiting for the first question"}
+              {isChallenge
+                ? "Current speaker"
+                : (activity?.prompt ?? "Waiting for the first question")}
             </h2>
           </div>
 
           {activity && isChallenge && state.challenge && (
             <ChallengeVote
-              code={code}
               activity={activity}
               challenge={state.challenge}
-              nextSpeakerOptionId={state.options[0]?.id ?? null}
               voteToken={voteToken}
               refresh={refresh}
             />

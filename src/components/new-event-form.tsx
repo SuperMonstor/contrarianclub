@@ -289,11 +289,11 @@ function EventFormFields({
           />
           <span>
             <span className="block font-semibold text-[color:var(--cc-parchment)]">
-              Enable speaker challenge
+              Enable Audience Section
             </span>
             <span className="mt-1 block text-sm text-[color:var(--cc-muted)]">
-              The room can call for the next speaker in repeating rounds. Each
-              round opens with a join window before voting unlocks.
+              Each audience speaker receives protected time, followed by a live
+              Keep speaking or Next speaker ballot.
             </span>
           </span>
         </label>
@@ -301,7 +301,7 @@ function EventFormFields({
         {challengeEnabled && (
           <div className="mt-4">
             <label className="club-label" htmlFor="challengeBufferSeconds">
-              Join window (seconds)
+              Protected time (seconds)
             </label>
             <input
               id="challengeBufferSeconds"
@@ -313,8 +313,7 @@ function EventFormFields({
               className="club-input mt-2 px-3.5 py-3"
             />
             <p className="mt-2 text-xs text-[color:var(--cc-faint)]">
-              How long the speaker is protected while the audience joins the
-              round. Voting opens when it ends.
+              The ballot unlocks when this protected speaking time ends.
             </p>
           </div>
         )}

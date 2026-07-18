@@ -11,21 +11,27 @@ import {
   Gavel,
   Mic,
   Monitor,
+  Pause,
   Pencil,
   PencilLine,
   Play,
   QrCode,
   RotateCcw,
+  SkipForward,
   Square,
 } from "lucide-react";
 import {
   advanceChallengeRound,
   controlActivity,
+  pauseChallengeSpeaker,
   resetChallenge,
+  resumeChallengeSpeaker,
   setActiveActivity,
   setPresenterMode,
+  startChallengeSpeaker,
   updateEventStatus,
 } from "@/app/actions";
+import { ChallengeSplit } from "@/components/challenge-vote";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import {
@@ -60,12 +66,19 @@ const PHASE_ORDER = {
   speaker_challenge: 3,
 } as const;
 
+const SECTION_ORDER = {
+  pre_debate: 0,
+  speaker_challenge: 1,
+  post_debate: 2,
+  general: 3,
+} as const;
+
 export function HostConsole({ code, editHref, initialState }: HostConsoleProps) {
   const { state, refreshSoon, isPending, lastSyncedAt } = useLiveEventState(
     code,
     initialState,
   );
-  const [command, setCommand] = useState<ControlCommand | null>(null);
+  const [command, setCommand] = useState<string | null>(null);
   const [statusCommand, setStatusCommand] = useState<string | null>(null);
   const [activeCommand, setActiveCommand] = useState<string | null>(null);
   const [isActing, startTransition] = useTransition();
@@ -96,9 +109,12 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     setCommand(nextCommand);
 
     startTransition(async () => {
-      await controlActivity(code, activity.id, nextCommand);
-      refreshSoon();
-      setCommand(null);
+      try {
+        await controlActivity(code, activity.id, nextCommand);
+        refreshSoon();
+      } finally {
+        setCommand(null);
+      }
     });
   }
 
@@ -106,9 +122,12 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     setStatusCommand(nextStatus);
 
     startTransition(async () => {
-      await updateEventStatus(code, nextStatus);
-      refreshSoon();
-      setStatusCommand(null);
+      try {
+        await updateEventStatus(code, nextStatus);
+        refreshSoon();
+      } finally {
+        setStatusCommand(null);
+      }
     });
   }
 
@@ -116,9 +135,12 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     setActiveCommand(activityId);
 
     startTransition(async () => {
-      await setActiveActivity(code, activityId);
-      refreshSoon();
-      setActiveCommand(null);
+      try {
+        await setActiveActivity(code, activityId);
+        refreshSoon();
+      } finally {
+        setActiveCommand(null);
+      }
     });
   }
 
@@ -131,15 +153,28 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     });
   }
 
-  function startNextRound() {
+  function runSpeakerCommand(
+    nextCommand: "start" | "pause" | "resume" | "next",
+  ) {
     if (!activity) return;
 
-    setCommand("open");
+    setCommand(nextCommand);
 
     startTransition(async () => {
-      await advanceChallengeRound(code, activity.id);
-      refreshSoon();
-      setCommand(null);
+      try {
+        if (nextCommand === "start") {
+          await startChallengeSpeaker(code, activity.id);
+        } else if (nextCommand === "pause") {
+          await pauseChallengeSpeaker(code, activity.id);
+        } else if (nextCommand === "resume") {
+          await resumeChallengeSpeaker(code, activity.id);
+        } else {
+          await advanceChallengeRound(code, activity.id);
+        }
+        refreshSoon();
+      } finally {
+        setCommand(null);
+      }
     });
   }
 
@@ -147,16 +182,19 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     if (!activity) return;
 
     const confirmed = window.confirm(
-      "This deletes every round's joins and votes for the speaker challenge and returns it to round 1. Meant for cleaning up after a test run. Continue?",
+      "This clears every Audience Section speaker ballot, plus legacy rehearsal joins and votes, then returns to speaker 1. Continue?",
     );
     if (!confirmed) return;
 
     setCommand("reset");
 
     startTransition(async () => {
-      await resetChallenge(code, activity.id);
-      refreshSoon();
-      setCommand(null);
+      try {
+        await resetChallenge(code, activity.id);
+        refreshSoon();
+      } finally {
+        setCommand(null);
+      }
     });
   }
 
@@ -257,23 +295,31 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
 
         <section className="space-y-5">
           <div className="club-panel p-6">
-            <div className="mb-6 grid gap-3 md:grid-cols-2">
-              {state.activities.map((item) => (
-                <ActivityCard
-                  key={item.id}
-                  activity={item}
-                  active={activity?.id === item.id}
-                  working={activeCommand === item.id}
-                  onSelect={() => makeActive(item.id)}
-                />
-              ))}
+            <div className="mb-6 grid gap-3 md:grid-cols-3">
+              {[...state.activities]
+                .filter((item) => item.phase !== "general")
+                .sort(
+                  (first, second) =>
+                    SECTION_ORDER[first.phase] - SECTION_ORDER[second.phase],
+                )
+                .map((item) => (
+                  <ActivityCard
+                    key={item.id}
+                    activity={item}
+                    active={activity?.id === item.id}
+                    working={activeCommand === item.id}
+                    onSelect={() => makeActive(item.id)}
+                  />
+                ))}
             </div>
 
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="club-kicker">Current poll</p>
+                <p className="club-kicker">Current section</p>
                 <h2 className="club-display club-d-title mt-3 max-w-3xl">
-                  {activity?.prompt ?? "No poll configured"}
+                  {activity?.phase === "speaker_challenge"
+                    ? "Current speaker"
+                    : (activity?.prompt ?? "No section configured")}
                 </h2>
               </div>
               <div className="flex gap-2">
@@ -292,28 +338,44 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
 
             {isChallenge ? (
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {activity?.status === "draft" ? (
+                  <ControlButton
+                    icon={<Play size={18} />}
+                    label="Start speaker"
+                    disabled={!activity || busy}
+                    active={command === "start"}
+                    primary
+                    onClick={() => runSpeakerCommand("start")}
+                  />
+                ) : state.challenge?.paused ? (
+                  <ControlButton
+                    icon={<Play size={18} />}
+                    label="Resume speaker"
+                    disabled={!activity || busy}
+                    active={command === "resume"}
+                    primary
+                    onClick={() => runSpeakerCommand("resume")}
+                  />
+                ) : (
+                  <ControlButton
+                    icon={<Pause size={18} />}
+                    label="Pause speaker"
+                    disabled={!activity || !isOpen || busy}
+                    active={command === "pause"}
+                    onClick={() => runSpeakerCommand("pause")}
+                  />
+                )}
                 <ControlButton
-                  icon={<Play size={18} />}
-                  label={
-                    activity?.status === "open"
-                      ? "Next speaker · new round"
-                      : "Start round"
-                  }
-                  disabled={!activity || busy}
-                  active={command === "open"}
-                  primary
-                  onClick={startNextRound}
-                />
-                <ControlButton
-                  icon={<Square size={18} />}
-                  label="Close challenge"
-                  disabled={!activity || !isOpen || busy}
-                  active={command === "close"}
-                  onClick={() => runCommand("close")}
+                  icon={<SkipForward size={18} />}
+                  label="Next speaker"
+                  disabled={!activity || activity.status === "draft" || busy}
+                  active={command === "next"}
+                  primary={activity?.status !== "draft"}
+                  onClick={() => runSpeakerCommand("next")}
                 />
                 <ControlButton
                   icon={<RotateCcw size={18} />}
-                  label="Reset challenge"
+                  label="Rehearsal reset"
                   disabled={!activity || busy}
                   active={command === "reset"}
                   onClick={runChallengeReset}
@@ -606,7 +668,9 @@ function ActivityCard({
         {phaseLabel(activity.phase)}
       </p>
       <h3 className="club-display club-d-item mt-2 line-clamp-2">
-        {activity.prompt}
+        {activity.phase === "speaker_challenge"
+          ? "Current speaker"
+          : activity.prompt}
       </h3>
       <div className="mt-4 flex gap-2">
         <span className="club-chip">{activity.status}</span>
@@ -809,114 +873,58 @@ function formatNullableSignedValue(value: number | null) {
 }
 
 function phaseLabel(phase: ActivitySummary["phase"]) {
-  if (phase === "pre_debate") return "pre-vote";
-  if (phase === "post_debate") return "post-vote";
-  if (phase === "speaker_challenge") return "speaker challenge";
+  if (phase === "pre_debate") return "Opening Vote";
+  if (phase === "post_debate") return "Closing Vote";
+  if (phase === "speaker_challenge") return "Audience Section";
   return "poll";
 }
 
 function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
   const remaining = useChallengeCountdown(challenge.opensInSeconds);
-  const joinWindow = challenge.joinWindowOpen && remaining > 0;
-  const votingOpen =
-    challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0);
-  // The bar shows next-speaker votes as a share of the round's joiners, with
-  // the majority mark at 50%; it turns wine once the majority is crossed.
-  const percent =
-    challenge.joiners === 0
-      ? 0
-      : Math.min(
-          100,
-          Math.round((challenge.nextVotes / challenge.joiners) * 100),
-        );
-  const majority =
-    challenge.joiners > 0 && challenge.nextVotes >= challenge.votesNeeded;
+  const protectedTime = remaining > 0;
 
   return (
     <>
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h3 className="club-display club-d-card">Speaker challenge</h3>
+        <h3 className="club-display club-d-card">Audience Section</h3>
         <span className="club-mono text-xs uppercase tracking-[0.16em] text-[color:var(--cc-muted)]">
-          Round {challenge.round}
+          Speaker {challenge.round}
         </span>
       </div>
 
-      {joinWindow ? (
+      {protectedTime ? (
         <div className="club-tile p-5 text-center">
-          <p className="club-label text-[0.65rem]">voting opens in</p>
+          <p className="club-label text-[0.65rem]">
+            {challenge.paused ? "protected time paused" : "protected time"}
+          </p>
           <p className="club-mono mt-2 text-6xl font-bold text-[color:var(--cc-gold-bright)]">
             {formatClock(remaining)}
           </p>
           <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
-            {challenge.joiners} joined so far
+            {challenge.paused
+              ? "Resume to continue from this exact position"
+              : "Ballot controls unlock at zero"}
           </p>
         </div>
       ) : (
         <p className="club-eyebrow">
-          {votingOpen ? "Voting open" : "Waiting for the next round"}
+          {challenge.paused
+            ? "Ballot paused"
+            : challenge.votingOpen
+              ? "Ballot open until the host advances"
+              : "Waiting for the first speaker"}
         </p>
       )}
 
-      {votingOpen && (
-        <div className="mt-4">
-          <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
-            <span className="font-semibold text-[color:var(--cc-parchment)]">
-              {challenge.nextVotes} of {challenge.joiners} joiners want the next
-              speaker
-            </span>
-            <span
-              className={`club-mono font-bold ${
-                majority
-                  ? "text-[color:var(--cc-wine-bright)]"
-                  : "text-[color:var(--cc-muted)]"
-              }`}
-            >
-              {majority ? `${percent}% · majority` : `${percent}%`}
-            </span>
-          </div>
-          <div className="relative h-4 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
-            <div
-              className={`h-full rounded-[3px] transition-all duration-700 ${
-                majority
-                  ? "bg-[color:var(--cc-wine-bright)]"
-                  : "bg-[color:var(--cc-gold-bright)]"
-              }`}
-              style={{ width: `${percent}%` }}
-            />
-            <div className="absolute inset-y-0 left-1/2 w-px bg-[color:var(--cc-ivory)]/40" />
-          </div>
-          <p className="mt-1.5 text-xs text-[color:var(--cc-muted)]">
-            Majority at the 50% mark
-          </p>
-        </div>
-      )}
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="club-tile p-4">
-          <p className="club-label text-[0.65rem]">Joined this round</p>
-          <p className="club-display mt-2 text-3xl text-[color:var(--cc-gold-bright)]">
-            {challenge.joiners}
-          </p>
-        </div>
-        <div className="club-tile p-4">
-          <p className="club-label text-[0.65rem]">Next-speaker votes</p>
-          <p className="club-display mt-2 text-3xl text-[color:var(--cc-ivory)]">
-            {challenge.nextVotes}
-          </p>
-        </div>
-        <div className="club-tile p-4">
-          <p className="club-label text-[0.65rem]">Needed</p>
-          <p className="club-display mt-2 text-3xl text-[color:var(--cc-ivory)]">
-            {challenge.votesNeeded}
-          </p>
-        </div>
+      <div className="mt-4">
+        <ChallengeSplit challenge={challenge} />
       </div>
 
-      {challenge.speakerOut && (
+      {challenge.leader === "next" && (
         <div className="club-panel-gold mt-4 px-4 py-4 text-center">
-          <p className="club-eyebrow">The room has spoken</p>
+          <p className="club-eyebrow">Next speaker leads</p>
           <p className="club-display club-d-card mt-1 text-[color:var(--cc-ivory)]">
-            Bring in the next speaker
+            The decision remains with the host
           </p>
         </div>
       )}

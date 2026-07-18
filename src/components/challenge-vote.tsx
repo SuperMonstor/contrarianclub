@@ -1,141 +1,136 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { Check, Loader2, Megaphone, UserPlus } from "lucide-react";
+import { Check, Loader2, Mic2, SkipForward } from "lucide-react";
 import {
   formatClock,
   useChallengeCountdown,
 } from "@/components/use-challenge-countdown";
 import { createBrowserClient } from "@/lib/supabase/browser";
-import type { ActivitySummary, ChallengeSummary } from "@/lib/types";
+import { ballotPercent } from "@/lib/speaker-challenge";
+import type {
+  ActivitySummary,
+  ChallengeSummary,
+  SpeakerBallotChoice,
+} from "@/lib/types";
 
 type ChallengeVoteProps = {
-  code: string;
   activity: ActivitySummary;
   challenge: ChallengeSummary;
-  nextSpeakerOptionId: string | null;
   voteToken: string;
   refresh: () => Promise<void>;
 };
 
-// Per-round keys: advancing the round changes the key, so every phone unlocks
-// for the new round without any inference from vote totals.
-function challengeKey(code: string, activityId: string, round: number, act: string) {
-  return `contrarianclub:${code}:activity:${activityId}:round:${round}:${act}`;
-}
-
-function readStored(key: string): string | null {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeStored(key: string, value: string) {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Best-effort cache only; the value already lives in component state.
-  }
-}
-
 function challengeErrorMessage(reason: string) {
-  if (reason.includes("join_window_closed")) {
-    return "The join window for this round has closed. You can join the next round.";
-  }
   if (reason.includes("voting_not_open_yet")) {
-    return "Voting hasn't opened yet. Try again in a moment.";
+    return "Voting opens when the protected time ends.";
   }
-  if (reason.includes("not_joined")) {
-    return "Only people who joined this round can vote. You can join the next round.";
+  if (reason.includes("speaker_paused")) {
+    return "The host has paused this speaker session.";
   }
-  if (reason.includes("poll_not_open")) return "The challenge is not open.";
+  if (reason.includes("stale_round")) {
+    return "The next speaker has started. Choose again for the new speaker.";
+  }
+  if (reason.includes("poll_not_open")) {
+    return "The Audience Section is not open.";
+  }
   if (reason.includes("event_not_active")) return "This event has ended.";
   if (reason.includes("invalid_token") || reason.includes("activity_not_found")) {
     return "Please refresh the page and try again.";
   }
-  return "Something went wrong. Please try again.";
+  return "Something went wrong. Your previous choice is still recorded.";
 }
 
 export function ChallengeVote({
-  code,
   activity,
   challenge,
-  nextSpeakerOptionId,
   voteToken,
   refresh,
 }: ChallengeVoteProps) {
-  const [hasJoined, setHasJoined] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
+  const [selectedChoice, setSelectedChoice] =
+    useState<SpeakerBallotChoice | null>(null);
+  const [confirmedChoice, setConfirmedChoice] =
+    useState<SpeakerBallotChoice | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRecovering, setIsRecovering] = useState(false);
   const [message, setMessage] = useState("");
   const remaining = useChallengeCountdown(challenge.opensInSeconds);
-
   const activityId = activity.id;
   const round = challenge.round;
 
-  // Restore this round's joined/voted flags; a round change resets both.
   useEffect(() => {
     let cancelled = false;
-    const joined = readStored(challengeKey(code, activityId, round, "joined"));
-    const voted = readStored(challengeKey(code, activityId, round, "voted"));
 
     window.queueMicrotask(() => {
       if (cancelled) return;
-      setHasJoined(joined === "true");
-      setHasVoted(voted === "true");
+      setSelectedChoice(null);
+      setConfirmedChoice(null);
       setMessage("");
     });
+
+    if (!voteToken) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const supabase = createBrowserClient();
+    if (!supabase) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    window.queueMicrotask(() => {
+      if (!cancelled) setIsRecovering(true);
+    });
+
+    void (async () => {
+      try {
+        const { data, error } = await supabase.rpc("get_speaker_ballot", {
+          p_token: voteToken,
+          p_activity_id: activityId,
+        });
+        if (cancelled) return;
+        if (error) {
+          setMessage(challengeErrorMessage(error.message));
+          return;
+        }
+
+        const recovered = (data as
+          | { round: number; choice: SpeakerBallotChoice | null }[]
+          | null)?.[0];
+        const choice = recovered?.round === round ? recovered.choice : null;
+        setSelectedChoice(choice);
+        setConfirmedChoice(choice);
+      } catch {
+        if (!cancelled) {
+          setMessage("Couldn't recover your choice. You can choose again.");
+        }
+      } finally {
+        if (!cancelled) setIsRecovering(false);
+      }
+    })();
 
     return () => {
       cancelled = true;
     };
-  }, [code, activityId, round]);
+  }, [activityId, round, voteToken]);
 
-  const isDraft = activity.status === "draft";
-  const isClosed = activity.status === "closed";
-  // Flip to the vote phase on the local tick for responsiveness (the safety
-  // poll can lag a few seconds); the server still rejects anything early.
-  const joinPhase = challenge.joinWindowOpen && remaining > 0;
-  const votePhase =
-    challenge.votingOpen || (challenge.joinWindowOpen && remaining === 0);
+  const protectedTime =
+    activity.status === "open" && !challenge.paused && remaining > 0;
+  const votingOpen =
+    activity.status === "open" &&
+    !challenge.paused &&
+    (challenge.votingOpen ||
+      (challenge.opensInSeconds > 0 && remaining === 0));
+  const ballotVisible =
+    votingOpen ||
+    (activity.status === "open" && challenge.paused && remaining === 0);
 
-  async function joinRound() {
-    if (!voteToken || isSubmitting) return;
-
-    const supabase = createBrowserClient();
-    if (!supabase) {
-      setMessage("Joining is unavailable right now.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setMessage("");
-
-    try {
-      const { error } = await supabase.rpc("join_challenge_round", {
-        p_token: voteToken,
-        p_activity_id: activityId,
-      });
-
-      if (error && !error.message.includes("already_joined")) {
-        setMessage(challengeErrorMessage(error.message));
-        return;
-      }
-
-      writeStored(challengeKey(code, activityId, round, "joined"), "true");
-      setHasJoined(true);
-      await refresh();
-    } catch {
-      setMessage("Couldn't reach the room. Check your connection and try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
-  async function voteNextSpeaker() {
-    if (!voteToken || !nextSpeakerOptionId || isSubmitting) return;
+  async function setBallot(choice: SpeakerBallotChoice) {
+    if (!voteToken || isSubmitting || !votingOpen) return;
 
     const supabase = createBrowserClient();
     if (!supabase) {
@@ -143,27 +138,35 @@ export function ChallengeVote({
       return;
     }
 
+    const previousChoice = confirmedChoice;
+    setSelectedChoice(choice);
     setIsSubmitting(true);
     setMessage("");
 
     try {
-      const { error } = await supabase.rpc("cast_vote", {
+      const { error } = await supabase.rpc("set_speaker_ballot", {
         p_token: voteToken,
         p_activity_id: activityId,
-        p_option_id: nextSpeakerOptionId,
-        p_display_name: null,
+        p_expected_round: round,
+        p_choice: choice,
       });
 
-      if (error && !error.message.includes("already_voted")) {
+      if (error) {
+        setSelectedChoice(previousChoice);
         setMessage(challengeErrorMessage(error.message));
         return;
       }
 
-      writeStored(challengeKey(code, activityId, round, "voted"), "true");
-      setHasVoted(true);
+      setConfirmedChoice(choice);
+      setMessage(
+        choice === "keep"
+          ? "Confirmed: Keep speaking."
+          : "Confirmed: Next speaker.",
+      );
       await refresh();
     } catch {
-      setMessage("Couldn't reach the room. Check your connection and try again.");
+      setSelectedChoice(previousChoice);
+      setMessage("Couldn't reach the room. Your previous choice is still recorded.");
     } finally {
       setIsSubmitting(false);
     }
@@ -171,98 +174,72 @@ export function ChallengeVote({
 
   return (
     <div className="mt-7 space-y-4">
-      {isDraft && (
+      {activity.status === "draft" && (
         <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
-          The speaker challenge hasn&apos;t started yet. Please wait for the
-          host.
+          The Audience Section has not started. Please wait for the host.
         </p>
       )}
 
-      {isClosed && (
+      {activity.status === "closed" && (
         <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
-          The speaker challenge is closed.
+          The Audience Section is waiting for the host.
         </p>
       )}
 
-      {challenge.speakerOut && !isDraft && (
-        <div className="club-panel-gold px-4 py-4 text-center">
-          <p className="club-eyebrow">The room has spoken</p>
-          <p className="club-display club-d-card mt-1 text-[color:var(--cc-ivory)]">
-            Next speaker
+      {protectedTime && (
+        <div className="club-panel-quiet px-4 py-5 text-center">
+          <p className="club-eyebrow">Protected speaking time</p>
+          <p className="club-mono mt-2 text-5xl font-bold text-[color:var(--cc-gold-bright)]">
+            {formatClock(remaining)}
+          </p>
+          <p className="mt-3 text-xs text-[color:var(--cc-muted)]">
+            The ballot unlocks when the clock reaches zero.
           </p>
         </div>
       )}
 
-      {joinPhase && (
-        <div className="space-y-3">
-          <div className="club-panel-quiet px-4 py-4 text-center">
-            <p className="club-eyebrow">Voting opens in</p>
-            <p className="club-mono mt-1 text-4xl font-bold text-[color:var(--cc-gold-bright)]">
-              {formatClock(remaining)}
+      {challenge.paused && (
+        <div className="club-panel-quiet px-4 py-4 text-center">
+          <p className="club-eyebrow">Speaker session paused</p>
+          {remaining > 0 && (
+            <p className="club-mono mt-2 text-3xl font-bold text-[color:var(--cc-gold-bright)]">
+              {formatClock(remaining)} protected time remains
             </p>
-            <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
-              {challenge.joiners} in this round so far
-            </p>
-          </div>
-          {hasJoined ? (
-            <p className="club-panel-quiet flex items-center gap-2 px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
-              <Check size={18} className="text-[color:var(--cc-gold-bright)]" />
-              You&apos;re in this round. Voting opens when the clock runs out.
-            </p>
-          ) : (
-            <button
-              type="button"
-              disabled={!voteToken || isSubmitting}
-              onClick={joinRound}
-              className="club-btn club-btn-primary w-full px-4 py-4"
-            >
-              {isSubmitting ? (
-                <Loader2 className="animate-spin" size={18} />
-              ) : (
-                <UserPlus size={18} />
-              )}
-              Join this round&apos;s vote
-            </button>
           )}
+          <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
+            The host can resume this speaker or begin the next one.
+          </p>
         </div>
       )}
 
-      {votePhase && !challenge.speakerOut && (
-        <div className="space-y-3">
-          <ChallengeMeter challenge={challenge} />
-          {hasJoined ? (
-            hasVoted ? (
-              <p className="club-panel-quiet flex items-center gap-2 px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
-                <Check size={18} className="text-[color:var(--cc-gold-bright)]" />
-                Vote received. Doing nothing keeps the current speaker.
-              </p>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  disabled={!voteToken || isSubmitting || !nextSpeakerOptionId}
-                  onClick={voteNextSpeaker}
-                  className="club-btn club-btn-primary w-full px-4 py-4"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="animate-spin" size={18} />
-                  ) : (
-                    <Megaphone size={18} />
-                  )}
-                  Vote out the speaker
-                </button>
-                <p className="text-center text-xs text-[color:var(--cc-muted)]">
-                  Or do nothing to keep the current speaker.
-                </p>
-              </>
-            )
-          ) : (
-            <p className="club-panel-quiet px-4 py-4 text-sm font-medium text-[color:var(--cc-parchment)]">
-              You didn&apos;t join this round, so you&apos;re sitting it out.
-              You can join when the next round opens.
-            </p>
-          )}
+      {ballotVisible && <ChallengeSplit challenge={challenge} />}
+
+      {votingOpen && (
+        <div className="grid grid-cols-2 gap-3">
+          <BallotButton
+            label="Keep speaking"
+            icon={<Mic2 size={19} />}
+            selected={selectedChoice === "keep"}
+            confirmed={confirmedChoice === "keep"}
+            disabled={!voteToken || isSubmitting || isRecovering}
+            onClick={() => setBallot("keep")}
+          />
+          <BallotButton
+            label="Next speaker"
+            icon={<SkipForward size={19} />}
+            selected={selectedChoice === "next"}
+            confirmed={confirmedChoice === "next"}
+            disabled={!voteToken || isSubmitting || isRecovering}
+            onClick={() => setBallot("next")}
+          />
         </div>
+      )}
+
+      {isRecovering && (
+        <p className="flex items-center justify-center gap-2 text-xs text-[color:var(--cc-muted)]">
+          <Loader2 className="animate-spin" size={14} />
+          Recovering your choice
+        </p>
       )}
 
       {message && (
@@ -274,35 +251,91 @@ export function ChallengeVote({
   );
 }
 
-// Live threshold meter for the voting phase. Counts ride the ~5s safety poll,
-// so the bar steps rather than glides; the width transition smooths it. The
-// meter always renders — below minimum turnout it still fills, with a note
-// that the round cannot produce a verdict yet.
-function ChallengeMeter({ challenge }: { challenge: ChallengeSummary }) {
-  const progress = Math.min(
-    100,
-    Math.round((challenge.nextVotes / challenge.votesNeeded) * 100),
+function BallotButton({
+  label,
+  icon,
+  selected,
+  confirmed,
+  disabled,
+  onClick,
+}: {
+  label: string;
+  icon: ReactNode;
+  selected: boolean;
+  confirmed: boolean;
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      disabled={disabled}
+      onClick={onClick}
+      className={`club-btn min-h-24 flex-col px-3 py-4 text-center ${
+        selected ? "club-btn-primary" : ""
+      }`}
+    >
+      <span className="flex items-center gap-2">
+        {icon}
+        {confirmed && <Check size={16} />}
+      </span>
+      <span>{label}</span>
+    </button>
   );
+}
+
+export function ChallengeSplit({
+  challenge,
+  large = false,
+}: {
+  challenge: ChallengeSummary;
+  large?: boolean;
+}) {
+  const keepPercent = ballotPercent(challenge.keepVotes, challenge.totalBallots);
+  const nextPercent = ballotPercent(challenge.nextVotes, challenge.totalBallots);
 
   return (
-    <div className="club-panel-quiet px-4 py-3">
-      <div className="mb-2 flex items-center justify-between gap-3 text-xs">
-        <span className="font-semibold text-[color:var(--cc-parchment)]">
-          {challenge.nextVotes} of {challenge.votesNeeded} to vote out
-        </span>
-        <span className="text-[color:var(--cc-muted)]">
-          {challenge.joiners} in this round
-        </span>
+    <div className="club-panel-quiet px-4 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="club-label text-[0.65rem]">Keep speaking</p>
+          <p className={`club-mono mt-1 font-bold text-[color:var(--cc-parchment)] ${large ? "text-5xl" : "text-3xl"}`}>
+            {challenge.keepVotes}
+          </p>
+          <p className="mt-1 text-xs text-[color:var(--cc-muted)]">{keepPercent}%</p>
+        </div>
+        <div className="text-right">
+          <p className="club-label text-[0.65rem]">Next speaker</p>
+          <p className={`club-mono mt-1 font-bold text-[color:var(--cc-gold-bright)] ${large ? "text-5xl" : "text-3xl"}`}>
+            {challenge.nextVotes}
+          </p>
+          <p className="mt-1 text-xs text-[color:var(--cc-muted)]">{nextPercent}%</p>
+        </div>
       </div>
-      <div className="h-2 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.06]">
+      <div className="mt-3 flex h-2 overflow-hidden rounded-sm border border-[color:var(--cc-line)] bg-[color:var(--cc-ivory)]/[0.05]">
         <div
-          className="h-full rounded-[3px] bg-[color:var(--cc-gold-bright)] transition-all duration-700"
-          style={{ width: `${progress}%` }}
+          className="bg-[color:var(--cc-parchment)] transition-[width] duration-500"
+          style={{ width: `${keepPercent}%` }}
+        />
+        <div
+          className="bg-[color:var(--cc-gold-bright)] transition-[width] duration-500"
+          style={{ width: `${nextPercent}%` }}
         />
       </div>
-      <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
-        A majority of this round&apos;s joiners votes the speaker out.
-      </p>
+      <div className="mt-3 flex items-center justify-between gap-3 text-xs text-[color:var(--cc-muted)]">
+        <span>{challenge.totalBallots} total ballots</span>
+        <span className="font-semibold text-[color:var(--cc-parchment)]">
+          {leaderLabel(challenge.leader)}
+        </span>
+      </div>
     </div>
   );
+}
+
+function leaderLabel(leader: ChallengeSummary["leader"]) {
+  if (leader === "keep") return "Keep speaking leads";
+  if (leader === "next") return "Next speaker leads";
+  if (leader === "tie") return "The ballot is tied";
+  return "No leader yet";
 }
