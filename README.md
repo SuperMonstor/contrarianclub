@@ -41,6 +41,8 @@ supabase/migrations/007_scale_activity_labels.sql
 supabase/migrations/008_presenter_swing_stage.sql
 supabase/migrations/009_vote_indexes.sql
 supabase/migrations/20260703143306_010_secure_vote_path.sql
+supabase/migrations/20260703232112_011_speaker_challenge.sql
+supabase/migrations/20260718000000_012_persistent_speaker_ballots.sql
 ```
 
 Then fill in `.env.local`:
@@ -76,6 +78,7 @@ admin until attendee/user auth is added.
 ```bash
 npm run dev
 npm run lint
+npm test
 npm run build
 ```
 
