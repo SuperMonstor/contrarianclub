@@ -5,19 +5,28 @@ import { useEffect, useState } from "react";
 // Ticks a local countdown between state refreshes. The server recomputes
 // opensInSeconds on every poll (~5s), so the deadline recalibrates each time a
 // fresh value arrives and client clock drift never accumulates.
-export function useChallengeCountdown(opensInSeconds: number) {
+export function useChallengeCountdown(
+  opensInSeconds: number,
+  paused = false,
+) {
   const [remaining, setRemaining] = useState(opensInSeconds);
-  const [syncedFrom, setSyncedFrom] = useState(opensInSeconds);
+  const [syncedFrom, setSyncedFrom] = useState({
+    opensInSeconds,
+    paused,
+  });
 
-  // Re-anchor during render when a fresh server value arrives, instead of in
-  // an effect (avoids a cascading render).
-  if (syncedFrom !== opensInSeconds) {
-    setSyncedFrom(opensInSeconds);
+  // Re-anchor during render when a fresh server value or lifecycle state
+  // arrives, instead of in an effect (avoids a cascading render).
+  if (
+    syncedFrom.opensInSeconds !== opensInSeconds ||
+    syncedFrom.paused !== paused
+  ) {
+    setSyncedFrom({ opensInSeconds, paused });
     setRemaining(opensInSeconds);
   }
 
   useEffect(() => {
-    if (opensInSeconds <= 0) return;
+    if (paused || opensInSeconds <= 0) return;
 
     const deadline = Date.now() + opensInSeconds * 1000;
     const interval = window.setInterval(() => {
@@ -27,7 +36,7 @@ export function useChallengeCountdown(opensInSeconds: number) {
     }, 250);
 
     return () => window.clearInterval(interval);
-  }, [opensInSeconds]);
+  }, [opensInSeconds, paused]);
 
   return remaining;
 }

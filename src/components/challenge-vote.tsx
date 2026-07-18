@@ -55,7 +55,10 @@ export function ChallengeVote({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRecovering, setIsRecovering] = useState(false);
   const [message, setMessage] = useState("");
-  const remaining = useChallengeCountdown(challenge.opensInSeconds);
+  const remaining = useChallengeCountdown(
+    challenge.opensInSeconds,
+    challenge.paused,
+  );
   const activityId = activity.id;
   const round = challenge.round;
 

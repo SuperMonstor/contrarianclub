@@ -116,9 +116,11 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                   <p className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
                     {state.event.title}
                   </p>
-                  <h1 className="club-display club-d-hero mt-6">
-                    {isChallengeStage ? "Current speaker" : activity.prompt}
-                  </h1>
+                  {!isChallengeStage && (
+                    <h1 className="club-display club-d-hero mt-6">
+                      {activity.prompt}
+                    </h1>
+                  )}
                 </>
               ) : isSwingStage ? null : (
                 <h1 className="club-display club-d-hero mt-5">
@@ -286,7 +288,10 @@ function ChallengeStage({
   challenge: ChallengeSummary;
   status: string;
 }) {
-  const remaining = useChallengeCountdown(challenge.opensInSeconds);
+  const remaining = useChallengeCountdown(
+    challenge.opensInSeconds,
+    challenge.paused,
+  );
 
   if (status === "draft") {
     return (
@@ -325,11 +330,11 @@ function ChallengeStage({
   if (challenge.votingOpen || challenge.paused) {
     return (
       <div>
-        <p className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
+        <h1 className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
           {challenge.leader === "next"
             ? "Next speaker leads."
             : "Keep speaking or next speaker?"}
-        </p>
+        </h1>
         <div className="mt-8 max-w-3xl">
           <ChallengeSplit challenge={challenge} large />
           <p className="club-eyebrow mt-4 text-[color:var(--cc-muted)]">

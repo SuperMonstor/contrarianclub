@@ -880,7 +880,10 @@ function phaseLabel(phase: ActivitySummary["phase"]) {
 }
 
 function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
-  const remaining = useChallengeCountdown(challenge.opensInSeconds);
+  const remaining = useChallengeCountdown(
+    challenge.opensInSeconds,
+    challenge.paused,
+  );
   const protectedTime = remaining > 0;
 
   return (
