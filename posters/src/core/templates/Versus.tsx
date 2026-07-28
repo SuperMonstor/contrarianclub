@@ -1,6 +1,6 @@
 import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
-import { Lockup } from "./Lockup";
+import { Lockup } from "../kit/Lockup";
 
 // Versus template, the shape of a debate: one question up top, two answers
 // side by side, a hairline and a small "or" medallion between them. Built for

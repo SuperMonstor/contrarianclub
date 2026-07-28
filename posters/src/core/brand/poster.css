@@ -131,6 +131,26 @@
   background: linear-gradient(90deg, var(--cc-line-strong), transparent 85%);
 }
 
+/* --- Treated art (the kit's standard painting treatment) ----------------- */
+.art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* darken + warm a bright old-master painting into the gallery-at-night
+     world, while keeping the figures clearly legible */
+  filter: saturate(0.82) contrast(1.05) brightness(0.86) sepia(0.1);
+}
+/* gentle warm wash to pull a cool canvas toward the gold palette */
+.art-tone {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(42, 30, 12, 0.28) 0%, rgba(20, 14, 8, 0.16) 45%, rgba(11, 9, 7, 0.3) 100%);
+}
+
 /* --- Statement-template treated background image ------------------------- */
 .stmt-img {
   position: absolute;

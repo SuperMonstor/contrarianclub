@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { FORMAT_LIST, FORMATS, type FormatId } from "./formats";
 import { WORK_LIST } from "./registry";
-import { PosterFrame } from "./templates/PosterFrame";
+import { PosterFrame } from "./kit/PosterFrame";
 import { renderTemplate } from "./templates";
 
 // Interactive preview. Pick a work, a slide (carousels have several) and a

@@ -1,6 +1,6 @@
 import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
-import { Lockup } from "./Lockup";
+import { Lockup } from "../kit/Lockup";
 
 // Editorial template, a printed-programme feel: logotype up top, hero title,
 // one-liner, supporting points, a details block, ceremonial closing.

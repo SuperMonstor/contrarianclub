@@ -1,6 +1,6 @@
 import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
-import { Lockup } from "./Lockup";
+import { Lockup } from "../kit/Lockup";
 
 // Statement template, full-bleed treated portrait, huge condensed headline,
 // CTA. Matches reference post 16 ("SHOULD TRILLIONAIRES EXIST?").

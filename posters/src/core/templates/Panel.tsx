@@ -1,6 +1,6 @@
 import type { SlideSpec } from "../types";
 import type { Format } from "../formats";
-import { Lockup } from "./Lockup";
+import { Lockup } from "../kit/Lockup";
 
 // Panel template, one sentence of an argument over a slice of a painting.
 // Consecutive panels share one image via image.pane {index, of}, so swiping

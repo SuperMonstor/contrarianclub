@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { SlideSpec } from "../../src/core/types";
-import { Lockup } from "../../src/core/templates/Lockup";
+import { Lockup } from "../../src/core/kit";
 
 // Hand-built slides for this carousel. No stock templates: each slide is
 // designed for the job it does in the story, and the composition changes as

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { FORMATS, type FormatId } from "./formats";
 import { WORKS } from "./registry";
-import { PosterFrame } from "./templates/PosterFrame";
+import { PosterFrame } from "./kit/PosterFrame";
 import { renderTemplate } from "./templates";
 
 // Renders ONE slide at exact pixel size, no studio chrome. The export script
