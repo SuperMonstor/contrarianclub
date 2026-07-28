@@ -160,25 +160,27 @@ const work: WorkSpec = {
       render: () => (
         <Poster
           copy={{
-            kicker: "First Edition",
+            kicker: "Presents",
             title: "Open Floor Debate",
             oneLiner:
               "A night of live argument on the questions everyone is already fighting about.",
-            closing: "Come argue. Or come watch.",
             image: { src: chamber, treatment: "lift", position: "center 46%" },
           }}
           partner={basecamp}
           beats={[
             {
+              marker: "01",
               label: "Topics revealed on the night",
               body: "Announced on the day, never before it. Nobody gets to prepare.",
             },
             {
+              marker: "02",
               label: "Put your name in",
               body: "Once the topic is up, anyone can volunteer. Speakers are then drawn at random.",
             },
             {
-              label: "Or just sit and watch",
+              marker: "or",
+              label: "Just sit and watch",
               body: "Nobody is called on and nobody is counted. Plenty of the room only ever listens.",
             },
           ]}

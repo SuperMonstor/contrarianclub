@@ -650,33 +650,64 @@ function CoBrand({ partner, height = 128 }: { partner: string; height?: number }
   );
 }
 
-/** One line of the format, as a labelled rule. Three of these carry the whole
- *  mechanic: when topics appear, how you get picked, and how to opt out. */
-function Beat({ label, body }: { label: string; body: string }) {
+/** One line of the format, hung off a marker in the left column.
+ *
+ *  The marker is the point of this block. The first two rows are numbered
+ *  because they happen in that order; the third is marked "or", not "03",
+ *  because sitting it out is not step three of the process, it is the way
+ *  around the process. Anyone scanning the poster reads the spine first and
+ *  gets the whole answer from it. */
+function Beat({ marker, label, body }: { marker: string; label: string; body: string }) {
+  const isOr = marker.toLowerCase() === "or";
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "78px 1fr", gap: 8 }}>
       <span
-        style={{
-          fontFamily: "var(--cc-font-condensed)",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          fontSize: 30,
-          letterSpacing: "0.015em",
-          color: GOLD,
-        }}
+        style={
+          isOr
+            ? {
+                fontFamily: "var(--cc-font-display)",
+                fontStyle: "italic",
+                fontWeight: 600,
+                fontSize: 30,
+                color: GOLD,
+                opacity: 0.9,
+              }
+            : {
+                fontFamily: "var(--cc-font-condensed)",
+                fontWeight: 700,
+                fontSize: 30,
+                color: GOLD,
+                opacity: 0.75,
+              }
+        }
       >
-        {label}
+        {marker}
       </span>
-      <span
-        style={{
-          fontFamily: "var(--cc-font-ui)",
-          fontSize: 22,
-          lineHeight: 1.42,
-          color: "var(--cc-parchment)",
-        }}
-      >
-        {body}
-      </span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+        <span
+          style={{
+            fontFamily: "var(--cc-font-condensed)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            fontSize: 31,
+            letterSpacing: "0.015em",
+            lineHeight: 1.02,
+            color: "var(--cc-ivory)",
+          }}
+        >
+          {label}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--cc-font-ui)",
+            fontSize: 22,
+            lineHeight: 1.44,
+            color: "var(--cc-parchment)",
+          }}
+        >
+          {body}
+        </span>
+      </div>
     </div>
   );
 }
@@ -689,7 +720,7 @@ export function Poster({
 }: {
   copy: Copy;
   partner: string;
-  beats: { label: string; body: string }[];
+  beats: { marker: string; label: string; body: string }[];
   details: { label: string; value: string }[];
 }) {
   return (
@@ -758,21 +789,30 @@ export function Poster({
           </p>
         </div>
 
-        {/* the mechanic, three lines, in the order it happens */}
+        {/* A full-width rule splits the poster in two: the announcement above,
+            which is centred and ceremonial, and the working detail below,
+            which is ranged left and meant to be scanned. Mixing the two
+            alignments in one undivided column was what made the earlier cut
+            feel unsettled. */}
+        <div style={{ marginTop: 46 }}>
+          <hr className="rule" style={{ border: 0 }} />
+        </div>
+
+        {/* the mechanic, hung off its marker spine */}
         <div
           style={{
             flex: 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap: 26,
+            gap: 30,
           }}
         >
           {beats.map((b, i) => (
             <div
               key={i}
               style={{
-                paddingTop: i === 0 ? 0 : 26,
+                paddingTop: i === 0 ? 0 : 30,
                 borderTop: i === 0 ? "none" : "1px solid rgba(200,162,74,0.16)",
               }}
             >
@@ -803,13 +843,6 @@ export function Poster({
             </div>
           ))}
         </div>
-
-        <span
-          className="closing"
-          style={{ fontSize: 26, marginTop: 26, textAlign: "center" }}
-        >
-          {copy.closing}
-        </span>
       </div>
     </div>
   );
