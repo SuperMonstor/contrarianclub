@@ -162,8 +162,11 @@ const work: WorkSpec = {
           copy={{
             kicker: "Presents",
             title: "Open Floor Debate",
+            // The draw is the room, not the format. Difficult topics are
+            // available anywhere; a hall full of strangers who have each
+            // thought about them differently is not.
             oneLiner:
-              "A night of live argument on the questions everyone is already fighting about.",
+              "Difficult questions, and a room full of strangers who will not see them the way you do.",
             image: { src: chamber, treatment: "lift", position: "center 46%" },
           }}
           partner={basecamp}
