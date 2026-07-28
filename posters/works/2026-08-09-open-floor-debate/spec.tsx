@@ -2,7 +2,8 @@ import type { WorkSpec } from "../../src/core/types";
 import chamber from "./assets/commons1833.jpg";
 import lecture from "./assets/orrery.jpg";
 import athens from "./assets/athens.jpg";
-import { Answer, Bring, Cover, Format, Invite, Motions } from "./slides";
+import basecamp from "./assets/basecamp.png";
+import { Answer, Bring, Cover, Format, Motions, Poster } from "./slides";
 
 // Instagram carousel announcing the first Open Floor Debate, 9 August, and
 // explaining the format. The design reasoning is in slides.tsx.
@@ -15,12 +16,12 @@ import { Answer, Bring, Cover, Format, Invite, Motions } from "./slides";
 //
 // The art is three rooms full of people, which is the whole subject:
 //
-//   1  chamber   Hayter, The House of Commons 1833   a full house, and an
-//                                                    empty floor in the middle
+//   1  athens    Raphael, The School of Athens       the argument as a place
+//                                                    you can walk into
 //   2  lecture   Wright of Derby, The Orrery         one person presenting,
 //                                                    everyone else rapt
-//   6  athens    Raphael, The School of Athens       the argument as a place
-//                                                    you can walk into
+//   6  chamber   Hayter, The House of Commons 1833   a full house, and an
+//                                                    empty floor in the middle
 //
 // All public domain, via Wikimedia Commons.
 const work: WorkSpec = {
@@ -41,7 +42,7 @@ const work: WorkSpec = {
             title: "Open Floor Debate",
             oneLiner:
               "Impromptu debates. The topic is revealed on the day, and anyone in the room can take the floor.",
-            image: { src: chamber, position: "center 42%" },
+            image: { src: athens, treatment: "bright", position: "center 42%" },
           }}
         />
       ),
@@ -58,7 +59,7 @@ const work: WorkSpec = {
             kicker: "Before You Ask",
             title: "No, you do not have to speak",
             closing: "Either way, you get the full night.",
-            image: { src: lecture, position: "center 40%" },
+            image: { src: lecture, treatment: "lift", position: "center 40%" },
           }}
           options={[
             {
@@ -150,18 +151,37 @@ const work: WorkSpec = {
       ),
     },
 
-    // 6. The invite, closing on the same two options slide 2 opened with.
+    // 6. The poster. Also ships standalone, so it repeats everything the deck
+    //    has said: the sell, the mechanic, the way out, the logistics. Run in
+    //    collaboration with Basecamp, so both marks lead.
     {
-      label: "Invite",
+      label: "Poster",
       hasImage: true,
       render: () => (
-        <Invite
+        <Poster
           copy={{
             kicker: "First Edition",
             title: "Open Floor Debate",
+            oneLiner:
+              "A night of live argument on the questions everyone is already fighting about.",
             closing: "Come argue. Or come watch.",
-            image: { src: athens, position: "center 46%" },
+            image: { src: chamber, treatment: "lift", position: "center 46%" },
           }}
+          partner={basecamp}
+          beats={[
+            {
+              label: "Topics revealed on the night",
+              body: "Announced on the day, never before it. Nobody gets to prepare.",
+            },
+            {
+              label: "Put your name in",
+              body: "Once the topic is up, anyone can volunteer. Speakers are then drawn at random.",
+            },
+            {
+              label: "Or just sit and watch",
+              body: "Nobody is called on and nobody is counted. Plenty of the room only ever listens.",
+            },
+          ]}
           details={[
             { label: "Date", value: "Sunday, 9 August" },
             { label: "Time", value: "2:00 to 5:00 pm" },

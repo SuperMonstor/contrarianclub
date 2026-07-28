@@ -43,7 +43,27 @@ export interface Copy {
   title?: string;
   oneLiner?: string;
   closing?: string;
-  image?: { src: string; position?: string };
+  image?: {
+    src: string;
+    position?: string;
+    /** Which way this painting has to be pushed to sit in the palette. The
+     *  candlelit ones are already dark and need lifting; the fresco is pale
+     *  plaster and needs the standard darkening. It travels with the image
+     *  rather than the slide, so the two can be swapped freely. */
+    treatment?: "lift" | "bright";
+  };
+}
+
+/** The treated painting, full-bleed behind a slide. */
+function Backdrop({ image }: { image: NonNullable<Copy["image"]> }) {
+  return (
+    <img
+      className={image.treatment === "bright" ? "ofd-art-bright" : "ofd-art-lift"}
+      src={image.src}
+      alt=""
+      style={{ objectPosition: image.position ?? "center 45%" }}
+    />
+  );
 }
 
 /** The masthead, identical on all six. `n` is 1-based. */
@@ -97,23 +117,16 @@ function Picture({
   n,
   image,
   scrim,
-  imgClass = "ofd-art-lift",
   children,
 }: {
   n: number;
-  image: { src: string; position?: string };
+  image: NonNullable<Copy["image"]>;
   scrim: string;
-  imgClass?: string;
   children: ReactNode;
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      <img
-        className={imgClass}
-        src={image.src}
-        alt=""
-        style={{ objectPosition: image.position ?? "center 45%" }}
-      />
+      <Backdrop image={image} />
       <div className="art-tone" />
       <div className={scrim} />
 
@@ -597,73 +610,207 @@ export function Bring({ copy, points }: { copy: Copy; points: string[] }) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. The invite. Closes on the same two options slide 2 opened with.
+// 6. The poster. This one also ships on its own, away from the carousel, so
+//    it cannot lean on any slide before it: the sell, the mechanic, the way
+//    out for people who do not want to speak, and the logistics all have to
+//    land here at a glance.
+//
+//    It is the one slide with no counter in its masthead. A standalone poster
+//    carrying "06 / 06" would be advertising that you are seeing part of
+//    something else.
 // ---------------------------------------------------------------------------
 
-export function Invite({
-  copy,
-  details,
-}: {
-  copy: Copy;
-  details: { label: string; value: string }[];
-}) {
+/** The collaboration lockup: both marks at equal optical weight, meeting at a
+ *  gold cross. Sized off a shared height rather than a shared width, since one
+ *  mark is wide and the other nearly square. */
+function CoBrand({ partner, height = 128 }: { partner: string; height?: number }) {
+  const PARTNER_RATIO = 935 / 701;
   return (
-    <Picture
-      n={6}
-      image={copy.image!}
-      scrim="ofd-invite-scrim"
-      imgClass="ofd-art-bright"
-    >
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 46 }}>
+      <Lockup width={height * (745 / 346) * 1.02} />
       <span
-        className="kicker"
-        style={{ fontSize: 18, letterSpacing: "0.4em", paddingLeft: "0.4em" }}
+        style={{
+          fontFamily: "var(--cc-font-display)",
+          fontSize: 34,
+          color: GOLD,
+          opacity: 0.75,
+          transform: "translateY(-2px)",
+        }}
       >
-        {copy.kicker}
+        &times;
       </span>
+      <img
+        src={partner}
+        alt="Basecamp"
+        height={height * 0.84}
+        width={height * 0.84 * PARTNER_RATIO}
+        style={{ display: "block" }}
+      />
+    </div>
+  );
+}
 
-      <h1
+/** One line of the format, as a labelled rule. Three of these carry the whole
+ *  mechanic: when topics appear, how you get picked, and how to opt out. */
+function Beat({ label, body }: { label: string; body: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+      <span
         style={{
           fontFamily: "var(--cc-font-condensed)",
           fontWeight: 700,
           textTransform: "uppercase",
-          fontSize: 112,
-          lineHeight: 0.92,
-          letterSpacing: "-0.006em",
-          color: "var(--cc-ivory)",
-          margin: "22px 0 0",
-          maxWidth: "10ch",
+          fontSize: 30,
+          letterSpacing: "0.015em",
+          color: GOLD,
         }}
       >
-        {copy.title}
-      </h1>
+        {label}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--cc-font-ui)",
+          fontSize: 22,
+          lineHeight: 1.42,
+          color: "var(--cc-parchment)",
+        }}
+      >
+        {body}
+      </span>
+    </div>
+  );
+}
 
-      {/* the details on a plate, so the slide reads as an invitation card */}
+export function Poster({
+  copy,
+  partner,
+  beats,
+  details,
+}: {
+  copy: Copy;
+  partner: string;
+  beats: { label: string; body: string }[];
+  details: { label: string; value: string }[];
+}) {
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      <Backdrop image={copy.image!} />
+      <div className="art-tone" />
+      <div className="ofd-poster-scrim" />
+
       <div
         style={{
-          marginTop: 40,
-          padding: "32px 40px",
-          border: "1px solid rgba(200,162,74,0.34)",
-          background: "rgba(11,9,7,0.52)",
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 22,
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          padding: "76px 76px 64px",
+          textShadow: SHADOW,
         }}
       >
-        {details.map((d, i) => (
-          <div key={i} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-            <span className="label" style={{ fontSize: 13, letterSpacing: "0.22em" }}>
-              {d.label}
-            </span>
-            <span className="value" style={{ fontSize: 26, lineHeight: 1.2 }}>
-              {d.value}
-            </span>
-          </div>
-        ))}
-      </div>
+        <CoBrand partner={partner} />
 
-      <span className="closing" style={{ fontSize: 28, marginTop: 36 }}>
-        {copy.closing}
-      </span>
-    </Picture>
+        <div style={{ marginTop: 40 }}>
+          <span
+            className="kicker"
+            style={{
+              fontSize: 17,
+              letterSpacing: "0.42em",
+              paddingLeft: "0.42em",
+              display: "block",
+              textAlign: "center",
+            }}
+          >
+            {copy.kicker}
+          </span>
+
+          <h1
+            style={{
+              fontFamily: "var(--cc-font-condensed)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              fontSize: 122,
+              lineHeight: 0.88,
+              letterSpacing: "-0.008em",
+              color: "var(--cc-ivory)",
+              margin: "20px 0 0",
+              textAlign: "center",
+            }}
+          >
+            {copy.title}
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "var(--cc-font-display)",
+              fontStyle: "italic",
+              fontSize: 33,
+              lineHeight: 1.28,
+              letterSpacing: "-0.01em",
+              color: "var(--cc-ivory)",
+              margin: "26px auto 0",
+              maxWidth: "24ch",
+              textAlign: "center",
+            }}
+          >
+            {copy.oneLiner}
+          </p>
+        </div>
+
+        {/* the mechanic, three lines, in the order it happens */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: 26,
+          }}
+        >
+          {beats.map((b, i) => (
+            <div
+              key={i}
+              style={{
+                paddingTop: i === 0 ? 0 : 26,
+                borderTop: i === 0 ? "none" : "1px solid rgba(200,162,74,0.16)",
+              }}
+            >
+              <Beat {...b} />
+            </div>
+          ))}
+        </div>
+
+        {/* the details on a plate, so the foot reads as an invitation card */}
+        <div
+          style={{
+            padding: "28px 36px",
+            border: "1px solid rgba(200,162,74,0.34)",
+            background: "rgba(11,9,7,0.62)",
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 20,
+          }}
+        >
+          {details.map((d, i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <span className="label" style={{ fontSize: 13, letterSpacing: "0.22em" }}>
+                {d.label}
+              </span>
+              <span className="value" style={{ fontSize: 25, lineHeight: 1.2 }}>
+                {d.value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <span
+          className="closing"
+          style={{ fontSize: 26, marginTop: 26, textAlign: "center" }}
+        >
+          {copy.closing}
+        </span>
+      </div>
+    </div>
   );
 }
