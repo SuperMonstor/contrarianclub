@@ -175,7 +175,7 @@ const work: WorkSpec = {
             },
             {
               icon: "scales",
-              label: "Genuinely interesting motions",
+              label: "Questions that divide the room",
               body: "Put your name in a hat, speakers are drawn at random.",
             },
             {
