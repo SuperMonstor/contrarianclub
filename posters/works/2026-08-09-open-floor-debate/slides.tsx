@@ -811,16 +811,21 @@ export function Poster({
             {copy.title}
           </h1>
 
+          {/* Set in the UI face, not the display italic. Three type voices on
+              one poster was one too many: the italic serif read as a caption
+              lifted off a different piece, and it had to hold its own directly
+              under a heavy condensed title. This is a claim, so it is set
+              plainly and lets the claim do the work. */}
           <p
             style={{
-              fontFamily: "var(--cc-font-display)",
-              fontStyle: "italic",
-              fontSize: 33,
-              lineHeight: 1.28,
-              letterSpacing: "-0.01em",
+              fontFamily: "var(--cc-font-ui)",
+              fontWeight: 400,
+              fontSize: 31,
+              lineHeight: 1.4,
+              letterSpacing: "-0.005em",
               color: "var(--cc-ivory)",
-              margin: "26px auto 0",
-              maxWidth: "24ch",
+              margin: "28px auto 0",
+              maxWidth: "31ch",
               textAlign: "center",
             }}
           >
