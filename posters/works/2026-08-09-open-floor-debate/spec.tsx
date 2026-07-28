@@ -163,7 +163,7 @@ const work: WorkSpec = {
             kicker: "Presents",
             title: "Open Floor Debate",
             oneLiner:
-              "The most interesting conversation happening in Bangalore this weekend.",
+              "The most interesting conversation in Bangalore this weekend.",
             image: { src: chamber, treatment: "lift", position: "center 46%" },
           }}
           partner={basecamp}
