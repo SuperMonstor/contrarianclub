@@ -1,7 +1,13 @@
 /* ==========================================================================
-   Poster surface + shared blocks. Mirrors the site's .club-shell treatment
-   (warm-black, film grain, vignette, gold hairlines) tuned for a printed-
-   programme feel on heavy stock.
+   The brand surface, and nothing else. Mirrors the site's .club-shell
+   treatment (warm-black, film grain, vignette, gold hairlines) tuned for a
+   printed-programme feel on heavy stock.
+
+   Everything here has to be right for every poster the club will ever make:
+   the canvas, the type roles, the hairlines, the standard art treatment. A
+   scrim tuned for one painting is not that. Legibility scrims say where type
+   is allowed to sit on a particular picture, so they belong in the work
+   folder, next to the slides they were tuned for, in its own slides.css.
    ========================================================================== */
 
 /* --- The fixed canvas ---------------------------------------------------- */
@@ -58,30 +64,6 @@
   position: absolute;
   inset: 7px;
   border: 1px solid rgba(200, 162, 74, 0.1);
-}
-
-/* --- Brand lockup (built from type, mirrors site .club-mark) -------------- */
-.lockup {
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.lockup-top {
-  font-family: var(--cc-font-display);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  background: linear-gradient(180deg, #f3d877 0%, #c8a24a 70%, #a07f33 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.lockup-main {
-  font-family: var(--cc-font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--cc-ivory);
 }
 
 /* --- Type roles ---------------------------------------------------------- */
@@ -149,162 +131,4 @@
   inset: 0;
   z-index: 1;
   background: linear-gradient(180deg, rgba(42, 30, 12, 0.28) 0%, rgba(20, 14, 8, 0.16) 45%, rgba(11, 9, 7, 0.3) 100%);
-}
-
-/* --- Statement-template treated background image ------------------------- */
-.stmt-img {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
-  /* darken + warm a bright old-master painting into the gallery-at-night
-     world, while keeping the figures clearly legible */
-  filter: saturate(0.82) contrast(1.05) brightness(0.86) sepia(0.1);
-}
-/* gentle warm wash to pull the cool wall toward the gold palette */
-.stmt-tone {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, rgba(42, 30, 12, 0.28) 0%, rgba(20, 14, 8, 0.16) 45%, rgba(11, 9, 7, 0.3) 100%);
-}
-/* --- Plate: a painting framed as a plate above a caption ----------------- */
-.plate-img {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.84) contrast(1.05) brightness(0.88) sepia(0.1);
-}
-/* just enough warmth and shading to sit in the palette; the plate carries no
-   type, so it does not need a legibility scrim */
-.plate-tone {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(11, 9, 7, 0.5) 0%, rgba(11, 9, 7, 0.08) 26%, rgba(11, 9, 7, 0.1) 62%, rgba(11, 9, 7, 0.55) 100%),
-    linear-gradient(180deg, rgba(42, 30, 12, 0.2), rgba(20, 14, 8, 0.14));
-}
-
-/* --- Invite slide: the motion and the details must read at a glance, so the
-   art keeps only the top third and the rest goes to near-black ------------- */
-.invite-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.72) 0%,
-      rgba(11, 9, 7, 0.26) 14%,
-      rgba(11, 9, 7, 0.4) 28%,
-      rgba(11, 9, 7, 0.82) 44%,
-      rgba(11, 9, 7, 0.95) 58%,
-      var(--cc-black) 74%
-    ),
-    radial-gradient(120% 80% at 50% 24%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
-}
-
-/* --- Conflict slide: art visible up top, near-black under the two columns - */
-/* dark-ground paintings (ink landscapes) need a lift, not a darkening, or the
-   slide reads as plain black in the feed */
-.conflict-img {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.86) contrast(1.02) brightness(1.22) sepia(0.12);
-}
-.conflict-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.6) 0%,
-      rgba(11, 9, 7, 0.16) 14%,
-      rgba(11, 9, 7, 0.3) 34%,
-      rgba(11, 9, 7, 0.78) 52%,
-      rgba(11, 9, 7, 0.93) 70%,
-      var(--cc-black) 100%
-    ),
-    radial-gradient(120% 80% at 50% 26%, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
-}
-
-/* --- Panel-template pane (a slice of a painting shared across slides) ----- */
-/* same darken-and-warm as .stmt-img; sizing is inline (pane math) */
-.panel-img {
-  position: absolute;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.82) contrast(1.05) brightness(0.86) sepia(0.1);
-}
-/* image window up top, text zone near-black below */
-.panel-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.6) 0%,
-      rgba(11, 9, 7, 0.12) 14%,
-      rgba(11, 9, 7, 0.06) 34%,
-      rgba(11, 9, 7, 0.55) 52%,
-      rgba(11, 9, 7, 0.9) 66%,
-      rgba(11, 9, 7, 0.985) 80%,
-      var(--cc-black) 100%
-    ),
-    radial-gradient(120% 80% at 50% 30%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
-}
-
-/* --- Versus-template backdrop (heavily scrimmed: two text columns) -------- */
-.versus-img {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* two columns of text sit on this, so it is knocked back further than the
-     statement treatment. Not so far that the painting disappears. */
-  filter: saturate(0.78) contrast(1.06) brightness(0.92) sepia(0.12);
-}
-.versus-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(11, 9, 7, 0.72) 0%, rgba(11, 9, 7, 0.42) 26%, rgba(11, 9, 7, 0.62) 52%, rgba(11, 9, 7, 0.82) 76%, rgba(11, 9, 7, 0.93) 100%),
-    radial-gradient(130% 90% at 50% 35%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
-}
-
-/* legibility scrim, soft over the logo, an open window on the room in the
-   upper-middle, then ramps to near-black under the headline block */
-.stmt-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.66) 0%,
-      rgba(11, 9, 7, 0.14) 15%,
-      rgba(11, 9, 7, 0) 32%,
-      rgba(11, 9, 7, 0.34) 45%,
-      rgba(11, 9, 7, 0.74) 55%,
-      rgba(11, 9, 7, 0.93) 68%,
-      rgba(11, 9, 7, 0.98) 82%,
-      var(--cc-black) 100%
-    ),
-    radial-gradient(120% 80% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
 }
