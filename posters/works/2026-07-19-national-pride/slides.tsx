@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
-import type { SlideSpec } from "../../src/core/types";
-import { Lockup } from "../../src/core/kit";
+import { Art, Lockup } from "../../src/core/kit";
+import "./slides.css";
 
-// Hand-built slides for this carousel. No stock templates: each slide is
-// designed for the job it does in the story, and the composition changes as
-// the story turns.
+// Hand-built slides for this carousel. Each slide is designed for the job it
+// does in the story, and the composition changes as the story turns.
 //
 // The grammar, so the nine slides feel like one object:
 //
@@ -23,24 +22,24 @@ import { Lockup } from "../../src/core/kit";
 // Accents: gold is the case for, wine is the case against. Nothing else in
 // the deck uses wine, so it only ever means "the other side".
 
+/** What a slide of this deck says. It is this carousel's shape, not a shared
+ *  one: another piece with a different argument will want different fields. */
+export interface Copy {
+  kicker: string;
+  title: string;
+  oneLiner?: string;
+  details?: { label: string; value: string }[];
+  closing?: string;
+  /** the two answers on the conflict slide, exactly two */
+  columns?: { heading: string; points: string[] }[];
+  image?: { src: string; position?: string };
+}
+
 const GOLD = "var(--cc-gold)";
 const WINE = "var(--cc-wine-bright)";
 
 const SHADOW =
   "0 1px 2px rgba(0,0,0,0.92), 0 2px 14px rgba(0,0,0,0.8), 0 5px 44px rgba(0,0,0,0.66)";
-
-/** The treated painting, used full-bleed or as a plate. */
-function Art({
-  src,
-  position = "center 45%",
-  className = "stmt-img",
-}: {
-  src: string;
-  position?: string;
-  className?: string;
-}) {
-  return <img className={className} src={src} alt="" style={{ objectPosition: position }} />;
-}
 
 /** A hairline with a gold or wine tick at its left. Used to open a text block. */
 function Rule({ accent = GOLD, width = "100%" }: { accent?: string; width?: string }) {
@@ -63,12 +62,12 @@ function Rule({ accent = GOLD, width = "100%" }: { accent?: string; width?: stri
 // 1 and 9. The covers. Type centred inside the painting, ceremonial.
 // ---------------------------------------------------------------------------
 
-export function Hook({ spec }: { spec: SlideSpec }) {
+export function Hook({ copy }: { copy: Copy }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
-      <div className="stmt-tone" />
-      <div className="stmt-scrim" />
+      {copy.image && <Art src={copy.image.src} position={copy.image.position} />}
+      <div className="art-tone" />
+      <div className="np-open-scrim" />
       {/* Delacroix's sky is pale exactly where the lockup sits; deepen the top
           band a little so gold-on-smoke does not go weak */}
       <div
@@ -111,7 +110,7 @@ export function Hook({ spec }: { spec: SlideSpec }) {
             className="kicker"
             style={{ fontSize: 19, letterSpacing: "0.42em", paddingLeft: "0.42em" }}
           >
-            {spec.kicker}
+            {copy.kicker}
           </span>
 
           <h1
@@ -124,7 +123,7 @@ export function Hook({ spec }: { spec: SlideSpec }) {
               maxWidth: "14ch",
             }}
           >
-            {spec.title}
+            {copy.title}
           </h1>
 
           <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 4 }}>
@@ -133,7 +132,7 @@ export function Hook({ spec }: { spec: SlideSpec }) {
             <span style={{ width: 60, height: 1, background: GOLD, opacity: 0.5 }} />
           </div>
 
-          {spec.oneLiner && (
+          {copy.oneLiner && (
             <p
               className="one-liner"
               style={{
@@ -144,7 +143,7 @@ export function Hook({ spec }: { spec: SlideSpec }) {
                 color: "var(--cc-parchment)",
               }}
             >
-              {spec.oneLiner}
+              {copy.oneLiner}
             </p>
           )}
         </div>
@@ -153,12 +152,12 @@ export function Hook({ spec }: { spec: SlideSpec }) {
   );
 }
 
-export function Invite({ spec }: { spec: SlideSpec }) {
+export function Invite({ copy }: { copy: Copy }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
-      <div className="stmt-tone" />
-      <div className="invite-scrim" />
+      {copy.image && <Art src={copy.image.src} position={copy.image.position} />}
+      <div className="art-tone" />
+      <div className="np-invite-scrim" />
 
       <div
         style={{
@@ -189,7 +188,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
             className="kicker"
             style={{ fontSize: 18, letterSpacing: "0.42em", paddingLeft: "0.42em" }}
           >
-            {spec.kicker}
+            {copy.kicker}
           </span>
 
           {/* The motion, in two weights. The because-clause is not a footnote:
@@ -206,9 +205,9 @@ export function Invite({ spec }: { spec: SlideSpec }) {
               maxWidth: "16ch",
             }}
           >
-            {spec.title}
+            {copy.title}
           </h1>
-          {spec.oneLiner && (
+          {copy.oneLiner && (
             <p
               style={{
                 fontFamily: "var(--cc-font-display)",
@@ -221,7 +220,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
                 maxWidth: "20ch",
               }}
             >
-              {spec.oneLiner}
+              {copy.oneLiner}
             </p>
           )}
 
@@ -246,7 +245,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
                 gap: 20,
               }}
             >
-              {(spec.details ?? []).slice(0, 3).map((d, i) => (
+              {(copy.details ?? []).slice(0, 3).map((d, i) => (
                 <div key={i} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   <span className="label" style={{ fontSize: 13, letterSpacing: "0.22em" }}>
                     {d.label}
@@ -258,7 +257,7 @@ export function Invite({ spec }: { spec: SlideSpec }) {
               ))}
             </div>
 
-            {(spec.details ?? []).slice(3).map((d, i) => (
+            {(copy.details ?? []).slice(3).map((d, i) => (
               <div
                 key={i}
                 style={{
@@ -279,12 +278,12 @@ export function Invite({ spec }: { spec: SlideSpec }) {
             ))}
           </div>
 
-          {spec.closing && (
+          {copy.closing && (
             <span
               className="closing"
               style={{ fontSize: 24, marginTop: 22, letterSpacing: "0.01em" }}
             >
-              {spec.closing}
+              {copy.closing}
             </span>
           )}
         </div>
@@ -298,11 +297,11 @@ export function Invite({ spec }: { spec: SlideSpec }) {
 // ---------------------------------------------------------------------------
 
 export function ChapterOpen({
-  spec,
+  copy,
   side,
   numeral,
 }: {
-  spec: SlideSpec;
+  copy: Copy;
   side: "for" | "against";
   numeral: string;
 }) {
@@ -313,9 +312,9 @@ export function ChapterOpen({
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {spec.image && <Art src={spec.image.src} position={spec.image.position} />}
-      <div className="stmt-tone" />
-      <div className="stmt-scrim" />
+      {copy.image && <Art src={copy.image.src} position={copy.image.position} />}
+      <div className="art-tone" />
+      <div className="np-open-scrim" />
 
       <div
         style={{
@@ -375,7 +374,7 @@ export function ChapterOpen({
               className="kicker"
               style={{ fontSize: 19, letterSpacing: "0.34em", color: accent }}
             >
-              {spec.kicker}
+              {copy.kicker}
             </span>
           </div>
 
@@ -392,10 +391,10 @@ export function ChapterOpen({
               maxWidth: "13ch",
             }}
           >
-            {spec.title}
+            {copy.title}
           </h1>
 
-          {spec.oneLiner && (
+          {copy.oneLiner && (
             <p
               className="one-liner"
               style={{
@@ -406,7 +405,7 @@ export function ChapterOpen({
                 color: "var(--cc-parchment)",
               }}
             >
-              {spec.oneLiner}
+              {copy.oneLiner}
             </p>
           )}
         </div>
@@ -420,12 +419,12 @@ export function ChapterOpen({
 // ---------------------------------------------------------------------------
 
 export function Beat({
-  spec,
+  copy,
   side,
   index,
   total,
 }: {
-  spec: SlideSpec;
+  copy: Copy;
   side: "for" | "against";
   index: number;
   total: number;
@@ -476,14 +475,14 @@ export function Beat({
           border: "1px solid rgba(200,162,74,0.26)",
         }}
       >
-        {spec.image && (
+        {copy.image && (
           <Art
-            src={spec.image.src}
-            position={spec.image.position}
-            className="plate-img"
+            src={copy.image.src}
+            position={copy.image.position}
+            className="np-plate-img"
           />
         )}
-        <div className="plate-tone" />
+        <div className="np-plate-tone" />
       </div>
 
       {/* the caption. Centred in its zone so a three-line sentence does not
@@ -503,14 +502,14 @@ export function Beat({
         <h1
           className="hero"
           style={{
-            fontSize: spec.title.length > 120 ? 52 : 60,
+            fontSize: copy.title.length > 120 ? 52 : 60,
             lineHeight: 1.19,
             letterSpacing: "-0.008em",
             margin: 0,
             maxWidth: "26ch",
           }}
         >
-          {spec.title}
+          {copy.title}
         </h1>
       </div>
     </div>
@@ -569,20 +568,20 @@ function Column({
   );
 }
 
-export function Conflict({ spec }: { spec: SlideSpec }): ReactNode {
-  const [left, right] = spec.columns ?? [];
+export function Conflict({ copy }: { copy: Copy }): ReactNode {
+  const [left, right] = copy.columns ?? [];
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {spec.image && (
+      {copy.image && (
         <Art
-          src={spec.image.src}
-          position={spec.image.position}
-          className="conflict-img"
+          src={copy.image.src}
+          position={copy.image.position}
+          className="np-conflict-img"
         />
       )}
-      <div className="stmt-tone" />
-      <div className="conflict-scrim" />
+      <div className="art-tone" />
+      <div className="np-conflict-scrim" />
 
       <div
         style={{
@@ -614,7 +613,7 @@ export function Conflict({ spec }: { spec: SlideSpec }): ReactNode {
             className="kicker"
             style={{ fontSize: 18, letterSpacing: "0.4em", paddingLeft: "0.4em" }}
           >
-            {spec.kicker}
+            {copy.kicker}
           </span>
           <h1
             className="hero"
@@ -626,7 +625,7 @@ export function Conflict({ spec }: { spec: SlideSpec }): ReactNode {
               maxWidth: "16ch",
             }}
           >
-            {spec.title}
+            {copy.title}
           </h1>
 
           {/* the two answers, meeting at a seam */}
@@ -681,9 +680,9 @@ export function Conflict({ spec }: { spec: SlideSpec }): ReactNode {
           </div>
         </div>
 
-        {spec.closing && (
+        {copy.closing && (
           <span className="closing" style={{ fontSize: 26 }}>
-            {spec.closing}
+            {copy.closing}
           </span>
         )}
       </div>

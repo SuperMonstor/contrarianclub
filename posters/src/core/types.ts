@@ -1,75 +1,33 @@
-// The data a template renders.
+// What core knows about a poster, which is deliberately almost nothing.
 //
 // One folder under works/ is one Work: a poster is a Work with a single slide,
 // a carousel is a Work with several. Nothing outside that folder needs editing
 // to add one; the registry discovers it.
-
-import type { FormatId } from "./formats";
-
+//
+// Core does not define what a slide SAYS. There is no kicker here, no title,
+// no details block. Those are layout vocabulary, and baking them in is what
+// turns every new piece into a hunt for the nearest existing shape. A work
+// declares its own content types in its own folder and hands core a function
+// that draws pixels. Start from the output, not from a form to fill in.
 
 import type { ReactNode } from "react";
-import type { Format } from "./formats";
-
-export type TemplateId = "editorial" | "statement" | "versus" | "panel";
-
-/** A work can render a slide itself instead of naming a stock template. Use
- *  this when a piece wants a bespoke layout: it keeps one-off design out of
- *  src/core, where everything has to be right for every future poster. */
-export type SlideRenderer = (props: {
-  spec: SlideSpec;
-  format: Format;
-}) => ReactNode;
-
-export interface DetailRow {
-  label: string;
-  value: string;
-}
-
-/** One side of a versus slide. */
-export interface VersusColumn {
-  heading: string;
-  points: string[];
-}
+import type { Format, FormatId } from "./formats";
 
 /** One rendered surface. A poster has one of these; a carousel has several. */
-export interface SlideSpec {
-  /** a stock template by name, or the work's own renderer */
-  template: TemplateId | SlideRenderer;
+export interface Slide {
+  /** Draw this slide at the given format. The work owns everything inside:
+   *  its copy, its layout, its treatment of the art. Reach into src/core/kit
+   *  for the shared pieces, and build the rest in the work's own folder. */
+  render: (props: { format: Format }) => ReactNode;
 
-  /** small gold uppercase tracked-out line above the title */
-  kicker: string;
-  /** the hero */
-  title: string;
-  /** one sentence directly under the title */
-  oneLiner?: string;
+  /** How the studio's slide picker names this one. Falls back to its number. */
+  label?: string;
 
-  /** optional short list / row of supporting points */
-  points?: string[];
-
-  /** the details block (date, time, entry, …) */
-  details?: DetailRow[];
-
-  /** optional ceremonial closing line */
-  closing?: string;
-
-  /** the two sides of a versus slide (exactly two render side by side) */
-  columns?: VersusColumn[];
-
-  /** Optional treated background image. Import it from the work's own assets/
-   *  folder rather than referencing a shared path:
-   *    import hero from "./assets/hero.jpg";
-   */
-  image?: {
-    src: string;
-    /** how far the image bleeds in from the right (editorial) or fills (statement) */
-    treatment?: "duotone" | "scrim" | "full";
-    /** CSS object-position for the crop, e.g. "center 62%". Each painting
-     *  wants its own band; the template default is a sane middle crop. */
-    position?: string;
-    /** Panel slides: this slide shows slice `index` of `of` from one image
-     *  shared across consecutive slides, so swiping pans the painting. */
-    pane?: { index: number; of: number };
-  };
+  /** Whether this slide carries a photograph. The only thing core needs to
+   *  know about the content, and only because it picks the file format: a
+   *  lossless PNG of a painting is four times the bytes for no visible gain,
+   *  while flat typographic slides stay PNG. */
+  hasImage?: boolean;
 }
 
 export interface WorkSpec {
@@ -79,7 +37,7 @@ export interface WorkSpec {
   date: string;
 
   /** One slide is a poster. Several, in order, is a carousel. */
-  slides: SlideSpec[];
+  slides: Slide[];
 
   /** Which formats `npm run poster <id>` writes by default. Posters usually
    *  want the three feed sizes; carousels only want the slide size. */

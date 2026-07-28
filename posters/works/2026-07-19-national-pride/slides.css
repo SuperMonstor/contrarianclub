@@ -1,0 +1,99 @@
+/* This carousel's own art treatments and scrims.
+
+   These are composition decisions, one per slide type: they say where on each
+   painting the type is allowed to sit. They lived in core once, which was a
+   mistake. Nothing here is right for a different deck with different
+   paintings, so it belongs next to the slides it was tuned for. */
+
+/* --- Chapter openers and the hook: type inside the painting -------------- */
+/* soft over the logo, an open window on the picture in the upper middle, then
+   a ramp to near-black under the headline block */
+.np-open-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.14) 15%,
+      rgba(11, 9, 7, 0) 32%,
+      rgba(11, 9, 7, 0.34) 45%,
+      rgba(11, 9, 7, 0.74) 55%,
+      rgba(11, 9, 7, 0.93) 68%,
+      rgba(11, 9, 7, 0.98) 82%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(120% 80% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* --- The invite (slide 9) ------------------------------------------------ */
+/* the motion and the details must read at a glance, so the art keeps only the
+   top third and the rest goes to near-black */
+.np-invite-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.26) 14%,
+      rgba(11, 9, 7, 0.4) 28%,
+      rgba(11, 9, 7, 0.82) 44%,
+      rgba(11, 9, 7, 0.95) 58%,
+      var(--cc-black) 74%
+    ),
+    radial-gradient(120% 80% at 50% 24%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* --- Beats: the painting framed as a plate above a caption --------------- */
+.np-plate-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.84) contrast(1.05) brightness(0.88) sepia(0.1);
+}
+/* just enough warmth and shading to sit in the palette; the plate carries no
+   type, so it does not need a legibility scrim */
+.np-plate-tone {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(11, 9, 7, 0.5) 0%, rgba(11, 9, 7, 0.08) 26%, rgba(11, 9, 7, 0.1) 62%, rgba(11, 9, 7, 0.55) 100%),
+    linear-gradient(180deg, rgba(42, 30, 12, 0.2), rgba(20, 14, 8, 0.14));
+}
+
+/* --- The conflict (slide 8) --------------------------------------------- */
+/* Fan Kuan's ink landscape is dark to begin with, so this one gets a lift
+   rather than the kit's darkening, or the slide reads as plain black in the
+   feed. This is exactly the case the standard .art treatment cannot serve. */
+.np-conflict-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.02) brightness(1.22) sepia(0.12);
+}
+.np-conflict-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.6) 0%,
+      rgba(11, 9, 7, 0.16) 14%,
+      rgba(11, 9, 7, 0.3) 34%,
+      rgba(11, 9, 7, 0.78) 52%,
+      rgba(11, 9, 7, 0.93) 70%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(120% 80% at 50% 26%, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
+}

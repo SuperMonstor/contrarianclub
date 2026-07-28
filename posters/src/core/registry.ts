@@ -5,8 +5,7 @@ import type { Work, WorkSpec } from "./types";
 // CLI. The folder name is the id, so works/2026-07-12-open-debate/ is exported
 // with `npm run poster 2026-07-12-open-debate`.
 //
-// spec.tsx when the work renders its own slides, spec.ts when it just names
-// stock templates.
+// Specs render their own slides, so they are .tsx.
 const modules = import.meta.glob<{ default: WorkSpec }>(
   "../../works/*/spec.{ts,tsx}",
   { eager: true },
@@ -47,5 +46,5 @@ export const MANIFEST: WorkManifestEntry[] = WORK_LIST.map((w) => ({
   title: w.title,
   date: w.date,
   formats: w.formats,
-  slides: w.slides.map((s) => ({ hasImage: Boolean(s.image) })),
+  slides: w.slides.map((s) => ({ hasImage: Boolean(s.hasImage) })),
 }));

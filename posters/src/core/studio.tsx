@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { FORMAT_LIST, FORMATS, type FormatId } from "./formats";
 import { WORK_LIST } from "./registry";
 import { PosterFrame } from "./kit/PosterFrame";
-import { renderTemplate } from "./templates";
 
 // Interactive preview. Pick a work, a slide (carousels have several) and a
 // format; see it at true proportions, scaled to fit. Export happens via the
@@ -52,7 +51,7 @@ export function Studio() {
             >
               {work.slides.map((s, i) => (
                 <option key={i} value={i}>
-                  {i + 1}. {s.title}
+                  {i + 1}. {s.label ?? "Slide"}
                 </option>
               ))}
             </select>
@@ -82,7 +81,7 @@ export function Studio() {
       <main className="studio-stage">
         {spec ? (
           <PosterFrame format={format} scale={scale}>
-            {renderTemplate(spec, format)}
+            {spec.render({ format })}
           </PosterFrame>
         ) : (
           <p>No work selected.</p>

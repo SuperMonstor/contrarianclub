@@ -1,0 +1,24 @@
+/* This poster's own legibility scrim. It is a composition decision, not a
+   brand one: it says where on THIS painting (Maccari's senate, lit from the
+   upper left) the type is allowed to sit.
+
+   Soft over the logo, an open window on the room in the upper middle so the
+   senators stay visible, then a ramp to near-black under the headline block. */
+.promo-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.14) 15%,
+      rgba(11, 9, 7, 0) 32%,
+      rgba(11, 9, 7, 0.34) 45%,
+      rgba(11, 9, 7, 0.74) 55%,
+      rgba(11, 9, 7, 0.93) 68%,
+      rgba(11, 9, 7, 0.98) 82%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(120% 80% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
+}

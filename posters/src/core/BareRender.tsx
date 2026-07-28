@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { FORMATS, type FormatId } from "./formats";
 import { WORKS } from "./registry";
 import { PosterFrame } from "./kit/PosterFrame";
-import { renderTemplate } from "./templates";
 
 // Renders ONE slide at exact pixel size, no studio chrome. The export script
 // navigates here and screenshots the #poster element. Signals readiness by
@@ -45,6 +44,6 @@ export function BareRender({
   if (!format) return <pre style={{ color: "#fff" }}>Unknown format: {formatId}</pre>;
 
   return (
-    <PosterFrame format={format}>{renderTemplate(spec, format)}</PosterFrame>
+    <PosterFrame format={format}>{spec.render({ format })}</PosterFrame>
   );
 }
