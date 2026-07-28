@@ -1,0 +1,116 @@
+/* This deck's own art treatments and scrims, tuned to its three paintings.
+
+   Two of the three (Hayter's Commons chamber, Wright's candlelit lecture) are
+   already dark and warm, so the kit's standard darken-and-warm would push them
+   to mud. They get a lift instead. Raphael's fresco is the opposite problem
+   and takes the standard treatment. */
+
+/* --- Dark paintings: lift, do not darken -------------------------------- */
+/* the chamber and the lecture are lit by candle and window against near-black
+   wood. Brightness up, saturation slightly down, warmed toward gold. */
+.ofd-art-lift {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.84) contrast(1.04) brightness(1.28) sepia(0.12);
+}
+
+/* --- Bright painting: the kit treatment, a touch further down ----------- */
+/* the fresco is pale plaster and open sky, so it needs the standard darkening
+   and then a little more before gold type will hold against it */
+.ofd-art-bright {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) contrast(1.06) brightness(0.78) sepia(0.12);
+}
+
+/* --- Slide 1, the cover -------------------------------------------------- */
+/* the chamber's benches fill the upper half and that is the picture worth
+   showing, so the window stays open high and the ramp starts late and hard,
+   under the title block */
+/* The stops are dense on purpose. A ramp built from a few widely spaced steps
+   shows its own edge as a horizontal band across the painting, which reads as
+   a mistake rather than as light. */
+.ofd-cover-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.62) 0%,
+      rgba(11, 9, 7, 0.24) 10%,
+      rgba(11, 9, 7, 0.11) 22%,
+      rgba(11, 9, 7, 0.13) 32%,
+      rgba(11, 9, 7, 0.22) 40%,
+      rgba(11, 9, 7, 0.36) 46%,
+      rgba(11, 9, 7, 0.52) 52%,
+      rgba(11, 9, 7, 0.67) 58%,
+      rgba(11, 9, 7, 0.79) 64%,
+      rgba(11, 9, 7, 0.88) 70%,
+      rgba(11, 9, 7, 0.94) 77%,
+      rgba(11, 9, 7, 0.98) 85%,
+      var(--cc-black) 93%
+    ),
+    radial-gradient(120% 80% at 50% 30%, transparent 52%, rgba(0, 0, 0, 0.52) 100%);
+}
+
+/* --- Slide 2, the answer ------------------------------------------------- */
+/* two columns of body copy sit in the lower half, so this one goes further
+   down than the cover. Wright's lamp is dead centre and the rapt faces ring
+   it, so the open window is tighter and higher: keep the faces, lose the
+   foreground. */
+.ofd-answer-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.6) 0%,
+      rgba(11, 9, 7, 0.2) 9%,
+      rgba(11, 9, 7, 0.1) 20%,
+      rgba(11, 9, 7, 0.14) 28%,
+      rgba(11, 9, 7, 0.26) 35%,
+      rgba(11, 9, 7, 0.42) 41%,
+      rgba(11, 9, 7, 0.6) 47%,
+      rgba(11, 9, 7, 0.76) 53%,
+      rgba(11, 9, 7, 0.87) 59%,
+      rgba(11, 9, 7, 0.93) 66%,
+      rgba(11, 9, 7, 0.97) 74%,
+      var(--cc-black) 84%
+    ),
+    radial-gradient(120% 80% at 50% 24%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* --- Slide 6, the invite ------------------------------------------------- */
+/* the details plate and the closing line need a flat, quiet ground, so the
+   fresco keeps only its top third */
+.ofd-invite-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.26) 10%,
+      rgba(11, 9, 7, 0.22) 20%,
+      rgba(11, 9, 7, 0.3) 28%,
+      rgba(11, 9, 7, 0.42) 35%,
+      rgba(11, 9, 7, 0.56) 41%,
+      rgba(11, 9, 7, 0.71) 47%,
+      rgba(11, 9, 7, 0.84) 53%,
+      rgba(11, 9, 7, 0.92) 60%,
+      rgba(11, 9, 7, 0.97) 68%,
+      var(--cc-black) 78%
+    ),
+    radial-gradient(120% 80% at 50% 22%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
