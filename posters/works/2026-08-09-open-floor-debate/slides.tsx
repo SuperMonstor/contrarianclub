@@ -716,42 +716,36 @@ function Icon({ name, size = 46 }: { name: IconName; size?: number }) {
  *  the headings still comes away with when topics appear, what they are like,
  *  and that speaking is optional. The body copy is for the person who has
  *  already decided to care. */
-function Beat({ icon, label, body }: { icon: IconName; label: string; body: string }) {
+
+/** One line of the checklist. Icon and words on the same centred line, so the
+ *  three read as a run of credits rather than three little articles.
+ *
+ *  There is no body copy under these any more, and that is the point: nobody
+ *  reads three paragraphs on a poster, they scan it. Each line has to survive
+ *  on its own or it does not belong here. */
+function Beat({ icon, label }: { icon: IconName; label: string }) {
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        textAlign: "center",
-        gap: 11,
+        justifyContent: "center",
+        gap: 20,
       }}
     >
-      <Icon name={icon} size={38} />
+      <Icon name={icon} size={34} />
       <span
         style={{
           fontFamily: "var(--cc-font-condensed)",
           fontWeight: 700,
           textTransform: "uppercase",
-          fontSize: 31,
-          letterSpacing: "0.015em",
+          fontSize: 33,
+          letterSpacing: "0.055em",
           lineHeight: 1.02,
           color: "var(--cc-ivory)",
         }}
       >
         {label}
-      </span>
-      <span
-        style={{
-          fontFamily: "var(--cc-font-display)",
-          fontSize: 25,
-          lineHeight: 1.36,
-          letterSpacing: "-0.004em",
-          color: "var(--cc-parchment)",
-          maxWidth: "56ch",
-        }}
-      >
-        {body}
       </span>
     </div>
   );
@@ -761,12 +755,15 @@ export function Poster({
   copy,
   partner,
   beats,
-  details,
+  when,
+  cta,
 }: {
   copy: Copy;
   partner: string;
-  beats: { icon: IconName; label: string; body: string }[];
-  details: { label: string; value: string }[];
+  beats: { icon: IconName; label: string }[];
+  /** the date and the hours, set on one line and separated by a gold point */
+  when: string[];
+  cta: string;
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -774,6 +771,9 @@ export function Poster({
       <div className="art-tone" />
       <div className="ofd-poster-scrim" />
 
+      {/* No rules, no plates, no boxes. The composition is carried by
+          typography and the space around it, which is also what lets the
+          chamber stay visible: every device removed is more painting. */}
       <div
         style={{
           position: "absolute",
@@ -781,21 +781,22 @@ export function Poster({
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          padding: "76px 76px 64px",
+          alignItems: "center",
+          textAlign: "center",
+          padding: "84px 76px 82px",
           textShadow: SHADOW,
         }}
       >
         <CoBrand partner={partner} />
 
-        <div style={{ marginTop: 30 }}>
+        <div style={{ marginTop: 76 }}>
           <span
             className="kicker"
             style={{
               fontSize: 17,
-              letterSpacing: "0.42em",
-              paddingLeft: "0.42em",
+              letterSpacing: "0.44em",
+              paddingLeft: "0.44em",
               display: "block",
-              textAlign: "center",
             }}
           >
             {copy.kicker}
@@ -806,22 +807,16 @@ export function Poster({
               fontFamily: "var(--cc-font-condensed)",
               fontWeight: 700,
               textTransform: "uppercase",
-              fontSize: 114,
+              fontSize: 126,
               lineHeight: 0.88,
               letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
-              margin: "20px 0 0",
-              textAlign: "center",
+              margin: "22px 0 0",
             }}
           >
             {copy.title}
           </h1>
 
-          {/* Upright display serif, the same face the details plate sets its
-              values in. The italic was what did not belong here, not the
-              serif: it read as a caption lifted off another piece. Inter was
-              worse in the other direction, generic where this line has to
-              carry the whole claim. */}
           <p
             style={{
               fontFamily: "var(--cc-font-display)",
@@ -830,78 +825,70 @@ export function Poster({
               lineHeight: 1.34,
               letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
-              margin: "22px auto 0",
+              margin: "26px auto 0",
               maxWidth: "29ch",
-              textAlign: "center",
             }}
           >
             {copy.oneLiner}
           </p>
         </div>
 
-        {/* A full-width rule splits the poster in two: the announcement above,
-            which is centred and ceremonial, and the working detail below,
-            which is ranged left and meant to be scanned. Mixing the two
-            alignments in one undivided column was what made the earlier cut
-            feel unsettled. */}
-        <div style={{ marginTop: 32 }}>
-          <hr className="rule" style={{ border: 0 }} />
-        </div>
-
-        {/* the mechanic, hung off its marker spine */}
         <div
           style={{
             flex: 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap: 24,
+            gap: 34,
           }}
         >
           {beats.map((b, i) => (
-            <div
-              key={i}
-              style={{
-                paddingTop: i === 0 ? 0 : 24,
-                borderTop: i === 0 ? "none" : "1px solid rgba(200,162,74,0.16)",
-              }}
-            >
-              <Beat {...b} />
-            </div>
+            <Beat key={i} {...b} />
           ))}
         </div>
 
-        {/* the details on a plate, so the foot reads as an invitation card */}
-        <div
-          style={{
-            marginTop: 22,
-            padding: "28px 36px",
-            border: "1px solid rgba(200,162,74,0.34)",
-            background: "rgba(11,9,7,0.62)",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 20,
-          }}
-        >
-          {details.map((d, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                gap: 8,
-              }}
-            >
-              <span className="label" style={{ fontSize: 13, letterSpacing: "0.22em" }}>
-                {d.label}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 22 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              fontFamily: "var(--cc-font-display)",
+              fontSize: 35,
+              letterSpacing: "-0.006em",
+              color: "var(--cc-ivory)",
+            }}
+          >
+            {when.map((w, i) => (
+              <span key={i} style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                {i > 0 && (
+                  <span
+                    style={{
+                      width: 5,
+                      height: 5,
+                      background: GOLD,
+                      transform: "rotate(45deg)",
+                    }}
+                  />
+                )}
+                {w}
               </span>
-              <span className="value" style={{ fontSize: 25, lineHeight: 1.2 }}>
-                {d.value}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <span
+            style={{
+              fontFamily: "var(--cc-font-condensed)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              fontSize: 25,
+              letterSpacing: "0.24em",
+              paddingLeft: "0.24em",
+              color: GOLD,
+            }}
+          >
+            {cta}
+          </span>
         </div>
       </div>
     </div>

@@ -168,27 +168,12 @@ const work: WorkSpec = {
           }}
           partner={basecamp}
           beats={[
-            {
-              icon: "seal",
-              label: "Topics revealed on the night",
-              body: "Announced on the day, so no one gets to prepare.",
-            },
-            {
-              icon: "scales",
-              label: "Questions that divide the room",
-              body: "Put your name in a hat, speakers are drawn at random.",
-            },
-            {
-              icon: "voices",
-              label: "Everyone has a voice",
-              body: "Sit and watch, or bring your own arguments and rebuttals.",
-            },
+            { icon: "seal", label: "Topics revealed on the night" },
+            { icon: "scales", label: "Questions that divide the room" },
+            { icon: "voices", label: "Everyone has a voice" },
           ]}
-          details={[
-            { label: "Date", value: "Sunday, 9 August" },
-            { label: "Time", value: "2:00 to 5:00 pm" },
-            { label: "Tickets", value: "On Offlyn" },
-          ]}
+          when={["Sunday, 9 August", "2:00 to 5:00 pm"]}
+          cta="Tickets on Offlyn"
         />
       ),
     },
