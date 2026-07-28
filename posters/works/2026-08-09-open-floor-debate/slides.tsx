@@ -623,7 +623,7 @@ export function Bring({ copy, points }: { copy: Copy; points: string[] }) {
 /** The collaboration lockup: both marks at equal optical weight, meeting at a
  *  gold cross. Sized off a shared height rather than a shared width, since one
  *  mark is wide and the other nearly square. */
-function CoBrand({ partner, height = 128 }: { partner: string; height?: number }) {
+function CoBrand({ partner, height = 116 }: { partner: string; height?: number }) {
   const PARTNER_RATIO = 935 / 701;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 46 }}>
@@ -718,36 +718,41 @@ function Icon({ name, size = 46 }: { name: IconName; size?: number }) {
  *  already decided to care. */
 function Beat({ icon, label, body }: { icon: IconName; label: string; body: string }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "78px 1fr", gap: 8 }}>
-      <span style={{ paddingTop: 2 }}>
-        <Icon name={icon} />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        gap: 11,
+      }}
+    >
+      <Icon name={icon} size={38} />
+      <span
+        style={{
+          fontFamily: "var(--cc-font-condensed)",
+          fontWeight: 700,
+          textTransform: "uppercase",
+          fontSize: 31,
+          letterSpacing: "0.015em",
+          lineHeight: 1.02,
+          color: "var(--cc-ivory)",
+        }}
+      >
+        {label}
       </span>
-      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-        <span
-          style={{
-            fontFamily: "var(--cc-font-condensed)",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            fontSize: 31,
-            letterSpacing: "0.015em",
-            lineHeight: 1.02,
-            color: "var(--cc-ivory)",
-          }}
-        >
-          {label}
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--cc-font-display)",
-            fontSize: 25,
-            lineHeight: 1.36,
-            letterSpacing: "-0.004em",
-            color: "var(--cc-parchment)",
-          }}
-        >
-          {body}
-        </span>
-      </div>
+      <span
+        style={{
+          fontFamily: "var(--cc-font-display)",
+          fontSize: 25,
+          lineHeight: 1.36,
+          letterSpacing: "-0.004em",
+          color: "var(--cc-parchment)",
+          maxWidth: "56ch",
+        }}
+      >
+        {body}
+      </span>
     </div>
   );
 }
@@ -782,7 +787,7 @@ export function Poster({
       >
         <CoBrand partner={partner} />
 
-        <div style={{ marginTop: 40 }}>
+        <div style={{ marginTop: 30 }}>
           <span
             className="kicker"
             style={{
@@ -801,7 +806,7 @@ export function Poster({
               fontFamily: "var(--cc-font-condensed)",
               fontWeight: 700,
               textTransform: "uppercase",
-              fontSize: 122,
+              fontSize: 114,
               lineHeight: 0.88,
               letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
@@ -825,7 +830,7 @@ export function Poster({
               lineHeight: 1.34,
               letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
-              margin: "28px auto 0",
+              margin: "22px auto 0",
               maxWidth: "29ch",
               textAlign: "center",
             }}
@@ -839,7 +844,7 @@ export function Poster({
             which is ranged left and meant to be scanned. Mixing the two
             alignments in one undivided column was what made the earlier cut
             feel unsettled. */}
-        <div style={{ marginTop: 46 }}>
+        <div style={{ marginTop: 32 }}>
           <hr className="rule" style={{ border: 0 }} />
         </div>
 
@@ -850,14 +855,14 @@ export function Poster({
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap: 30,
+            gap: 24,
           }}
         >
           {beats.map((b, i) => (
             <div
               key={i}
               style={{
-                paddingTop: i === 0 ? 0 : 30,
+                paddingTop: i === 0 ? 0 : 24,
                 borderTop: i === 0 ? "none" : "1px solid rgba(200,162,74,0.16)",
               }}
             >
@@ -869,6 +874,7 @@ export function Poster({
         {/* the details on a plate, so the foot reads as an invitation card */}
         <div
           style={{
+            marginTop: 22,
             padding: "28px 36px",
             border: "1px solid rgba(200,162,74,0.34)",
             background: "rgba(11,9,7,0.62)",
@@ -878,7 +884,16 @@ export function Poster({
           }}
         >
           {details.map((d, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                gap: 8,
+              }}
+            >
               <span className="label" style={{ fontSize: 13, letterSpacing: "0.22em" }}>
                 {d.label}
               </span>
