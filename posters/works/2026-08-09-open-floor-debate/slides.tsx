@@ -734,14 +734,18 @@ function Beat({ icon, label }: { icon: IconName; label: string }) {
       }}
     >
       <Icon name={icon} size={34} />
+      {/* Small caps in the display serif, generously tracked. The condensed
+          sans said sports fixture; this says printed programme, which is the
+          room we are actually describing. The initial cap stays full height,
+          so the line keeps a little ceremony. */}
       <span
         style={{
-          fontFamily: "var(--cc-font-condensed)",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          fontSize: 33,
-          letterSpacing: "0.055em",
-          lineHeight: 1.02,
+          fontFamily: "var(--cc-font-display)",
+          fontWeight: 500,
+          fontVariantCaps: "small-caps",
+          fontSize: 38,
+          letterSpacing: "0.15em",
+          lineHeight: 1.04,
           color: "var(--cc-ivory)",
         }}
       >
@@ -825,7 +829,7 @@ export function Poster({
               lineHeight: 1.34,
               letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
-              margin: "26px auto 0",
+              margin: "16px auto 0",
               maxWidth: "29ch",
             }}
           >
