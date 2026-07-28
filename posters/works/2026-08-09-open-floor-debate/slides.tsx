@@ -738,9 +738,10 @@ function Beat({ icon, label, body }: { icon: IconName; label: string; body: stri
         </span>
         <span
           style={{
-            fontFamily: "var(--cc-font-ui)",
-            fontSize: 22,
-            lineHeight: 1.44,
+            fontFamily: "var(--cc-font-display)",
+            fontSize: 25,
+            lineHeight: 1.36,
+            letterSpacing: "-0.004em",
             color: "var(--cc-parchment)",
           }}
         >
@@ -811,21 +812,21 @@ export function Poster({
             {copy.title}
           </h1>
 
-          {/* Set in the UI face, not the display italic. Three type voices on
-              one poster was one too many: the italic serif read as a caption
-              lifted off a different piece, and it had to hold its own directly
-              under a heavy condensed title. This is a claim, so it is set
-              plainly and lets the claim do the work. */}
+          {/* Upright display serif, the same face the details plate sets its
+              values in. The italic was what did not belong here, not the
+              serif: it read as a caption lifted off another piece. Inter was
+              worse in the other direction, generic where this line has to
+              carry the whole claim. */}
           <p
             style={{
-              fontFamily: "var(--cc-font-ui)",
+              fontFamily: "var(--cc-font-display)",
               fontWeight: 400,
-              fontSize: 31,
-              lineHeight: 1.4,
-              letterSpacing: "-0.005em",
+              fontSize: 34,
+              lineHeight: 1.34,
+              letterSpacing: "-0.008em",
               color: "var(--cc-ivory)",
               margin: "28px auto 0",
-              maxWidth: "31ch",
+              maxWidth: "29ch",
               textAlign: "center",
             }}
           >
