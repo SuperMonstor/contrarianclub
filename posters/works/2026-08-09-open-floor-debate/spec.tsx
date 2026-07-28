@@ -169,19 +169,19 @@ const work: WorkSpec = {
           partner={basecamp}
           beats={[
             {
-              marker: "01",
+              icon: "seal",
               label: "Topics revealed on the night",
-              body: "Announced on the day, never before it. Nobody gets to prepare.",
+              body: "Announced on the day, so no one gets to prepare.",
             },
             {
-              marker: "02",
-              label: "Put your name in",
-              body: "Once the topic is up, anyone can volunteer. Speakers are then drawn at random.",
+              icon: "scales",
+              label: "Questions that divide the room",
+              body: "Genuinely interesting motions, argued seriously. Put your name in for the one you want to take on, and speakers are drawn at random.",
             },
             {
-              marker: "or",
-              label: "Just sit and watch",
-              body: "Nobody is called on and nobody is counted. Plenty of the room only ever listens.",
+              icon: "voices",
+              label: "Everyone has a voice",
+              body: "Sit and watch, or take the floor and bring your own arguments and your own rebuttals.",
             },
           ]}
           details={[

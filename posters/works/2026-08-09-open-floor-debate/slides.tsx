@@ -650,38 +650,77 @@ function CoBrand({ partner, height = 128 }: { partner: string; height?: number }
   );
 }
 
-/** One line of the format, hung off a marker in the left column.
+/** The three marks in the format block's left column.
  *
- *  The marker is the point of this block. The first two rows are numbered
- *  because they happen in that order; the third is marked "or", not "03",
- *  because sitting it out is not step three of the process, it is the way
- *  around the process. Anyone scanning the poster reads the spine first and
- *  gets the whole answer from it. */
-function Beat({ marker, label, body }: { marker: string; label: string; body: string }) {
-  const isOr = marker.toLowerCase() === "or";
+ *  Drawn rather than numbered: these three points are not a sequence, they are
+ *  three separate things that are true about the night, and numbering them
+ *  implied an order that does not exist. Thin gold strokes on an open
+ *  counter, so they sit with the engraved hairlines rather than looking like
+ *  UI dropped onto a poster.
+ *
+ *  seal    the topic, sealed until the night
+ *  scales  a question with two sides worth arguing
+ *  voices  more than one person talking */
+export type IconName = "seal" | "scales" | "voices";
+
+function Icon({ name, size = 46 }: { name: IconName; size?: number }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 32 32",
+    fill: "none",
+    stroke: GOLD,
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    style: { display: "block", opacity: 0.9 },
+  };
+
+  if (name === "seal") {
+    return (
+      <svg {...common}>
+        <rect x="3" y="8" width="26" height="17" rx="1.5" />
+        <path d="M3 8.6 L16 18 L29 8.6" />
+        <circle cx="16" cy="18" r="3.1" />
+      </svg>
+    );
+  }
+
+  if (name === "scales") {
+    return (
+      <svg {...common}>
+        <path d="M16 7.5 V25.5" />
+        <path d="M6 11 H26" />
+        <path d="M11 25.8 H21" />
+        <circle cx="16" cy="6" r="1.4" />
+        <path d="M6 11 L2.8 17 M6 11 L9.2 17" />
+        <path d="M2.4 17 A3.9 3.9 0 0 0 9.6 17" />
+        <path d="M26 11 L22.8 17 M26 11 L29.2 17" />
+        <path d="M22.4 17 A3.9 3.9 0 0 0 29.6 17" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <rect x="11" y="5" width="18" height="12.5" rx="3" />
+      <rect x="3" y="13" width="18" height="12.5" rx="3" />
+      <path d="M8.5 25.5 V29 L12.5 25.5" />
+    </svg>
+  );
+}
+
+/** One line of the format, hung off its mark in the left column.
+ *
+ *  The spine is the point of this block: someone who reads only the marks and
+ *  the headings still comes away with when topics appear, what they are like,
+ *  and that speaking is optional. The body copy is for the person who has
+ *  already decided to care. */
+function Beat({ icon, label, body }: { icon: IconName; label: string; body: string }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "78px 1fr", gap: 8 }}>
-      <span
-        style={
-          isOr
-            ? {
-                fontFamily: "var(--cc-font-display)",
-                fontStyle: "italic",
-                fontWeight: 600,
-                fontSize: 30,
-                color: GOLD,
-                opacity: 0.9,
-              }
-            : {
-                fontFamily: "var(--cc-font-condensed)",
-                fontWeight: 700,
-                fontSize: 30,
-                color: GOLD,
-                opacity: 0.75,
-              }
-        }
-      >
-        {marker}
+      <span style={{ paddingTop: 2 }}>
+        <Icon name={icon} />
       </span>
       <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
         <span
@@ -720,7 +759,7 @@ export function Poster({
 }: {
   copy: Copy;
   partner: string;
-  beats: { marker: string; label: string; body: string }[];
+  beats: { icon: IconName; label: string; body: string }[];
   details: { label: string; value: string }[];
 }) {
   return (
