@@ -176,12 +176,12 @@ const work: WorkSpec = {
             {
               icon: "scales",
               label: "Questions that divide the room",
-              body: "Genuinely interesting motions, argued seriously. Put your name in for the one you want to take on, and speakers are drawn at random.",
+              body: "Put your name in a hat, speakers are drawn at random.",
             },
             {
               icon: "voices",
               label: "Everyone has a voice",
-              body: "Sit and watch, or take the floor and bring your own arguments and your own rebuttals.",
+              body: "Sit and watch, or bring your own arguments and rebuttals.",
             },
           ]}
           details={[
