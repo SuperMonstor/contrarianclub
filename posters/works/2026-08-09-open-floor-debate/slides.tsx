@@ -58,6 +58,32 @@ function Mark() {
   );
 }
 
+/** The cue at the foot of every slide but the last, naming what is coming so
+ *  a reader has a reason to keep going rather than deciding they have the gist
+ *  three slides in. */
+function NextCue({ text, align = "flex-start" }: { text: string; align?: "flex-start" | "center" }) {
+  return (
+    <div style={{ display: "flex", justifyContent: align }}>
+      <span
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          fontFamily: "var(--cc-font-ui)",
+          fontWeight: 500,
+          fontSize: 18,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: "var(--cc-muted)",
+        }}
+      >
+        {text}
+        <span style={{ color: GOLD, fontSize: 21 }}>&rarr;</span>
+      </span>
+    </div>
+  );
+}
+
 /** Pull a phrase out in gold, for naming things inside a sentence. */
 export function G({ children }: { children: ReactNode }) {
   return <span style={{ color: GOLD }}>{children}</span>;
@@ -360,11 +386,13 @@ export function Statement({
   art,
   lead,
   rest,
+  next,
   leadSize = 58,
 }: {
   art: Art;
   lead: ReactNode;
   rest?: ReactNode;
+  next?: string;
   leadSize?: number;
 }) {
   return (
@@ -426,6 +454,12 @@ export function Statement({
             </p>
           )}
         </div>
+
+        {next && (
+          <div style={{ marginTop: 34 }}>
+            <NextCue text={next} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -436,153 +470,124 @@ export function Statement({
 // ---------------------------------------------------------------------------
 
 export function Sequence({
+  art,
   lead,
   steps,
   note,
+  next,
 }: {
+  art: Art;
   lead: string;
   steps: string[];
   note: ReactNode;
+  next?: string;
 }) {
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        padding: "84px 78px 84px",
-      }}
-    >
-      <Mark />
-
-      <p
-        style={{
-          fontFamily: "var(--cc-font-display)",
-          fontWeight: 500,
-          fontSize: 56,
-          lineHeight: 1.12,
-          letterSpacing: "-0.016em",
-          color: "var(--cc-ivory)",
-          margin: "50px 0 0",
-          maxWidth: "17ch",
-        }}
-      >
-        {lead}
-      </p>
-
-      {/* The run of the night on a gold spine. A thread rather than a numbered
-          list: it is one continuous evening, not seven separate items. */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", paddingTop: 20 }}>
-        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-          {steps.map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "stretch", gap: 24 }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: 10,
-                }}
-              >
-                <span
-                  style={{
-                    width: 9,
-                    height: 9,
-                    marginTop: 12,
-                    borderRadius: "50%",
-                    background: GOLD,
-                    flexShrink: 0,
-                  }}
-                />
-                {i < steps.length - 1 && (
-                  <span style={{ flex: 1, width: 1, background: "rgba(200,162,74,0.45)" }} />
-                )}
-              </div>
-              <span
-                style={{
-                  fontFamily: "var(--cc-font-display)",
-                  fontSize: 30,
-                  lineHeight: 1.22,
-                  color: "var(--cc-ivory)",
-                  paddingBottom: i < steps.length - 1 ? 32 : 0,
-                }}
-              >
-                {s}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <p
-        style={{
-          fontFamily: "var(--cc-font-display)",
-          fontSize: 30,
-          lineHeight: 1.42,
-          color: "var(--cc-parchment)",
-          margin: 0,
-          maxWidth: "34ch",
-        }}
-      >
-        {note}
-      </p>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// 6. Bring nothing.
-// ---------------------------------------------------------------------------
-
-export function Plain({ lead, rest }: { lead: ReactNode; rest: ReactNode }) {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        padding: "84px 78px 84px",
-      }}
-    >
-      <Mark />
+    <div style={{ position: "absolute", inset: 0 }}>
+      <Backdrop art={art} />
+      <div className="art-tone" />
+      <div className="ofd-sequence-scrim" />
 
       <div
         style={{
-          flex: 1,
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          gap: 36,
+          padding: "84px 78px 84px",
+          textShadow: SHADOW,
         }}
       >
+        <Mark />
+
         <p
           style={{
             fontFamily: "var(--cc-font-display)",
             fontWeight: 500,
-            fontSize: 76,
-            lineHeight: 1.08,
-            letterSpacing: "-0.02em",
+            fontSize: 56,
+            lineHeight: 1.12,
+            letterSpacing: "-0.016em",
             color: "var(--cc-ivory)",
-            margin: 0,
-            maxWidth: "13ch",
+            margin: "40px 0 0",
+            maxWidth: "17ch",
           }}
         >
           {lead}
         </p>
+
+        {/* The run of the night as one continuous thread rather than a bulleted
+            list. The numeral sits inside the spine, so the eye follows a single
+            gold line from the announcement to the open floor: the shape of the
+            evening is the graphic. */}
+        <div style={{ flex: 1, display: "flex", alignItems: "center", paddingTop: 26 }}>
+          <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            {steps.map((step, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "stretch", gap: 26 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: 42,
+                    flexShrink: 0,
+                  }}
+                >
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 42,
+                      height: 42,
+                      flexShrink: 0,
+                      borderRadius: "50%",
+                      border: `1px solid ${GOLD}`,
+                      background: "rgba(11,9,7,0.72)",
+                      fontFamily: "var(--cc-font-condensed)",
+                      fontWeight: 700,
+                      fontSize: 19,
+                      color: GOLD,
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {i < steps.length - 1 && (
+                    <span style={{ flex: 1, width: 1, background: "rgba(200,162,74,0.5)" }} />
+                  )}
+                </div>
+                <span
+                  style={{
+                    fontFamily: "var(--cc-font-display)",
+                    fontSize: 32,
+                    lineHeight: 1.2,
+                    color: "var(--cc-ivory)",
+                    paddingTop: 4,
+                    paddingBottom: i < steps.length - 1 ? 30 : 0,
+                  }}
+                >
+                  {step}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <p
           style={{
             fontFamily: "var(--cc-font-display)",
-            fontSize: 32,
-            lineHeight: 1.44,
+            fontSize: 30,
+            lineHeight: 1.42,
             color: "var(--cc-parchment)",
-            margin: 0,
-            maxWidth: "30ch",
+            margin: "0 0 34px",
+            maxWidth: "34ch",
           }}
         >
-          {rest}
+          {note}
         </p>
+
+        {next && <NextCue text={next} />}
       </div>
     </div>
   );

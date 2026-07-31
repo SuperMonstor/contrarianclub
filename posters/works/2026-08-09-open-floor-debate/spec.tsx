@@ -2,30 +2,34 @@ import type { WorkSpec } from "../../src/core/types";
 import chamber from "./assets/commons1833.jpg";
 import lecture from "./assets/orrery.jpg";
 import dispute from "./assets/dispute.jpg";
+import panel from "./assets/panel.jpg";
 import athens from "./assets/athens.jpg";
 import basecamp from "./assets/basecamp.png";
-import { Closing, G, Plain, Poster, Sequence, Statement } from "./slides";
+import { Closing, G, Poster, Sequence, Statement } from "./slides";
 
 // Instagram carousel for the first Open Floor Debate, 9 August, run with
 // Basecamp. The design reasoning is in slides.tsx.
 //
 // The poster leads rather than closes. Someone scrolling past gets the whole
-// offer in one frame, and the swipe cue tells them the rest is there if they
-// want it. Slide 7 is that poster's twin, turned into a call to action.
+// offer in one frame, and every slide after it names what is coming next, so
+// there is always a reason to keep going rather than deciding you have the
+// gist. Slide 6 is the poster's twin, turned into the call to action.
 //
-// The five slides between them are the club's own words about the night, in
-// the order someone asks the questions: can I take part, what will we argue
-// about, how does it actually run, can I bring something, what do I need.
+// "Bring nothing" and "bring your best topics" used to be two slides, and read
+// as contradicting each other. They are one slide now, and the tension is the
+// point: turn up with nothing, unless you have been chewing on something.
 //
 // The art, all public domain via Wikimedia Commons:
 //
-//   1, 7  chamber   Hayter, The House of Commons 1833   a full house
+//   1, 6  chamber   Hayter, The House of Commons 1833   a full house
 //   2     lecture   Wright of Derby, The Orrery         one talking, the rest
 //                                                       listening
 //   3     dispute   Rembrandt, Two Old Men Disputing    two people who are not
 //                                                       going to agree
+//   4     panel     Rembrandt, The Syndics              a table, mid business
 //   5     athens    Raphael, The School of Athens       everyone with an idea
 const WHEN = ["Sunday, 9 August", "2:00 to 5:00 pm"];
+const CTA = "Tickets link in bio";
 
 const work: WorkSpec = {
   title: "Open Floor Debate, format explainer",
@@ -49,7 +53,7 @@ const work: WorkSpec = {
             { icon: "voices", label: "Everyone has a voice" },
           ]}
           when={WHEN}
-          cta="Tickets on Offlyn"
+          cta={CTA}
           swipeHint="More details to follow"
         />
       ),
@@ -64,6 +68,7 @@ const work: WorkSpec = {
           art={{ src: lecture, treatment: "lift", position: "center 40%" }}
           lead="Anyone in the audience has the option to take the floor."
           rest="We announce topics on the day, so no one can prepare beforehand."
+          next="What we argue about"
         />
       ),
     },
@@ -85,6 +90,7 @@ const work: WorkSpec = {
               topic you definitely have a strong opinion on.
             </>
           }
+          next="How a round runs"
         />
       ),
     },
@@ -92,8 +98,10 @@ const work: WorkSpec = {
     // 4. The run of the night.
     {
       label: "How it runs",
+      hasImage: true,
       render: () => (
         <Sequence
+          art={{ src: panel, treatment: "lift", position: "center 34%" }}
           lead="Here's how a round runs."
           steps={[
             "We announce the topic",
@@ -102,43 +110,41 @@ const work: WorkSpec = {
             "15 minutes to prepare",
             "A round of statements",
             "A round of rebuttals",
-            "Open floor, for anyone in the audience to join the conversation",
+            "Open floor, for anyone in the audience to join",
           ]}
           note={
             <>
               Two teams of two to three people each. We pick <G>three topics</G> on the day.
             </>
           }
+          next="What to bring"
         />
       ),
     },
 
-    // 5. The audience can set the agenda too.
+    // 5. Bring nothing, unless you have been chewing on something.
     {
-      label: "Bring your topics",
+      label: "Bring nothing",
       hasImage: true,
       render: () => (
         <Statement
           art={{ src: athens, treatment: "bright", position: "center 46%" }}
-          lead="Bring your best topics."
-          leadSize={68}
-          rest="If you have something interesting that you haven't been able to find a clear answer to, bring it along on the day. If it's good enough, we'll bring it up to be debated."
+          lead="Bring nothing."
+          leadSize={76}
+          rest={
+            <>
+              No preparation, no experience, no obligation. The goal is to have a fun discourse
+              that challenges your core beliefs. Although if you have a topic you haven't been
+              able to find a clear answer to, bring that along. If it's good enough, we'll put it
+              up to be debated.
+            </>
+          }
+          next="How to join"
         />
       ),
     },
 
-    // 6. And you need nothing to walk in.
-    {
-      label: "Bring nothing",
-      render: () => (
-        <Plain
-          lead="You don't need to bring anything."
-          rest="No preparation, no experience, no obligation. The goal is to have a fun discourse that challenges your core beliefs."
-        />
-      ),
-    },
-
-    // 7. The close, in the same room the deck opened in.
+    // 6. The close, in the same room the deck opened in.
     {
       label: "Join",
       hasImage: true,
@@ -146,15 +152,9 @@ const work: WorkSpec = {
         <Closing
           art={{ src: chamber, treatment: "lift", position: "center 30%" }}
           partner={basecamp}
-          pitch={
-            <>
-              If you've been interested in debating, or just want to hear a charged, intellectual
-              conversation around the most interesting, divisive topics of our time,{" "}
-              <G>join now</G>.
-            </>
-          }
+          pitch="Join a charged, intellectually stimulating conversation around the most interesting, divisive topics of our time."
           when={WHEN}
-          cta="Tickets on Offlyn"
+          cta={CTA}
         />
       ),
     },

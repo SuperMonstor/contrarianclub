@@ -82,3 +82,28 @@
     ),
     radial-gradient(125% 85% at 50% 18%, transparent 44%, rgba(0, 0, 0, 0.48) 100%);
 }
+
+/* --- Slide 4, the run of the night --------------------------------------- */
+/* Seven steps and a note have to sit on this one, so the panel keeps only a
+   lit band at the top and everything below it goes quiet. Enough painting to
+   stop the slide reading as a plain black list, not so much that the thread
+   has to fight it. */
+.ofd-sequence-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.4) 7%,
+      rgba(11, 9, 7, 0.34) 14%,
+      rgba(11, 9, 7, 0.46) 21%,
+      rgba(11, 9, 7, 0.64) 28%,
+      rgba(11, 9, 7, 0.8) 35%,
+      rgba(11, 9, 7, 0.89) 43%,
+      rgba(11, 9, 7, 0.93) 52%,
+      rgba(11, 9, 7, 0.95) 100%
+    ),
+    radial-gradient(125% 85% at 50% 14%, transparent 44%, rgba(0, 0, 0, 0.5) 100%);
+}
