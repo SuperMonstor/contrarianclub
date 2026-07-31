@@ -25,14 +25,20 @@ already says it, and naming Basecamp brings their audience with it.
 > This edition leans toward AI and technology, relationships, and a few we are
 > keeping to ourselves until you are in the room.
 >
-> Once a topic is up, anyone who wants to argue it puts their name in. Speakers
-> are drawn at random and teams are formed on the spot. You get ten to fifteen
-> minutes to work out your line, then it is opening statements, one from every
-> speaker, followed by a round of rebuttals.
+> Once a topic is up, anyone who wants to argue it puts their name in a hat.
+> Speakers are drawn at random into two teams of two to three people each. You
+> get fifteen minutes to prepare, then a round of statements, a round of
+> rebuttals, and the floor opens for anyone in the audience to join the
+> conversation. We pick three topics on the day.
 >
-> You do not have to speak. Nobody is called on, plenty of the room only ever
-> listens, and you can decide once you are there. Coming to watch is a full
-> afternoon.
+> You don't need to bring anything. No preparation, no experience, no
+> obligation. Anyone in the audience has the option to take the floor, and
+> plenty of the room only ever listens. The goal is to have a fun discourse
+> that challenges your core beliefs.
+>
+> If you have something interesting that you haven't been able to find a clear
+> answer to, bring it along on the day. If it's good enough, we'll bring it up
+> to be debated.
 >
 > Motions we have run before:
 >
@@ -48,14 +54,13 @@ already says it, and naming Basecamp brings their audience with it.
 
 For anywhere with a character limit.
 
-> Impromptu debates on topics revealed that day. Put your name in and speakers
-> are drawn at random, or sit and watch. No preparation, no experience, no
-> obligation to speak. Sunday, 9 August, 2:00 to 5:00 pm.
+> Impromptu debates on topics revealed that day. Put your name in a hat and
+> speakers are drawn at random, or sit and watch. No preparation, no
+> experience, no obligation. Sunday, 9 August, 2:00 to 5:00 pm.
 
 ## Open questions
 
 - **Venue.** Deliberately left off the poster, but a ticket listing usually
   needs one. Add it before publishing.
-- **Teams of four.** Not stated above, because it is still unclear whether
-  that is four per side or four in total. Worth adding once settled: it tells
-  a prospective speaker how much of the argument is theirs to carry.
+- Teams and topic count are settled: two teams of two to three, three topics
+  on the day, fifteen minutes to prepare. The carousel and this copy agree.
