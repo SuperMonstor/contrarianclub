@@ -134,9 +134,9 @@ const work: WorkSpec = {
           rest={
             <>
               No preparation, no experience, no obligation. The goal is to have a fun discourse
-              that challenges your core beliefs. Although if you have a topic you haven't been
-              able to find a clear answer to, bring that along. If it's good enough, we'll put it
-              up to be debated.
+              that challenges your core beliefs. If you have a topic you haven't been able to
+              find a clear answer to, tell us. If it's good enough we'll use it as a topic on the
+              day.
             </>
           }
           next="How to join"
