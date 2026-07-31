@@ -54,7 +54,7 @@ const work: WorkSpec = {
           ]}
           when={WHEN}
           cta={CTA}
-          swipeHint="More details to follow"
+          swipeHint="Swipe for more details"
         />
       ),
     },

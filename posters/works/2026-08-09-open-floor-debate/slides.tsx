@@ -349,27 +349,39 @@ export function Poster({
           ))}
         </div>
 
-        <Footer when={when} cta={cta}>
-          {swipeHint && (
-            <span
-              style={{
-                marginTop: 10,
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                fontFamily: "var(--cc-font-ui)",
-                fontWeight: 500,
-                fontSize: 18,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--cc-muted)",
-              }}
-            >
-              {swipeHint}
-              <span style={{ color: GOLD, fontSize: 21 }}>&rarr;</span>
+        <Footer when={when} cta={cta} />
+
+        {/* The swipe cue is an affordance, not part of the poster. Stacked
+            with the date and the ticket line it read as a third line of copy,
+            so it is set apart: pushed to the foot on its own, and given the
+            one outline anywhere on this poster. A viewer should register it as
+            something to act on rather than something to read. */}
+        {swipeHint && (
+          <span
+            style={{
+              marginTop: 44,
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              padding: "11px 26px",
+              border: "1px solid rgba(200,162,74,0.3)",
+              borderRadius: 999,
+              background: "rgba(11,9,7,0.35)",
+              fontFamily: "var(--cc-font-ui)",
+              fontWeight: 500,
+              fontSize: 16,
+              letterSpacing: "0.2em",
+              paddingLeft: "calc(26px + 0.2em)",
+              textTransform: "uppercase",
+              color: "var(--cc-parchment)",
+            }}
+          >
+            {swipeHint}
+            <span style={{ color: GOLD, fontSize: 20, transform: "translateY(-1px)" }}>
+              &rarr;
             </span>
-          )}
-        </Footer>
+          </span>
+        )}
       </div>
     </div>
   );
