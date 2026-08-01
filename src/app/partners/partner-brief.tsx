@@ -61,7 +61,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
                 and saw <strong>demand for 110 tickets in under 12 hours</strong>.
               </p>
               <p>
-                In just two months, we have sold out <strong>five shows</strong>.
+                We have now sold out <strong>eight shows</strong>.
                 The live debate is the starting point. <mark className={styles.highlight}>We
                 turn the best arguments, prompts and moments into content that
                 brings new people into the conversation</mark>, then back into
@@ -75,15 +75,15 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           <p className={styles.statsHeading}>Progress in 2 months</p>
           <div className={styles.statsGrid}>
             <article>
-              <strong>&gt;300</strong>
+              <strong>&gt;500</strong>
               <span>live attendees</span>
             </article>
             <article>
-              <strong>~350K</strong>
+              <strong>&gt;1M</strong>
               <span>views</span>
             </article>
             <article>
-              <strong>5</strong>
+              <strong>8</strong>
               <span>sold-out shows</span>
             </article>
           </div>
