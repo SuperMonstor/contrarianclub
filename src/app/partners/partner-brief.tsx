@@ -93,18 +93,25 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
       <section className={styles.elevation}>
         <div className={styles.elevationAside}>
           <p className={styles.sectionLabel}>Coming next</p>
+          <p className={styles.elevationKicker}>Part of</p>
           <div className={styles.elevationLockup} aria-label="Elevation Capital">
             <span className={styles.elevationMark} aria-hidden="true"><i /><i /></span>
             <span>Elevation<br />Capital</span>
           </div>
-          <p className={styles.elevationKicker}>In partnership with</p>
+          <p className={styles.elevationEvent}>Basecamp · 6–12 August</p>
+          <div className={styles.techWeekLockup}>
+            Bengaluru<br />Tech Week
+          </div>
+          <p className={styles.elevationEvent}>1–6 September</p>
         </div>
         <div>
-          <h2>Contrarian Debate Club<br />at Tech Week.</h2>
+          <h2>Contrarian at Basecamp<br />and Bengaluru Tech Week.</h2>
           <p>
-            Next month, we are bringing the Contrarian room to Tech Week with
-            Elevation Capital, creating another moment where ambitious people
-            can meet ideas in public. Beyond Bengaluru, we are also planning
+            This month we bring the Contrarian room to Basecamp, Elevation
+            Capital&apos;s founder week, and in September we join Bengaluru Tech
+            Week, the citywide festival that gathers more than 10,000 builders,
+            founders and investors. Both put the format in front of exactly the
+            people it is built for. Beyond Bengaluru, we are also planning
             future live events in more cities, taking the format to the wider
             community already engaging with our content.
           </p>

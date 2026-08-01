@@ -63,8 +63,12 @@
 .elevationMark i { display: block; width: 9px; height: 20px; background: #2f65d7; clip-path: polygon(0 100%, 0 41%, 100% 0, 100% 100%); }
 .elevationMark i:last-child { height: 29px; background: #163d9e; }
 .elevationKicker { margin: 0; color: var(--brick); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+/* Bengaluru Tech Week ships no usable logo asset, so it is credited as a
+   typographic wordmark rather than an invented mark. */
+.techWeekLockup { margin-top: 22px; color: var(--ink); font-family: var(--font-ui), sans-serif; font-size: 17px; font-weight: 850; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
+.elevationEvent { margin: 8px 0 0; color: rgba(26, 22, 18, 0.62); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 .elevation h2 { max-width: 1060px; margin: 0; font-family: var(--font-display), Georgia, serif; font-size: clamp(2.8rem, 5.6vw, 6.1rem); font-weight: 500; line-height: 0.88; letter-spacing: -0.075em; }
-.elevation div > p:last-child { max-width: 520px; margin: 28px 0 0; font-size: 1.08rem; line-height: 1.62; }
+.elevation > div:last-child > p:last-child { max-width: 520px; margin: 28px 0 0; font-size: 1.08rem; line-height: 1.62; }
 
 .audience { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.86fr); gap: clamp(40px, 8vw, 128px); align-items: center; background: #e3d2ae; }
 .audienceImageWrap { aspect-ratio: 4 / 5; overflow: hidden; }
@@ -162,11 +166,13 @@
   .fitGrid { grid-template-columns: minmax(0, 1fr) minmax(78mm, 0.78fr); gap: 24mm; }
   .socialProof { grid-template-columns: minmax(56mm, 0.74fr) minmax(0, 1fr); }
   .galleryGrid { grid-template-columns: 1.55fr 1fr; }
-  .storyGrid > div, .fitGrid > div > p:not(.proposalLabel), .socialCopy p:not(.sectionLabel), .elevation div > p:last-child { font-size: 10.5pt; line-height: 1.45; }
+  .storyGrid > div, .fitGrid > div > p:not(.proposalLabel), .socialCopy p:not(.sectionLabel), .elevation > div:last-child > p:last-child { font-size: 10.5pt; line-height: 1.45; }
   .elevation h2 { font-size: 42pt; }
   .elevation { gap: 24mm; align-items: center; }
   .elevationAside .sectionLabel { margin-bottom: 14mm; }
   .elevationLockup { font-size: 13pt; }
+  .techWeekLockup { margin-top: 8mm; font-size: 13pt; }
+  .elevationEvent { margin-top: 2mm; font-size: 7.5pt; }
   .profileGrid { margin-top: 12mm; }
   .profileGrid > div { min-height: 23mm; padding: 4mm 3mm 3mm 0; }
   .profileGrid dt { font-size: 7pt; }
