@@ -43,6 +43,9 @@ supabase/migrations/009_vote_indexes.sql
 supabase/migrations/20260703143306_010_secure_vote_path.sql
 supabase/migrations/20260703232112_011_speaker_challenge.sql
 supabase/migrations/20260718000000_012_persistent_speaker_ballots.sql
+supabase/migrations/20260808000000_013_two_topics_and_speaker_electorate.sql
+supabase/migrations/20260808010000_014_live_speaker_voting.sql
+supabase/migrations/20260808020000_015_refresh_all_live_speaker_rounds.sql
 ```
 
 Then fill in `.env.local`:
