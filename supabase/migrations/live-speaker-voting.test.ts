@@ -32,4 +32,17 @@ describe("live speaker voting migration contract", () => {
     expect(migration).toContain("get_speaker_participation(");
     expect(migration).toContain("set_next_speaker_request(");
   });
+
+  it("preserves event enrollment during a rehearsal reset", () => {
+    const resetFunction = migration.slice(
+      migration.indexOf("create or replace function public.admin_reset_speaker"),
+      migration.indexOf(
+        "revoke all on function public.join_speaker_electorate",
+      ),
+    );
+
+    expect(resetFunction).toContain("delete from speaker_rounds");
+    expect(resetFunction).toContain("delete from speaker_ballots");
+    expect(resetFunction).not.toContain("delete from speaker_electorate");
+  });
 });
