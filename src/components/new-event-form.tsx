@@ -13,6 +13,7 @@ type PollOption = {
 
 export type EventFormValues = {
   title: string;
+  topicMotions: string[];
   eventFormat: ActivityType;
   options: string[];
   scaleLeftLabel: string;
@@ -31,6 +32,7 @@ type NewEventFormProps = {
 
 const defaultValues: EventFormValues = {
   title: "Contrarian Club Debate",
+  topicMotions: ["Topic one motion", "Topic two motion"],
   eventFormat: "multiple_choice",
   options: ["Proposition", "Opposition", "Too close to call"],
   scaleLeftLabel: "Opposition",
@@ -65,6 +67,7 @@ export function NewEventForm({ eventCode, initialValues }: NewEventFormProps) {
     eventCode ?? "new",
     values.eventFormat,
     values.title,
+    values.topicMotions.join("|"),
     values.prePrompt,
     values.postPrompt,
     values.scaleLeftLabel,
@@ -138,6 +141,32 @@ function EventFormFields({
           defaultValue={values.title}
           className="club-input mt-2 px-3.5 py-3"
         />
+      </div>
+
+      <div>
+        <p className="club-label">Debate topics</p>
+        <div className="mt-2.5 space-y-2.5">
+          {[0, 1].map((index) => (
+            <div key={index}>
+              <label className="sr-only" htmlFor={`topic-${index + 1}`}>
+                Topic {index + 1} motion
+              </label>
+              <textarea
+                id={`topic-${index + 1}`}
+                name="topicMotions"
+                required
+                rows={2}
+                defaultValue={values.topicMotions[index] ?? ""}
+                className="club-input resize-none px-3.5 py-3"
+                placeholder={`Topic ${index + 1} motion`}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-[color:var(--cc-faint)]">
+          Each topic receives its own opening vote, audience section, closing
+          vote, and swing result.
+        </p>
       </div>
 
       <div>
@@ -292,8 +321,8 @@ function EventFormFields({
               Enable Audience Section
             </span>
             <span className="mt-1 block text-sm text-[color:var(--cc-muted)]">
-              Each audience speaker receives protected time, followed by a live
-              Keep speaking or Next speaker ballot.
+              Each audience speaker receives protected time, followed by a
+              threshold-based request for the next speaker.
             </span>
           </span>
         </label>

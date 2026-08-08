@@ -1,11 +1,15 @@
 import { connection } from "next/server";
 import { buildEventUrls } from "@/lib/site";
 import { roundScaleAverage, scaleSideLabel } from "@/lib/scale";
-import { summarizeSpeakerBallots } from "@/lib/speaker-challenge";
+import {
+  speakerRequestThreshold,
+  summarizeSpeakerBallots,
+} from "@/lib/speaker-challenge";
 import { createServiceClient } from "@/lib/supabase/server";
 import type {
   ActivitySummary,
   ChallengeSummary,
+  DebateTopicSummary,
   DebateSwingSummary,
   EventState,
   EventSummary,
@@ -60,7 +64,10 @@ export async function getEventState(code: string): Promise<EventState | null> {
     return null;
   }
 
-  const activities = await getActivitiesForEvent(supabase, event.id);
+  const [activities, topics] = await Promise.all([
+    getActivitiesForEvent(supabase, event.id),
+    getTopicsForEvent(supabase, event.id),
+  ]);
 
   const urls = buildEventUrls(event.code);
 
@@ -84,6 +91,8 @@ export async function getEventState(code: string): Promise<EventState | null> {
   if (!activity) {
     return {
       event,
+      topics,
+      activeTopic: null,
       activities: [],
       activity: null,
       mode: "join",
@@ -97,6 +106,8 @@ export async function getEventState(code: string): Promise<EventState | null> {
   }
 
   const activityIds = activities.map((item) => item.id);
+  const activeTopic =
+    topics.find((topic) => topic.id === activity.topic_id) ?? null;
   const pollActivityIds = activities
     .filter((item) => item.phase !== "speaker_challenge")
     .map((item) => item.id);
@@ -157,6 +168,7 @@ export async function getEventState(code: string): Promise<EventState | null> {
           activities,
           groupOptionsByActivity(allOptions),
           groupVotesByActivity(allVotes ?? []),
+          activity.topic_id ?? null,
         )
       : null;
 
@@ -170,6 +182,8 @@ export async function getEventState(code: string): Promise<EventState | null> {
 
   return {
     event,
+    topics,
+    activeTopic,
     activities,
     activity,
     mode,
@@ -190,14 +204,37 @@ async function buildChallengeSummary(
   const round = activity.challenge_round ?? 1;
   const bufferSeconds = activity.challenge_buffer_seconds ?? 90;
 
-  const { data: ballots, error } = await supabase
-    .from("speaker_ballots")
-    .select("choice")
-    .eq("activity_id", activity.id)
-    .eq("round", round)
-    .returns<{ choice: SpeakerBallotChoice }[]>();
+  const [
+    { data: ballots, error },
+    { data: roundState, error: roundError },
+    { count: electorateCount, error: electorateError },
+  ] = await Promise.all([
+    supabase
+      .from("speaker_ballots")
+      .select("choice")
+      .eq("activity_id", activity.id)
+      .eq("round", round)
+      .eq("choice", "next")
+      .returns<{ choice: SpeakerBallotChoice }[]>(),
+    supabase
+      .from("speaker_rounds")
+      .select("eligible_count, threshold_count, reached_at")
+      .eq("activity_id", activity.id)
+      .eq("round", round)
+      .maybeSingle<{
+        eligible_count: number;
+        threshold_count: number;
+        reached_at: string | null;
+      }>(),
+    supabase
+      .from("speaker_electorate")
+      .select("device_id", { count: "exact", head: true })
+      .eq("event_id", activity.event_id),
+  ]);
 
   if (error) throw error;
+  if (roundError) throw roundError;
+  if (electorateError) throw electorateError;
 
   const paused = activity.challenge_paused ?? false;
   const opensAtMs = activity.voting_opens_at
@@ -209,7 +246,12 @@ async function buildChallengeSummary(
     : started && opensAtMs !== null
       ? Math.max(0, Math.ceil((opensAtMs - Date.now()) / 1000))
       : 0;
-  const votingOpen = eventActive && started && !paused && opensInSeconds === 0;
+  const thresholdReached = Boolean(roundState?.reached_at);
+  const votingOpen =
+    eventActive &&
+    started &&
+    !paused &&
+    opensInSeconds === 0;
   const totals = summarizeSpeakerBallots(
     (ballots ?? []).map((ballot) => ballot.choice),
   );
@@ -220,8 +262,28 @@ async function buildChallengeSummary(
     opensInSeconds,
     paused,
     votingOpen,
+    eligibleCount: roundState?.eligible_count ?? electorateCount ?? 0,
+    thresholdCount:
+      roundState?.threshold_count ??
+      speakerRequestThreshold(electorateCount ?? 0),
+    thresholdReached,
     ...totals,
   };
+}
+
+async function getTopicsForEvent(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+) {
+  const { data, error } = await supabase
+    .from("debate_topics")
+    .select("id, event_id, motion, sort_order, created_at")
+    .eq("event_id", eventId)
+    .order("sort_order", { ascending: true })
+    .returns<DebateTopicSummary[]>();
+
+  if (error) throw error;
+  return data ?? [];
 }
 
 async function getActivitiesForEvent(
@@ -231,7 +293,7 @@ async function getActivitiesForEvent(
   const withLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label, challenge_round, voting_opens_at, challenge_buffer_seconds, challenge_paused, challenge_paused_remaining_seconds, challenge_revision",
+      "id, event_id, topic_id, sort_order, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label, challenge_round, voting_opens_at, challenge_buffer_seconds, challenge_paused, challenge_paused_remaining_seconds, challenge_revision",
     )
     .eq("event_id", eventId)
     .order("created_at", { ascending: true })
@@ -250,7 +312,7 @@ async function getActivitiesForEvent(
   const withoutLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at",
+      "id, event_id, topic_id, sort_order, type, phase, prompt, status, results_visibility, created_at",
     )
     .eq("event_id", eventId)
     .order("created_at", { ascending: true })
@@ -345,14 +407,21 @@ function groupVotesByActivity(votes: ActivityVoteRow[]) {
   }, {});
 }
 
-function buildSwingSummary(
+export function buildSwingSummary(
   activities: ActivitySummary[],
   optionsByActivity: ActivityOptions,
   votesByActivity: ActivityVotes,
+  topicId: string | null,
 ): DebateSwingSummary | null {
-  const preActivity = activities.find((activity) => activity.phase === "pre_debate");
+  const topicActivities = activities.filter(
+    (activity) => (activity.topic_id ?? null) === topicId,
+  );
+  const preActivity = topicActivities.find(
+    (activity) => activity.phase === "pre_debate",
+  );
   const postActivity = activities.find(
-    (activity) => activity.phase === "post_debate",
+    (activity) =>
+      (activity.topic_id ?? null) === topicId && activity.phase === "post_debate",
   );
 
   if (!preActivity || !postActivity) {

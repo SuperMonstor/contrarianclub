@@ -1,23 +1,26 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ChallengeVote } from "@/components/challenge-vote";
+import {
+  ChallengeProgress,
+  ChallengeVote,
+} from "@/components/challenge-vote";
 import { createBrowserClient } from "@/lib/supabase/browser";
 import type { ActivitySummary, ChallengeSummary } from "@/lib/types";
 
-vi.mock("@/lib/supabase/browser", () => ({
-  createBrowserClient: vi.fn(),
-}));
+vi.mock("@/lib/supabase/browser", () => ({ createBrowserClient: vi.fn() }));
 
 const activity: ActivitySummary = {
   id: "activity-1",
   event_id: "event-1",
+  topic_id: "topic-1",
+  sort_order: 1,
   type: "multiple_choice",
   phase: "speaker_challenge",
   prompt: "Current speaker",
   status: "open",
   results_visibility: "hidden",
-  created_at: "2026-07-19T00:00:00.000Z",
+  created_at: "2026-08-08T00:00:00.000Z",
 };
 
 const challenge: ChallengeSummary = {
@@ -26,33 +29,44 @@ const challenge: ChallengeSummary = {
   opensInSeconds: 0,
   paused: false,
   votingOpen: true,
-  keepVotes: 2,
-  nextVotes: 1,
-  totalBallots: 3,
-  leader: "keep",
+  nextVotes: 2,
+  eligibleCount: 8,
+  thresholdCount: 4,
+  thresholdReached: false,
 };
 
-function mockRpc(
-  getChoice: "keep" | "next" | null,
-  setError: { message: string } | null = null,
-) {
+function mockRpc({
+  joined = true,
+  eligible = true,
+  requested = false,
+  requestError = null,
+}: {
+  joined?: boolean;
+  eligible?: boolean;
+  requested?: boolean;
+  requestError?: { message: string } | null;
+} = {}) {
   const rpc = vi.fn(async (name: string) => {
-    if (name === "get_speaker_ballot") {
-      return { data: [{ round: 3, choice: getChoice }], error: null };
+    if (name === "get_speaker_participation") {
+      return {
+        data: [{ round: 3, joined, eligible, requested }],
+        error: null,
+      };
     }
-    return { data: null, error: setError };
+    if (name === "set_next_speaker_request") {
+      return { data: null, error: requestError };
+    }
+    return { data: null, error: null };
   });
   vi.mocked(createBrowserClient).mockReturnValue({ rpc } as never);
   return rpc;
 }
 
 describe("ChallengeVote", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  beforeEach(() => vi.clearAllMocks());
 
-  it("recovers and highlights the server-confirmed choice after refresh", async () => {
-    mockRpc("keep");
+  it("recovers event enrollment and the current request", async () => {
+    mockRpc({ requested: true });
     render(
       <ChallengeVote
         activity={activity}
@@ -62,40 +76,136 @@ describe("ChallengeVote", () => {
       />,
     );
 
-    expect(await screen.findByRole("button", { name: /Keep speaking/i })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    expect(await screen.findByText(/Enrolled once/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Withdraw next-speaker request/i }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("switches a ballot without a second participation step", async () => {
-    const rpc = mockRpc("keep");
-    const refresh = vi.fn(async () => undefined);
+  it("enrolls once through the event-level electorate", async () => {
+    const rpc = mockRpc({ joined: false, eligible: false });
+    const user = userEvent.setup();
+    render(
+      <ChallengeVote
+        activity={{ ...activity, status: "draft" }}
+        challenge={{ ...challenge, votingOpen: false }}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+
+    await user.click(
+      await screen.findByRole("button", { name: /Join audience speaker requests/i }),
+    );
+    expect(rpc).toHaveBeenCalledWith("join_speaker_electorate", {
+      p_token: "token-1",
+    });
+  });
+
+  it("makes a late enrollee eligible for the current speaker", async () => {
+    let joined = false;
+    const rpc = vi.fn(async (name: string) => {
+      if (name === "get_speaker_participation") {
+        return {
+          data: [
+            {
+              round: 3,
+              joined,
+              eligible: joined,
+              requested: false,
+            },
+          ],
+          error: null,
+        };
+      }
+      if (name === "join_speaker_electorate") {
+        joined = true;
+      }
+      return { data: null, error: null };
+    });
+    vi.mocked(createBrowserClient).mockReturnValue({ rpc } as never);
+    const user = userEvent.setup();
+
+    render(
+      <ChallengeVote
+        activity={activity}
+        challenge={challenge}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+
+    await user.click(
+      await screen.findByRole("button", { name: /Join audience speaker requests/i }),
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Request next speaker" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("You can now vote on the current speaker."),
+    ).toBeInTheDocument();
+  });
+
+  it("submits one next-speaker request for the expected round", async () => {
+    const rpc = mockRpc();
     const user = userEvent.setup();
     render(
       <ChallengeVote
         activity={activity}
         challenge={challenge}
         voteToken="token-1"
-        refresh={refresh}
+        refresh={vi.fn(async () => undefined)}
       />,
     );
 
-    const next = await screen.findByRole("button", { name: /Next speaker/i });
-    await user.click(next);
-
-    expect(rpc).toHaveBeenCalledWith("set_speaker_ballot", {
+    await user.click(
+      await screen.findByRole("button", { name: "Request next speaker" }),
+    );
+    expect(rpc).toHaveBeenCalledWith("set_next_speaker_request", {
       p_token: "token-1",
       p_activity_id: "activity-1",
       p_expected_round: 3,
-      p_choice: "next",
+      p_requested: true,
     });
-    expect(next).toHaveAttribute("aria-pressed", "true");
-    expect(refresh).toHaveBeenCalledTimes(1);
   });
 
-  it("rolls optimistic selection back when the server rejects it", async () => {
-    mockRpc("keep", { message: "speaker_paused" });
+  it("keeps new requests available past the threshold", async () => {
+    mockRpc();
+    render(
+      <ChallengeVote
+        activity={activity}
+        challenge={{ ...challenge, thresholdReached: true }}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Request next speaker" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps withdrawals available past the threshold", async () => {
+    mockRpc({ requested: true });
+    render(
+      <ChallengeVote
+        activity={activity}
+        challenge={{ ...challenge, thresholdReached: true }}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("button", {
+        name: "Withdraw next-speaker request",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("rolls the optimistic request back on rejection", async () => {
+    mockRpc({ requestError: { message: "speaker_paused" } });
     const user = userEvent.setup();
     render(
       <ChallengeVote
@@ -106,58 +216,95 @@ describe("ChallengeVote", () => {
       />,
     );
 
-    const keep = await screen.findByRole("button", { name: /Keep speaking/i });
-    const next = screen.getByRole("button", { name: /Next speaker/i });
-    await user.click(next);
-
-    await waitFor(() => expect(keep).toHaveAttribute("aria-pressed", "true"));
-    expect(next).toHaveAttribute("aria-pressed", "false");
+    const button = await screen.findByRole("button", {
+      name: "Request next speaker",
+    });
+    await user.click(button);
+    await waitFor(() => expect(button).toHaveAttribute("aria-pressed", "false"));
     expect(screen.getByText(/host has paused/i)).toBeInTheDocument();
   });
 
-  it("shows only the protected countdown before 90 seconds expires", () => {
-    mockRpc(null);
+  it("shows anonymous live vote and enrollment totals", async () => {
+    mockRpc();
     render(
       <ChallengeVote
         activity={activity}
-        challenge={{ ...challenge, opensInSeconds: 90, votingOpen: false }}
+        challenge={challenge}
         voteToken="token-1"
         refresh={vi.fn()}
       />,
     );
-
-    expect(screen.getByText("1:30")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Keep speaking/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Join this round/i)).not.toBeInTheDocument();
+    await screen.findByText(/Enrolled once/i);
+    expect(screen.getByText("2 voted")).toBeInTheDocument();
+    expect(screen.getByText("8 joined")).toBeInTheDocument();
+    const progressbar = screen.getByRole("progressbar", {
+      name: "Next-speaker vote progress",
+    });
+    expect(progressbar).toHaveAttribute("aria-valuenow", "2");
+    expect(progressbar.firstElementChild).toHaveStyle({ width: "25%" });
+    expect(progressbar.firstElementChild).toHaveClass(
+      "bg-[color:var(--cc-gold-bright)]",
+    );
   });
 
-  it("keeps live totals visible while an unlocked ballot is paused", () => {
-    mockRpc("next");
+  it("turns the audience progress bar red at the threshold", async () => {
+    mockRpc();
     render(
       <ChallengeVote
         activity={activity}
-        challenge={{ ...challenge, paused: true, votingOpen: false }}
+        challenge={{
+          ...challenge,
+          nextVotes: 4,
+          thresholdReached: true,
+        }}
         voteToken="token-1"
         refresh={vi.fn()}
       />,
     );
 
-    expect(screen.getByText("3 total ballots")).toBeInTheDocument();
-    expect(screen.getByText("Speaker session paused")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Next speaker/i })).not.toBeInTheDocument();
+    const progressbar = await screen.findByRole("progressbar", {
+      name: "Next-speaker vote progress",
+    });
+    expect(progressbar.firstElementChild).toHaveClass(
+      "bg-[color:var(--cc-wine-bright)]",
+    );
+    expect(progressbar.firstElementChild).toHaveStyle({ width: "50%" });
   });
 
-  it("does not re-enable a server-closed ballot from a zero local timer", () => {
-    mockRpc("next");
+  it("recovers cleanly when participation lookup loses the connection", async () => {
+    const rpc = vi.fn(async () => {
+      throw new Error("network_failed");
+    });
+    vi.mocked(createBrowserClient).mockReturnValue({ rpc } as never);
+
     render(
       <ChallengeVote
         activity={activity}
-        challenge={{ ...challenge, opensInSeconds: 0, votingOpen: false }}
+        challenge={challenge}
         voteToken="token-1"
-        refresh={vi.fn()}
+        refresh={vi.fn(async () => undefined)}
       />,
     );
 
-    expect(screen.queryByRole("button", { name: /Next speaker/i })).not.toBeInTheDocument();
+    expect(
+      await screen.findByText(/Couldn't recover your enrollment/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Recovering enrollment/i)).not.toBeInTheDocument();
+  });
+
+  it("does not claim zero more requests when a round has no electorate", () => {
+    render(
+      <ChallengeProgress
+        challenge={{
+          ...challenge,
+          nextVotes: 0,
+          eligibleCount: 0,
+          thresholdCount: 0,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("No eligible voters in this round")).toBeInTheDocument();
+    expect(screen.queryByText("0 more needed")).not.toBeInTheDocument();
   });
 });

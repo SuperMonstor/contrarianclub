@@ -7,16 +7,10 @@ import { requireAdminUser } from "@/lib/auth";
 import { createServerAuthClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { buildScaleOptions } from "@/lib/scale";
+import { getTopicResetScope } from "@/lib/speaker-challenge";
 import type { ActivityType, ControlCommand, PresentationMode } from "@/lib/types";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-const PHASE_ORDER = {
-  pre_debate: 0,
-  post_debate: 1,
-  general: 2,
-  speaker_challenge: 3,
-} as const;
-
 const CHALLENGE_PROMPT = "Current speaker";
 const CHALLENGE_OPTION_LABEL = "Legacy next-speaker vote";
 const CHALLENGE_BUFFER_DEFAULT = 90;
@@ -26,7 +20,16 @@ const CHALLENGE_BUFFER_MAX = 600;
 type EditableActivity = {
   id: string;
   event_id: string;
-  phase: "pre_debate" | "post_debate" | "general";
+  topic_id: string | null;
+  sort_order: number;
+  phase: "pre_debate" | "post_debate" | "speaker_challenge" | "general";
+};
+
+type EditableTopic = {
+  id: string;
+  event_id: string;
+  motion: string;
+  sort_order: number;
 };
 
 type EditablePollOption = {
@@ -48,6 +51,13 @@ function cleanOptions(formData: FormData) {
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 8);
+}
+
+function cleanTopicMotions(formData: FormData) {
+  return formData
+    .getAll("topicMotions")
+    .map((value) => String(value ?? "").trim())
+    .slice(0, 2);
 }
 
 function getEventFormat(formData: FormData): ActivityType {
@@ -82,12 +92,15 @@ function withChallengeMigrationHint(error: { code?: string; message?: string }) 
 async function insertChallengeActivity(
   supabase: ReturnType<typeof createServiceClient>,
   eventId: string,
+  topicId: string,
   bufferSeconds: number,
 ) {
   const { data: activity, error: activityError } = await supabase
     .from("activities")
     .insert({
       event_id: eventId,
+      topic_id: topicId,
+      sort_order: 1,
       phase: "speaker_challenge",
       type: "multiple_choice",
       prompt: CHALLENGE_PROMPT,
@@ -157,10 +170,10 @@ async function getActivityForEvent(
 
   const { data: activity, error: activityError } = await supabase
     .from("activities")
-    .select("event_id, phase")
+    .select("event_id, topic_id, sort_order, phase")
     .eq("id", activityId)
     .eq("event_id", event.id)
-    .single<{ event_id: string; phase: keyof typeof PHASE_ORDER }>();
+    .single<EditableActivity>();
 
   if (activityError) throw activityError;
 
@@ -174,33 +187,34 @@ async function getResetActivityIds(
 ) {
   const { data: activities, error } = await supabase
     .from("activities")
-    .select("id, phase, created_at")
+    .select("id, topic_id, sort_order, phase, created_at")
     .eq("event_id", eventId)
     .order("created_at", { ascending: true })
     .returns<
-      { id: string; phase: keyof typeof PHASE_ORDER; created_at: string }[]
+      {
+        id: string;
+        topic_id: string | null;
+        sort_order: number;
+        phase: EditableActivity["phase"];
+        created_at: string;
+      }[]
     >();
 
   if (error) throw error;
 
   // The speaker challenge sits outside the pre → post flow: its rounds are
   // append-only history, so it never joins the cascading reset.
-  const orderedActivities = activities
-    .filter((activity) => activity.phase !== "speaker_challenge")
-    .sort(
-      (first, second) =>
-        PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
-        first.created_at.localeCompare(second.created_at),
-    );
+  const currentActivity = activities.find((activity) => activity.id === activityId);
+  if (!currentActivity || !currentActivity.topic_id) {
+    throw new Error("Activity does not belong to a debate topic.");
+  }
 
-  const currentIndex = orderedActivities.findIndex(
-    (activity) => activity.id === activityId,
-  );
-  if (currentIndex === -1) {
+  const resetScope = getTopicResetScope(activities, activityId);
+  if (resetScope.length === 0) {
     throw new Error("Activity does not belong to this event.");
   }
 
-  return orderedActivities.slice(currentIndex).map((activity) => activity.id);
+  return resetScope.map((activity) => activity.id);
 }
 
 async function deleteOrphanParticipants(
@@ -284,58 +298,58 @@ async function getDebateActivities(
 ) {
   const { data: activities, error } = await supabase
     .from("activities")
-    .select("id, event_id, phase")
+    .select("id, event_id, topic_id, sort_order, phase")
     .eq("event_id", eventId)
     .in("phase", ["pre_debate", "post_debate"])
     .returns<EditableActivity[]>();
 
   if (error) throw error;
 
-  const preActivity = activities.find(
-    (activity) => activity.phase === "pre_debate",
-  );
-  const postActivity = activities.find(
-    (activity) => activity.phase === "post_debate",
-  );
-
-  if (!preActivity || !postActivity) {
-    throw new Error("This event is missing its pre/post debate activities.");
-  }
-
-  return [preActivity, postActivity];
+  return activities ?? [];
 }
 
-async function syncChallengeActivity(
+async function syncChallengeActivities(
   supabase: ReturnType<typeof createServiceClient>,
   eventId: string,
   challenge: { enabled: boolean; bufferSeconds: number },
+  topics: EditableTopic[],
   debateActivities: EditableActivity[],
 ) {
-  const { data: existing, error } = await supabase
+  const { data: existingChallenges, error } = await supabase
     .from("activities")
-    .select("id")
+    .select("id, event_id, topic_id, sort_order, phase")
     .eq("event_id", eventId)
     .eq("phase", "speaker_challenge")
-    .maybeSingle<{ id: string }>();
+    .returns<EditableActivity[]>();
 
   if (error) throw error;
 
-  if (challenge.enabled && !existing) {
-    await insertChallengeActivity(supabase, eventId, challenge.bufferSeconds);
+  if (challenge.enabled) {
+    for (const topic of topics) {
+      const existing = (existingChallenges ?? []).find(
+        (activity) => activity.topic_id === topic.id,
+      );
+      if (!existing) {
+        await insertChallengeActivity(
+          supabase,
+          eventId,
+          topic.id,
+          challenge.bufferSeconds,
+        );
+        continue;
+      }
+
+      const { error: updateError } = await supabase
+        .from("activities")
+        .update({ challenge_buffer_seconds: challenge.bufferSeconds })
+        .eq("id", existing.id);
+
+      if (updateError) throw withChallengeMigrationHint(updateError);
+    }
     return;
   }
 
-  if (challenge.enabled && existing) {
-    const { error: updateError } = await supabase
-      .from("activities")
-      .update({ challenge_buffer_seconds: challenge.bufferSeconds })
-      .eq("id", existing.id);
-
-    if (updateError) throw withChallengeMigrationHint(updateError);
-    return;
-  }
-
-  if (!existing) return;
+  if (!existingChallenges?.length) return;
 
   // Disabling removes the activity (options, votes, and joins cascade). If the
   // presenter was parked on it, hand the stage back to the pre-debate poll
@@ -352,7 +366,12 @@ async function syncChallengeActivity(
 
   if (presentationError) throw presentationError;
 
-  if (presentation?.active_activity_id === existing.id && preActivity) {
+  if (
+    existingChallenges.some(
+      (activity) => activity.id === presentation?.active_activity_id,
+    ) &&
+    preActivity
+  ) {
     const { error: repointError } = await supabase
       .from("presentation_state")
       .update({
@@ -368,7 +387,10 @@ async function syncChallengeActivity(
   const { error: deleteError } = await supabase
     .from("activities")
     .delete()
-    .eq("id", existing.id);
+    .in(
+      "id",
+      existingChallenges.map((activity) => activity.id),
+    );
 
   if (deleteError) throw deleteError;
 }
@@ -464,11 +486,127 @@ async function assertScaleSchemaReady(
   throw error;
 }
 
+async function ensureTopics(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+  motions: string[],
+) {
+  const { data: existingTopics, error } = await supabase
+    .from("debate_topics")
+    .select("id, event_id, motion, sort_order")
+    .eq("event_id", eventId)
+    .order("sort_order", { ascending: true })
+    .returns<EditableTopic[]>();
+
+  if (error) throw error;
+
+  const topics = [...(existingTopics ?? [])];
+  for (let sortOrder = 0; sortOrder < motions.length; sortOrder += 1) {
+    const existing = topics.find((topic) => topic.sort_order === sortOrder);
+    if (existing) {
+      const { error: updateError } = await supabase
+        .from("debate_topics")
+        .update({ motion: motions[sortOrder] })
+        .eq("id", existing.id);
+      if (updateError) throw updateError;
+      existing.motion = motions[sortOrder];
+      continue;
+    }
+
+    const { data: inserted, error: insertError } = await supabase
+      .from("debate_topics")
+      .insert({ event_id: eventId, motion: motions[sortOrder], sort_order: sortOrder })
+      .select("id, event_id, motion, sort_order")
+      .single<EditableTopic>();
+    if (insertError) throw insertError;
+    topics.push(inserted);
+  }
+
+  return topics
+    .filter((topic) => topic.sort_order < motions.length)
+    .sort((first, second) => first.sort_order - second.sort_order);
+}
+
+async function ensureTopicPollActivities(
+  supabase: ReturnType<typeof createServiceClient>,
+  eventId: string,
+  topics: EditableTopic[],
+  eventFormat: ActivityType,
+  prePrompt: string,
+  postPrompt: string,
+  scaleLabels: ReturnType<typeof getScaleLabels>,
+) {
+  const existingActivities = await getDebateActivities(supabase, eventId);
+  const activities = [...existingActivities];
+
+  for (const topic of topics) {
+    for (const phase of ["pre_debate", "post_debate"] as const) {
+      const existing = activities.find(
+        (activity) => activity.topic_id === topic.id && activity.phase === phase,
+      );
+      const prompt = phase === "pre_debate" ? prePrompt : postPrompt;
+      const sortOrder = phase === "pre_debate" ? 0 : 2;
+      const values = {
+        event_id: eventId,
+        topic_id: topic.id,
+        sort_order: sortOrder,
+        phase,
+        prompt,
+        type: eventFormat,
+        status: "draft",
+        results_visibility: "hidden",
+        ...(eventFormat === "scale"
+          ? {
+              scale_center_label: scaleLabels.centerLabel,
+              scale_left_label: scaleLabels.leftLabel,
+              scale_right_label: scaleLabels.rightLabel,
+            }
+          : {}),
+      };
+
+      if (!existing) {
+        const { data: inserted, error: insertError } = await supabase
+          .from("activities")
+          .insert(values)
+          .select("id, event_id, topic_id, sort_order, phase")
+          .single<EditableActivity>();
+        if (insertError) throw insertError;
+        activities.push(inserted);
+        continue;
+      }
+
+      const { error: updateError } = await supabase
+        .from("activities")
+        .update({
+          prompt,
+          sort_order: sortOrder,
+          type: eventFormat,
+          ...(eventFormat === "scale"
+            ? {
+                scale_center_label: scaleLabels.centerLabel,
+                scale_left_label: scaleLabels.leftLabel,
+                scale_right_label: scaleLabels.rightLabel,
+              }
+            : {}),
+        })
+        .eq("id", existing.id);
+      if (updateError) throw updateError;
+    }
+  }
+
+  return activities.filter(
+    (activity) =>
+      activity.topic_id !== null &&
+      topics.some((topic) => topic.id === activity.topic_id),
+  );
+}
+
 export async function createEvent(formData: FormData) {
   await requireAdminUser();
 
   const supabase = createServiceClient();
   const title = String(formData.get("title") ?? "").trim();
+  const topicMotions = cleanTopicMotions(formData);
   const prePrompt = String(formData.get("prePrompt") ?? "").trim();
   const postPrompt = String(formData.get("postPrompt") ?? "").trim();
   const eventFormat = getEventFormat(formData);
@@ -478,12 +616,14 @@ export async function createEvent(formData: FormData) {
 
   if (
     !title ||
+    topicMotions.length !== 2 ||
+    topicMotions.some((motion) => !motion) ||
     !prePrompt ||
     !postPrompt ||
     (eventFormat === "multiple_choice" && options.length < 2)
   ) {
     throw new Error(
-      "Title, pre/post prompts, and at least two options are required.",
+      "Title, two topic motions, pre/post prompts, and at least two options are required.",
     );
   }
 
@@ -501,62 +641,21 @@ export async function createEvent(formData: FormData) {
 
   if (eventError) throw eventError;
 
-  const { data: activities, error: activityError } =
-    eventFormat === "scale"
-      ? await supabase
-          .from("activities")
-          .insert([
-            {
-              event_id: event.id,
-              phase: "pre_debate",
-              prompt: prePrompt,
-              results_visibility: "hidden",
-              scale_center_label: scaleLabels.centerLabel,
-              scale_left_label: scaleLabels.leftLabel,
-              scale_right_label: scaleLabels.rightLabel,
-              status: "draft",
-              type: eventFormat,
-            },
-            {
-              event_id: event.id,
-              phase: "post_debate",
-              prompt: postPrompt,
-              results_visibility: "hidden",
-              scale_center_label: scaleLabels.centerLabel,
-              scale_left_label: scaleLabels.leftLabel,
-              scale_right_label: scaleLabels.rightLabel,
-              status: "draft",
-              type: eventFormat,
-            },
-          ])
-          .select("id, phase")
-          .returns<{ id: string; phase: "pre_debate" | "post_debate" }[]>()
-      : await supabase
-          .from("activities")
-          .insert([
-            {
-              event_id: event.id,
-              prompt: prePrompt,
-              phase: "pre_debate",
-              type: eventFormat,
-              status: "draft",
-              results_visibility: "hidden",
-            },
-            {
-              event_id: event.id,
-              prompt: postPrompt,
-              phase: "post_debate",
-              type: eventFormat,
-              status: "draft",
-              results_visibility: "hidden",
-            },
-          ])
-          .select("id, phase")
-          .returns<{ id: string; phase: "pre_debate" | "post_debate" }[]>();
+  const topics = await ensureTopics(supabase, event.id, topicMotions);
+  const activities = await ensureTopicPollActivities(
+    supabase,
+    event.id,
+    topics,
+    eventFormat,
+    prePrompt,
+    postPrompt,
+    scaleLabels,
+  );
 
-  if (activityError) throw activityError;
-
-  const preActivity = activities.find((activity) => activity.phase === "pre_debate");
+  const preActivity = activities.find(
+    (activity) =>
+      activity.topic_id === topics[0]?.id && activity.phase === "pre_debate",
+  );
   if (!preActivity) {
     throw new Error("Could not create the pre-debate activity.");
   }
@@ -580,7 +679,7 @@ export async function createEvent(formData: FormData) {
   );
 
   if (challenge.enabled) {
-    await insertChallengeActivity(supabase, event.id, challenge.bufferSeconds);
+    await syncChallengeActivities(supabase, event.id, challenge, topics, activities);
   }
 
   const { error: stateError } = await supabase
@@ -603,6 +702,7 @@ export async function updateEvent(code: string, formData: FormData) {
   const normalizedCode = code.trim().toUpperCase();
   const supabase = createServiceClient();
   const title = String(formData.get("title") ?? "").trim();
+  const topicMotions = cleanTopicMotions(formData);
   const prePrompt = String(formData.get("prePrompt") ?? "").trim();
   const postPrompt = String(formData.get("postPrompt") ?? "").trim();
   const eventFormat = getEventFormat(formData);
@@ -612,12 +712,14 @@ export async function updateEvent(code: string, formData: FormData) {
 
   if (
     !title ||
+    topicMotions.length !== 2 ||
+    topicMotions.some((motion) => !motion) ||
     !prePrompt ||
     !postPrompt ||
     (eventFormat === "multiple_choice" && options.length < 2)
   ) {
     throw new Error(
-      "Title, pre/post prompts, and at least two options are required.",
+      "Title, two topic motions, pre/post prompts, and at least two options are required.",
     );
   }
 
@@ -633,8 +735,6 @@ export async function updateEvent(code: string, formData: FormData) {
 
   if (eventError) throw eventError;
 
-  const debateActivities = await getDebateActivities(supabase, event.id);
-
   const { error: updateEventError } = await supabase
     .from("events")
     .update({ title })
@@ -642,30 +742,16 @@ export async function updateEvent(code: string, formData: FormData) {
 
   if (updateEventError) throw updateEventError;
 
-  for (const activity of debateActivities) {
-    const prompt =
-      activity.phase === "pre_debate" ? prePrompt : postPrompt;
-    const activityUpdate =
-      eventFormat === "scale"
-        ? {
-            prompt,
-            type: eventFormat,
-            scale_center_label: scaleLabels.centerLabel,
-            scale_left_label: scaleLabels.leftLabel,
-            scale_right_label: scaleLabels.rightLabel,
-          }
-        : {
-            prompt,
-            type: eventFormat,
-          };
-
-    const { error: activityError } = await supabase
-      .from("activities")
-      .update(activityUpdate)
-      .eq("id", activity.id);
-
-    if (activityError) throw activityError;
-  }
+  const topics = await ensureTopics(supabase, event.id, topicMotions);
+  const debateActivities = await ensureTopicPollActivities(
+    supabase,
+    event.id,
+    topics,
+    eventFormat,
+    prePrompt,
+    postPrompt,
+    scaleLabels,
+  );
 
   const eventOptions =
     eventFormat === "scale"
@@ -676,7 +762,13 @@ export async function updateEvent(code: string, formData: FormData) {
     await syncPollOptions(supabase, activity.id, eventOptions, eventFormat);
   }
 
-  await syncChallengeActivity(supabase, event.id, challenge, debateActivities);
+  await syncChallengeActivities(
+    supabase,
+    event.id,
+    challenge,
+    topics,
+    debateActivities,
+  );
 
   revalidatePath("/");
   revalidatePath("/admin");

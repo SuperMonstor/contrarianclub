@@ -31,7 +31,7 @@ import {
   startChallengeSpeaker,
   updateEventStatus,
 } from "@/app/actions";
-import { ChallengeSplit } from "@/components/challenge-vote";
+import { ChallengeProgress } from "@/components/challenge-vote";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import {
@@ -44,6 +44,7 @@ import {
   useChallengeCountdown,
 } from "@/components/use-challenge-countdown";
 import { useLiveEventState } from "@/components/use-live-event-state";
+import { getTopicResetScope } from "@/lib/speaker-challenge";
 import type {
   ActivitySummary,
   ChallengeSummary,
@@ -59,13 +60,6 @@ type HostConsoleProps = {
   initialState: EventState;
 };
 
-const PHASE_ORDER = {
-  pre_debate: 0,
-  post_debate: 1,
-  general: 2,
-  speaker_challenge: 3,
-} as const;
-
 const SECTION_ORDER = {
   pre_debate: 0,
   speaker_challenge: 1,
@@ -77,6 +71,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
   const { state, refreshSoon, isPending, lastSyncedAt } = useLiveEventState(
     code,
     initialState,
+    `/api/admin/events/${code}/state`,
   );
   const [command, setCommand] = useState<string | null>(null);
   const [statusCommand, setStatusCommand] = useState<string | null>(null);
@@ -94,7 +89,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     if (!activity) return;
 
     if (nextCommand === "reset") {
-      const resetScope = getResetScope(state.activities, activity.id);
+      const resetScope = getTopicResetScope(state.activities, activity.id);
       if (resetScope.length > 1) {
         const [, ...futureSteps] = resetScope;
         const futureLabels = futureSteps.map((item) => phaseLabel(item.phase)).join(", ");
@@ -182,7 +177,7 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
     if (!activity) return;
 
     const confirmed = window.confirm(
-      "This clears every Audience Section speaker ballot, plus legacy rehearsal joins and votes, then returns to speaker 1. Continue?",
+      "This clears this topic's speaker rounds and requests, then returns to speaker 1. Event enrollment remains intact. Continue?",
     );
     if (!confirmed) return;
 
@@ -206,6 +201,9 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
   const swingReady = state.totalVotes > 0 || (state.swing?.matchedVotes ?? 0) > 0;
   const canShowSwing = isPostDebate && isRevealed && swingReady;
   const swingActive = state.mode === "swing";
+  const topicOrder = new Map(
+    state.topics.map((topic) => [topic.id, topic.sort_order]),
+  );
 
   return (
     <div className="club-shell min-h-screen">
@@ -295,17 +293,22 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
 
         <section className="space-y-5">
           <div className="club-panel p-6">
-            <div className="mb-6 grid gap-3 md:grid-cols-3">
+            <div className="mb-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {[...state.activities]
                 .filter((item) => item.phase !== "general")
                 .sort(
                   (first, second) =>
+                    (topicOrder.get(first.topic_id ?? "") ?? 0) -
+                      (topicOrder.get(second.topic_id ?? "") ?? 0) ||
                     SECTION_ORDER[first.phase] - SECTION_ORDER[second.phase],
                 )
                 .map((item) => (
                   <ActivityCard
                     key={item.id}
                     activity={item}
+                    topicNumber={
+                      (topicOrder.get(item.topic_id ?? "") ?? 0) + 1
+                    }
                     active={activity?.id === item.id}
                     working={activeCommand === item.id}
                     onSelect={() => makeActive(item.id)}
@@ -316,6 +319,11 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="club-kicker">Current section</p>
+                {state.activeTopic && (
+                  <p className="mt-2 text-sm font-semibold text-[color:var(--cc-gold)]">
+                    Topic {state.activeTopic.sort_order + 1}: {state.activeTopic.motion}
+                  </p>
+                )}
                 <h2 className="club-display club-d-title mt-3 max-w-3xl">
                   {activity?.phase === "speaker_challenge"
                     ? "Current speaker"
@@ -370,7 +378,10 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
                   label="Next speaker"
                   disabled={!activity || activity.status === "draft" || busy}
                   active={command === "next"}
-                  primary={activity?.status !== "draft"}
+                  primary={
+                    activity?.status !== "draft" ||
+                    Boolean(state.challenge?.thresholdReached)
+                  }
                   onClick={() => runSpeakerCommand("next")}
                 />
                 <ControlButton
@@ -472,10 +483,16 @@ export function HostConsole({ code, editHref, initialState }: HostConsoleProps) 
             <div className="club-panel-gold self-start p-6">
               <p className="club-eyebrow">Sync</p>
               <p className="club-display mt-3 text-6xl text-[color:var(--cc-gold-bright)]">
-                {state.participantCount}
+                {isChallenge
+                  ? (state.challenge?.eligibleCount ?? 0)
+                  : state.participantCount}
               </p>
               <p className="mt-1 text-sm text-[color:var(--cc-parchment)]">
-                tracked voter{state.participantCount === 1 ? "" : "s"}
+                {isChallenge
+                  ? activity?.status === "draft"
+                    ? "enrolled for speaker requests"
+                    : "eligible for this speaker"
+                  : `tracked voter${state.participantCount === 1 ? "" : "s"}`}
               </p>
               <div className="club-rule my-5" />
               <p className="club-label text-[0.65rem]">Last sync</p>
@@ -644,11 +661,13 @@ function StatusButton({
 
 function ActivityCard({
   activity,
+  topicNumber,
   active,
   working,
   onSelect,
 }: {
   activity: ActivitySummary;
+  topicNumber: number;
   active: boolean;
   working: boolean;
   onSelect: () => void;
@@ -665,7 +684,7 @@ function ActivityCard({
       }`}
     >
       <p className="club-eyebrow text-[color:var(--cc-gold)]">
-        {phaseLabel(activity.phase)}
+        Topic {topicNumber} · {phaseLabel(activity.phase)}
       </p>
       <h3 className="club-display club-d-item mt-2 line-clamp-2">
         {activity.phase === "speaker_challenge"
@@ -906,48 +925,35 @@ function ChallengeHostPanel({ challenge }: { challenge: ChallengeSummary }) {
           <p className="mt-2 text-xs text-[color:var(--cc-muted)]">
             {challenge.paused
               ? "Resume to continue from this exact position"
-              : "Ballot controls unlock at zero"}
+              : "Request control unlocks at zero"}
           </p>
         </div>
       ) : (
         <p className="club-eyebrow">
           {challenge.paused
-            ? "Ballot paused"
+            ? "Requests paused"
             : challenge.votingOpen
-              ? "Ballot open until the host advances"
+              ? challenge.thresholdReached
+                ? "Threshold reached. Requests remain open until the host advances."
+                : "Requests open until the host advances"
               : "Waiting for the first speaker"}
         </p>
       )}
 
       <div className="mt-4">
-        <ChallengeSplit challenge={challenge} />
+        <ChallengeProgress challenge={challenge} />
       </div>
 
-      {challenge.leader === "next" && (
+      {challenge.thresholdReached && (
         <div className="club-panel-gold mt-4 px-4 py-4 text-center">
-          <p className="club-eyebrow">Next speaker leads</p>
+          <p className="club-eyebrow">Threshold reached</p>
           <p className="club-display club-d-card mt-1 text-[color:var(--cc-ivory)]">
-            The decision remains with the host
+            The room requests the next speaker
           </p>
         </div>
       )}
     </>
   );
-}
-
-function getResetScope(activities: ActivitySummary[], activityId: string) {
-  const orderedActivities = activities
-    .filter((activity) => activity.phase !== "speaker_challenge")
-    .sort(
-    (first, second) =>
-      PHASE_ORDER[first.phase] - PHASE_ORDER[second.phase] ||
-      first.created_at.localeCompare(second.created_at),
-  );
-  const currentIndex = orderedActivities.findIndex(
-    (activity) => activity.id === activityId,
-  );
-  if (currentIndex === -1) return [];
-  return orderedActivities.slice(currentIndex);
 }
 
 function ControlButton({

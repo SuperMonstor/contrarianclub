@@ -11,25 +11,33 @@ const REALTIME_DEBOUNCE_MS = 500;
 // missed events, so it can run slowly.
 const SAFETY_POLL_MS = 5000;
 
-export function useLiveEventState(code: string, initialState: EventState) {
+export function useLiveEventState(
+  code: string,
+  initialState: EventState,
+  stateEndpoint = `/api/events/${code}/state`,
+) {
   const [state, setState] = useState(initialState);
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
   const [isPending, startTransition] = useTransition();
   const debounceRef = useRef<number | null>(null);
 
   const refresh = useCallback(async () => {
-    const response = await fetch(`/api/events/${code}/state`, {
-      cache: "no-store",
-    });
+    try {
+      const response = await fetch(stateEndpoint, {
+        cache: "no-store",
+      });
 
-    if (!response.ok) {
-      return;
+      if (!response.ok) {
+        return;
+      }
+
+      const nextState = (await response.json()) as EventState;
+      setState(nextState);
+      setLastSyncedAt(new Date());
+    } catch {
+      // Realtime and the safety poll will try again. Keep the last good state.
     }
-
-    const nextState = (await response.json()) as EventState;
-    setState(nextState);
-    setLastSyncedAt(new Date());
-  }, [code]);
+  }, [stateEndpoint]);
 
   // Coalesce bursts of realtime events into a single trailing refetch.
   const scheduleRefresh = useCallback(() => {

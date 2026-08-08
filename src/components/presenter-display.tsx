@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { QRCodeCanvas } from "qrcode.react";
-import { ChallengeSplit } from "@/components/challenge-vote";
 import { Logo } from "@/components/logo";
 import { ResultBars } from "@/components/result-bars";
 import { ScaleChoiceScale } from "@/components/scale-choice-scale";
@@ -30,12 +29,23 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
     activity?.results_visibility === "revealed" || state.mode === "results";
   const isScale = activity?.type === "scale";
   const isSwingStage = state.mode === "swing" && state.swing !== null;
-  const isJoinMode = !isSwingStage && (!activity || state.mode === "join");
   const isChallengeStage =
     !isSwingStage &&
-    !isJoinMode &&
     activity?.phase === "speaker_challenge" &&
     state.challenge !== null;
+  const challengeRemaining = useChallengeCountdown(
+    state.challenge?.opensInSeconds ?? 0,
+    state.challenge?.paused ?? false,
+  );
+  const challengeRequestsOpen = Boolean(
+    state.challenge &&
+      (state.challenge.votingOpen ||
+        (state.challenge.opensInSeconds > 0 && challengeRemaining === 0)),
+  );
+  const isJoinMode =
+    !isSwingStage &&
+    !isChallengeStage &&
+    (!activity || state.mode === "join");
   const hasActiveQuestion = Boolean(activity) && !isSwingStage && !isJoinMode;
   const isLive =
     isSwingStage || isJoinMode || showResults || activity?.status === "open";
@@ -46,9 +56,9 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
       : isChallengeStage
         ? state.challenge?.paused
           ? "Audience Section paused"
-          : state.challenge?.opensInSeconds
+          : challengeRemaining > 0
             ? "Protected speaking time"
-            : state.challenge?.votingOpen
+            : challengeRequestsOpen
               ? "Audience ballot live"
               : "Audience Section"
         : showResults
@@ -114,7 +124,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                 <>
                   <p className="club-kicker mt-5">The motion</p>
                   <p className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
-                    {state.event.title}
+                    {state.activeTopic?.motion ?? state.event.title}
                   </p>
                   {!isChallengeStage && (
                     <h1 className="club-display club-d-hero mt-6">
@@ -122,9 +132,18 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
                     </h1>
                   )}
                 </>
-              ) : isSwingStage ? null : (
+              ) : isSwingStage ? (
+                <>
+                  <p className="club-kicker mt-5">
+                    Topic {(state.activeTopic?.sort_order ?? 0) + 1} swing
+                  </p>
+                  <h1 className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
+                    {state.activeTopic?.motion ?? state.event.title}
+                  </h1>
+                </>
+              ) : (
                 <h1 className="club-display club-d-hero mt-5">
-                  {state.event.title}
+                  {state.activeTopic?.motion ?? state.event.title}
                 </h1>
               )}
             </div>
@@ -139,6 +158,7 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
               ) : isChallengeStage && state.challenge ? (
                 <ChallengeStage
                   challenge={state.challenge}
+                  remaining={challengeRemaining}
                   status={activity?.status ?? "draft"}
                 />
               ) : showResults && activity ? (
@@ -189,7 +209,9 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
             <span>{state.participantCount} tracked</span>
             <span>
               {isChallengeStage
-                ? `${state.challenge?.totalBallots ?? 0} ballots`
+                ? state.challenge?.thresholdReached
+                  ? "Threshold reached"
+                  : "Requests private"
                 : `${state.totalVotes} responses`}
             </span>
           </footer>
@@ -283,15 +305,16 @@ export function PresenterDisplay({ code, initialState }: PresenterDisplayProps) 
 
 function ChallengeStage({
   challenge,
+  remaining,
   status,
 }: {
   challenge: ChallengeSummary;
+  remaining: number;
   status: string;
 }) {
-  const remaining = useChallengeCountdown(
-    challenge.opensInSeconds,
-    challenge.paused,
-  );
+  const requestsOpen =
+    challenge.votingOpen ||
+    (challenge.opensInSeconds > 0 && remaining === 0);
 
   if (status === "draft") {
     return (
@@ -327,22 +350,32 @@ function ChallengeStage({
     );
   }
 
-  if (challenge.votingOpen || challenge.paused) {
+  if (requestsOpen || challenge.paused) {
     return (
       <div>
         <h1 className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
-          {challenge.leader === "next"
-            ? "Next speaker leads."
-            : "Keep speaking or next speaker?"}
+          {challenge.thresholdReached
+            ? "The room requests the next speaker."
+            : "Next-speaker requests are open."}
         </h1>
-        <div className="mt-8 max-w-3xl">
-          <ChallengeSplit challenge={challenge} large />
-          <p className="club-eyebrow mt-4 text-[color:var(--cc-muted)]">
-            {challenge.paused
-              ? "Ballot paused"
-              : "The host decides when the speaker changes"}
-          </p>
-        </div>
+        <p className="club-eyebrow mt-4 text-[color:var(--cc-muted)]">
+          {challenge.paused
+            ? "Requests paused"
+            : "Vote privately on your phone. The host makes the transition."}
+        </p>
+      </div>
+    );
+  }
+
+  if (challenge.thresholdReached) {
+    return (
+      <div>
+        <h1 className="club-display club-d-hero text-[color:var(--cc-gold-bright)]">
+          The room requests the next speaker.
+        </h1>
+        <p className="club-eyebrow mt-4 text-[color:var(--cc-muted)]">
+          The host will make the transition.
+        </p>
       </div>
     );
   }

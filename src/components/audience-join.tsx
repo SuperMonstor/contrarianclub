@@ -250,9 +250,13 @@ export function AudienceJoin({ code, initialState }: AudienceJoinProps) {
             <Logo className="w-32" />
             <span className="club-chip club-mono">{state.event.code}</span>
           </div>
-          <p className="club-eyebrow mt-5">Tonight&rsquo;s motion</p>
+          <p className="club-eyebrow mt-5">
+            {state.activeTopic
+              ? `Topic ${state.activeTopic.sort_order + 1}`
+              : "Tonight's event"}
+          </p>
           <h1 className="club-display club-d-lead mt-1.5 text-[color:var(--cc-parchment)]">
-            {state.event.title}
+            {state.activeTopic?.motion ?? state.event.title}
           </h1>
           <p className="mt-3 flex items-center gap-2 text-sm text-[color:var(--cc-muted)]">
             <span className="club-rule w-6" />

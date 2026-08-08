@@ -1,52 +1,78 @@
 import { describe, expect, it } from "vitest";
-import { ballotPercent, summarizeSpeakerBallots } from "@/lib/speaker-challenge";
+import {
+  getTopicResetScope,
+  requestProgress,
+  speakerRequestThreshold,
+  summarizeSpeakerBallots,
+} from "@/lib/speaker-challenge";
 
-describe("speaker ballot summary", () => {
-  it("has no leader with zero ballots", () => {
-    expect(summarizeSpeakerBallots([])).toEqual({
-      keepVotes: 0,
-      nextVotes: 0,
-      totalBallots: 0,
-      leader: "none",
-    });
-    expect(ballotPercent(0, 0)).toBe(0);
-  });
-
-  it("reports a tie", () => {
-    expect(summarizeSpeakerBallots(["keep", "next"])).toMatchObject({
-      keepVotes: 1,
-      nextVotes: 1,
-      totalBallots: 2,
-      leader: "tie",
+describe("speaker request summary", () => {
+  it("counts only next-speaker requests", () => {
+    expect(summarizeSpeakerBallots(["next", "keep", "next"])).toEqual({
+      nextVotes: 2,
     });
   });
 
-  it("lets one Next ballot lead without quorum", () => {
-    expect(summarizeSpeakerBallots(["next"])).toMatchObject({
-      totalBallots: 1,
-      leader: "next",
-    });
+  it("uses exactly half of the live electorate rounded up", () => {
+    expect(speakerRequestThreshold(0)).toBe(0);
+    expect(speakerRequestThreshold(1)).toBe(1);
+    expect(speakerRequestThreshold(10)).toBe(5);
+    expect(speakerRequestThreshold(11)).toBe(6);
   });
 
-  it("reports Keep speaking and Next speaker leaders", () => {
-    expect(summarizeSpeakerBallots(["keep", "keep", "next"]).leader).toBe(
-      "keep",
-    );
-    expect(summarizeSpeakerBallots(["next", "next", "keep"]).leader).toBe(
-      "next",
-    );
+  it("has no absolute minimum threshold", () => {
+    expect(speakerRequestThreshold(2)).toBe(1);
   });
 
-  it("does not increase turnout when a device switches choices", () => {
-    const before = summarizeSpeakerBallots(["next", "keep"]);
-    const after = summarizeSpeakerBallots(["keep", "keep"]);
-
-    expect(after.totalBallots).toBe(before.totalBallots);
-    expect(after).toMatchObject({ keepVotes: 2, nextVotes: 0, leader: "keep" });
+  it("caps displayed progress at one hundred percent", () => {
+    expect(requestProgress(2, 4)).toBe(50);
+    expect(requestProgress(5, 4)).toBe(100);
+    expect(requestProgress(0, 0)).toBe(0);
   });
+});
 
-  it("rounds percentages for the public split", () => {
-    expect(ballotPercent(2, 3)).toBe(67);
-    expect(ballotPercent(1, 3)).toBe(33);
+describe("topic reset scope", () => {
+  const activities = [
+    {
+      id: "topic-1-pre",
+      topic_id: "topic-1",
+      sort_order: 0,
+      phase: "pre_debate" as const,
+      created_at: "2026-08-08T00:00:00.000Z",
+    },
+    {
+      id: "topic-1-post",
+      topic_id: "topic-1",
+      sort_order: 2,
+      phase: "post_debate" as const,
+      created_at: "2026-08-08T00:02:00.000Z",
+    },
+    {
+      id: "topic-2-pre",
+      topic_id: "topic-2",
+      sort_order: 0,
+      phase: "pre_debate" as const,
+      created_at: "2026-08-08T00:03:00.000Z",
+    },
+    {
+      id: "topic-2-post",
+      topic_id: "topic-2",
+      sort_order: 2,
+      phase: "post_debate" as const,
+      created_at: "2026-08-08T00:04:00.000Z",
+    },
+  ];
+
+  it("cascades only through later steps in the selected topic", () => {
+    expect(
+      getTopicResetScope(activities, "topic-1-pre").map(
+        (activity) => activity.id,
+      ),
+    ).toEqual(["topic-1-pre", "topic-1-post"]);
+    expect(
+      getTopicResetScope(activities, "topic-2-post").map(
+        (activity) => activity.id,
+      ),
+    ).toEqual(["topic-2-post"]);
   });
 });

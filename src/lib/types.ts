@@ -22,6 +22,8 @@ export type EventSummary = {
 export type ActivitySummary = {
   id: string;
   event_id: string;
+  topic_id?: string | null;
+  sort_order?: number;
   type: ActivityType;
   phase: ActivityPhase;
   prompt: string;
@@ -39,9 +41,8 @@ export type ActivitySummary = {
   challenge_revision?: number;
 };
 
-// Live state of the current speaker-challenge round. Tallies here are public
-// by design. The rolling referendum is the spectacle, unlike the debate
-// polls, whose per-option counts stay hidden until the host reveals.
+// Live state of the current speaker-challenge round. Aggregate counts are
+// public, but device IDs and individual requests remain private.
 export type ChallengeSummary = {
   round: number;
   bufferSeconds: number;
@@ -50,10 +51,18 @@ export type ChallengeSummary = {
   opensInSeconds: number;
   paused: boolean;
   votingOpen: boolean;
-  keepVotes: number;
   nextVotes: number;
-  totalBallots: number;
-  leader: ChallengeLeader;
+  eligibleCount: number;
+  thresholdCount: number;
+  thresholdReached: boolean;
+};
+
+export type DebateTopicSummary = {
+  id: string;
+  event_id: string;
+  motion: string;
+  sort_order: number;
+  created_at: string;
 };
 
 export type PollOptionResult = {
@@ -67,6 +76,8 @@ export type PollOptionResult = {
 
 export type EventState = {
   event: EventSummary;
+  topics: DebateTopicSummary[];
+  activeTopic: DebateTopicSummary | null;
   activities: ActivitySummary[];
   activity: ActivitySummary | null;
   mode: PresentationMode;

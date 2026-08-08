@@ -42,11 +42,22 @@ async function getEditableEvent(code: string) {
   if (!event) return null;
 
   const activities = await getEditableActivities(supabase, event.id);
+  const { data: topics, error: topicsError } = await supabase
+    .from("debate_topics")
+    .select("id, motion, sort_order")
+    .eq("event_id", event.id)
+    .order("sort_order", { ascending: true })
+    .limit(2)
+    .returns<{ id: string; motion: string; sort_order: number }[]>();
+  if (topicsError) throw topicsError;
+  const firstTopicId = topics?.[0]?.id;
   const preActivity = activities.find(
-    (activity) => activity.phase === "pre_debate",
+    (activity) =>
+      activity.topic_id === firstTopicId && activity.phase === "pre_debate",
   );
   const postActivity = activities.find(
-    (activity) => activity.phase === "post_debate",
+    (activity) =>
+      activity.topic_id === firstTopicId && activity.phase === "post_debate",
   );
 
   if (!preActivity || !postActivity) {
@@ -72,6 +83,7 @@ async function getEditableEvent(code: string) {
     preActivity.scale_right_label ?? derivedScaleLabels.rightLabel;
   const formValues: EventFormValues = {
     title: event.title,
+    topicMotions: (topics ?? []).map((topic) => topic.motion),
     eventFormat: preActivity.type,
     options:
       preActivity.type === "scale"
@@ -98,14 +110,15 @@ async function getChallengeSettings(
     .select("challenge_buffer_seconds")
     .eq("event_id", eventId)
     .eq("phase", "speaker_challenge")
-    .maybeSingle<{ challenge_buffer_seconds: number | null }>();
+    .limit(1)
+    .returns<{ challenge_buffer_seconds: number | null }[]>();
 
   // 42703 means migration 011 has not been applied; no challenge can exist.
   if (error && error.code !== "42703") throw error;
 
   return {
-    enabled: Boolean(data),
-    bufferSeconds: data?.challenge_buffer_seconds ?? 90,
+    enabled: Boolean(data?.length),
+    bufferSeconds: data?.[0]?.challenge_buffer_seconds ?? 90,
   };
 }
 
@@ -143,7 +156,7 @@ async function getEditableActivities(
   const withLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label",
+      "id, event_id, topic_id, sort_order, type, phase, prompt, status, results_visibility, created_at, scale_left_label, scale_center_label, scale_right_label",
     )
     .eq("event_id", eventId)
     .in("phase", ["pre_debate", "post_debate"])
@@ -161,7 +174,7 @@ async function getEditableActivities(
   const withoutLabels = await supabase
     .from("activities")
     .select(
-      "id, event_id, type, phase, prompt, status, results_visibility, created_at",
+      "id, event_id, topic_id, sort_order, type, phase, prompt, status, results_visibility, created_at",
     )
     .eq("event_id", eventId)
     .in("phase", ["pre_debate", "post_debate"])
