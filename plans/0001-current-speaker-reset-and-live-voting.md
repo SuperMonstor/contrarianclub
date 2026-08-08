@@ -11,6 +11,9 @@ rather than a voting cutoff.
 
 - Add migration 014 that replaces the deployed speaker functions without
   altering migration 013.
+- Add migration 015 after review because migration 014 was already deployed.
+  Refresh every open speaker round when the event-wide electorate grows, and
+  reconcile open rounds once when the migration is applied.
 - Make rehearsal reset retain the Current Speaker activity, return it to
   draft, and set presentation mode to `poll`.
 - Make the presenter prioritize Current Speaker over legacy `join` mode.
@@ -45,4 +48,3 @@ rather than a voting cutoff.
 - Crossing the threshold advises the host but never advances automatically.
 - Pausing temporarily prevents requests without removing eligibility.
 - Withdrawals remain available and may turn the live threshold indicator off.
-
