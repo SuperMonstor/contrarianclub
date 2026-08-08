@@ -17,6 +17,8 @@
    - `supabase/migrations/20260703143306_010_secure_vote_path.sql`
    - `supabase/migrations/20260703232112_011_speaker_challenge.sql`
    - `supabase/migrations/20260718000000_012_persistent_speaker_ballots.sql`
+   - `supabase/migrations/20260808000000_013_two_topics_and_speaker_electorate.sql`
+   - `supabase/migrations/20260808010000_014_live_speaker_voting.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
