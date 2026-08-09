@@ -29,7 +29,10 @@ import "./slides.css";
 //
 // The art, all public domain via Wikimedia Commons:
 //
-//   1, 10  chamber     Hayter, The House of Commons 1833
+//   1      room        a photograph of the actual night, and the only one in
+//                      the deck. It opens in the real room; the close is
+//                      painted, so the deck ends in the imagined one.
+//   10     chamber     Hayter, The House of Commons 1833
 //   2      cradle      Morisot, The Cradle
 //   6      illmatched  Cranach the Elder, Ill-Matched Lovers. Five centuries
 //                      old and still the exact stigma the motion is about,
@@ -45,14 +48,21 @@ const SHADOW =
 export interface Art {
   src: string;
   position?: string;
-  /** dark canvases get lifted, pale ones get pushed down */
-  treatment?: "lift" | "bright";
+  /** dark canvases get lifted, pale ones get pushed down, the photograph gets
+   *  most of its colour taken away */
+  treatment?: "lift" | "bright" | "photo";
 }
+
+const ART_CLASS = {
+  lift: "r8-art-lift",
+  bright: "r8-art-bright",
+  photo: "r8-art-photo",
+} as const;
 
 function Backdrop({ art }: { art: Art }) {
   return (
     <img
-      className={art.treatment === "bright" ? "r8-art-bright" : "r8-art-lift"}
+      className={ART_CLASS[art.treatment ?? "lift"]}
       src={art.src}
       alt=""
       style={{ objectPosition: art.position ?? "center 45%" }}
@@ -149,7 +159,7 @@ export function Cover({
     <div style={{ position: "absolute", inset: 0 }}>
       <Backdrop art={art} />
       <div className="art-tone" />
-      <div className="r8-cover-scrim" />
+      <div className={art.treatment === "photo" ? "r8-photo-scrim" : "r8-cover-scrim"} />
 
       <div
         style={{
@@ -164,8 +174,10 @@ export function Cover({
           textShadow: SHADOW,
         }}
       >
-        <CoBrand partner={partner} />
-
+        {/* The co-brand sits with the title rather than up in the corner: at
+            the top of the slide it read as letterhead, and the two marks are
+            the reason this night happened. Larger, and close enough to the
+            wordmark that the eye takes all three in at once. */}
         <div
           style={{
             flex: 1,
@@ -174,6 +186,10 @@ export function Cover({
             justifyContent: "center",
           }}
         >
+          <div style={{ marginBottom: 54 }}>
+            <CoBrand partner={partner} height={152} />
+          </div>
+
           <h1
             style={{
               fontFamily: "var(--cc-font-condensed)",

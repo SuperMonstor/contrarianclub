@@ -1,5 +1,6 @@
 import type { WorkSpec } from "../../src/core/types";
 import chamber from "./assets/commons1833.jpg";
+import room from "./assets/room.jpg";
 import cradle from "./assets/cradle.jpg";
 import illmatched from "./assets/illmatched.jpg";
 import basecamp from "./assets/basecamp.png";
@@ -46,7 +47,7 @@ const work: WorkSpec = {
       hasImage: true,
       render: () => (
         <Cover
-          art={{ src: chamber, treatment: "lift", position: "center 46%" }}
+          art={{ src: room, treatment: "photo", position: "center 62%" }}
           partner={basecamp}
           title="Debate #8"
           subtitle="recapped"

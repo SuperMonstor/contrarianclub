@@ -32,6 +32,22 @@
   filter: saturate(0.72) contrast(1.04) brightness(0.72) sepia(0.16);
 }
 
+/* --- The one photograph: a room lit in club purple ----------------------- */
+/* Everything else in this deck is oil paint. A phone photo of the actual night
+   arrives saturated magenta and blue, which is the one thing the palette
+   cannot hold, so most of the colour comes out and what is left is pushed
+   warm. Read as a photograph it is heavy handed. Read next to nine painted
+   slides it belongs to them, which is the point. */
+.r8-art-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.32) contrast(1.0) brightness(0.92) sepia(0.4);
+}
+
 /* --- Cover and close: a lit band at the top, quiet below ----------------- */
 /* Both bookends carry a co-brand at the top and a short line lower down, so
    the picture keeps the middle and the two type zones sit on near-flat
@@ -54,6 +70,33 @@
       rgba(11, 9, 7, 0.9) 100%
     ),
     radial-gradient(125% 85% at 50% 20%, transparent 46%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* --- The photographic cover: type from a third of the way down ----------- */
+/* The painted covers could hold type over the picture because a painting has
+   large quiet areas. This photograph does not: it is a lit room full of small
+   high contrast detail exactly where the wordmark, the title and three lines
+   of copy have to sit. So the ceiling keeps most of its light, and everything
+   from a third of the way down goes near black. What survives is the shape of
+   the room and the lights, which is all that was wanted from it. */
+.r8-photo-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.46) 0%,
+      rgba(11, 9, 7, 0.26) 10%,
+      rgba(11, 9, 7, 0.34) 20%,
+      rgba(11, 9, 7, 0.56) 28%,
+      rgba(11, 9, 7, 0.72) 35%,
+      rgba(11, 9, 7, 0.8) 42%,
+      rgba(11, 9, 7, 0.82) 55%,
+      rgba(11, 9, 7, 0.82) 78%,
+      rgba(11, 9, 7, 0.78) 100%
+    ),
+    radial-gradient(120% 80% at 50% 12%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 /* --- Motion slides: the picture on top, the motion at the foot ----------- */
