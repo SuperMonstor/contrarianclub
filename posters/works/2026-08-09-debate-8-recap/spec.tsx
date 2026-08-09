@@ -32,7 +32,6 @@ const MOTION_ONE = "Choosing not to have children is morally selfish in a low bi
 const MOTION_TWO =
   "The social stigma against consensual age gap relationships causes more harm than the relationships themselves.";
 
-const ROUND_NOTE = "Live poll on the night. Everyone who voted in this round.";
 const MATCHED_NOTE = "Measured on the people who voted in both rounds.";
 
 const work: WorkSpec = {
@@ -77,13 +76,11 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Pre-debate vote"
-          motion={MOTION_ONE}
+          headline="The room walked in firmly against the motion."
           counts={[13, 9, 0, 2, 3, 1, 2]}
           leftLabel="Disagree"
           rightLabel="Agree"
           average={-1.5}
-          headline="The room walked in against it, and not narrowly."
-          footnote={ROUND_NOTE}
         />
       ),
     },
@@ -94,13 +91,11 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Post-debate vote"
-          motion={MOTION_ONE}
+          headline="By the end, the room was close to balanced."
           counts={[8, 5, 4, 2, 5, 3, 5]}
           leftLabel="Disagree"
           rightLabel="Agree"
           average={-0.4}
-          headline="It left with every position on the scale occupied."
-          footnote={ROUND_NOTE}
         />
       ),
     },
@@ -148,13 +143,11 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Pre-debate vote"
-          motion={MOTION_TWO}
+          headline="The room walked in leaning toward the motion."
           counts={[2, 1, 2, 6, 4, 7, 4]}
           leftLabel="Disagree"
           rightLabel="Agree"
           average={0.8}
-          headline="The room walked in sympathetic to it."
-          footnote={ROUND_NOTE}
         />
       ),
     },
@@ -165,13 +158,11 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Post-debate vote"
-          motion={MOTION_TWO}
+          headline="By the end, the room was pulling both ways."
           counts={[3, 2, 3, 4, 2, 2, 6]}
           leftLabel="Disagree"
           rightLabel="Agree"
           average={0.4}
-          headline="It left flatter, with a hard core still at Agree."
-          footnote={ROUND_NOTE}
         />
       ),
     },

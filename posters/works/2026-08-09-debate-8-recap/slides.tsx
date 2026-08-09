@@ -338,25 +338,23 @@ function signed(value: number) {
 
 export function Distribution({
   kicker,
-  motion,
   headline,
   counts,
   leftLabel,
   rightLabel,
   average,
-  footnote,
 }: {
   kicker: string;
-  motion: string;
+  /** the reading of the chart. This slide's title, not a caption under it. */
   headline: string;
   /** seven bars, in scale order from -3 to +3 */
   counts: number[];
   leftLabel: string;
   rightLabel: string;
   average: number;
-  footnote: string;
 }) {
   const max = Math.max(...counts);
+  const total = counts.reduce((sum, count) => sum + count, 0);
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -374,34 +372,38 @@ export function Distribution({
       >
         <Mark />
 
-        {/* Which round, then what was being voted on. The motion is the title
-            of this slide rather than a note under one, so it is set at reading
-            size in parchment: large enough to be read, quiet enough that the
-            chart still lands first. */}
+        {/* Which round, then what the chart says. The motion is not repeated
+            here: the slide before it stated the motion, and repeating it made
+            the reader parse a paragraph before reaching the only new thing on
+            the slide. One sentence at the top, then the evidence for it. */}
         <div style={{ marginTop: 40 }}>
           <Kicker text={kicker} />
-          <p
+          <h2
             style={{
               fontFamily: "var(--cc-font-display)",
-              fontSize: 34,
-              lineHeight: 1.28,
-              letterSpacing: "-0.008em",
-              color: "var(--cc-parchment)",
-              margin: "18px 0 0",
-              maxWidth: "28ch",
+              fontWeight: 500,
+              fontSize: 58,
+              lineHeight: 1.1,
+              letterSpacing: "-0.018em",
+              color: "var(--cc-ivory)",
+              margin: "20px 0 0",
+              maxWidth: "16ch",
             }}
           >
-            {motion}
-          </p>
+            {headline}
+          </h2>
         </div>
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          {/* Bars scaled against the tallest, exactly as the presenter display
-              does it, so an empty position still shows as a hairline and the
-              shape of the room is legible rather than the arithmetic. */}
+          {/* Bars scaled against the tallest, as the presenter display does it,
+              so the shape of the room is legible rather than the arithmetic.
+              Each bar carries its own count above the fill: without it a
+              distribution is a picture of proportions and the reader has no way
+              to tell twenty people from five. The tallest bar stops at 88% to
+              leave that number somewhere to sit. */}
           <div style={{ display: "flex", gap: 12, alignItems: "flex-end" }}>
             {counts.map((count, i) => {
-              const height = max === 0 ? 0 : Math.max(count === 0 ? 0 : 4, (count / max) * 100);
+              const height = max === 0 ? 0 : Math.max(count === 0 ? 0 : 4, (count / max) * 88);
               return (
                 <div
                   key={SCALE_VALUES[i]}
@@ -411,7 +413,8 @@ export function Distribution({
                     style={{
                       height: 470,
                       display: "flex",
-                      alignItems: "flex-end",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
                       border: "1px solid var(--cc-line)",
                       borderRadius: 3,
                       background: "rgba(244,234,210,0.06)",
@@ -419,6 +422,18 @@ export function Distribution({
                       boxSizing: "border-box",
                     }}
                   >
+                    <span
+                      style={{
+                        fontFamily: "var(--cc-font-display)",
+                        fontSize: 30,
+                        lineHeight: 1,
+                        textAlign: "center",
+                        paddingBottom: 12,
+                        color: count === 0 ? "var(--cc-faint)" : "var(--cc-ivory)",
+                      }}
+                    >
+                      {count}
+                    </span>
                     <div
                       style={{
                         width: "100%",
@@ -460,57 +475,28 @@ export function Distribution({
           </div>
         </div>
 
-        {/* The headline sits under the chart rather than over it. The picture
-            is the evidence and the sentence is the reading of it, in that
-            order. */}
-        <div style={{ borderTop: "1px solid var(--cc-line)", paddingTop: 30 }}>
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 32 }}>
-            <p
-              style={{
-                fontFamily: "var(--cc-font-display)",
-                fontWeight: 500,
-                fontSize: 40,
-                lineHeight: 1.16,
-                letterSpacing: "-0.014em",
-                color: "var(--cc-ivory)",
-                margin: 0,
-                maxWidth: "18ch",
-              }}
-            >
-              {headline}
-            </p>
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <span
-                className="kicker"
-                style={{ display: "block", fontSize: 14, letterSpacing: "0.24em" }}
-              >
-                Average position
-              </span>
-              <span
-                style={{
-                  display: "block",
-                  fontFamily: "var(--cc-font-display)",
-                  fontSize: 62,
-                  lineHeight: 1,
-                  color: GOLD_BRIGHT,
-                  marginTop: 8,
-                }}
-              >
-                {signed(average)}
-              </span>
-            </div>
-          </div>
-          <p
-            style={{
-              fontFamily: "var(--cc-font-ui)",
-              fontSize: 19,
-              letterSpacing: "0.04em",
-              color: "var(--cc-faint)",
-              margin: "22px 0 0",
-            }}
-          >
-            {footnote}
-          </p>
+        {/* Everything the chart cannot say itself, on one line. The average was
+            a display number in its own block, which made the foot of the slide
+            compete with the top of it. */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: 32,
+            borderTop: "1px solid var(--cc-line)",
+            paddingTop: 26,
+            fontFamily: "var(--cc-font-ui)",
+            fontSize: 21,
+            letterSpacing: "0.03em",
+            color: "var(--cc-muted)",
+          }}
+        >
+          <span>{total} voted in this round</span>
+          <span>
+            Average position{" "}
+            <span style={{ color: GOLD_BRIGHT, fontWeight: 700 }}>{signed(average)}</span>
+          </span>
         </div>
       </div>
     </div>
