@@ -385,6 +385,7 @@ export function Distribution({
   leftLabel,
   rightLabel,
   average,
+  fact,
 }: {
   kicker: string;
   /** the reading of the chart. This slide's title, not a caption under it. */
@@ -394,6 +395,10 @@ export function Distribution({
   leftLabel: string;
   rightLabel: string;
   average: number;
+  /** one thing this particular chart shows that the title does not. It has to
+   *  be readable off the bars above it: a fact about some other round would be
+   *  a second slide's worth of thinking on this one. */
+  fact?: ReactNode;
 }) {
   const max = Math.max(...counts);
   const total = counts.reduce((sum, count) => sum + count, 0);
@@ -516,6 +521,28 @@ export function Distribution({
             <span style={{ textAlign: "right" }}>{rightLabel}</span>
           </div>
         </div>
+
+        {/* The one detail in the bars worth pointing at, marked with a rule
+            rather than a label so it reads as an aside and not as a second
+            headline. */}
+        {fact && (
+          <div style={{ display: "flex", gap: 22, marginBottom: 34 }}>
+            <span style={{ width: 2, background: "rgba(200,162,74,0.5)", flexShrink: 0 }} />
+            <p
+              style={{
+                fontFamily: "var(--cc-font-display)",
+                fontSize: 27,
+                lineHeight: 1.4,
+                letterSpacing: "-0.006em",
+                color: "var(--cc-parchment)",
+                margin: 0,
+                maxWidth: "36ch",
+              }}
+            >
+              {fact}
+            </p>
+          </div>
+        )}
 
         {/* Everything the chart cannot say itself, on one line. The average was
             a display number in its own block, which made the foot of the slide

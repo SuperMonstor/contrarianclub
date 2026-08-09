@@ -3,7 +3,7 @@ import chamber from "./assets/commons1833.jpg";
 import cradle from "./assets/cradle.jpg";
 import illmatched from "./assets/illmatched.jpg";
 import basecamp from "./assets/basecamp.png";
-import { Closing, Cover, Distribution, Motion, Swing } from "./slides";
+import { Closing, Cover, Distribution, G, Motion, Swing } from "./slides";
 
 // Instagram carousel recapping Debate #8, run with Basecamp on 9 August. The
 // design reasoning is in slides.tsx.
@@ -86,6 +86,12 @@ const work: WorkSpec = {
           leftLabel="Disagree"
           rightLabel="Agree"
           average={-1.5}
+          fact={
+            <>
+              Not one person leaned <G>Disagree</G>. The room was certain, or it was on the other
+              side. Mild disagreement did not exist yet.
+            </>
+          }
         />
       ),
     },
@@ -101,6 +107,12 @@ const work: WorkSpec = {
           leftLabel="Disagree"
           rightLabel="Agree"
           average={-0.4}
+          fact={
+            <>
+              Every position on the scale now has takers, including <G>-1</G>, which nobody had
+              chosen before the debate.
+            </>
+          }
         />
       ),
     },
@@ -121,7 +133,13 @@ const work: WorkSpec = {
             { label: "Toward Disagree", percent: 19, tone: "wine" },
             { label: "Held", percent: 23, tone: "muted" },
           ]}
-          reading="A room that arrived certain left the question open. Three in four people moved at all, and most of them moved the same way."
+          reading={
+            <>
+              A room that arrived certain left the question open. Three in four people moved at
+              all, and one of them swung the entire scale: <G>absolutely sure Disagree</G> to{" "}
+              <G>absolutely sure Agree</G>.
+            </>
+          }
           footnote={MATCHED_NOTE}
         />
       ),
@@ -153,6 +171,11 @@ const work: WorkSpec = {
           leftLabel="Disagree"
           rightLabel="Agree"
           average={0.8}
+          fact={
+            <>
+              Six of the twenty six sat at an extreme. On the first motion it was half the room.
+            </>
+          }
         />
       ),
     },
@@ -168,6 +191,12 @@ const work: WorkSpec = {
           leftLabel="Disagree"
           rightLabel="Agree"
           average={0.4}
+          fact={
+            <>
+              Nine of the twenty two ended at an extreme, up from six. This argument made people
+              more certain, not less.
+            </>
+          }
         />
       ),
     },
