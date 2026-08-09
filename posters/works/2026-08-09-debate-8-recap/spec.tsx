@@ -76,7 +76,7 @@ const work: WorkSpec = {
       label: "One, before",
       render: () => (
         <Distribution
-          kicker="Motion One · Before the debate"
+          kicker="Pre-debate vote"
           motion={MOTION_ONE}
           counts={[13, 9, 0, 2, 3, 1, 2]}
           leftLabel="Disagree"
@@ -93,7 +93,7 @@ const work: WorkSpec = {
       label: "One, after",
       render: () => (
         <Distribution
-          kicker="Motion One · After the debate"
+          kicker="Post-debate vote"
           motion={MOTION_ONE}
           counts={[8, 5, 4, 2, 5, 3, 5]}
           leftLabel="Disagree"
@@ -147,7 +147,7 @@ const work: WorkSpec = {
       label: "Two, before",
       render: () => (
         <Distribution
-          kicker="Motion Two · Before the debate"
+          kicker="Pre-debate vote"
           motion={MOTION_TWO}
           counts={[2, 1, 2, 6, 4, 7, 4]}
           leftLabel="Disagree"
@@ -164,7 +164,7 @@ const work: WorkSpec = {
       label: "Two, after",
       render: () => (
         <Distribution
-          kicker="Motion Two · After the debate"
+          kicker="Post-debate vote"
           motion={MOTION_TWO}
           counts={[3, 2, 3, 4, 2, 2, 6]}
           leftLabel="Disagree"

@@ -374,16 +374,21 @@ export function Distribution({
       >
         <Mark />
 
+        {/* Which round, then what was being voted on. The motion is the title
+            of this slide rather than a note under one, so it is set at reading
+            size in parchment: large enough to be read, quiet enough that the
+            chart still lands first. */}
         <div style={{ marginTop: 40 }}>
           <Kicker text={kicker} />
           <p
             style={{
               fontFamily: "var(--cc-font-display)",
-              fontSize: 27,
-              lineHeight: 1.32,
-              color: "var(--cc-muted)",
-              margin: "16px 0 0",
-              maxWidth: "34ch",
+              fontSize: 34,
+              lineHeight: 1.28,
+              letterSpacing: "-0.008em",
+              color: "var(--cc-parchment)",
+              margin: "18px 0 0",
+              maxWidth: "28ch",
             }}
           >
             {motion}
