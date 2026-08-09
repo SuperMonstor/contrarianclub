@@ -136,11 +136,13 @@ export function Cover({
   partner: string;
   title: string;
   subtitle: string;
-  /** how the night ran. It sits here rather than on the first motion slide,
-   *  because a cover that only names itself gives a scroller no reason to
-   *  stop, and because these mechanics belong to the whole evening rather
-   *  than to one motion. */
-  context: string;
+  /** how the night ran, one beat per line. It sits here rather than on the
+   *  first motion slide, because a cover that only names itself gives a
+   *  scroller no reason to stop, and because these mechanics belong to the
+   *  whole evening rather than to one motion. Set as separate lines, not a
+   *  paragraph: three facts in a block of justified serif read as something
+   *  to get through rather than three facts. */
+  context: string[];
   swipeHint: string;
 }) {
   return (
@@ -208,19 +210,24 @@ export function Cover({
             }}
           />
 
-          <p
-            style={{
-              fontFamily: "var(--cc-font-display)",
-              fontSize: 30,
-              lineHeight: 1.46,
-              letterSpacing: "-0.006em",
-              color: "var(--cc-parchment)",
-              margin: "0 auto",
-              maxWidth: "30ch",
-            }}
-          >
-            {context}
-          </p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            {context.map((line, i) => (
+              <p
+                key={i}
+                style={{
+                  fontFamily: "var(--cc-font-display)",
+                  fontSize: 31,
+                  lineHeight: 1.3,
+                  letterSpacing: "-0.006em",
+                  color: "var(--cc-parchment)",
+                  margin: 0,
+                  maxWidth: "27ch",
+                }}
+              >
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
 
         <span

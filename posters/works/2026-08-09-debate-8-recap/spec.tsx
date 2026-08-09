@@ -50,7 +50,11 @@ const work: WorkSpec = {
           partner={basecamp}
           title="Debate #8"
           subtitle="recapped"
-          context="Anyone in the audience could put their name in to speak. Teams were drawn at random, with fifteen minutes to prepare. We polled the room before a word was said, and again after the open floor closed."
+          context={[
+            "Anyone in the audience could put their name in to speak.",
+            "Teams were drawn at random, with fifteen minutes to prepare.",
+            "We polled the room before a word was said, and again after the open floor closed.",
+          ]}
           swipeHint="Swipe for the results"
         />
       ),
