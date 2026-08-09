@@ -129,12 +129,18 @@ export function Cover({
   partner,
   title,
   subtitle,
+  context,
   swipeHint,
 }: {
   art: Art;
   partner: string;
   title: string;
   subtitle: string;
+  /** how the night ran. It sits here rather than on the first motion slide,
+   *  because a cover that only names itself gives a scroller no reason to
+   *  stop, and because these mechanics belong to the whole evening rather
+   *  than to one motion. */
+  context: string;
   swipeHint: string;
 }) {
   return (
@@ -192,6 +198,29 @@ export function Cover({
           >
             {subtitle}
           </p>
+
+          <span
+            style={{
+              width: 64,
+              height: 1,
+              background: "rgba(200,162,74,0.5)",
+              margin: "40px auto 36px",
+            }}
+          />
+
+          <p
+            style={{
+              fontFamily: "var(--cc-font-display)",
+              fontSize: 30,
+              lineHeight: 1.46,
+              letterSpacing: "-0.006em",
+              color: "var(--cc-parchment)",
+              margin: "0 auto",
+              maxWidth: "30ch",
+            }}
+          >
+            {context}
+          </p>
         </div>
 
         <span
@@ -229,12 +258,16 @@ export function Motion({
   kicker,
   intro,
   motion,
+  motionSize = 50,
   note,
 }: {
   art: Art;
   kicker: string;
-  intro: ReactNode;
+  /** only where this particular motion needs explaining. The mechanics of the
+   *  night live on the cover. */
+  intro?: ReactNode;
   motion: string;
+  motionSize?: number;
   note?: ReactNode;
 }) {
   return (
@@ -265,19 +298,21 @@ export function Motion({
             gap: 26,
           }}
         >
-          <p
-            style={{
-              fontFamily: "var(--cc-font-display)",
-              fontSize: 30,
-              lineHeight: 1.42,
-              letterSpacing: "-0.006em",
-              color: "var(--cc-parchment)",
-              margin: 0,
-              maxWidth: "32ch",
-            }}
-          >
-            {intro}
-          </p>
+          {intro && (
+            <p
+              style={{
+                fontFamily: "var(--cc-font-display)",
+                fontSize: 30,
+                lineHeight: 1.42,
+                letterSpacing: "-0.006em",
+                color: "var(--cc-parchment)",
+                margin: 0,
+                maxWidth: "32ch",
+              }}
+            >
+              {intro}
+            </p>
+          )}
 
           <div>
             <Kicker text={kicker} />
@@ -293,7 +328,7 @@ export function Motion({
                 style={{
                   fontFamily: "var(--cc-font-display)",
                   fontWeight: 500,
-                  fontSize: 50,
+                  fontSize: motionSize,
                   lineHeight: 1.16,
                   letterSpacing: "-0.016em",
                   color: "var(--cc-ivory)",

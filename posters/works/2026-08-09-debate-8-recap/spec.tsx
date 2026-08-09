@@ -50,22 +50,23 @@ const work: WorkSpec = {
           partner={basecamp}
           title="Debate #8"
           subtitle="recapped"
+          context="Anyone in the audience could put their name in to speak. Teams were drawn at random, with fifteen minutes to prepare. We polled the room before a word was said, and again after the open floor closed."
           swipeHint="Swipe for the results"
         />
       ),
     },
 
-    // 2. The first motion, and how it got its speakers.
+    // 2. The first motion, and nothing else. How the night ran moved to the
+    //    cover, where it gives a scroller a reason to stop.
     {
       label: "Motion one",
       hasImage: true,
       render: () => (
         <Motion
           art={{ src: cradle, treatment: "bright", position: "center 38%" }}
-          intro="Anyone in the audience could put their name in to speak. The teams were drawn at random, with fifteen minutes to prepare."
           kicker="Motion One"
           motion={MOTION_ONE}
-          note="We polled the room before a word was said, and again after the open floor closed."
+          motionSize={58}
         />
       ),
     },
