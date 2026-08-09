@@ -28,6 +28,10 @@ import { Closing, Cover, Distribution, G, Motion, Swing } from "./slides";
 // The swing slides plot the matched averages, not the round averages, which is
 // why motion 2 reads +0.7 to +0.1 here and +0.8 to +0.4 on the two slides
 // before it. Different populations, and each slide says which it is using.
+//
+// The fertility figures on slide 2 are NFHS-5 (2019-21): India 2.0, Karnataka
+// 1.7, against a replacement level of 2.1. Check them against the latest round
+// before reusing this copy anywhere.
 
 const MOTION_ONE = "Choosing not to have children is morally selfish in a low birth rate society.";
 const MOTION_TWO =
@@ -72,6 +76,13 @@ const work: WorkSpec = {
           kicker="Motion One"
           motion={MOTION_ONE}
           motionSize={58}
+          note={
+            <>
+              India&apos;s fertility rate is <G>2.0</G>, under the 2.1 a generation needs to
+              replace itself. Karnataka&apos;s is <G>1.7</G>. The low birth rate society was the
+              one the room was sitting in.
+            </>
+          }
         />
       ),
     },
