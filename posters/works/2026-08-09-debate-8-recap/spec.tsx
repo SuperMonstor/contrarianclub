@@ -89,8 +89,8 @@ const work: WorkSpec = {
           average={-1.5}
           fact={
             <>
-              Not one person leaned <G>Disagree</G>. The room was certain, or it was on the other
-              side. Mild disagreement did not exist yet.
+              Not one person sat at <G>-1</G>. The room was certain, or it was on the other side.
+              Mild disagreement did not exist yet.
             </>
           }
         />
