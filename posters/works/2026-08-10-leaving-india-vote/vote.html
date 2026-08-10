@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaving India vote</title>
+  <style>
+    @font-face {
+      font-family: "Playfair Display";
+      font-style: normal;
+      font-weight: 900;
+      font-display: block;
+      src: url("../../node_modules/@fontsource/playfair-display/files/playfair-display-latin-900-normal.woff2");
+    }
+
+    @font-face {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url("../../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2");
+    }
+
+    @font-face {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 600;
+      font-display: block;
+      src: url("../../node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2");
+    }
+
+    @font-face {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 700 900;
+      font-display: block;
+      src: url("../../node_modules/@fontsource/inter/files/inter-latin-900-normal.woff2");
+    }
+
+    :root {
+      --black: #0b0907;
+      --ivory: #f4ead2;
+      --parchment: #ddceac;
+      --muted: #9d9079;
+      --faint: #6f6555;
+      --gold: #c8a24a;
+      --gold-bright: #f0d36a;
+      --wine: #8f2822;
+      --wine-bright: #c7463d;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "Inter", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      background: #050403;
+      color: var(--ivory);
+      font-family: var(--sans);
+    }
+
+    .deck {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      padding: 26px;
+    }
+
+    .slot { position: relative; width: 100%; }
+
+    .frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1600px;
+      height: 900px;
+      overflow: hidden;
+      isolation: isolate;
+      transform-origin: top left;
+      background:
+        radial-gradient(110% 72% at 50% -12%, rgba(200, 162, 74, 0.12), transparent 61%),
+        linear-gradient(180deg, #0d0a07 0%, #0a0806 58%, #080604 100%),
+        var(--black);
+    }
+
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0.045;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background: radial-gradient(135% 100% at 50% 36%, transparent 48%, rgba(0, 0, 0, 0.68) 100%);
+    }
+
+    .inset {
+      position: absolute;
+      inset: 38px;
+      z-index: 1;
+      border: 1px solid rgba(200, 162, 74, 0.14);
+    }
+
+    .body {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 112px 50px;
+    }
+
+    .logo { display: block; width: 178px; height: auto; }
+
+    .topic {
+      margin-top: 24px;
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .topic b { color: var(--parchment); font-weight: 700; }
+
+    .result {
+      max-width: 1250px;
+      margin: 12px 0 0;
+      color: var(--ivory);
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .question {
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      height: 325px;
+      margin: auto 0 0;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-width: 0;
+    }
+
+    .plot {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      border: 1px solid rgba(200, 162, 74, 0.17);
+      border-bottom: 0;
+      background: linear-gradient(180deg, rgba(244, 234, 210, 0.018), rgba(244, 234, 210, 0.04));
+    }
+
+    .value {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      color: var(--ivory);
+      font-family: var(--serif);
+      font-size: 34px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .bar {
+      width: calc(100% - 32px);
+      min-height: 5px;
+    }
+
+    .leave .bar { background: linear-gradient(180deg, var(--gold-bright), var(--gold)); }
+    .stay .bar { background: linear-gradient(180deg, var(--wine-bright), var(--wine)); }
+    .undecided .bar { background: rgba(244, 234, 210, 0.2); }
+
+    .leave .label { color: var(--gold-bright); }
+    .stay .label { color: var(--wine-bright); }
+    .undecided .label { color: var(--parchment); }
+
+    .choice-label {
+      min-height: 67px;
+      padding: 14px 14px 0;
+      text-align: center;
+    }
+
+    .label {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .detail {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .caption {
+      width: 100%;
+      margin-top: 22px;
+      color: var(--faint);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <div class="slot" data-name="01-before-the-debate">
+      <section class="frame">
+        <div class="inset"></div>
+        <div class="body">
+          <img class="logo" src="../../src/core/brand/logo-dark.svg" alt="The Contrarian Debate Club" />
+          <div class="topic">Leaving India <b>&middot; Before the debate</b></div>
+          <h1 class="result">Leaving led. But barely.</h1>
+          <div class="question">Should Indians leave if the opportunity presents itself?</div>
+          <div class="chart">
+            <div class="choice leave">
+              <div class="plot">
+                <span class="value" style="bottom: calc(100% - 225px + 13px)">7</span>
+                <div class="bar" style="height: 225px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Leave</span>
+                <span class="detail">If the opportunity comes</span>
+              </div>
+            </div>
+            <div class="choice stay">
+              <div class="plot">
+                <span class="value" style="bottom: calc(100% - 161px + 13px)">5</span>
+                <div class="bar" style="height: 161px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Stay</span>
+                <span class="detail">Even if the opportunity comes</span>
+              </div>
+            </div>
+            <div class="choice undecided">
+              <div class="plot">
+                <span class="value" style="bottom: calc(100% - 161px + 13px)">5</span>
+                <div class="bar" style="height: 161px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Undecided</span>
+              </div>
+            </div>
+          </div>
+          <div class="caption">17 responses shown in the source chart</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="slot" data-name="02-after-the-debate">
+      <section class="frame">
+        <div class="inset"></div>
+        <div class="body">
+          <img class="logo" src="../../src/core/brand/logo-dark.svg" alt="The Contrarian Debate Club" />
+          <div class="topic">Leaving India <b>&middot; After the debate</b></div>
+          <h1 class="result">The undecided disappeared.</h1>
+          <div class="question">Should Indians leave if the opportunity presents itself?</div>
+          <div class="chart">
+            <div class="choice leave">
+              <div class="plot">
+                <span class="value" style="bottom: calc(100% - 225px + 13px)">70%</span>
+                <div class="bar" style="height: 225px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Leave</span>
+                <span class="detail">If the opportunity comes</span>
+              </div>
+            </div>
+            <div class="choice stay">
+              <div class="plot">
+                <span class="value" style="bottom: calc(100% - 96px + 13px)">30%</span>
+                <div class="bar" style="height: 96px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Stay</span>
+                <span class="detail">Even if the opportunity comes</span>
+              </div>
+            </div>
+            <div class="choice undecided">
+              <div class="plot">
+                <span class="value" style="bottom: 14px">0%</span>
+                <div class="bar" style="height: 5px"></div>
+              </div>
+              <div class="choice-label">
+                <span class="label">Undecided</span>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Results shown as percentages in the source chart</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    function fit() {
+      document.querySelectorAll(".slot").forEach(function (slot) {
+        var frame = slot.querySelector(".frame");
+        var scale = slot.clientWidth / 1600;
+        frame.style.transform = "scale(" + scale + ")";
+        slot.style.height = 900 * scale + "px";
+      });
+    }
+
+    fit();
+    window.addEventListener("resize", fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  </script>
+</body>
+</html>
