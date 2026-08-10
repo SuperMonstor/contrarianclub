@@ -5,7 +5,8 @@ import type { PartnerDeck } from "@/content/partner-decks";
 import { ExportPdfButton } from "./export-pdf-button";
 import styles from "./page.module.css";
 
-const instagramUrl = "https://www.instagram.com/contrarianclubblr/";
+const instagramHandle = "thecontrarian.club";
+const instagramUrl = `https://www.instagram.com/${instagramHandle}/`;
 
 // The deck. Everything in it is true of the club whoever is reading it. The one
 // partner-specific piece is the proposal card, which is why it is a prop (see
@@ -210,7 +211,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
             that keeps an argument alive between shows.
           </p>
           <a className={styles.instagramLink} href={instagramUrl} target="_blank" rel="noreferrer">
-            Review @contrarianclubblr on Instagram <span aria-hidden="true">↗</span>
+            Review @{instagramHandle} on Instagram <span aria-hidden="true">↗</span>
           </a>
         </div>
       </section>
@@ -260,7 +261,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         />
         <p>A partnership built around sharper questions.</p>
         <a href={instagramUrl} target="_blank" rel="noreferrer">
-          @contrarianclubblr <span aria-hidden="true">↗</span>
+          @{instagramHandle} <span aria-hidden="true">↗</span>
         </a>
       </footer>
       <ExportPdfButton />
