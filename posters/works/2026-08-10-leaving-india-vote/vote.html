@@ -137,26 +137,16 @@
     .topic b { color: var(--parchment); font-weight: 700; }
 
     .result {
-      max-width: 1250px;
-      margin: 12px 0 0;
+      max-width: 1320px;
+      margin: 14px 0 0;
       color: var(--ivory);
       font-family: var(--serif);
-      font-size: 64px;
+      font-size: 56px;
       font-weight: 900;
       letter-spacing: -0.025em;
-      line-height: 1;
+      line-height: 1.04;
       text-align: center;
       text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
-    }
-
-    .question {
-      margin-top: 13px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-align: center;
-      text-transform: uppercase;
     }
 
     .chart {
@@ -164,7 +154,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       width: 100%;
-      height: 325px;
+      height: 300px;
       margin: auto 0 0;
     }
 
@@ -196,10 +186,12 @@
       font-weight: 700;
       line-height: 1;
       text-align: center;
+      bottom: calc(var(--bar-height) + 14px);
     }
 
     .bar {
       width: calc(100% - 32px);
+      height: var(--bar-height);
       min-height: 5px;
     }
 
@@ -257,13 +249,12 @@
         <div class="body">
           <img class="logo" src="../../src/core/brand/logo-dark.svg" alt="The Contrarian Debate Club" />
           <div class="topic">Leaving India <b>&middot; Before the debate</b></div>
-          <h1 class="result">Leaving led. But barely.</h1>
-          <div class="question">Should Indians leave if the opportunity presents itself?</div>
+          <h1 class="result">Should Indians leave the country if the opportunity presents itself?</h1>
           <div class="chart">
             <div class="choice leave">
-              <div class="plot">
-                <span class="value" style="bottom: calc(100% - 225px + 13px)">7</span>
-                <div class="bar" style="height: 225px"></div>
+              <div class="plot" style="--bar-height: 195px">
+                <span class="value">7</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Leave</span>
@@ -271,9 +262,9 @@
               </div>
             </div>
             <div class="choice stay">
-              <div class="plot">
-                <span class="value" style="bottom: calc(100% - 161px + 13px)">5</span>
-                <div class="bar" style="height: 161px"></div>
+              <div class="plot" style="--bar-height: 139px">
+                <span class="value">5</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Stay</span>
@@ -281,9 +272,9 @@
               </div>
             </div>
             <div class="choice undecided">
-              <div class="plot">
-                <span class="value" style="bottom: calc(100% - 161px + 13px)">5</span>
-                <div class="bar" style="height: 161px"></div>
+              <div class="plot" style="--bar-height: 139px">
+                <span class="value">5</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Undecided</span>
@@ -301,13 +292,12 @@
         <div class="body">
           <img class="logo" src="../../src/core/brand/logo-dark.svg" alt="The Contrarian Debate Club" />
           <div class="topic">Leaving India <b>&middot; After the debate</b></div>
-          <h1 class="result">The undecided disappeared.</h1>
-          <div class="question">Should Indians leave if the opportunity presents itself?</div>
+          <h1 class="result">Should Indians leave the country if the opportunity presents itself?</h1>
           <div class="chart">
             <div class="choice leave">
-              <div class="plot">
-                <span class="value" style="bottom: calc(100% - 225px + 13px)">70%</span>
-                <div class="bar" style="height: 225px"></div>
+              <div class="plot" style="--bar-height: 195px">
+                <span class="value">70%</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Leave</span>
@@ -315,9 +305,9 @@
               </div>
             </div>
             <div class="choice stay">
-              <div class="plot">
-                <span class="value" style="bottom: calc(100% - 96px + 13px)">30%</span>
-                <div class="bar" style="height: 96px"></div>
+              <div class="plot" style="--bar-height: 84px">
+                <span class="value">30%</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Stay</span>
@@ -325,9 +315,9 @@
               </div>
             </div>
             <div class="choice undecided">
-              <div class="plot">
-                <span class="value" style="bottom: 14px">0%</span>
-                <div class="bar" style="height: 5px"></div>
+              <div class="plot" style="--bar-height: 5px">
+                <span class="value">0%</span>
+                <div class="bar"></div>
               </div>
               <div class="choice-label">
                 <span class="label">Undecided</span>
