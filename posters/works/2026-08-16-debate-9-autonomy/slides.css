@@ -1,0 +1,74 @@
+/* This poster's own scrims and art treatments.
+
+   Both columns share one scrim, which is the point: the two halves have to be
+   weighted identically or the poster takes a side before the debate starts.
+   Soft over the lockup at the top, an open window through the middle where
+   each painting does its work, then a ramp to near-black under the word that
+   carries on into the copy plate so the art dissolves rather than stops. */
+
+.pa-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.3) 16%,
+      rgba(11, 9, 7, 0.05) 27%,
+      rgba(11, 9, 7, 0.05) 58%,
+      rgba(11, 9, 7, 0.5) 70%,
+      rgba(11, 9, 7, 0.88) 82%,
+      rgba(11, 9, 7, 0.99) 93%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(130% 70% at 50% 40%, transparent 46%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* The engraved border, redrawn above the art. Matches core's .poster-border
+   exactly, including the inner hairline, but sits over the paintings so all
+   four sides read the same. */
+.pa-frame {
+  position: absolute;
+  inset: 40px;
+  z-index: 6;
+  pointer-events: none;
+  border: 1px solid var(--cc-line);
+}
+.pa-frame::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(200, 162, 74, 0.1);
+}
+
+/* Ravi Varma's Shakuntala is already warm and mid-toned, so the kit's standard
+   treatment is right. It only needs a touch more contrast to hold her against
+   the pale hills behind her. */
+.pa-art-autonomy {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) contrast(1.1) brightness(0.88) sepia(0.12);
+}
+
+/* Degas's Bellelli interior is a cool grey room, which goes dead under the
+   standard darkening, and it is a wide painting being read as a tall slice.
+   The element runs taller than its column so the crop lands on the mother and
+   the daughter rather than on the carpet, and the filter warms harder than the
+   kit default to bring the grey into the gold palette. */
+.pa-art-obligation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  z-index: 0;
+  width: 100%;
+  height: 168%;
+  object-fit: cover;
+  filter: saturate(0.72) contrast(1.12) brightness(0.92) sepia(0.2);
+}
