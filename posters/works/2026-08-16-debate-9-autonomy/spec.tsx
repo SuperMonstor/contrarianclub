@@ -1,5 +1,4 @@
 import type { WorkSpec } from "../../src/core/types";
-import autonomy from "./assets/autonomy.jpg";
 import obligation from "./assets/obligation.jpg";
 import { Poster } from "./slides";
 
@@ -9,17 +8,13 @@ import { Poster } from "./slides";
 //
 // The design reasoning is in slides.tsx.
 //
-// The art, both public domain via Wikimedia Commons:
-//
-//   left   Raja Ravi Varma, Shakuntala Lost in Thoughts (1901). A woman
-//          alone, self-possessed, no one else in the picture. Warm, open,
-//          outdoors.
-//   right  Edgar Degas, The Bellelli Family (1858-67). A family posed as a
-//          duty: mother in mourning black, the children arranged, the father
-//          turned away. Cool, enclosed, interior.
-//
-// Warm and alone against cool and surrounded, so the two halves argue at
-// thumbnail size before a word is read.
+// The art, public domain via Wikimedia Commons: Edgar Degas, The Bellelli
+// Family (1858-67). A family arranged for the record, mother in mourning
+// black, the daughters posed between, and the father turned away from all of
+// them in his own chair. The whole motion is in one picture, which is why it
+// runs alone: an earlier cut paired it with a Ravi Varma, and two paintings
+// cropped into columns read as two damaged reproductions rather than one
+// argument.
 const work: WorkSpec = {
   title: "Debate Club #9, autonomy vs obligation",
   date: "2026-08-16",
@@ -33,24 +28,12 @@ const work: WorkSpec = {
         <Poster
           copy={{
             kicker: "Debate Club #9",
-            sides: [
-              {
-                word: "Autonomy",
-                art: {
-                  src: autonomy,
-                  position: "40% center",
-                  className: "pa-art-autonomy",
-                },
-              },
-              {
-                word: "Obligation",
-                art: {
-                  src: obligation,
-                  position: "26% center",
-                  className: "pa-art-obligation",
-                },
-              },
-            ],
+            art: {
+              src: obligation,
+              position: "center center",
+              className: "pa-art-obligation",
+            },
+            hero: ["Personal Autonomy", "Social Obligation"],
             oneLiner: "Two motions on where one ends and the other begins.",
             lines: [
               "Debaters drawn at random.",

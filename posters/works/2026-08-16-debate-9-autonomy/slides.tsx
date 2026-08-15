@@ -2,48 +2,45 @@ import type { ReactNode } from "react";
 import { Art, ArtTone, Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Debate Club #9. One poster, and the composition is the theme.
+// Debate Club #9.
 //
 // The grammar:
 //
-//   Masthead, plate, hero, copy. Four bands, in that order, each doing one
-//   job. The club sits on flat black at the top where nothing competes with
-//   it. The picture is a plate below that, split down the middle: two
-//   paintings, a gold seam between them, left the individual and right the
-//   group. The seam stops where the picture ramps into black, and the two
-//   contested words take the full width of the poster below it, stacked, with
-//   the divider rotated flat and the vs breaking it. So the split is vertical
-//   in the picture and horizontal in the words: the same line, turned.
+//   One painting, one field, edge to edge. No plate, no box, no border. This
+//   is the whole lesson of the Open Floor poster: its painting is cropped
+//   hard too, but nothing draws a rectangle around it, so the eye reads it as
+//   atmosphere and never asks where the rest of it went. Put a painting
+//   inside visible edges and it reads as a reproduction instead, and a
+//   reproduction that has been cut looks broken.
 //
-//   Type does three jobs and no more, which is the only reason a poster this
-//   dense holds together. Playfair is the club's voice: the lockup, the
-//   one-liner, the vs. Oswald is what the night is: the two words, and the
-//   three facts under them. Inter appears twice, both small gold caps, both
-//   pure utility: the edition number and the call to action.
+//   So the art is a continuous ground from the top of the poster down, and
+//   every band of type sits on it: the lockup on a near-black top, the two
+//   contested phrases where the picture ramps into the dark, the copy on the
+//   black it becomes. Nothing has an edge of its own.
 //
-//   Gold is the club talking. The seam, the vs, the kicker, the CTA. Ivory is
-//   the two contested words, weighted identically, because neither side is
-//   allowed to win on the page.
+//   The picture carries the argument by itself. Degas paints a family
+//   arranged for the record, and the father turned away from all of them in
+//   his own chair. Both halves of the motion are in one frame, which is more
+//   than the two cropped halves managed between them.
+//
+//   Type does three jobs and no more. Playfair is the club's voice: the
+//   lockup, the one-liner, the vs. Oswald is what the night is: the two
+//   phrases, and the three facts under them. Inter appears twice, both small
+//   gold caps, both pure utility: the edition number and the call to action.
+//
+//   Gold is the club talking. Ivory is the two contested phrases, set at one
+//   size, because neither side is allowed to win on the page.
 
-const MASTHEAD = 265; // black band: the lockup gets a dead quiet ground
-const ART_BOTTOM = 1000; // where the plate gives way to the copy
-const SEAM = 540; // the split, dead centre
-const SEAM_END = 640; // the seam stops before the hero: it belongs to the picture
-const HERO_TOP = 690;
-const HERO_SIZE = 126;
-const FRAME = 47; // core's engraved border, inner line
-
-/** One side of the argument: a painting and the word it carries. */
-export interface Side {
-  /** the contested noun, set large under the plate */
-  word: string;
-  art: { src: string; position?: string; className?: string };
-}
+const HERO_TOP = 762;
+const HERO_SIZE = 96;
+const HERO_LINE = Math.round(HERO_SIZE * 1.02);
+const VS_H = 44;
 
 export interface PosterCopy {
   kicker: string;
-  /** exactly two, left then right, in the order they are argued */
-  sides: [Side, Side];
+  art: { src: string; position?: string; className?: string };
+  /** the two sides, stacked, the vs between them */
+  hero: [string, string];
   oneLiner: ReactNode;
   /** how the night works, one line each */
   lines: string[];
@@ -53,40 +50,16 @@ export interface PosterCopy {
 const SHADOW =
   "0 1px 2px rgba(0,0,0,0.9), 0 2px 16px rgba(0,0,0,0.78), 0 6px 46px rgba(0,0,0,0.6)";
 
-/** Half the plate: a painting, clipped to its column. */
-function Column({ side, edge }: { side: Side; edge: "left" | "right" }) {
+/** The divider between the two phrases: a hairline broken by the vs. */
+function VsRule({ top }: { top: number }) {
   return (
     <div
       style={{
         position: "absolute",
-        top: 0,
-        left: edge === "left" ? 0 : SEAM,
-        width: SEAM,
-        height: ART_BOTTOM - MASTHEAD,
-        overflow: "hidden",
-      }}
-    >
-      <Art
-        src={side.art.src}
-        position={side.art.position}
-        className={side.art.className ?? "art"}
-      />
-      <ArtTone />
-      <div className="pa-scrim" />
-    </div>
-  );
-}
-
-/** The flat divider between the two words: the seam, rotated. */
-function VsRule() {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: HERO_TOP + Math.round(HERO_SIZE * 1.02),
+        top,
         left: 0,
         right: 0,
-        height: 44,
+        height: VS_H,
         zIndex: 4,
         display: "flex",
         alignItems: "center",
@@ -96,7 +69,7 @@ function VsRule() {
     >
       <span
         style={{
-          width: 330,
+          width: 300,
           height: 1,
           background:
             "linear-gradient(90deg, transparent, var(--cc-line-strong) 88%)",
@@ -115,7 +88,7 @@ function VsRule() {
       </span>
       <span
         style={{
-          width: 330,
+          width: 300,
           height: 1,
           background:
             "linear-gradient(90deg, var(--cc-line-strong) 12%, transparent)",
@@ -125,7 +98,7 @@ function VsRule() {
   );
 }
 
-function Word({ children, top }: { children: ReactNode; top: number }) {
+function Phrase({ children, top }: { children: ReactNode; top: number }) {
   return (
     <div
       style={{
@@ -151,16 +124,27 @@ function Word({ children, top }: { children: ReactNode; top: number }) {
 }
 
 export function Poster({ copy }: { copy: PosterCopy }) {
-  const [left, right] = copy.sides;
-  const lineH = Math.round(HERO_SIZE * 1.02);
+  const [first, second] = copy.hero;
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* the masthead, on flat black */}
+      {/* The field. Covers the canvas, so core's engraved border never shows:
+          this poster is one continuous picture, not a picture in a frame. */}
+      <div className="pa-field">
+        <Art
+          src={copy.art.src}
+          position={copy.art.position}
+          className={copy.art.className ?? "art"}
+        />
+        <ArtTone />
+        <div className="pa-scrim" />
+      </div>
+
+      {/* the club */}
       <div
         style={{
           position: "absolute",
-          top: 46,
+          top: 58,
           left: 0,
           right: 0,
           zIndex: 5,
@@ -170,64 +154,33 @@ export function Poster({ copy }: { copy: PosterCopy }) {
         <Lockup width={320} align="center" />
         <div
           className="kicker"
-          style={{ marginTop: 27, fontSize: 22, letterSpacing: "0.42em" }}
+          style={{
+            marginTop: 26,
+            fontSize: 22,
+            letterSpacing: "0.42em",
+            textShadow: SHADOW,
+          }}
         >
           {copy.kicker}
         </div>
       </div>
 
-      {/* the plate */}
+      {/* the argument */}
+      <Phrase top={HERO_TOP}>{first}</Phrase>
+      <VsRule top={HERO_TOP + HERO_LINE} />
+      <Phrase top={HERO_TOP + HERO_LINE + VS_H}>{second}</Phrase>
+
+      {/* the terms */}
       <div
         style={{
           position: "absolute",
-          top: MASTHEAD,
+          top: 1032,
           left: 0,
           right: 0,
-          height: ART_BOTTOM - MASTHEAD,
-          overflow: "hidden",
-        }}
-      >
-        <Column side={left} edge="left" />
-        <Column side={right} edge="right" />
-        {/* The seam. A bare hairline disappears into a lit painting, so it
-            runs in its own dark gutter: the two pictures are cut apart, and
-            the gold line sits in the cut. */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: SEAM - 2,
-            width: 4,
-            height: SEAM_END - MASTHEAD,
-            zIndex: 3,
-            background:
-              "linear-gradient(90deg, rgba(11,9,7,0.92) 0 1.5px, rgba(200,162,74,0.75) 1.5px 2.5px, rgba(11,9,7,0.92) 2.5px 4px)",
-            WebkitMaskImage:
-              "linear-gradient(180deg, #000 0%, #000 68%, transparent 100%)",
-            maskImage:
-              "linear-gradient(180deg, #000 0%, #000 68%, transparent 100%)",
-          }}
-        />
-      </div>
-
-      {/* the hero, taking the full width the columns could not give it */}
-      <Word top={HERO_TOP}>{left.word}</Word>
-      <VsRule />
-      <Word top={HERO_TOP + lineH + 44}>{right.word}</Word>
-
-      {/* the copy plate */}
-      <div
-        style={{
-          position: "absolute",
-          top: ART_BOTTOM,
-          left: 0,
-          right: 0,
-          bottom: FRAME,
           zIndex: 5,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <div
@@ -242,7 +195,7 @@ export function Poster({ copy }: { copy: PosterCopy }) {
           {copy.oneLiner}
         </div>
 
-        <div style={{ marginTop: 32, textAlign: "center" }}>
+        <div style={{ marginTop: 30, textAlign: "center" }}>
           {copy.lines.map((line) => (
             <div
               key={line}
@@ -263,17 +216,11 @@ export function Poster({ copy }: { copy: PosterCopy }) {
 
         <div
           className="kicker"
-          style={{ marginTop: 30, fontSize: 20, letterSpacing: "0.34em" }}
+          style={{ marginTop: 28, fontSize: 20, letterSpacing: "0.34em" }}
         >
           {copy.cta}
         </div>
       </div>
-
-      {/* The engraved border again, on top. Core draws it under the art, which
-          is right for a poster whose picture is full bleed: it disappears.
-          This one runs edge to edge over the plate so the frame reads as a
-          frame rather than as three sides of a rectangle around the copy. */}
-      <div className="pa-frame" />
     </div>
   );
 }

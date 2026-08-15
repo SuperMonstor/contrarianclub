@@ -1,12 +1,22 @@
-/* This poster's own scrims and art treatments.
+/* This poster's own field and scrim.
 
-   Both columns share one scrim, which is the point: the two halves have to be
-   weighted identically or the poster takes a side before the debate starts.
-   The plate sits under a solid black masthead, so the scrim does not have to
-   protect the lockup. It only has to open through the middle where each
-   painting does its work, then ramp to near-black under the hero so the
-   picture dissolves into the words rather than stopping at an edge. */
+   The field covers the canvas and is painted near-black, so the picture has no
+   edge of its own anywhere: not at the top where the lockup sits, not at the
+   bottom where it becomes the copy plate, and not against core's engraved
+   border, which stays hidden underneath. One continuous ground. */
 
+.pa-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--cc-black);
+}
+
+/* The scrim says where type is allowed to sit on this particular painting.
+   Near-black across the top so the lockup reads on quiet ground, an open
+   window through the middle where the whole family is visible, then a long
+   ramp into black under the two phrases that never comes back. */
 .pa-scrim {
   position: absolute;
   inset: 0;
@@ -14,66 +24,34 @@
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.34) 0%,
-      rgba(11, 9, 7, 0.06) 9%,
-      rgba(11, 9, 7, 0.06) 36%,
-      rgba(11, 9, 7, 0.5) 46%,
-      rgba(11, 9, 7, 0.92) 55%,
-      rgba(11, 9, 7, 0.99) 63%,
+      rgba(11, 9, 7, 0.95) 0%,
+      rgba(11, 9, 7, 0.92) 12%,
+      rgba(11, 9, 7, 0.62) 17%,
+      rgba(11, 9, 7, 0.12) 24%,
+      rgba(11, 9, 7, 0.07) 40%,
+      rgba(11, 9, 7, 0.34) 48%,
+      rgba(11, 9, 7, 0.86) 55%,
+      rgba(11, 9, 7, 0.97) 62%,
       var(--cc-black) 72%
     ),
-    radial-gradient(130% 68% at 50% 34%, transparent 44%, rgba(0, 0, 0, 0.5) 100%);
-}
-
-/* The engraved border, redrawn above the art. Matches core's .poster-border
-   exactly, including the inner hairline, but sits over the plate so all four
-   sides read the same. */
-.pa-frame {
-  position: absolute;
-  inset: 40px;
-  z-index: 6;
-  pointer-events: none;
-  border: 1px solid var(--cc-line);
-}
-.pa-frame::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(200, 162, 74, 0.1);
-}
-
-/* Ravi Varma's Shakuntala is already warm and mid-toned, so the kit's standard
-   treatment is right. It only needs a touch more contrast to hold her against
-   the pale hills behind her. The element runs taller than its column and rides
-   up, so the crop tightens on her without dropping her face into the lower
-   half of the plate. */
-.pa-art-autonomy {
-  position: absolute;
-  top: -85px;
-  left: 0;
-  right: 0;
-  bottom: auto;
-  z-index: 0;
-  width: 100%;
-  height: 140%;
-  object-fit: cover;
-  filter: saturate(0.8) contrast(1.1) brightness(0.88) sepia(0.12);
+    radial-gradient(115% 58% at 50% 34%, transparent 40%, rgba(0, 0, 0, 0.66) 100%);
 }
 
 /* Degas's Bellelli interior is a cool grey room, which goes dead under the
-   standard darkening, and it is a wide painting being read as a tall slice.
-   The element runs taller than its column so the crop lands on the mother and
-   her daughters rather than on the carpet, and the filter warms harder than
-   the kit default to bring the grey into the gold palette. */
+   kit's standard darkening, so this warms harder and lifts rather than
+   knocking back. The element is pushed down the canvas because the mother's
+   head sits high in the painting and the lockup needs that band: dropping it
+   puts her face in the open window instead of behind the wordmark. Its full
+   height shows, and only the outer edges of the width are lost. */
 .pa-art-obligation {
   position: absolute;
-  top: 0;
+  top: 140px;
   left: 0;
   right: 0;
   bottom: auto;
   z-index: 0;
   width: 100%;
-  height: 127%;
+  height: 1080px;
   object-fit: cover;
-  filter: saturate(0.72) contrast(1.12) brightness(0.92) sepia(0.2);
+  filter: saturate(0.7) contrast(1.15) brightness(0.84) sepia(0.28);
 }
