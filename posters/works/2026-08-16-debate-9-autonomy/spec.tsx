@@ -35,33 +35,23 @@ const work: WorkSpec = {
             kicker: "Debate Club #9",
             sides: [
               {
-                label: "Personal",
                 word: "Autonomy",
-                size: 79,
                 art: {
                   src: autonomy,
-                  position: "68% center",
+                  position: "40% center",
                   className: "pa-art-autonomy",
                 },
               },
               {
-                label: "Social",
                 word: "Obligation",
-                size: 72,
                 art: {
                   src: obligation,
-                  position: "24% center",
+                  position: "26% center",
                   className: "pa-art-obligation",
                 },
               },
             ],
-            oneLiner: (
-              <>
-                Two motions on where one ends
-                <br />
-                and the other begins.
-              </>
-            ),
+            oneLiner: "Two motions on where one ends and the other begins.",
             lines: [
               "Debaters drawn at random.",
               "The floor opens to everyone.",

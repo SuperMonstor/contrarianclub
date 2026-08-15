@@ -6,49 +6,46 @@ import "./slides.css";
 //
 // The grammar:
 //
-//   The frame is split down the middle, not across it. Two paintings, two
-//   columns, a gold seam between them with the "vs" breaking the line. Left
-//   is the individual, right is the group, and you feel the opposition
-//   before you read either word. Government and opposition, essentially.
+//   Masthead, plate, hero, copy. Four bands, in that order, each doing one
+//   job. The club sits on flat black at the top where nothing competes with
+//   it. The picture is a plate below that, split down the middle: two
+//   paintings, a gold seam between them, left the individual and right the
+//   group. The seam stops where the picture ramps into black, and the two
+//   contested words take the full width of the poster below it, stacked, with
+//   the divider rotated flat and the vs breaking it. So the split is vertical
+//   in the picture and horizontal in the words: the same line, turned.
 //
-//   Each column owns its half completely: its own painting, its own scrim,
-//   its own word set at the same size as the other so neither side wins on
-//   the page. The lockup sits on the seam at the top, because the club is
-//   the thing standing between the two.
+//   Type does three jobs and no more, which is the only reason a poster this
+//   dense holds together. Playfair is the club's voice: the lockup, the
+//   one-liner, the vs. Oswald is what the night is: the two words, and the
+//   three facts under them. Inter appears twice, both small gold caps, both
+//   pure utility: the edition number and the call to action.
 //
-//   Art region runs full bleed to 960, then each column's scrim ramps to
-//   near-black so the picture dissolves into the copy plate rather than
-//   stopping at an edge. Everything below 960 is type on black: the
-//   one-liner that names the question, the three lines that say how the
-//   night works, the call to action.
-//
-// Gold means the club's own voice here: the seam, the vs, the kicker, the
-// call to action. Ivory is the two contested words. Nothing else is gold, so
-// gold never means "one of the sides".
+//   Gold is the club talking. The seam, the vs, the kicker, the CTA. Ivory is
+//   the two contested words, weighted identically, because neither side is
+//   allowed to win on the page.
 
-const ART_H = 940; // where the paintings give way to the copy plate
+const MASTHEAD = 265; // black band: the lockup gets a dead quiet ground
+const ART_BOTTOM = 1000; // where the plate gives way to the copy
 const SEAM = 540; // the split, dead centre
+const SEAM_END = 640; // the seam stops before the hero: it belongs to the picture
+const HERO_TOP = 690;
+const HERO_SIZE = 126;
 const FRAME = 47; // core's engraved border, inner line
 
-/** One side of the argument: a painting, a qualifier, and the word itself. */
+/** One side of the argument: a painting and the word it carries. */
 export interface Side {
-  /** small gold qualifier above the word: PERSONAL, SOCIAL */
-  label: string;
-  /** the contested noun, set large */
+  /** the contested noun, set large under the plate */
   word: string;
-  /** tuned per side so the two words come out the same width on the page.
-   *  Equal size would hand the longer word more of the poster, and neither
-   *  side is allowed to win before the debate. */
-  size: number;
   art: { src: string; position?: string; className?: string };
 }
 
 export interface PosterCopy {
   kicker: string;
-  /** exactly two, left then right */
+  /** exactly two, left then right, in the order they are argued */
   sides: [Side, Side];
   oneLiner: ReactNode;
-  /** how the night works, one sentence per line */
+  /** how the night works, one line each */
   lines: string[];
   cta: string;
 }
@@ -56,7 +53,7 @@ export interface PosterCopy {
 const SHADOW =
   "0 1px 2px rgba(0,0,0,0.9), 0 2px 16px rgba(0,0,0,0.78), 0 6px 46px rgba(0,0,0,0.6)";
 
-/** One column of the diptych: a painting, clipped, with its word over it. */
+/** Half the plate: a painting, clipped to its column. */
 function Column({ side, edge }: { side: Side; edge: "left" | "right" }) {
   return (
     <div
@@ -65,7 +62,7 @@ function Column({ side, edge }: { side: Side; edge: "left" | "right" }) {
         top: 0,
         left: edge === "left" ? 0 : SEAM,
         width: SEAM,
-        height: ART_H,
+        height: ART_BOTTOM - MASTHEAD,
         overflow: "hidden",
       }}
     >
@@ -76,117 +73,153 @@ function Column({ side, edge }: { side: Side; edge: "left" | "right" }) {
       />
       <ArtTone />
       <div className="pa-scrim" />
+    </div>
+  );
+}
 
-      <div
+/** The flat divider between the two words: the seam, rotated. */
+function VsRule() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: HERO_TOP + Math.round(HERO_SIZE * 1.02),
+        left: 0,
+        right: 0,
+        height: 44,
+        zIndex: 4,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 24,
+      }}
+    >
+      <span
         style={{
-          position: "absolute",
-          inset: "auto 0 0 0",
-          zIndex: 2,
-          paddingBottom: 66,
-          paddingLeft: 30,
-          paddingRight: 30,
-          textAlign: "center",
+          width: 330,
+          height: 1,
+          background:
+            "linear-gradient(90deg, transparent, var(--cc-line-strong) 88%)",
+        }}
+      />
+      <span
+        style={{
+          fontFamily: "var(--cc-font-display)",
+          fontStyle: "italic",
+          fontSize: 30,
+          color: "var(--cc-gold)",
+          textShadow: SHADOW,
         }}
       >
-        <div
-          className="kicker"
-          style={{ fontSize: 18, letterSpacing: "0.36em", textShadow: SHADOW }}
-        >
-          {side.label}
-        </div>
-        <div
-          style={{
-            marginTop: 14,
-            fontFamily: "var(--cc-font-condensed)",
-            fontWeight: 700,
-            fontSize: side.size,
-            lineHeight: 1,
-            letterSpacing: "0.005em",
-            textTransform: "uppercase",
-            color: "var(--cc-ivory)",
-            textShadow: SHADOW,
-          }}
-        >
-          {side.word}
-        </div>
-      </div>
+        vs
+      </span>
+      <span
+        style={{
+          width: 330,
+          height: 1,
+          background:
+            "linear-gradient(90deg, var(--cc-line-strong) 12%, transparent)",
+        }}
+      />
+    </div>
+  );
+}
+
+function Word({ children, top }: { children: ReactNode; top: number }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top,
+        left: 0,
+        right: 0,
+        zIndex: 4,
+        textAlign: "center",
+        fontFamily: "var(--cc-font-condensed)",
+        fontWeight: 700,
+        fontSize: HERO_SIZE,
+        lineHeight: 1.02,
+        letterSpacing: "0.004em",
+        textTransform: "uppercase",
+        color: "var(--cc-ivory)",
+        textShadow: SHADOW,
+      }}
+    >
+      {children}
     </div>
   );
 }
 
 export function Poster({ copy }: { copy: PosterCopy }) {
   const [left, right] = copy.sides;
+  const lineH = Math.round(HERO_SIZE * 1.02);
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      <Column side={left} edge="left" />
-      <Column side={right} edge="right" />
-
-      {/* the seam, and the vs breaking it */}
+      {/* the masthead, on flat black */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: SEAM,
-          width: 1,
-          height: ART_H,
-          zIndex: 3,
-          background:
-            "linear-gradient(180deg, rgba(200,162,74,0.06) 0%, rgba(200,162,74,0.5) 22%, rgba(200,162,74,0.5) 78%, rgba(200,162,74,0) 100%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 815,
-          left: SEAM - 29,
-          width: 58,
-          height: 42,
-          zIndex: 4,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "var(--cc-black)",
-          border: "1px solid var(--cc-line-strong)",
-          fontFamily: "var(--cc-font-display)",
-          fontStyle: "italic",
-          fontSize: 27,
-          color: "var(--cc-gold)",
-        }}
-      >
-        vs
-      </div>
-
-      {/* the club, standing on the seam */}
-      <div
-        style={{
-          position: "absolute",
-          top: 58,
+          top: 46,
           left: 0,
           right: 0,
           zIndex: 5,
           textAlign: "center",
         }}
       >
-        <Lockup width={260} align="center" />
+        <Lockup width={320} align="center" />
         <div
           className="kicker"
-          style={{
-            marginTop: 30,
-            fontSize: 20,
-            letterSpacing: "0.4em",
-            textShadow: SHADOW,
-          }}
+          style={{ marginTop: 27, fontSize: 22, letterSpacing: "0.42em" }}
         >
           {copy.kicker}
         </div>
       </div>
 
+      {/* the plate */}
+      <div
+        style={{
+          position: "absolute",
+          top: MASTHEAD,
+          left: 0,
+          right: 0,
+          height: ART_BOTTOM - MASTHEAD,
+          overflow: "hidden",
+        }}
+      >
+        <Column side={left} edge="left" />
+        <Column side={right} edge="right" />
+        {/* The seam. A bare hairline disappears into a lit painting, so it
+            runs in its own dark gutter: the two pictures are cut apart, and
+            the gold line sits in the cut. */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: SEAM - 2,
+            width: 4,
+            height: SEAM_END - MASTHEAD,
+            zIndex: 3,
+            background:
+              "linear-gradient(90deg, rgba(11,9,7,0.92) 0 1.5px, rgba(200,162,74,0.75) 1.5px 2.5px, rgba(11,9,7,0.92) 2.5px 4px)",
+            WebkitMaskImage:
+              "linear-gradient(180deg, #000 0%, #000 68%, transparent 100%)",
+            maskImage:
+              "linear-gradient(180deg, #000 0%, #000 68%, transparent 100%)",
+          }}
+        />
+      </div>
+
+      {/* the hero, taking the full width the columns could not give it */}
+      <Word top={HERO_TOP}>{left.word}</Word>
+      <VsRule />
+      <Word top={HERO_TOP + lineH + 44}>{right.word}</Word>
+
       {/* the copy plate */}
       <div
         style={{
           position: "absolute",
-          top: ART_H,
+          top: ART_BOTTOM,
           left: 0,
           right: 0,
           bottom: FRAME,
@@ -198,25 +231,30 @@ export function Poster({ copy }: { copy: PosterCopy }) {
         }}
       >
         <div
-          className="one-liner"
           style={{
-            fontSize: 31,
-            lineHeight: 1.26,
-            maxWidth: 660,
+            fontFamily: "var(--cc-font-display)",
+            fontSize: 34,
+            lineHeight: 1.3,
+            color: "var(--cc-parchment)",
             textAlign: "center",
           }}
         >
           {copy.oneLiner}
         </div>
 
-        <hr className="rule" style={{ width: 150, margin: "30px 0 26px" }} />
-
-        <div style={{ textAlign: "center" }}>
+        <div style={{ marginTop: 32, textAlign: "center" }}>
           {copy.lines.map((line) => (
             <div
               key={line}
-              className="value"
-              style={{ fontSize: 26, lineHeight: 1.58, color: "var(--cc-parchment)" }}
+              style={{
+                fontFamily: "var(--cc-font-condensed)",
+                fontWeight: 400,
+                fontSize: 21,
+                lineHeight: 1.72,
+                letterSpacing: "0.11em",
+                textTransform: "uppercase",
+                color: "var(--cc-parchment)",
+              }}
             >
               {line}
             </div>
@@ -233,8 +271,8 @@ export function Poster({ copy }: { copy: PosterCopy }) {
 
       {/* The engraved border again, on top. Core draws it under the art, which
           is right for a poster whose picture is full bleed: it disappears.
-          This one runs edge to edge over both paintings so the frame reads as
-          a frame rather than as three sides of a rectangle around the copy. */}
+          This one runs edge to edge over the plate so the frame reads as a
+          frame rather than as three sides of a rectangle around the copy. */}
       <div className="pa-frame" />
     </div>
   );

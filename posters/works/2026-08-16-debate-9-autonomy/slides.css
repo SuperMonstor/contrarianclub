@@ -2,9 +2,10 @@
 
    Both columns share one scrim, which is the point: the two halves have to be
    weighted identically or the poster takes a side before the debate starts.
-   Soft over the lockup at the top, an open window through the middle where
-   each painting does its work, then a ramp to near-black under the word that
-   carries on into the copy plate so the art dissolves rather than stops. */
+   The plate sits under a solid black masthead, so the scrim does not have to
+   protect the lockup. It only has to open through the middle where each
+   painting does its work, then ramp to near-black under the hero so the
+   picture dissolves into the words rather than stopping at an edge. */
 
 .pa-scrim {
   position: absolute;
@@ -13,21 +14,20 @@
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.72) 0%,
-      rgba(11, 9, 7, 0.3) 16%,
-      rgba(11, 9, 7, 0.05) 27%,
-      rgba(11, 9, 7, 0.05) 58%,
-      rgba(11, 9, 7, 0.5) 70%,
-      rgba(11, 9, 7, 0.88) 82%,
-      rgba(11, 9, 7, 0.99) 93%,
-      var(--cc-black) 100%
+      rgba(11, 9, 7, 0.34) 0%,
+      rgba(11, 9, 7, 0.06) 9%,
+      rgba(11, 9, 7, 0.06) 36%,
+      rgba(11, 9, 7, 0.5) 46%,
+      rgba(11, 9, 7, 0.92) 55%,
+      rgba(11, 9, 7, 0.99) 63%,
+      var(--cc-black) 72%
     ),
-    radial-gradient(130% 70% at 50% 40%, transparent 46%, rgba(0, 0, 0, 0.5) 100%);
+    radial-gradient(130% 68% at 50% 34%, transparent 44%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 /* The engraved border, redrawn above the art. Matches core's .poster-border
-   exactly, including the inner hairline, but sits over the paintings so all
-   four sides read the same. */
+   exactly, including the inner hairline, but sits over the plate so all four
+   sides read the same. */
 .pa-frame {
   position: absolute;
   inset: 40px;
@@ -44,13 +44,18 @@
 
 /* Ravi Varma's Shakuntala is already warm and mid-toned, so the kit's standard
    treatment is right. It only needs a touch more contrast to hold her against
-   the pale hills behind her. */
+   the pale hills behind her. The element runs taller than its column and rides
+   up, so the crop tightens on her without dropping her face into the lower
+   half of the plate. */
 .pa-art-autonomy {
   position: absolute;
-  inset: 0;
+  top: -85px;
+  left: 0;
+  right: 0;
+  bottom: auto;
   z-index: 0;
   width: 100%;
-  height: 100%;
+  height: 140%;
   object-fit: cover;
   filter: saturate(0.8) contrast(1.1) brightness(0.88) sepia(0.12);
 }
@@ -58,8 +63,8 @@
 /* Degas's Bellelli interior is a cool grey room, which goes dead under the
    standard darkening, and it is a wide painting being read as a tall slice.
    The element runs taller than its column so the crop lands on the mother and
-   the daughter rather than on the carpet, and the filter warms harder than the
-   kit default to bring the grey into the gold palette. */
+   her daughters rather than on the carpet, and the filter warms harder than
+   the kit default to bring the grey into the gold palette. */
 .pa-art-obligation {
   position: absolute;
   top: 0;
@@ -68,7 +73,7 @@
   bottom: auto;
   z-index: 0;
   width: 100%;
-  height: 168%;
+  height: 127%;
   object-fit: cover;
   filter: saturate(0.72) contrast(1.12) brightness(0.92) sepia(0.2);
 }
