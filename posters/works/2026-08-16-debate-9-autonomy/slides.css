@@ -126,8 +126,13 @@
   color: transparent;
   text-shadow: none;
   background: var(--cc-ivory);
-  padding: 0.05em 0.2em;
-  margin: 0 0.02em -0.05em;
+  /* line-height must be reset. An inline-block inherits the motion's 1.56, so
+     each bar became a full line box tall, half again the height of the word it
+     covers. Where redactions fall on two consecutive lines the boxes then
+     collide and read as one mass rather than four strokes. */
+  line-height: 1;
+  padding: 0.06em 0.2em;
+  margin: 0 0.02em;
   /* uneven ends, so the stroke starts and stops like a hand did it. This does
      the work on its own if the filter below is ever unavailable. */
   border-radius: 5px 11px 6px 13px / 10px 5px 12px 6px;
