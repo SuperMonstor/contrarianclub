@@ -75,7 +75,7 @@ For the poster post.
 
 Not for publication. These are what gets revealed in the room.
 
-1. This House Believes that Indian society places too much emphasis on
+1. This Club Believes that Indian society places too much emphasis on
    familial obligation at the expense of individual autonomy.
 2. Respecting personal autonomy requires society to tolerate self
    destructive choices.

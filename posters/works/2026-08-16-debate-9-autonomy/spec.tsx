@@ -66,7 +66,7 @@ const work: WorkSpec = {
           kicker="Motion One"
           text={
             <>
-              This House Believes that <R>Indian</R> <R>society</R> places too much
+              This Club Believes that <R>Indian</R> <R>society</R> places too much
               emphasis on <R>familial</R> <R>obligation</R> at the expense of individual
               autonomy.
             </>
