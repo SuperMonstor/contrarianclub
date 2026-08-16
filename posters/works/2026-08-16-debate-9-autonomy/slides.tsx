@@ -440,15 +440,20 @@ export function Motion({
   );
 }
 
-/** One question, set large on an open face. Nothing else on the slide. */
+/** One turn of the argument, in two beats: a thing everybody would agree to,
+ *  then the part nobody agrees on. Set on an open detail of a face, with
+ *  nothing else on the slide. The setup is quiet and the turn is the size of a
+ *  headline, because the second sentence is the whole reason for the first. */
 export function Question({
   src,
   focus,
-  text,
+  setup,
+  turn,
 }: {
   src: string;
   focus: Focus;
-  text: ReactNode;
+  setup: ReactNode;
+  turn: ReactNode;
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -461,144 +466,155 @@ export function Question({
       <div
         style={{
           position: "absolute",
-          bottom: 150,
-          left: 100,
-          right: 100,
+          bottom: 148,
+          left: 96,
+          right: 96,
           zIndex: 5,
           textAlign: "center",
         }}
       >
-        <hr className="rule" style={{ width: 150, margin: "0 auto 44px" }} />
+        <hr className="rule" style={{ width: 150, margin: "0 auto 40px" }} />
         <div
           style={{
             fontFamily: "var(--cc-font-display)",
+            fontSize: 36,
+            lineHeight: 1.32,
+            color: "var(--cc-parchment)",
+            textShadow: SHADOW,
+          }}
+        >
+          {setup}
+        </div>
+        <div
+          style={{
+            marginTop: 22,
+            fontFamily: "var(--cc-font-display)",
             fontSize: 62,
-            lineHeight: 1.24,
+            lineHeight: 1.2,
             color: "var(--cc-ivory)",
             textShadow: SHADOW,
           }}
         >
-          {text}
+          {turn}
         </div>
       </div>
     </div>
   );
 }
 
-/** The close. The poster's twin, turned into the call to action, and the one
- *  slide that says out loud that the motions are being held back. */
+/** The close, and the one slide that leaves the room.
+
+ *  Everything before it is a dark painting. This is the ivory the redactions
+ *  were painted in, turned into the whole page: the clean sheet after the
+ *  marker, and the club speaking in its own voice rather than through Degas.
+ *  Left aligned as a printed notice, with the lockup signing off at the foot
+ *  instead of heading it, so it cannot be mistaken for the poster again. */
 export function Close({
-  art,
+  kicker,
   hero,
   oneLiner,
   lines,
   cta,
 }: {
-  art: { src: string; position?: string; className?: string };
-  /** two lines, set at one size */
-  hero: [string, string];
+  kicker: string;
+  /** three lines, set as a stack */
+  hero: string[];
   oneLiner: ReactNode;
   lines: string[];
   cta: string;
 }) {
   return (
-    <div style={{ position: "absolute", inset: 0 }}>
-      <div className="pa-field">
-        <Art
-          src={art.src}
-          position={art.position}
-          className={art.className ?? "art"}
-        />
-        <ArtTone />
-        <div className="pa-scrim" />
-      </div>
+    <div className="pa-close">
+      <div className="pa-close-grain" />
 
-      <div
-        style={{
-          position: "absolute",
-          top: 64,
-          left: 0,
-          right: 0,
-          zIndex: 5,
-          textAlign: "center",
-        }}
-      >
-        <Lockup width={280} align="center" />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          top: 742,
-          left: 0,
-          right: 0,
-          zIndex: 5,
-          textAlign: "center",
-          fontFamily: "var(--cc-font-condensed)",
-          fontWeight: 700,
-          fontSize: 88,
-          lineHeight: 1.06,
-          letterSpacing: "0.004em",
-          textTransform: "uppercase",
-          color: "var(--cc-ivory)",
-          textShadow: SHADOW,
-        }}
-      >
-        {hero[0]}
-        <br />
-        {hero[1]}
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          top: 1000,
-          left: 0,
-          right: 0,
-          zIndex: 5,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ position: "absolute", inset: "104px 96px", zIndex: 2 }}>
         <div
           style={{
+            fontFamily: "var(--cc-font-ui)",
+            fontWeight: 600,
+            fontSize: 20,
+            letterSpacing: "0.42em",
+            textTransform: "uppercase",
+            color: "var(--cc-gold-deep)",
+          }}
+        >
+          {kicker}
+        </div>
+        <hr className="pa-close-rule" style={{ margin: "26px 0 0" }} />
+
+        <div
+          style={{
+            marginTop: 62,
+            fontFamily: "var(--cc-font-condensed)",
+            fontWeight: 700,
+            fontSize: 112,
+            lineHeight: 1.02,
+            letterSpacing: "0.004em",
+            textTransform: "uppercase",
+            color: "var(--cc-black)",
+          }}
+        >
+          {hero.map((line) => (
+            <div key={line}>{line}</div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: 46,
+            maxWidth: 760,
             fontFamily: "var(--cc-font-display)",
-            fontSize: 32,
-            lineHeight: 1.32,
-            color: "var(--cc-parchment)",
-            textAlign: "center",
-            maxWidth: 800,
+            fontSize: 33,
+            lineHeight: 1.36,
+            color: "rgba(11, 9, 7, 0.74)",
           }}
         >
           {oneLiner}
         </div>
 
-        <div style={{ marginTop: 28, textAlign: "center" }}>
-          {lines.map((line) => (
-            <div
-              key={line}
-              style={{
-                fontFamily: "var(--cc-font-condensed)",
-                fontWeight: 400,
-                fontSize: 21,
-                lineHeight: 1.72,
-                letterSpacing: "0.11em",
-                textTransform: "uppercase",
-                color: "var(--cc-parchment)",
-              }}
-            >
-              {line}
-            </div>
-          ))}
-        </div>
+        <hr className="pa-close-rule" style={{ margin: "52px 0 34px" }} />
+
+        {lines.map((line) => (
+          <div
+            key={line}
+            style={{
+              fontFamily: "var(--cc-font-condensed)",
+              fontWeight: 400,
+              fontSize: 21,
+              lineHeight: 1.76,
+              letterSpacing: "0.11em",
+              textTransform: "uppercase",
+              color: "rgba(11, 9, 7, 0.8)",
+            }}
+          >
+            {line}
+          </div>
+        ))}
 
         <div
-          className="kicker"
-          style={{ marginTop: 26, fontSize: 20, letterSpacing: "0.34em" }}
+          style={{
+            marginTop: 34,
+            fontFamily: "var(--cc-font-ui)",
+            fontWeight: 600,
+            fontSize: 21,
+            letterSpacing: "0.34em",
+            textTransform: "uppercase",
+            color: "var(--cc-gold-deep)",
+          }}
         >
           {cta}
         </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 96,
+          left: 96,
+          zIndex: 2,
+        }}
+      >
+        <Lockup width={250} variant="light" />
       </div>
     </div>
   );

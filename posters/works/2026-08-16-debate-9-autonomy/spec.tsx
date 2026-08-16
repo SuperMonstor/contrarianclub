@@ -76,7 +76,8 @@ const work: WorkSpec = {
       ),
     },
 
-    // 3. What that motion is really asking, on the mother's face.
+    // 3. The conflict inside that motion, in two beats: the part nobody would
+    //    argue with, then the part everybody does. On the mother's face.
     {
       label: "Question one",
       hasImage: true,
@@ -84,7 +85,8 @@ const work: WorkSpec = {
         <Question
           src={obligation}
           focus={{ x: 0.27, y: 0.3, scale: 3.2 }}
-          text={<>How much of your life belongs to the people who raised you?</>}
+          setup="Everyone agrees you owe your family something."
+          turn="Nobody agrees how much."
         />
       ),
     },
@@ -111,7 +113,8 @@ const work: WorkSpec = {
       ),
     },
 
-    // 5. The second question. Short enough to land as a dare.
+    // 5. The same shape for the second motion, and the sharper of the two,
+    //    because it turns the reader into the one doing the intervening.
     {
       label: "Question two",
       hasImage: true,
@@ -119,25 +122,23 @@ const work: WorkSpec = {
         <Question
           src={obligation}
           focus={{ x: 0.8, y: 0.46, scale: 3.4 }}
-          text={<>Is it your life to ruin?</>}
+          setup="You would stop a friend from wrecking their life."
+          turn="They never asked you to."
         />
       ),
     },
 
-    // 6. The close, in the room the deck opened in, and the one slide that
-    //    says the withholding out loud instead of leaving it as an omission.
+    // 6. The close, and the only slide that leaves the room: the ivory the
+    //    redactions were painted in, taken over the whole page. It says the
+    //    withholding out loud instead of leaving it as an omission.
     {
       label: "Close",
       hasImage: true,
       render: () => (
         <Close
-          art={{
-            src: obligation,
-            position: "center center",
-            className: "pa-art-obligation",
-          }}
-          hero={["Motions revealed", "in the room"]}
-          oneLiner="Nobody sees them beforehand, so nobody arrives with a prepared case."
+          kicker="Debate Club #9"
+          hero={["Motions", "revealed", "in the room"]}
+          oneLiner="Nobody sees them beforehand, so nobody turns up with a prepared case. You will find out when everyone else does."
           lines={LINES}
           cta={CTA}
         />

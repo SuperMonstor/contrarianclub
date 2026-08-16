@@ -139,6 +139,41 @@
   filter: url(#pa-ink);
 }
 
+/* --- The close ---------------------------------------------------------- */
+
+/* The one slide that leaves the room. It is the ivory the redactions were
+   painted in, taken over the whole page: the clean sheet after the marker.
+   Core's grain and vignette sit under the work's own layers and so never reach
+   a slide like this, which is why the paper is built here instead. */
+.pa-close {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 78% at 50% 12%, rgba(255, 252, 244, 0.85), transparent 62%),
+    var(--cc-ivory);
+}
+
+/* aged paper: the same fractal noise core uses on the dark canvas, plus a warm
+   edge burn so a flat ivory rectangle does not read as a blank export */
+.pa-close-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(118% 88% at 50% 40%, transparent 52%, rgba(120, 92, 44, 0.2) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-blend-mode: normal, multiply;
+  opacity: 0.5;
+}
+
+.pa-close-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, rgba(138, 108, 44, 0.55), rgba(138, 108, 44, 0.08) 88%, transparent);
+}
+
 /* Degas's Bellelli interior is a cool grey room, which goes dead under the
    kit's standard darkening, so this warms harder and lifts rather than
    knocking back. The element is pushed down the canvas because the mother's
