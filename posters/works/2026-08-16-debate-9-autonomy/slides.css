@@ -37,6 +37,91 @@
     radial-gradient(115% 58% at 50% 34%, transparent 40%, rgba(0, 0, 0, 0.66) 100%);
 }
 
+/* --- The carousel ------------------------------------------------------- */
+
+/* A close crop of the same painting. Positioned by the Detail component, which
+   works out where to hang it; this only carries the treatment, matched to the
+   full view so the deck reads as one room under one light. */
+.pa-detail {
+  position: absolute;
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.7) contrast(1.15) brightness(0.84) sepia(0.28);
+}
+
+/* Motion slides are documents. The painting stays a texture behind the text
+   rather than a picture: knocked well back so a sentence with holes in it can
+   actually be read, but never so far back that the room disappears. */
+.pa-scrim-doc {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.86) 0%,
+      rgba(11, 9, 7, 0.68) 20%,
+      rgba(11, 9, 7, 0.64) 44%,
+      rgba(11, 9, 7, 0.72) 72%,
+      rgba(11, 9, 7, 0.88) 100%
+    ),
+    radial-gradient(108% 54% at 50% 48%, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+/* The father's corner of the painting is already the darkest thing in it, so
+   the same scrim that knocks the mother's side back turns his side to mud.
+   Same shape, less of it. */
+.pa-scrim-doc.pa-lift {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.78) 0%,
+      rgba(11, 9, 7, 0.5) 20%,
+      rgba(11, 9, 7, 0.44) 44%,
+      rgba(11, 9, 7, 0.56) 72%,
+      rgba(11, 9, 7, 0.8) 100%
+    ),
+    radial-gradient(108% 54% at 50% 48%, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* Question slides are the opposite: the face stays open in the top two thirds
+   and the bottom third goes to black for one line of type. */
+.pa-scrim-question {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.16) 12%,
+      rgba(11, 9, 7, 0.08) 34%,
+      rgba(11, 9, 7, 0.4) 50%,
+      rgba(11, 9, 7, 0.9) 60%,
+      var(--cc-black) 70%
+    ),
+    radial-gradient(110% 55% at 50% 30%, transparent 42%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+/* A word behind a bar. The hidden word still sets the width, so the bar is
+   exactly as long as what it hides and the letters can be counted.
+
+   text-shadow must be killed explicitly. The motion inherits the deck's
+   layered shadow, and a shadow still paints under transparent text: the first
+   cut of this slide had every redacted word plainly legible as its own
+   shadow. */
+.pa-redacted {
+  color: transparent;
+  text-shadow: none;
+  background: var(--cc-obsidian);
+  padding: 0.04em 0.18em;
+  margin: 0 0.03em;
+  border-radius: 1px;
+  box-shadow:
+    0 2px 0 rgba(200, 162, 74, 0.45),
+    0 0 0 1px rgba(200, 162, 74, 0.12);
+}
+
 /* Degas's Bellelli interior is a cool grey room, which goes dead under the
    kit's standard darkening, so this warms harder and lifts rather than
    knocking back. The element is pushed down the canvas because the mother's
