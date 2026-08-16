@@ -113,15 +113,19 @@
 
    It has to look struck out by hand, not typeset. A clean rectangle with a
    gold rule under it reads as a design element, and the whole point is that
-   somebody took a marker to this. So: no border, no rule, a flat cool black
-   against the warm painting, and a turbulence filter chewing the edges so no
-   two bars are the same shape. The bar overshoots the word slightly, the way
-   a marker stroke does. */
+   somebody took a marker to this. So: no border, no rule, and a turbulence
+   filter chewing the edges so no two bars are the same shape. The bar
+   overshoots the word slightly, the way a marker stroke does.
+
+   Struck out in ivory rather than black. On a near-black painting a black bar
+   is a hole you have to hunt for; ivory is the loudest thing on the slide,
+   which is right, because the missing words are the thing being sold. It also
+   reads as paint over the sentence rather than absence of it. */
 .pa-redacted {
   display: inline-block;
   color: transparent;
   text-shadow: none;
-  background: #070502;
+  background: var(--cc-ivory);
   padding: 0.05em 0.2em;
   margin: 0 0.02em -0.05em;
   /* uneven ends, so the stroke starts and stops like a hand did it. This does
