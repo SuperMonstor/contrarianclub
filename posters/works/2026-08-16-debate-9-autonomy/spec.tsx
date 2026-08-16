@@ -53,7 +53,7 @@ const work: WorkSpec = {
       ),
     },
 
-    // 2. The first motion, four words short. What survives the bars still says
+    // 2. The first motion, struck through. What survives the bars still says
     //    something at the expense of individual autonomy, so the reader knows
     //    the shape of the argument and not the target.
     {
@@ -71,7 +71,6 @@ const work: WorkSpec = {
               autonomy.
             </>
           }
-          withheld="Four words withheld"
         />
       ),
     },
@@ -91,8 +90,8 @@ const work: WorkSpec = {
       ),
     },
 
-    // 4. The second motion, also four words short, on the father who has
-    //    turned away from the room.
+    // 4. The second motion, struck the same way, on the father who has turned
+    //    away from the room.
     {
       label: "Motion two",
       hasImage: true,
@@ -108,7 +107,6 @@ const work: WorkSpec = {
               <R>destructive</R> <R>choices</R>.
             </>
           }
-          withheld="Four words withheld"
         />
       ),
     },

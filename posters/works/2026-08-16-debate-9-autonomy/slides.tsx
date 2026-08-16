@@ -350,15 +350,12 @@ export function Motion({
   focus,
   kicker,
   text,
-  withheld,
   lift = false,
 }: {
   src: string;
   focus: Focus;
   kicker: string;
   text: ReactNode;
-  /** how many words are behind the bars, spelled out */
-  withheld: string;
   /** ease the scrim where the painting is already dark */
   lift?: boolean;
 }) {
@@ -394,7 +391,7 @@ export function Motion({
         style={{
           position: "absolute",
           top: 330,
-          bottom: 260,
+          bottom: 215,
           left: 95,
           right: 95,
           zIndex: 5,
@@ -419,23 +416,6 @@ export function Motion({
         </div>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: 130,
-          left: 0,
-          right: 0,
-          zIndex: 5,
-          textAlign: "center",
-        }}
-      >
-        <div
-          className="kicker"
-          style={{ fontSize: 19, letterSpacing: "0.34em" }}
-        >
-          {withheld}
-        </div>
-      </div>
     </div>
   );
 }
