@@ -290,10 +290,58 @@ function Detail({ src, focus }: { src: string; focus: Focus }) {
   );
 }
 
-/** A blacked out word. The bar is exactly as wide as the word it hides, so a
- *  reader can count the letters, which is most of the fun. */
+/** Roughens the edge of anything it is applied to. Turbulence displaced a few
+ *  pixels either way, which is what turns a rectangle into a marker stroke.
+ *  Rendered once per slide that needs it; the id is local to the slide. */
+function InkFilter() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="0"
+      height="0"
+      style={{ position: "absolute" }}
+      aria-hidden="true"
+    >
+      <defs>
+        <filter
+          id="pa-ink"
+          x="-14%"
+          y="-55%"
+          width="128%"
+          height="210%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.07 0.16"
+            numOctaves={4}
+            seed={11}
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale={9}
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+/** A word struck out in ink. The hidden word still sets the width, so the bar
+ *  is exactly as long as what it hides and the letters can be counted, which
+ *  is most of the fun. Each bar is tilted a hair off true, deterministically
+ *  by word length, because nobody rules these by hand and gets them straight. */
 export function R({ children }: { children: string }) {
-  return <span className="pa-redacted">{children}</span>;
+  const tilt = ((children.length % 3) - 1) * 0.45;
+  return (
+    <span className="pa-redacted" style={{ transform: `rotate(${tilt}deg)` }}>
+      {children}
+    </span>
+  );
 }
 
 /** One motion, as a document with its load bearing words removed. */
@@ -316,6 +364,7 @@ export function Motion({
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
+      <InkFilter />
       <div className="pa-field">
         <Detail src={src} focus={focus} />
         <ArtTone />
@@ -359,7 +408,10 @@ export function Motion({
             fontSize: 41,
             lineHeight: 1.56,
             color: "var(--cc-ivory)",
-            textAlign: "center",
+            /* left aligned, unlike every other slide. Centring a sentence with
+               four black bars in it opens rivers around them, and a document
+               is not a centred thing anyway. */
+            textAlign: "left",
             textShadow: SHADOW,
           }}
         >

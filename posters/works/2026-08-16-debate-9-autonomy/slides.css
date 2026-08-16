@@ -109,17 +109,25 @@
    text-shadow must be killed explicitly. The motion inherits the deck's
    layered shadow, and a shadow still paints under transparent text: the first
    cut of this slide had every redacted word plainly legible as its own
-   shadow. */
+   shadow.
+
+   It has to look struck out by hand, not typeset. A clean rectangle with a
+   gold rule under it reads as a design element, and the whole point is that
+   somebody took a marker to this. So: no border, no rule, a flat cool black
+   against the warm painting, and a turbulence filter chewing the edges so no
+   two bars are the same shape. The bar overshoots the word slightly, the way
+   a marker stroke does. */
 .pa-redacted {
+  display: inline-block;
   color: transparent;
   text-shadow: none;
-  background: var(--cc-obsidian);
-  padding: 0.04em 0.18em;
-  margin: 0 0.03em;
-  border-radius: 1px;
-  box-shadow:
-    0 2px 0 rgba(200, 162, 74, 0.45),
-    0 0 0 1px rgba(200, 162, 74, 0.12);
+  background: #070502;
+  padding: 0.05em 0.2em;
+  margin: 0 0.02em -0.05em;
+  /* uneven ends, so the stroke starts and stops like a hand did it. This does
+     the work on its own if the filter below is ever unavailable. */
+  border-radius: 5px 11px 6px 13px / 10px 5px 12px 6px;
+  filter: url(#pa-ink);
 }
 
 /* Degas's Bellelli interior is a cool grey room, which goes dead under the
