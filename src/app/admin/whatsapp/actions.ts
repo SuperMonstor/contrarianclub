@@ -57,3 +57,32 @@ export async function requeueUnknownWhatsAppDelivery(formData: FormData) {
 
   revalidatePath(`/admin/whatsapp/campaigns/${data.campaign_id}`);
 }
+
+export async function setWhatsAppSubscriberActive(formData: FormData) {
+  await requireAdminUser();
+  const subscriberId = String(formData.get("subscriberId") ?? "");
+  const activeValue = String(formData.get("isActive") ?? "");
+  if (!isUuid(subscriberId) || !["true", "false"].includes(activeValue)) {
+    throw new Error("Invalid subscriber update.");
+  }
+  const isActive = activeValue === "true";
+  if (isActive && formData.get("confirmOptIn") !== "yes") {
+    throw new Error("Confirm the subscriber's new opt-in before reactivating.");
+  }
+
+  const now = new Date().toISOString();
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("whatsapp_subscribers")
+    .update({
+      is_active: isActive,
+      preference_at: now,
+      preference_source: "admin",
+      opted_out_at: isActive ? null : now,
+    })
+    .eq("id", subscriberId);
+  if (error) throw error;
+
+  revalidatePath("/admin/whatsapp");
+  revalidatePath("/admin/whatsapp/subscribers");
+}

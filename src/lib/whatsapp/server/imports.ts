@@ -204,7 +204,8 @@ export async function previewWhatsAppImport(
 ) {
   const prepared = await prepareImport(file, options, createServiceClient());
   if (!prepared.ready) return prepared;
-  const { normalized: _normalized, ...safePreview } = prepared;
+  const { normalized, ...safePreview } = prepared;
+  void normalized;
   return safePreview;
 }
 

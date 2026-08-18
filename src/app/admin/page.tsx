@@ -6,6 +6,7 @@ import {
   Monitor,
   Pencil,
   Radio,
+  MessageCircleMore,
   Star,
   StarOff,
 } from "lucide-react";
@@ -73,6 +74,13 @@ export default async function AdminEventsPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2.5">
+            <Link
+              href={adminPath("/whatsapp", hostname)}
+              className="club-btn px-4 py-3"
+            >
+              <MessageCircleMore size={18} />
+              WhatsApp marketing
+            </Link>
             <Link
               href={adminPath("/events/new", hostname)}
               className="club-btn club-btn-primary px-4 py-3"
