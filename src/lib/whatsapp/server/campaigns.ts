@@ -266,3 +266,79 @@ export async function sendCampaignBatch(
     retryAfterMs: hasMore && counts.retryable > 0 ? 1_000 : 0,
   };
 }
+
+type CampaignRecord = {
+  id: string;
+  template_name: string;
+  language_code: string;
+  parameters: CampaignParameters;
+  status: string;
+  recipient_count: number;
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+};
+
+type UnknownDelivery = {
+  id: string;
+  recipient_phone: string;
+  recipient_name: string | null;
+  attempt_count: number;
+  last_error_message: string | null;
+};
+
+export async function getCampaignDetail(campaignId: string) {
+  if (!isUuid(campaignId)) return null;
+  const supabase = createServiceClient();
+  const statuses = [
+    "queued",
+    "sending",
+    "sent",
+    "delivered",
+    "read",
+    "retryable_failed",
+    "unknown",
+    "failed",
+  ] as const;
+  const [campaignResult, ...countResults] = await Promise.all([
+    supabase
+      .from("whatsapp_campaigns")
+      .select(
+        "id, template_name, language_code, parameters, status, recipient_count, started_at, completed_at, created_at",
+      )
+      .eq("id", campaignId)
+      .maybeSingle<CampaignRecord>(),
+    ...statuses.map((status) =>
+      supabase
+        .from("whatsapp_deliveries")
+        .select("id", { count: "exact", head: true })
+        .eq("campaign_id", campaignId)
+        .eq("status", status),
+    ),
+  ]);
+  if (campaignResult.error) throw campaignResult.error;
+  for (const result of countResults) {
+    if (result.error) throw result.error;
+  }
+  if (!campaignResult.data) return null;
+
+  const { data: unknownDeliveries, error: unknownError } = await supabase
+    .from("whatsapp_deliveries")
+    .select(
+      "id, recipient_phone, recipient_name, attempt_count, last_error_message",
+    )
+    .eq("campaign_id", campaignId)
+    .eq("status", "unknown")
+    .order("updated_at", { ascending: false })
+    .limit(50)
+    .returns<UnknownDelivery[]>();
+  if (unknownError) throw unknownError;
+
+  return {
+    campaign: campaignResult.data,
+    counts: Object.fromEntries(
+      statuses.map((status, index) => [status, countResults[index]?.count ?? 0]),
+    ) as Record<(typeof statuses)[number], number>,
+    unknownDeliveries: unknownDeliveries ?? [],
+  };
+}
