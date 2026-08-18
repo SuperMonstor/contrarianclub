@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, FileUp, LayoutDashboard, Megaphone, Users } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { adminPath, currentHostname } from "@/lib/admin-routes";
+import { adminPath, currentHostname, PUBLIC_HOST } from "@/lib/admin-routes";
 
 const links = [
   { href: "/whatsapp", label: "Overview", icon: LayoutDashboard },
@@ -53,6 +53,14 @@ export async function MarketingHeader({
             {label}
           </Link>
         ))}
+        <Link
+          href={`https://${PUBLIC_HOST}/privacy`}
+          target="_blank"
+          rel="noreferrer"
+          className="club-btn ml-auto shrink-0 px-3.5 py-2 text-xs"
+        >
+          Privacy notice
+        </Link>
       </nav>
     </>
   );

@@ -20,6 +20,8 @@
    - `supabase/migrations/20260808000000_013_two_topics_and_speaker_electorate.sql`
    - `supabase/migrations/20260808010000_014_live_speaker_voting.sql`
    - `supabase/migrations/20260808020000_015_refresh_all_live_speaker_rounds.sql`
+   - `supabase/migrations/20260819000000_016_whatsapp_marketing_tables.sql`
+   - `supabase/migrations/20260819010000_017_whatsapp_marketing_functions.sql`
 4. Copy these values into `.env.local`:
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
@@ -65,3 +67,11 @@ Open `http://localhost:3000`, sign in at `/admin`, create an event, and use the 
 6. Deploy.
 
 Preview deployments can use the same Supabase project during Phase 1. Before a real event, freeze changes and use the production deployment only.
+
+## WhatsApp Marketing
+
+The WhatsApp subscriber list and campaign tools are separate from live events.
+Complete the Meta Business, dedicated number, template, webhook, and production
+token setup in [`docs/whatsapp-setup.md`](whatsapp-setup.md) before attempting a
+campaign. The application does not send any message during installation or
+deployment.

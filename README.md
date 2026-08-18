@@ -46,6 +46,8 @@ supabase/migrations/20260718000000_012_persistent_speaker_ballots.sql
 supabase/migrations/20260808000000_013_two_topics_and_speaker_electorate.sql
 supabase/migrations/20260808010000_014_live_speaker_voting.sql
 supabase/migrations/20260808020000_015_refresh_all_live_speaker_rounds.sql
+supabase/migrations/20260819000000_016_whatsapp_marketing_tables.sql
+supabase/migrations/20260819010000_017_whatsapp_marketing_functions.sql
 ```
 
 Then fill in `.env.local`:
@@ -61,6 +63,10 @@ PUBLIC_HOST=thecontrarian.club
 ADMIN_HOST=admin.thecontrarian.club
 ```
 
+The WhatsApp marketing variables are documented in
+[`docs/whatsapp-setup.md`](docs/whatsapp-setup.md). Keep all Meta credentials
+server-only.
+
 More setup notes are in `docs/setup.md`.
 
 Create admin users manually in Supabase Auth, then sign in at `/admin/login`.
@@ -73,8 +79,11 @@ admin until attendee/user auth is added.
 - `/admin` lists events for authenticated admins.
 - `/admin/events/new` creates an event.
 - `/admin/events/[code]` controls the poll.
+- `/admin/whatsapp` manages the independent WhatsApp subscriber list and campaigns.
+- `/admin/whatsapp/import` previews and imports `.xlsx` guest lists.
 - `/join/[code]` is the audience mobile view.
 - `/present/[code]` is the projector view.
+- `/api/whatsapp/webhook` receives signed Meta delivery and opt-out events.
 
 ## Commands
 
