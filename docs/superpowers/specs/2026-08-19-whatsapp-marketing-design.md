@@ -191,7 +191,7 @@ The pair `(campaign_id, subscriber_id)` is unique. A non-null
 
 ## Workbook import rules
 
-The first release accepts `.xlsx` files up to 5 MB. Formula execution, macros,
+The first release accepts `.xlsx` files up to 4 MB. Formula execution, macros,
 `.xls`, CSV, and password-protected workbooks are not supported.
 
 The importer reads the first non-empty worksheet and requires:
@@ -481,3 +481,5 @@ confirmation in the application.
   https://www.indiacode.nic.in/handle/123456789/22037
 - Digital Personal Data Protection Rules, 2025:
   https://www.meity.gov.in/documents/act-and-policies/digital-personal-data-protection-rules-2025-gDOxUjMtQWa
+- Vercel Functions limits:
+  https://vercel.com/docs/functions/limitations
