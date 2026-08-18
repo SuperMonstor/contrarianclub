@@ -71,6 +71,10 @@ export function isUuid(value: string): boolean {
   );
 }
 
+export function canRetryUnknownDelivery(attemptCount: number): boolean {
+  return Number.isInteger(attemptCount) && attemptCount >= 0 && attemptCount < 3;
+}
+
 function defaultCreateDependencies(): CreateDependencies {
   return {
     getConfig: getWhatsAppConfig,

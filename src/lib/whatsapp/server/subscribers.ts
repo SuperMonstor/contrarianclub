@@ -72,7 +72,7 @@ export async function getWhatsAppOverview() {
 }
 
 function safeSearchTerm(value: string): string {
-  return value.trim().replace(/[,()%_*]/g, "").slice(0, 80);
+  return value.trim().replace(/[^a-zA-Z0-9+\s-]/g, "").slice(0, 80);
 }
 
 export async function getWhatsAppSubscribers(search: string) {

@@ -50,6 +50,7 @@ export async function requeueUnknownWhatsAppDelivery(formData: FormData) {
     })
     .eq("id", deliveryId)
     .eq("status", "unknown")
+    .lt("attempt_count", 3)
     .select("campaign_id")
     .maybeSingle<{ campaign_id: string }>();
   if (error) throw error;

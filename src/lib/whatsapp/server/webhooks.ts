@@ -53,8 +53,7 @@ async function processOptOutEvent(
       preference_source: "whatsapp",
       opted_out_at: event.occurredAt,
     })
-    .eq("phone_e164", event.phoneE164)
-    .lte("preference_at", event.occurredAt);
+    .eq("phone_e164", event.phoneE164);
   if (error) throw error;
 }
 

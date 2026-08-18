@@ -60,12 +60,10 @@ describe("WhatsApp webhook database processing", () => {
     );
   });
 
-  it("records an opt-out only when it is not older than the current preference", async () => {
+  it("always records an explicit WhatsApp opt-out immediately", async () => {
     const optOutChain = {
-      eq: vi.fn(),
-      lte: vi.fn().mockResolvedValue({ error: null }),
+      eq: vi.fn().mockResolvedValue({ error: null }),
     };
-    optOutChain.eq.mockReturnValue(optOutChain);
     const update = vi.fn().mockReturnValue(optOutChain);
     const client = {
       from: vi.fn().mockReturnValue({ update }),
@@ -92,10 +90,6 @@ describe("WhatsApp webhook database processing", () => {
     expect(optOutChain.eq).toHaveBeenCalledWith(
       "phone_e164",
       "+919876543210",
-    );
-    expect(optOutChain.lte).toHaveBeenCalledWith(
-      "preference_at",
-      "2026-08-19T10:00:00.000Z",
     );
   });
 });

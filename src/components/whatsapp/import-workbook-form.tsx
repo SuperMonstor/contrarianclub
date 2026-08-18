@@ -2,7 +2,11 @@
 
 import { FileSpreadsheet, LoaderCircle, Upload } from "lucide-react";
 import { useState } from "react";
-import type { ImportColumnMapping, ImportCounts } from "@/lib/whatsapp/types";
+import type {
+  ImportColumnMapping,
+  ImportCounts,
+  ImportIssue,
+} from "@/lib/whatsapp/types";
 
 type Preview = {
   ready: boolean;
@@ -18,6 +22,7 @@ type Preview = {
   sourceDateRequired: boolean;
   totalRows?: number;
   validRows?: number;
+  issues?: ImportIssue[];
   counts?: ImportCounts;
 };
 
@@ -109,11 +114,14 @@ export function ImportWorkbookForm() {
     }
   }
 
+  const sourceDateNeeded = Boolean(
+    preview && !preview.ready && mapping.preferenceTime === null,
+  );
   const mappingComplete = Boolean(
     mapping.name &&
       mapping.phone &&
       mapping.consent &&
-      (!preview?.sourceDateRequired || sourceDate),
+      (!sourceDateNeeded || sourceDate),
   );
   const busy = state === "previewing" || state === "confirming";
 
@@ -201,7 +209,7 @@ export function ImportWorkbookForm() {
                 }))
               }
             />
-            {preview.sourceDateRequired ? (
+            {sourceDateNeeded ? (
               <label className="grid gap-2">
                 <span className="club-label">Source debate date</span>
                 <input
@@ -241,6 +249,25 @@ export function ImportWorkbookForm() {
             ) : null}
           </div>
           <CountGrid counts={preview.counts} />
+          {preview.issues?.length ? (
+            <div className="mt-5 grid gap-2">
+              <p className="club-eyebrow">Rows excluded from this import</p>
+              {preview.issues.slice(0, 50).map((issue) => (
+                <div
+                  className="club-panel-quiet grid gap-1 px-3 py-3 text-xs sm:grid-cols-[auto_auto_1fr] sm:gap-3"
+                  key={`${issue.rowNumber}:${issue.message}`}
+                >
+                  <strong className="text-[color:var(--cc-parchment)]">
+                    Row {issue.rowNumber}
+                  </strong>
+                  <span className="club-mono text-[color:var(--cc-gold)]">
+                    {issue.maskedPhone ?? "No phone"}
+                  </span>
+                  <span className="text-[color:var(--cc-muted)]">{issue.message}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
           <button
             type="button"
             className="club-btn club-btn-primary mt-6 px-5 py-3"

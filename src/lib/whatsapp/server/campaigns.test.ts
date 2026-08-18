@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import {
+  canRetryUnknownDelivery,
   createCampaign,
   sendCampaignBatch,
 } from "@/lib/whatsapp/server/campaigns";
@@ -17,6 +18,11 @@ const parameters = {
 };
 
 describe("WhatsApp campaign service", () => {
+  it("does not offer a retry after the third attempt", () => {
+    expect(canRetryUnknownDelivery(2)).toBe(true);
+    expect(canRetryUnknownDelivery(3)).toBe(false);
+  });
+
   it("creates a snapshot with the configured template", async () => {
     const createSnapshot = vi.fn().mockResolvedValue({
       campaignId: "campaign-1",

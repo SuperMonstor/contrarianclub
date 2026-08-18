@@ -7,7 +7,10 @@ import { MarketingHeader } from "@/components/whatsapp/marketing-header";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { requireAdminUser } from "@/lib/auth";
 import { maskIndianPhone } from "@/lib/whatsapp/phone";
-import { getCampaignDetail } from "@/lib/whatsapp/server/campaigns";
+import {
+  canRetryUnknownDelivery,
+  getCampaignDetail,
+} from "@/lib/whatsapp/server/campaigns";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +40,7 @@ export default async function WhatsAppCampaignPage({
 
         <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <CampaignStat value={accepted} label="Accepted" />
-          <CampaignStat value={counts.delivered} label="Delivered" />
+          <CampaignStat value={counts.delivered + counts.read} label="Delivered" />
           <CampaignStat value={counts.read} label="Read" />
           <CampaignStat value={counts.retryable_failed + counts.queued} label="Pending" />
           <CampaignStat value={counts.failed + counts.unknown} label="Needs attention" />
@@ -105,16 +108,22 @@ export default async function WhatsAppCampaignPage({
                       {maskIndianPhone(delivery.recipient_phone)}. Attempt {delivery.attempt_count} of 3
                     </p>
                   </div>
-                  <form action={requeueUnknownWhatsAppDelivery} className="flex flex-wrap items-center gap-3">
-                    <input type="hidden" name="deliveryId" value={delivery.id} />
-                    <label className="flex items-center gap-2 text-xs text-[color:var(--cc-muted)]">
-                      <input type="checkbox" name="acknowledgeDuplicateRisk" value="yes" required />
-                      I accept the duplicate risk
-                    </label>
-                    <PendingSubmitButton className="club-btn club-btn-danger px-3 py-2 text-xs">
-                      Retry message
-                    </PendingSubmitButton>
-                  </form>
+                  {canRetryUnknownDelivery(delivery.attempt_count) ? (
+                    <form action={requeueUnknownWhatsAppDelivery} className="flex flex-wrap items-center gap-3">
+                      <input type="hidden" name="deliveryId" value={delivery.id} />
+                      <label className="flex items-center gap-2 text-xs text-[color:var(--cc-muted)]">
+                        <input type="checkbox" name="acknowledgeDuplicateRisk" value="yes" required />
+                        I accept the duplicate risk
+                      </label>
+                      <PendingSubmitButton className="club-btn club-btn-danger px-3 py-2 text-xs">
+                        Retry message
+                      </PendingSubmitButton>
+                    </form>
+                  ) : (
+                    <span className="club-chip border-[color:var(--cc-wine-bright)]/40 text-[#f0c9c4]">
+                      attempt limit reached
+                    </span>
+                  )}
                 </article>
               ))}
             </div>
