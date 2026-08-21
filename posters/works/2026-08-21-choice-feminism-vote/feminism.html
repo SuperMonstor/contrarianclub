@@ -59,25 +59,18 @@ body { margin: 0; background: #060504; font-family: var(--sans); }
 .logo { width: 200px; display: block; }
 
 .motion {
-  margin-top: 28px; max-width: 1240px;
-  font-weight: 600; font-size: 14px; line-height: 1.5;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--gold); text-align: center;
+  margin-top: 34px; max-width: 1240px;
+  font-family: var(--serif); font-weight: 900;
+  font-size: 56px; line-height: 1.1; letter-spacing: -0.014em;
+  color: var(--ivory); text-align: center;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
 }
 
 .stage {
-  margin-top: 11px;
-  font-weight: 600; font-size: 13px;
+  margin-top: 22px;
+  font-weight: 600; font-size: 18px;
   letter-spacing: 0.34em; text-transform: uppercase;
-  color: var(--parchment); text-align: center;
-}
-
-.result {
-  font-family: var(--serif); font-weight: 900;
-  font-size: 68px; line-height: 1.02; letter-spacing: -0.018em;
-  color: var(--ivory);
-  margin: 16px 0 0; text-align: center;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
+  color: var(--gold-bright); text-align: center;
 }
 
 .chartwrap { width: 100%; margin: auto 0; }
@@ -147,16 +140,12 @@ var LOGO = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQ2IiBoZWlnaHQ9IjI2MiIgdm
 // electorate the swing deck uses, so the two slides describe one room changing
 // its mind rather than two different crowds.
 var DEBATE = {
-  motion: "Choice feminism isn&rsquo;t real when it feeds the system that oppresses you",
+  motion: "Choice feminism isn&rsquo;t real when it<br>feeds the system that oppresses you",
   left: "Isn&rsquo;t real feminism",
   right: "Can be real feminism",
   before: [8, 8, 2, 5, 1, 4, 2],
   after:  [11, 9, 3, 1, 2, 0, 4],
-  caption: "30 voters &middot; same room, both rounds",
-  heads: {
-    before: "60% said it isn&rsquo;t real feminism.",
-    after:  "77% ended up there."
-  }
+  caption: "30 voters &middot; same room, both rounds"
 };
 
 var DEG = ["&minus;3", "&minus;2", "&minus;1", "0", "+1", "+2", "+3"];
@@ -208,7 +197,6 @@ function frame(d, stage) {
       '<img class="logo" src="' + LOGO + '" alt="The Contrarian Debate Club" />' +
       '<span class="motion">' + d.motion + '</span>' +
       '<span class="stage">' + stageName + '</span>' +
-      '<h2 class="result">' + d.heads[stage] + '</h2>' +
       '<div class="chartwrap">' + standing(d, counts) + '</div>' +
       '<span class="caption">' + d.caption + '</span>' +
     '</div></section></div>';

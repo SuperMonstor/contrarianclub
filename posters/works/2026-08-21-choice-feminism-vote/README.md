@@ -3,12 +3,13 @@
 Two 16:9 slides: where the room stood on choice feminism before the debate,
 and where it stood after.
 
-1. **Before**, 60% said it isn't real feminism
-2. **After**, 77% ended up there
+1. **Before**, 60% said it isn't real feminism, 23% said it can be
+2. **After**, 77% said it isn't, 20% said it can be
 
-Each slide carries the motion in full under the wordmark, exactly as it read
-on the night: "Choice feminism isn't real when it feeds the system that
-oppresses you". The stage sits on a quieter line beneath it.
+The motion carries the slide. It sits under the wordmark in full, exactly as
+it read on the night, with the stage in gold beneath it. There is no separate
+headline: the numbers speak in the chart, and a slide that shouts its own
+result before the reader has seen the bars is arguing rather than reporting.
 
 Both plot the full seven point scale rather than collapsing it to two sides.
 The degree is the interesting part: the room did not just lean further, it
