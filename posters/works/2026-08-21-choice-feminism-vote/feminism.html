@@ -58,13 +58,19 @@ body { margin: 0; background: #060504; font-family: var(--sans); }
 
 .logo { width: 200px; display: block; }
 
-.topic {
-  margin-top: 30px;
-  font-weight: 600; font-size: 15px;
-  letter-spacing: 0.32em; text-transform: uppercase;
+.motion {
+  margin-top: 28px; max-width: 1240px;
+  font-weight: 600; font-size: 14px; line-height: 1.5;
+  letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--gold); text-align: center;
 }
-.topic b { color: var(--parchment); font-weight: 600; }
+
+.stage {
+  margin-top: 11px;
+  font-weight: 600; font-size: 13px;
+  letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--parchment); text-align: center;
+}
 
 .result {
   font-family: var(--serif); font-weight: 900;
@@ -141,7 +147,7 @@ var LOGO = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQ2IiBoZWlnaHQ9IjI2MiIgdm
 // electorate the swing deck uses, so the two slides describe one room changing
 // its mind rather than two different crowds.
 var DEBATE = {
-  topic: "Choice Feminism",
+  motion: "Choice feminism isn&rsquo;t real when it feeds the system that oppresses you",
   left: "Isn&rsquo;t real feminism",
   right: "Can be real feminism",
   before: [8, 8, 2, 5, 1, 4, 2],
@@ -200,7 +206,8 @@ function frame(d, stage) {
   return '<div class="slot" data-name="' + stage + '-the-debate"><section class="frame">' +
     '<div class="inset"></div><div class="body">' +
       '<img class="logo" src="' + LOGO + '" alt="The Contrarian Debate Club" />' +
-      '<span class="topic">' + d.topic + ' &middot; <b>' + stageName + '</b></span>' +
+      '<span class="motion">' + d.motion + '</span>' +
+      '<span class="stage">' + stageName + '</span>' +
       '<h2 class="result">' + d.heads[stage] + '</h2>' +
       '<div class="chartwrap">' + standing(d, counts) + '</div>' +
       '<span class="caption">' + d.caption + '</span>' +

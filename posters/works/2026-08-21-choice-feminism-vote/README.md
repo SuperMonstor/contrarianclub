@@ -6,6 +6,10 @@ and where it stood after.
 1. **Before**, 60% said it isn't real feminism
 2. **After**, 77% ended up there
 
+Each slide carries the motion in full under the wordmark, exactly as it read
+on the night: "Choice feminism isn't real when it feeds the system that
+oppresses you". The stage sits on a quieter line beneath it.
+
 Both plot the full seven point scale rather than collapsing it to two sides.
 The degree is the interesting part: the room did not just lean further, it
 hardened, and the "too close to call" middle emptied out almost completely.
