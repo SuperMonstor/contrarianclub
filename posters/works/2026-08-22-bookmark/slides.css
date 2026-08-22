@@ -1,0 +1,212 @@
+/* ==========================================================================
+   Bookmark, six variations. 600 x 1800 trim, which is 2 x 6 in at 300px/in,
+   so every number in here is a print measurement: 1px is 1/300 in, 12pt is
+   50px, and a hairline is 1px because that is 0.08mm at the 600dpi export.
+
+   The sheet is the piece's own. Core's .poster-border sits 40px inside the
+   canvas, a sound frame on a 1080-wide social canvas and 0.13in from a trim
+   edge here, which is inside a guillotine's tolerance. Each bookmark paints
+   a full-bleed sheet over it and carries its own grain and vignette, tuned
+   for a tall narrow object rather than a square one.
+   ========================================================================== */
+
+.bm-sheet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(130% 34% at 50% -6%, rgba(200, 162, 74, 0.12), transparent 62%),
+    linear-gradient(180deg, #0c0a07 0%, #0a0806 58%, #080604 100%),
+    var(--cc-black);
+}
+
+/* film grain, over the painting and under the type */
+.bm-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* vignette, stretched tall: a square falloff would darken the middle of a
+   piece this narrow and leave the long ends untouched */
+.bm-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(76% 62% at 50% 46%, transparent 42%, rgba(0, 0, 0, 0.62) 100%);
+}
+
+.bm-body {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* --- Art treatments ------------------------------------------------------
+   The kit filter is tuned for a feed image seen for a second. A bookmark is
+   held at reading distance under a lamp, and ink dries darker than a screen,
+   so these run a little lighter than .art and lean warmer.                  */
+.bm-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Raphael's fresco is chalk-pale end to end and needs a hard knock-back */
+.bm-art--fresco {
+  filter: saturate(0.76) contrast(1.08) brightness(0.66) sepia(0.16);
+}
+/* the two studies: mid-toned to begin with, so only warmed and settled */
+.bm-art--study {
+  filter: saturate(0.84) contrast(1.05) brightness(0.8) sepia(0.12);
+}
+.bm-art--figure {
+  filter: saturate(0.82) contrast(1.06) brightness(0.74) sepia(0.13);
+}
+/* held back until it is texture rather than picture */
+.bm-art--ghost {
+  filter: saturate(0.5) contrast(1.02) brightness(0.55) sepia(0.2);
+}
+
+/* --- Legibility scrims, one per composition ------------------------------ */
+.bm-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+/* 1. Column: black at both ends, the arch and the two philosophers left open */
+.bm-scrim--column {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 6, 4, 0.94) 0%,
+    rgba(8, 6, 4, 0.5) 13%,
+    rgba(8, 6, 4, 0.08) 26%,
+    rgba(8, 6, 4, 0.1) 50%,
+    rgba(8, 6, 4, 0.62) 66%,
+    rgba(8, 6, 4, 0.96) 77%,
+    #080604 100%
+  );
+}
+/* 4. Ticket: the art block alone, fading into the stub */
+.bm-scrim--ticket {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 6, 4, 0.82) 0%,
+    rgba(8, 6, 4, 0.28) 22%,
+    rgba(8, 6, 4, 0.22) 44%,
+    rgba(8, 6, 4, 0.86) 78%,
+    rgba(8, 6, 4, 0.99) 100%
+  );
+}
+/* 5. Index: the painting is wallpaper, so the scrim is nearly flat */
+.bm-scrim--index {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 6, 4, 0.94) 0%,
+    rgba(8, 6, 4, 0.88) 34%,
+    rgba(8, 6, 4, 0.86) 62%,
+    rgba(8, 6, 4, 0.62) 78%,
+    rgba(8, 6, 4, 0.72) 90%,
+    rgba(8, 6, 4, 0.94) 100%
+  );
+}
+/* 6. Spine: a dark head for the statement, the figure left alone below */
+.bm-scrim--spine {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 6, 4, 0.96) 0%,
+    rgba(8, 6, 4, 0.88) 26%,
+    rgba(8, 6, 4, 0.3) 44%,
+    rgba(8, 6, 4, 0.18) 62%,
+    rgba(8, 6, 4, 0.82) 88%,
+    rgba(8, 6, 4, 0.97) 100%
+  );
+}
+
+/* --- The engraved frame, at a print-safe inset --------------------------- */
+.bm-frame {
+  position: absolute;
+  inset: 34px;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid var(--cc-line);
+}
+.bm-frame::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(200, 162, 74, 0.09);
+}
+
+/* --- The plate window (variation 2) -------------------------------------- */
+.bm-plate {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(200, 162, 74, 0.28);
+  box-shadow: 0 8px 34px rgba(0, 0, 0, 0.55);
+}
+.bm-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bm-plate-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(42, 30, 12, 0.3) 0%, rgba(11, 9, 7, 0.22) 100%);
+}
+
+/* --- The perforation (variation 4) --------------------------------------- */
+.bm-perf {
+  position: relative;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(200, 162, 74, 0.5) 0 9px,
+    transparent 9px 20px
+  );
+}
+.bm-perf::before,
+.bm-perf::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--cc-black);
+  transform: translateY(-50%);
+}
+.bm-perf::before { left: -17px; }
+.bm-perf::after { right: -17px; }
+
+/* --- The spine strip (variation 6) --------------------------------------- */
+.bm-spine-strip {
+  position: absolute;
+  left: 44px;
+  bottom: 300px;
+  z-index: 4;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--cc-font-ui);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--cc-gold);
+}

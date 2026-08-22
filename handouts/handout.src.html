@@ -1,0 +1,586 @@
+<meta charset="utf-8">
+<title>Debate handout</title>
+
+<!--
+  THE CONTRARIAN DEBATE CLUB, audience handout.
+  One A4 sheet, printed both sides. Front is context and preparation, back is
+  rebuttals taken live.
+
+  Edit the DEBATE object at the bottom of this file and nothing else. Then:
+
+      node handouts/build.cjs
+
+  which inlines the fonts and the wordmark into handout.html and writes
+  out/handout.pdf, ready for the print shop.
+-->
+
+<style>
+__FONTS__
+
+:root {
+  --ink: #16110b;
+  --ink-soft: #4a4034;
+  --ink-faint: #8d8271;
+  --rule: #cfc4ad;
+  --rule-faint: #e2d9c6;
+  --gold: #c8a24a;
+  --gold-deep: #8a6c2c;
+  --band: #0b0907;
+  --parchment: #ddceac;
+
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --ui: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  --condensed: "Oswald", "Inter", Arial, sans-serif;
+
+  --margin: 14mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--ui);
+  color: var(--ink);
+  background: #6f6a63;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The sheet ------------------------------------------------------------- */
+
+.sheet {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Masthead -------------------------------------------------------------- */
+
+.band {
+  flex: none;
+  background: var(--band);
+  color: var(--parchment);
+  padding: 0 var(--margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.band--front { height: 25mm; }
+.band--back { height: 13mm; }
+
+.band .wordmark { display: block; height: 10mm; width: auto; }
+.band--back .wordmark { height: 6mm; }
+
+.band .meta { text-align: right; }
+
+.band .meta .no {
+  font-family: var(--condensed);
+  font-weight: 500;
+  font-size: 10pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.band .meta .when {
+  font-size: 7pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b8069;
+  margin-top: 1.2mm;
+}
+
+.band--back .running {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 8.5pt;
+  color: var(--parchment);
+  text-align: right;
+  max-width: 130mm;
+  line-height: 1.3;
+}
+
+/* Shared type roles ----------------------------------------------------- */
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 0 var(--margin) 12mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.kicker {
+  font-family: var(--ui);
+  font-weight: 600;
+  font-size: 6.8pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+}
+
+.kicker::after {
+  content: "";
+  flex: 1;
+  height: 0.3mm;
+  background: var(--rule-faint);
+}
+
+.hint {
+  font-size: 7.4pt;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.rule {
+  flex: none;
+  height: 0.3mm;
+  background: var(--rule);
+}
+
+/* Front, the motion ----------------------------------------------------- */
+
+.motion-block { flex: none; padding: 6.5mm 0 0; }
+
+.motion {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 25pt;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  margin-top: 3.2mm;
+  max-width: 170mm;
+}
+
+.stance {
+  margin-top: 5.5mm;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 6mm;
+}
+
+.stance .ask { font-size: 7.4pt; color: var(--ink-faint); font-style: italic; max-width: 62mm; }
+
+.scale { display: flex; align-items: center; gap: 2.6mm; }
+
+.scale .pole {
+  font-family: var(--condensed);
+  font-weight: 500;
+  font-size: 7.2pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.scale .tick {
+  width: 3.6mm;
+  height: 3.6mm;
+  border: 0.3mm solid var(--rule);
+  border-radius: 50%;
+}
+
+.scale .tick--mid { border-color: var(--gold); }
+
+/* Front, context -------------------------------------------------------- */
+
+.context {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 10mm;
+  padding: 6mm 0 4mm;
+}
+
+.context > section + section {
+  border-left: 0.3mm solid var(--rule-faint);
+  padding-left: 10mm;
+  margin-left: -4mm;
+}
+
+.terms { margin-top: 3.5mm; display: flex; flex-direction: column; gap: 2.6mm; }
+
+.terms dt {
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 8.6pt;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.terms dd {
+  font-size: 8pt;
+  line-height: 1.38;
+  color: var(--ink-soft);
+  margin-top: 0.6mm;
+}
+
+.split { margin-top: 3.5mm; display: flex; flex-direction: column; gap: 3.5mm; }
+
+.split .label {
+  font-weight: 600;
+  font-size: 6.5pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 1.2mm;
+}
+
+.split p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+
+.split .contested {
+  border-left: 0.7mm solid var(--gold);
+  padding-left: 3.5mm;
+}
+
+.split .contested p { color: var(--ink); }
+
+/* Front, how the night runs --------------------------------------------- */
+
+.runs { flex: none; padding: 4.5mm 0; }
+
+.steps {
+  margin-top: 3.5mm;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.steps li { list-style: none; padding-right: 4mm; border-right: 0.3mm solid var(--rule-faint); }
+.steps li + li { padding-left: 4mm; }
+.steps li:last-child { border-right: 0; padding-right: 0; }
+
+.steps .n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 11pt;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.steps p { font-size: 7.2pt; line-height: 1.35; color: var(--ink-soft); margin-top: 1.4mm; }
+
+/* Front, your case ------------------------------------------------------ */
+
+.case { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 6mm; }
+
+.case .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
+.case .head .hint { max-width: 122mm; text-align: right; }
+
+.points { flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 4mm; }
+
+.point { display: flex; gap: 4mm; align-items: flex-start; }
+
+.point .n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--gold);
+  width: 7mm;
+  flex: none;
+  line-height: 1;
+  padding-top: 4mm;
+}
+
+.point .lines { flex: 1; }
+
+.point .line {
+  border-bottom: 0.35mm solid var(--rule);
+  height: 9mm;
+}
+
+.point .line--why {
+  border-bottom-color: var(--rule-faint);
+  height: 8mm;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 1mm;
+}
+
+.point .line--why span {
+  font-weight: 600;
+  font-size: 6pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c6ba9f;
+}
+
+/* Back, the rebuttal grid ----------------------------------------------- */
+
+.back-head { flex: none; padding: 7mm 0 0; }
+
+.back-head h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15pt;
+  margin-top: 3mm;
+}
+
+.back-head .hint { margin-top: 2mm; max-width: 132mm; }
+
+.grid { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 6mm; }
+
+.grid .cols {
+  display: grid;
+  grid-template-columns: 8mm 0.8fr 1.2fr;
+  padding-bottom: 1.8mm;
+  border-bottom: 0.4mm solid var(--gold);
+}
+
+.grid .cols span {
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 7.6pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  padding-left: 4mm;
+}
+
+.grid .cols span:first-child { padding-left: 0; }
+
+.rows { flex: 1; display: flex; flex-direction: column; }
+
+.row {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 8mm 0.8fr 1.2fr;
+  padding-top: 2.5mm;
+}
+
+.row + .row { border-top: 0.3mm solid var(--rule); }
+
+.row .n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 12pt;
+  color: var(--gold);
+  line-height: 1;
+}
+
+/* Every cell is ruled to the bottom of its row. A half-ruled box reads as an
+   unfinished page rather than as space that was left on purpose. */
+.row .cell { display: flex; flex-direction: column; padding: 0 4mm; }
+.row .cell + .cell { border-left: 0.3mm solid var(--rule-faint); }
+.row .cell .line { flex: 1; border-bottom: 0.3mm solid var(--rule-faint); }
+.row .cell .line:last-child { border-bottom: 0; }
+
+/* Back, the closer ------------------------------------------------------ */
+
+.closer {
+  flex: none;
+  margin-top: 7mm;
+  border-top: 0.4mm solid var(--gold);
+  padding: 5mm 0 0;
+}
+
+.closer .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
+.closer .head .hint { max-width: 112mm; text-align: right; }
+.closer .line { border-bottom: 0.35mm solid var(--rule); height: 9.5mm; margin-top: 3mm; }
+
+.foot {
+  flex: none;
+  margin-top: 6mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.foot .wordmark { height: 9mm; width: auto; }
+
+.foot .handle {
+  font-size: 7pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Screen preview only --------------------------------------------------- */
+
+@media screen {
+  body { padding: 14mm; display: flex; flex-direction: column; align-items: center; gap: 14mm; }
+  .sheet { box-shadow: 0 3mm 12mm rgba(0, 0, 0, 0.35); }
+}
+
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  body { background: #fff; padding: 0; }
+  .sheet { box-shadow: none; break-after: page; page-break-after: always; }
+  .sheet:last-child { break-after: auto; page-break-after: auto; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+<section class="sheet" id="front">
+  <header class="band band--front">
+    <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
+    <div class="meta">
+      <div class="no" data-bind="number"></div>
+      <div class="when" data-bind="when"></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="motion-block">
+      <div class="kicker">The motion</div>
+      <h1 class="motion" data-bind="motion"></h1>
+      <div class="stance">
+        <p class="ask">Mark where you stand before a word is spoken. Mark it again on the way out.</p>
+        <div class="scale">
+          <span class="pole" data-bind="poleAgainst"></span>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <i class="tick tick--mid"></i>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <span class="pole" data-bind="poleFor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule" style="margin-top: 6mm;"></div>
+
+    <div class="context">
+      <section>
+        <div class="kicker">What the words mean</div>
+        <dl class="terms" data-bind="terms"></dl>
+      </section>
+      <section>
+        <div class="kicker">The real disagreement</div>
+        <div class="split">
+          <div>
+            <div class="label">Both sides agree</div>
+            <p data-bind="agreed"></p>
+          </div>
+          <div class="contested">
+            <div class="label">They split on</div>
+            <p data-bind="split"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="rule"></div>
+
+    <section class="runs">
+      <div class="kicker">How the night runs</div>
+      <ol class="steps" data-bind="steps"></ol>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="case">
+      <div class="head">
+        <div class="kicker" style="flex: none;">Your case</div>
+        <p class="hint">Four or five points, in your own words. Write the trigger, not the speech. The rest you say on stage.</p>
+      </div>
+      <div class="points" data-bind="points"></div>
+    </section>
+  </div>
+</section>
+
+<section class="sheet" id="back">
+  <header class="band band--back">
+    <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
+    <p class="running" data-bind="motionShort"></p>
+  </header>
+
+  <div class="body">
+    <div class="back-head">
+      <div class="kicker">While they speak</div>
+      <h2>Answer what was said.</h2>
+      <p class="hint">Write down their claim as they made it, not the weaker version that is easy to knock over. Then write your answer beside it. One row, one exchange.</p>
+    </div>
+
+    <div class="grid">
+      <div class="cols"><span></span><span>They said</span><span>My answer</span></div>
+      <div class="rows" data-bind="rows"></div>
+    </div>
+
+    <section class="closer">
+      <div class="head">
+        <div class="kicker" style="flex: none;">The one sentence</div>
+        <p class="hint">The last thing you say is the thing the room votes on. Write it before you stand up.</p>
+      </div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </section>
+
+    <footer class="foot">
+      <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_LIGHT__">
+      <span class="handle">instagram.com/thecontrarian.club</span>
+    </footer>
+  </div>
+</section>
+
+<script>
+// Everything that changes from one debate to the next lives here. Nothing
+// above this line should need touching.
+const DEBATE = {
+  number: "Debate 10",
+  when: "Placeholder date &middot; Placeholder venue",
+
+  // The motion exactly as it will read on stage. Two lines is the comfortable
+  // maximum. Use <br> only to stop an ugly break.
+  motion: "The motion goes here, worded exactly as it<br>will be read out on the night",
+
+  // The two ends of the seven point scale, in the audience's words.
+  poleAgainst: "Disagree",
+  poleFor: "Agree",
+
+  // Two or three terms, defined so that neither side would object to the
+  // wording. A loaded definition decides the debate before it starts.
+  terms: [
+    ["First term", "A neutral one line definition, phrased so that both sides would accept it as fair before the debate begins."],
+    ["Second term", "The second word the room will otherwise argue past each other about, defined in the same plain way."],
+    ["Third term", "Drop this row if the motion only turns on two words. Three is the ceiling."],
+  ],
+
+  // The single most useful thing on the sheet. Name the common ground first,
+  // then the one question the evening actually turns on.
+  agreed: "State the ground nobody is contesting, so the room does not spend twenty minutes proving a point both sides already grant.",
+  split: "State the one question the evening actually turns on, as a question, in a single sentence.",
+
+  // The running order. Keep each step to a line.
+  steps: [
+    "Vote on the motion before anyone speaks.",
+    "Opening cases, one speaker a side.",
+    "Open floor. Raise a hand, take the mic, two minutes.",
+    "Closing statements from both sides.",
+    "Vote again. The room decides who moved it.",
+  ],
+
+  points: 5,   // writing blocks on the front
+  rows: 5,     // rebuttal rows on the back
+};
+
+const $ = (name) => document.querySelectorAll('[data-bind="' + name + '"]');
+const set = (name, html) => $(name).forEach((el) => (el.innerHTML = html));
+
+for (const key of ["number", "when", "motion", "poleAgainst", "poleFor", "agreed", "split"]) {
+  set(key, DEBATE[key]);
+}
+
+// The back page carries the motion in running type, so it never wraps to two
+// lines there and never keeps the front page's manual break.
+set("motionShort", DEBATE.motion.replace(/<br\s*\/?>/g, " "));
+
+set("terms", DEBATE.terms.map(([term, meaning]) => "<dt>" + term + "</dt><dd>" + meaning + "</dd>").join(""));
+
+set("steps", DEBATE.steps.map((text, i) =>
+  '<li><div class="n">' + (i + 1) + "</div><p>" + text + "</p></li>").join(""));
+
+set("points", Array.from({ length: DEBATE.points }, (_, i) =>
+  '<div class="point"><div class="n">' + (i + 1) + '</div>' +
+  '<div class="lines"><div class="line"></div>' +
+  '<div class="line line--why"><span>because</span></div></div></div>').join(""));
+
+const cell = '<div class="cell">' + '<div class="line"></div>'.repeat(3) + "</div>";
+set("rows", Array.from({ length: DEBATE.rows }, (_, i) =>
+  '<div class="row"><div class="n">' + (i + 1) + "</div>" + cell + cell + "</div>").join(""));
+</script>
