@@ -1,11 +1,13 @@
 // Build the debate handout.
 //
-//   node handouts/build.cjs          inline everything into handout.html
-//   node handouts/build.cjs --pdf    and render out/handout.pdf
+//   node handouts/build.cjs                     the current template
+//   node handouts/build.cjs --pdf               and render out/handout.pdf
+//   node handouts/build.cjs <dir> --pdf         an archived debate's handout
 //
 // handout.src.html is the file you edit. This step inlines the fonts and the
 // wordmark as data URIs so the result renders identically on any machine, at
-// any print shop, with no network and no sibling asset folder.
+// any print shop, with no network and no sibling asset folder. The built
+// handout.html and out/handout.pdf land beside the source they came from.
 
 const fs = require("fs");
 const path = require("path");
@@ -34,13 +36,18 @@ const fontFace = ([family, weight, file]) =>
   ";font-display:block;src:url(" + dataUri(path.join(MODULES, file), "font/woff2") +
   ") format('woff2');}";
 
+// Either the template at the root of handouts/, or an archived debate's own
+// folder passed as the first argument.
+const target = process.argv.slice(2).find((a) => !a.startsWith("--"));
+const BASE = target ? path.resolve(target) : DIR;
+
 const html = fs
-  .readFileSync(path.join(DIR, "handout.src.html"), "utf8")
+  .readFileSync(path.join(BASE, "handout.src.html"), "utf8")
   .replace("__FONTS__", FACES.map(fontFace).join("\n"))
   .replace(/__LOGO_DARK__/g, dataUri(path.join(BRAND, "logo-dark.svg"), "image/svg+xml"))
   .replace(/__LOGO_LIGHT__/g, dataUri(path.join(BRAND, "logo-light.svg"), "image/svg+xml"));
 
-const out = path.join(DIR, "handout.html");
+const out = path.join(BASE, "handout.html");
 fs.writeFileSync(out, html);
 console.log("handout.html  " + Math.round(html.length / 1024) + "KB");
 
@@ -54,8 +61,9 @@ if (!process.argv.includes("--pdf")) return;
   const page = await browser.newPage();
   await page.goto("file://" + out);
   await page.waitForTimeout(1200);
-  const pdf = path.join(DIR, "out", "handout.pdf");
+  fs.mkdirSync(path.join(BASE, "out"), { recursive: true });
+  const pdf = path.join(BASE, "out", "handout.pdf");
   await page.pdf({ path: pdf, format: "A4", printBackground: true, preferCSSPageSize: true });
   await browser.close();
-  console.log("out/handout.pdf");
+  console.log(path.relative(ROOT, pdf));
 })();
