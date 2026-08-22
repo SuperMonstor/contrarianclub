@@ -93,6 +93,8 @@ body {
   margin-top: 1.2mm;
 }
 
+.band--back .running br { display: none; }
+
 .band--back .running {
   font-family: var(--display);
   font-style: italic;
@@ -171,14 +173,20 @@ body {
 }
 
 .stance {
-  margin-top: 5.5mm;
+  margin-top: 5mm;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 6mm;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5mm;
 }
 
-.stance .ask { font-size: 7.4pt; color: var(--ink-faint); font-style: italic; max-width: 62mm; }
+.stance .ask {
+  font-weight: 600;
+  font-size: 6.5pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
 
 .scale { display: flex; align-items: center; gap: 2.6mm; }
 
@@ -200,23 +208,28 @@ body {
 
 .scale .tick--mid { border-color: var(--gold); }
 
-/* Front, context -------------------------------------------------------- */
+/* Front, context ------------------------------------------------------- */
 
-.context {
-  flex: none;
+/* Every band below the motion is the same move: a kicker, then a row of
+   columns divided by hairlines. Three terms, then the clash, then the two
+   benches. One rhythm, so the page is scanned rather than read. */
+
+.band-row {
+  margin-top: 3.5mm;
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 10mm;
-  padding: 5mm 0 3.5mm;
+  gap: 8mm;
 }
 
-.context > section + section {
+.band-row--3 { grid-template-columns: repeat(3, 1fr); }
+.band-row--2 { grid-template-columns: 1fr 1fr; }
+
+.band-row > * + * {
   border-left: 0.3mm solid var(--rule-faint);
-  padding-left: 10mm;
+  padding-left: 8mm;
   margin-left: -4mm;
 }
 
-.terms { margin-top: 3.5mm; display: flex; flex-direction: column; gap: 2.6mm; }
+.terms { flex: none; padding: 3.5mm 0 3mm; }
 
 .terms dt {
   font-family: var(--condensed);
@@ -230,12 +243,12 @@ body {
   font-size: 8pt;
   line-height: 1.38;
   color: var(--ink-soft);
-  margin-top: 0.6mm;
+  margin-top: 1.2mm;
 }
 
-.split { margin-top: 3.5mm; display: flex; flex-direction: column; gap: 3.5mm; }
+.clash { flex: none; padding: 3mm 0; }
 
-.split .label {
+.clash .label {
   font-weight: 600;
   font-size: 6.5pt;
   letter-spacing: 0.18em;
@@ -244,31 +257,14 @@ body {
   margin-bottom: 1.2mm;
 }
 
-.split p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+.clash p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
 
-.split .contested {
-  border-left: 0.7mm solid var(--gold);
-  padding-left: 3.5mm;
-}
+.clash .contested { border-left-color: var(--gold); border-left-width: 0.7mm; }
+.clash .contested p { color: var(--ink); }
 
-.split .contested p { color: var(--ink); }
+.benches { flex: none; padding: 3mm 0; }
 
-.benches { flex: none; padding: 4mm 0; }
-
-.benches .sides {
-  margin-top: 3.5mm;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10mm;
-}
-
-.benches .side + .side {
-  border-left: 0.3mm solid var(--rule-faint);
-  padding-left: 10mm;
-  margin-left: -4mm;
-}
-
-.benches .side b {
+.benches b {
   display: block;
   font-family: var(--condensed);
   font-weight: 600;
@@ -279,11 +275,11 @@ body {
   margin-bottom: 1.2mm;
 }
 
-.benches .side p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+.benches p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
 
 /* Front, how the night runs --------------------------------------------- */
 
-.runs { flex: none; padding: 4mm 0; }
+.runs { flex: none; padding: 3.5mm 0; }
 
 .steps {
   margin-top: 3.5mm;
@@ -469,9 +465,9 @@ body {
   <div class="body">
     <div class="motion-block">
       <div class="kicker">The motion</div>
-      <h1 class="motion" data-bind="motion"></h1>
+      <h1 class="motion"><span class="formula" data-bind="formula"></span><span data-bind="motion"></span></h1>
       <div class="stance">
-        <p class="ask">Mark where you stand before a word is spoken. Mark it again on the way out.</p>
+        <p class="ask">Mark where you stand, now and on the way out</p>
         <div class="scale">
           <span class="pole" data-bind="poleAgainst"></span>
           <i class="tick"></i><i class="tick"></i><i class="tick"></i>
@@ -482,33 +478,34 @@ body {
       </div>
     </div>
 
-    <div class="rule" style="margin-top: 6mm;"></div>
+    <div class="rule" style="margin-top: 5mm;"></div>
 
-    <div class="context">
-      <section>
-        <div class="kicker">What the words mean</div>
-        <dl class="terms" data-bind="terms"></dl>
-      </section>
-      <section>
-        <div class="kicker">The real disagreement</div>
-        <div class="split">
-          <div>
-            <div class="label">Both sides agree</div>
-            <p data-bind="agreed"></p>
-          </div>
-          <div class="contested">
-            <div class="label">They split on</div>
-            <p data-bind="split"></p>
-          </div>
+    <section class="terms">
+      <div class="kicker">What the words mean</div>
+      <dl class="band-row band-row--3" data-bind="terms"></dl>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="clash">
+      <div class="kicker">The real disagreement</div>
+      <div class="band-row band-row--2">
+        <div>
+          <div class="label">Both sides agree</div>
+          <p data-bind="agreed"></p>
         </div>
-      </section>
-    </div>
+        <div class="contested">
+          <div class="label">They split on</div>
+          <p data-bind="split"></p>
+        </div>
+      </div>
+    </section>
 
     <div class="rule"></div>
 
     <section class="benches">
       <div class="kicker">Where each side starts</div>
-      <div class="sides" data-bind="benches"></div>
+      <div class="band-row band-row--2" data-bind="benches"></div>
     </section>
 
     <div class="rule"></div>
@@ -533,7 +530,7 @@ body {
 <section class="sheet" id="back">
   <header class="band band--back">
     <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
-    <p class="running" data-bind="motionShort"></p>
+    <p class="running" data-bind="motion"></p>
   </header>
 
   <div class="body">
@@ -571,9 +568,13 @@ const DEBATE = {
   number: "Debate Club #9",
   when: "Motion two of two",
 
-  // The motion exactly as it will read on stage. The formula leads in, the
-  // claim carries the page.
-  motion: '<span class="formula">This Club Believes that</span>Respecting personal autonomy requires society to tolerate self destructive choices',
+  // The ritual lead-in, set smaller above the claim. Leave it out and the
+  // motion starts at full size.
+  formula: "This Club Believes that",
+
+  // The claim itself, worded exactly as it will be read out. This is what the
+  // room votes on, so it carries the page. <br> only to stop an ugly break.
+  motion: "Respecting personal autonomy requires society to tolerate self destructive choices",
 
   // The two ends of the seven point scale, in the audience's words.
   poleAgainst: "Step in",
@@ -587,7 +588,7 @@ const DEBATE = {
     ["Self destructive choices",
      "Decisions that risk serious physical, psychological, financial or social harm, mainly to the person making them. Refusing treatment, addiction, gambling, extreme sport, assisted dying."],
     ["Tolerate",
-     "To refrain from prohibiting, preventing or punishing a choice you disagree with. Not the same as approving of it. The motion asks whether society should allow, not whether it should applaud."],
+     "To refrain from prohibiting, preventing or punishing a choice you disagree with. Not the same as approving of it: the motion asks whether society should allow, not whether it should applaud."],
   ],
 
   // Name the common ground first, then the one question the evening turns on.
@@ -603,10 +604,10 @@ const DEBATE = {
 
   // The running order. Keep each step to a line.
   steps: [
-    "The motion is revealed. This sheet is the first anyone sees of it.",
+    "The motion is revealed. Nobody saw it beforehand.",
     "Vote on it before a word is spoken.",
-    "Debaters are drawn at random. If your name comes out, you argue.",
-    "The teams have their say, then the floor opens to the room.",
+    "Debaters are drawn at random.",
+    "The teams speak, then the floor opens.",
     "Vote again. The room decides who moved it.",
   ],
 
@@ -617,18 +618,15 @@ const DEBATE = {
 const $ = (name) => document.querySelectorAll('[data-bind="' + name + '"]');
 const set = (name, html) => $(name).forEach((el) => (el.innerHTML = html));
 
-for (const key of ["number", "when", "motion", "poleAgainst", "poleFor", "agreed", "split"]) {
-  set(key, DEBATE[key]);
+for (const key of ["number", "when", "formula", "motion", "poleAgainst", "poleFor", "agreed", "split"]) {
+  set(key, DEBATE[key] || "");
 }
 
-// The back page carries the motion in running type, so it never wraps to two
-// lines there and never keeps the front page's manual break.
-set("motionShort", DEBATE.motion.replace(/<br\s*\/?>/g, " "));
-
 set("benches", (DEBATE.benches || []).map(([side, line]) =>
-  '<div class="side"><b>' + side + "</b><p>" + line + "</p></div>").join(""));
+  "<div><b>" + side + "</b><p>" + line + "</p></div>").join(""));
 
-set("terms", DEBATE.terms.map(([term, meaning]) => "<dt>" + term + "</dt><dd>" + meaning + "</dd>").join(""));
+set("terms", DEBATE.terms.map(([term, meaning]) =>
+  "<div><dt>" + term + "</dt><dd>" + meaning + "</dd></div>").join(""));
 
 set("steps", DEBATE.steps.map((text, i) =>
   '<li><div class="n">' + (i + 1) + "</div><p>" + text + "</p></li>").join(""));
