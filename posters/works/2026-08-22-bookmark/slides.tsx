@@ -21,8 +21,8 @@ import "./slides.css";
 //                               shows above the pages. Never the small print.
 //   One voice line.             Exactly one sentence you are meant to remember.
 //                               Where it sits is what changes between variations.
-//   The address at the foot.    contrarian.club, in gold micro caps, always
-//                               last, always the same size.
+//   The address at the foot.    the Instagram handle, in gold micro caps,
+//                               always last, always the same size.
 //   Gold is punctuation.        Rules, numerals and the address. Never a fill.
 //
 // The art is Renaissance and every painting is a person reading or arguing,
@@ -98,7 +98,7 @@ function Tick({ width = 78 }: { width?: number }) {
   return <div style={{ width, height: 2, background: GOLD }} />;
 }
 
-const ADDRESS = "contrarian.club";
+const ADDRESS = "@thecontrarian.club";
 
 // ---------------------------------------------------------------------------
 // 1. The Column
@@ -294,7 +294,7 @@ export function Manifesto({
 
         <Hairline />
         <div style={{ height: 40 }} />
-        <Lockup width={252} />
+        <Lockup width={252} artwork="left" />
         <div style={{ height: 32 }} />
         <Micro color="var(--cc-muted)" size={21}>
           {ADDRESS}
@@ -382,7 +382,7 @@ export function Ticket({
         <div style={{ height: 40 }} />
         <Hairline />
         <div style={{ height: 40 }} />
-        <Lockup width={244} />
+        <Lockup width={244} artwork="left" />
         <div style={{ height: 28 }} />
         <Micro color="var(--cc-gold-deep)" size={21}>
           {ADDRESS}
@@ -510,7 +510,7 @@ export function Spine({ art, line }: { art: Art; line: ReactNode }) {
 
         <div style={{ flex: 1 }} />
 
-        <Lockup width={236} />
+        <Lockup width={236} artwork="left" />
         <div style={{ height: 26 }} />
         <Micro color="var(--cc-muted)" size={20} tracking={0.26}>
           Bangalore

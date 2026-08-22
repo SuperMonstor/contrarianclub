@@ -154,6 +154,17 @@ body {
 
 .motion-block { flex: none; padding: 6.5mm 0 0; }
 
+.motion .formula {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13pt;
+  letter-spacing: 0;
+  color: var(--gold-deep);
+  margin-bottom: 1.2mm;
+}
+
 .motion {
   font-family: var(--display);
   font-weight: 700;
@@ -201,7 +212,7 @@ body {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 10mm;
-  padding: 6mm 0 4mm;
+  padding: 5mm 0 3.5mm;
 }
 
 .context > section + section {
@@ -247,9 +258,37 @@ body {
 
 .split .contested p { color: var(--ink); }
 
+.benches { flex: none; padding: 4mm 0; }
+
+.benches .sides {
+  margin-top: 3.5mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10mm;
+}
+
+.benches .side + .side {
+  border-left: 0.3mm solid var(--rule-faint);
+  padding-left: 10mm;
+  margin-left: -4mm;
+}
+
+.benches .side b {
+  display: block;
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 1.2mm;
+}
+
+.benches .side p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+
 /* Front, how the night runs --------------------------------------------- */
 
-.runs { flex: none; padding: 4.5mm 0; }
+.runs { flex: none; padding: 4mm 0; }
 
 .steps {
   margin-top: 3.5mm;
@@ -279,7 +318,7 @@ body {
 .case .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
 .case .head .hint { max-width: 122mm; text-align: right; }
 
-.points { flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 4mm; }
+.points { flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 3mm; }
 
 .point { display: flex; gap: 4mm; align-items: flex-start; }
 
@@ -298,12 +337,12 @@ body {
 
 .point .line {
   border-bottom: 0.35mm solid var(--rule);
-  height: 9mm;
+  height: 8.5mm;
 }
 
 .point .line--why {
   border-bottom-color: var(--rule-faint);
-  height: 8mm;
+  height: 7.5mm;
   display: flex;
   align-items: flex-end;
   padding-bottom: 1mm;
@@ -472,6 +511,13 @@ body {
 
     <div class="rule"></div>
 
+    <section class="benches">
+      <div class="kicker">Where each side starts</div>
+      <div class="sides" data-bind="benches"></div>
+    </section>
+
+    <div class="rule"></div>
+
     <section class="runs">
       <div class="kicker">How the night runs</div>
       <ol class="steps" data-bind="steps"></ol>
@@ -482,7 +528,7 @@ body {
     <section class="case">
       <div class="head">
         <div class="kicker" style="flex: none;">Your case</div>
-        <p class="hint">Four or five points, in your own words. Write the trigger, not the speech. The rest you say on stage.</p>
+        <p class="hint">Your points, in your own words. Write the trigger, not the speech. The rest you say on stage.</p>
       </div>
       <div class="points" data-bind="points"></div>
     </section>
@@ -527,40 +573,49 @@ body {
 // Everything that changes from one debate to the next lives here. Nothing
 // above this line should need touching.
 const DEBATE = {
-  number: "Debate 10",
-  when: "Placeholder date &middot; Placeholder venue",
+  number: "Debate Club #9",
+  when: "Motion two of two",
 
-  // The motion exactly as it will read on stage. Two lines is the comfortable
-  // maximum. Use <br> only to stop an ugly break.
-  motion: "The motion goes here, worded exactly as it<br>will be read out on the night",
+  // The motion exactly as it will read on stage. The formula leads in, the
+  // claim carries the page.
+  motion: '<span class="formula">This Club Believes that</span>Respecting personal autonomy requires society to tolerate self destructive choices',
 
   // The two ends of the seven point scale, in the audience's words.
-  poleAgainst: "Disagree",
-  poleFor: "Agree",
+  poleAgainst: "Step in",
+  poleFor: "Leave them to it",
 
-  // Two or three terms, defined so that neither side would object to the
-  // wording. A loaded definition decides the debate before it starts.
+  // Defined so that neither side would object to the wording. A loaded
+  // definition decides the motion before anyone speaks.
   terms: [
-    ["First term", "A neutral one line definition, phrased so that both sides would accept it as fair before the debate begins."],
-    ["Second term", "The second word the room will otherwise argue past each other about, defined in the same plain way."],
-    ["Third term", "Drop this row if the motion only turns on two words. Three is the ceiling."],
+    ["Personal autonomy",
+     "A competent adult's capacity to make informed, voluntary decisions about their own life, by their own values, with nobody coercing them."],
+    ["Self destructive choices",
+     "Decisions that risk serious physical, psychological, financial or social harm, mainly to the person making them. Refusing treatment, addiction, gambling, extreme sport, assisted dying."],
+    ["Tolerate",
+     "To refrain from prohibiting, preventing or punishing a choice you disagree with. Not the same as approving of it. The motion asks whether society should allow, not whether it should applaud."],
   ],
 
-  // The single most useful thing on the sheet. Name the common ground first,
-  // then the one question the evening actually turns on.
-  agreed: "State the ground nobody is contesting, so the room does not spend twenty minutes proving a point both sides already grant.",
-  split: "State the one question the evening actually turns on, as a question, in a single sentence.",
+  // Name the common ground first, then the one question the evening turns on.
+  agreed: "Autonomy matters, and society has some duty to prevent serious harm. Neither side denies either, and both accept that some limits on choice are already justified.",
+  split: "Is stopping someone from seriously harming themselves a legitimate exercise of social responsibility, or an unjustified exercise of control over their life?",
+
+  // Where each bench starts. Optional: delete the key and the block does not
+  // draw.
+  benches: [
+    ["For the motion", "An adult who knowingly chooses something that harms mainly themselves should be left to it, however unwise the choice looks from outside."],
+    ["Against", "Autonomy is not absolute. Where the harm is severe or irreversible, or consent is compromised, society may legitimately restrict the choice."],
+  ],
 
   // The running order. Keep each step to a line.
   steps: [
-    "Vote on the motion before anyone speaks.",
-    "Opening cases, one speaker a side.",
-    "Open floor. Raise a hand, take the mic, two minutes.",
-    "Closing statements from both sides.",
+    "The motion is revealed. This sheet is the first anyone sees of it.",
+    "Vote on it before a word is spoken.",
+    "Debaters are drawn at random. If your name comes out, you argue.",
+    "The teams have their say, then the floor opens to the room.",
     "Vote again. The room decides who moved it.",
   ],
 
-  points: 5,   // writing blocks on the front
+  points: 4,   // writing blocks on the front
   rows: 5,     // rebuttal rows on the back
 };
 
@@ -574,6 +629,9 @@ for (const key of ["number", "when", "motion", "poleAgainst", "poleFor", "agreed
 // The back page carries the motion in running type, so it never wraps to two
 // lines there and never keeps the front page's manual break.
 set("motionShort", DEBATE.motion.replace(/<br\s*\/?>/g, " "));
+
+set("benches", (DEBATE.benches || []).map(([side, line]) =>
+  '<div class="side"><b>' + side + "</b><p>" + line + "</p></div>").join(""));
 
 set("terms", DEBATE.terms.map(([term, meaning]) => "<dt>" + term + "</dt><dd>" + meaning + "</dd>").join(""));
 
