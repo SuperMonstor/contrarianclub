@@ -28,10 +28,20 @@ node handouts/build.cjs --pdf
 ```
 
 **Edit the `DEBATE` object at the bottom of `handout.src.html` and nothing
-else.** Everything that changes between debates lives there: the number, the
-date and venue, the motion, the poles of the scale, the terms, the agreed
-ground, the split, the running order, and how many writing blocks and
-rebuttal rows to draw. The layout above it is not a per-event decision.
+else.** Everything that changes between debates lives there: the edition, the
+line under it, the ritual formula, the claim, the poles of the scale, the
+terms, the agreed ground, the split, where each bench starts, the running
+order, and how many writing blocks and rebuttal rows to draw. The layout above
+it is not a per-event decision.
+
+A night with two motions gets two sheets, one per motion. The `when` field is
+free text, and is worth more as "Motion two of two" than as a date: everybody
+holding one is already in the room.
+
+The front page is a fixed budget. Long definitions and five writing blocks do
+not both fit, and the honest trade is to drop `points` to four rather than
+crowd the lines against the trim edge. Rebuild and look at it. If the last
+rule sits within a centimetre of the paper edge, cut copy or cut a block.
 
 `build.cjs` inlines the fonts and the wordmark as data URIs and writes
 `handout.html`, then `--pdf` renders `out/handout.pdf` at true A4. The built
@@ -58,6 +68,11 @@ grant.
 sentences, the motion has two debates in it and one of them should be cut.
 
 Three terms is the ceiling. Two is usually right.
+
+`benches` states where each side starts, one sentence each. It is the most
+useful thing on the sheet for anyone who might be drawn to argue, and it has
+to be fair to both benches or it is campaigning. Delete the key and the band
+does not draw.
 
 ## Printing
 
