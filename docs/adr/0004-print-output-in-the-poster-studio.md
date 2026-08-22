@@ -34,6 +34,14 @@ out. A screenshot ships tagged 72dpi, so a printer placing a bookmark would
 get a 16 x 50 inch image and have to know to resize it. The pixels are right
 either way; the file should say how big it is.
 
+Print ships PNG, not PDF. A PDF with live type was the obvious thing to hand a
+press, and Chrome's print path produced one at exact size. It also composited
+the page differently from the screen path: CSS filters were dropped, a
+mix-blend-mode layer flattened, and a layered text-shadow came out as an
+opaque rectangle behind the words. The result was a different design. The
+screenshot uses the same compositor as the studio preview, so it is the only
+export that is what was approved, and it is what goes to the printer.
+
 A format may carry a bleed: extra canvas outside the trim on every side, with
 the layout staying exactly where it is and the surface running out past where
 the guillotine lands. A piece that reaches its edges wants one, since a cut
