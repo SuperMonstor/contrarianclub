@@ -150,12 +150,11 @@ const work: WorkSpec = {
         <Back
           bleed={format.bleed}
           qr={qr}
-          kicker="Scan for the next debate"
           blurb={
             <>
-              A room in Bangalore where the motion is
-              announced on the night and anyone can
-              take the floor.
+              Come with an opinion.
+              <br />
+              Leave with a better one.
             </>
           }
           url="thecontrarian.club"

@@ -505,13 +505,11 @@ export function Index({
 
 export function Back({
   qr,
-  kicker,
   blurb,
   url,
   bleed,
 }: {
   qr: string;
-  kicker: string;
   blurb: ReactNode;
   url: string;
   bleed?: number;
@@ -535,18 +533,15 @@ export function Back({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: 32,
+            gap: 48,
           }}
         >
           <div className="bm-qr">
             <img src={qr} alt={`QR code for ${url}`} />
           </div>
-          <Micro size={21} tracking={0.3}>
-            {kicker}
-          </Micro>
           <p
             className="value"
-            style={{ fontSize: 33, lineHeight: 1.32, textAlign: "center", margin: "18px 0 0" }}
+            style={{ fontSize: 35, lineHeight: 1.34, textAlign: "center", margin: 0 }}
           >
             {blurb}
           </p>
