@@ -2,7 +2,8 @@ import type { WorkSpec } from "../../src/core/types";
 import athens from "./assets/athens.jpg";
 import augustine from "./assets/augustine.jpg";
 import jerome from "./assets/jerome.jpg";
-import { Column, Index, Manifesto, Plate, Spine, Ticket } from "./slides";
+import qr from "./assets/qr-club.svg";
+import { Back, Column, Index, Manifesto, Plate, Spine, Ticket } from "./slides";
 
 // A bookmark, printed at 2 x 6 in, handed out at debates and kept for as long
 // as the book lasts. Six variations to choose between, not six slides of one
@@ -133,6 +134,24 @@ const work: WorkSpec = {
               Not the position.
             </>
           }
+        />
+      ),
+    },
+    {
+      label: "7. The Back (shared)",
+      hasImage: false,
+      render: () => (
+        <Back
+          qr={qr}
+          kicker="Scan for the next debate"
+          blurb={
+            <>
+              A room in Bangalore where the motion is
+              announced on the night and anyone can
+              take the floor.
+            </>
+          }
+          url="thecontrarian.club"
         />
       ),
     },

@@ -479,6 +479,70 @@ export function Index({
 }
 
 // ---------------------------------------------------------------------------
+// 7. The Back
+// One back for whichever front wins. It does the job the front cannot: it
+// says where to go next, and it says it to a phone. Set as the reverse of a
+// printed card, so it stays quiet and lets the front be the object.
+// ---------------------------------------------------------------------------
+
+export function Back({
+  qr,
+  kicker,
+  blurb,
+  url,
+}: {
+  qr: string;
+  kicker: string;
+  blurb: ReactNode;
+  url: string;
+}) {
+  return (
+    <div className="bm-sheet">
+      <div className="bm-frame" />
+
+      <div className="bm-body" style={{ padding: "92px 62px 76px", alignItems: "center" }}>
+        <Lockup width={264} align="center" />
+
+        <div style={{ height: 36 }} />
+        <Hairline />
+
+        {/* tile, instruction and blurb read as one block, centred in what the
+            lockup and the foot leave, so the air lands evenly above and below */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 32,
+          }}
+        >
+          <div className="bm-qr">
+            <img src={qr} alt={`QR code for ${url}`} />
+          </div>
+          <Micro size={21} tracking={0.3}>
+            {kicker}
+          </Micro>
+          <p
+            className="value"
+            style={{ fontSize: 33, lineHeight: 1.32, textAlign: "center", margin: "18px 0 0" }}
+          >
+            {blurb}
+          </p>
+        </div>
+
+        <Hairline />
+        <div style={{ height: 28 }} />
+        <Micro color="var(--cc-parchment)" size={21}>
+          {url}
+        </Micro>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // 6. The Spine
 // A gallery label. One figure, one line, and the address set vertically up the
 // left edge where a bookmark's own spine would be. The most restrained of the

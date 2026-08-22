@@ -225,3 +225,25 @@
   text-transform: uppercase;
   color: var(--cc-gold);
 }
+
+/* --- The shared back (variation 7) ---------------------------------------
+   A dark card cannot carry a QR safely: the spec wants dark modules on a
+   light ground and plenty of scanners refuse an inverted one. So the code
+   sits on an ivory tile, which reads as a museum label pinned to the card
+   rather than an apology. The tile is 1.4in wide including the quiet zone,
+   which puts a module at 0.95mm, comfortably above where ink spread starts
+   costing reads.                                                           */
+.bm-qr {
+  position: relative;
+  width: 452px;
+  padding: 14px;
+  background: var(--cc-ivory);
+  border: 1px solid rgba(200, 162, 74, 0.5);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+.bm-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated; /* keep the module edges square at any size */
+}
