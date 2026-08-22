@@ -1,0 +1,160 @@
+<meta charset="utf-8">
+<title>Debate handout</title>
+
+<!--
+  THE CONTRARIAN DEBATE CLUB, speaker handout.
+  One A4 sheet, printed both sides, for anyone who might be drawn to argue.
+  Front is the argument, back is the night.
+
+  The copy lives in the motion folder's debate.js. Build with:
+
+      node handouts/build.cjs handouts/<yyyy-mm-dd>-<slug> --pdf
+-->
+
+<style>
+__SHEET_CSS__
+</style>
+
+<section class="sheet" id="front">
+  <header class="band band--front">
+    <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
+    <div class="meta">
+      <div class="no" data-bind="number"></div>
+      <div class="when" data-bind="when"></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="motion-block">
+      <div class="kicker">The motion</div>
+      <h1 class="motion"><span class="formula" data-bind="formula"></span><span data-bind="motion"></span></h1>
+      <div class="stance">
+        <p class="ask">Mark where you stand, now and on the way out</p>
+        <div class="scale">
+          <span class="pole" data-bind="poleAgainst"></span>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <i class="tick tick--mid"></i>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <span class="pole" data-bind="poleFor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule" style="margin-top: 5mm;"></div>
+
+    <section class="terms">
+      <div class="kicker">What the words mean</div>
+      <dl class="band-row band-row--3" data-bind="terms"></dl>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="clash">
+      <div class="kicker">The real disagreement</div>
+      <div class="band-row band-row--2">
+        <div>
+          <div class="label">Both sides agree</div>
+          <p data-bind="agreed"></p>
+        </div>
+        <div class="contested">
+          <div class="label">They split on</div>
+          <p data-bind="split"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="benches">
+      <div class="kicker">Where each side starts</div>
+      <div class="band-row band-row--2" data-bind="benches"></div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="case">
+      <div class="head">
+        <div class="kicker" style="flex: none;">Your case</div>
+        <p class="hint">Four or five points, one line each, in your own words. On stage you take them one at a time and elaborate, so write the trigger and not the speech.</p>
+      </div>
+      <div class="points" data-bind="points"></div>
+    </section>
+  </div>
+</section>
+
+<section class="sheet" id="back">
+  <header class="band band--back">
+    <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
+    <p class="running" data-bind="motion"></p>
+  </header>
+
+  <div class="body">
+    <section class="how">
+      <div class="kicker">How to do this</div>
+      <ol class="band-row band-row--3" data-bind="how"></ol>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="order">
+      <div class="kicker">The order</div>
+      <div class="rounds" data-bind="rounds"></div>
+      <p class="after" data-bind="afterOrder"></p>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="grid">
+      <div class="kicker">While they speak</div>
+      <p class="hint">One row, one exchange. Their claim on the left, your answer on the right.</p>
+      <div class="cols"><span></span><span>They said</span><span>My answer</span></div>
+      <div class="rows" data-bind="rows"></div>
+    </section>
+
+    <section class="closer">
+      <div class="head">
+        <div class="kicker" style="flex: none;">The one sentence</div>
+        <p class="hint">The last thing you say is the thing the room votes on. Write it before you stand up.</p>
+      </div>
+      <div class="line"></div>
+    </section>
+
+    <footer class="foot">
+      <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_LIGHT__">
+      <span class="handle">instagram.com/thecontrarian.club</span>
+    </footer>
+  </div>
+</section>
+
+<script>
+__DEBATE__
+__RENDER__
+
+set("afterOrder", DEBATE.afterOrder);
+
+set("how", DEBATE.how.map(([when, what]) =>
+  "<li><b>" + when + "</b><p>" + what + "</p></li>").join(""));
+
+// The beats are numbered straight through every round, so "you speak fifth"
+// means something instead of "second, again".
+let beatNo = 0;
+set("rounds", DEBATE.rounds.map(([label, beats]) =>
+  "<div class=\"round\"><b>" + label + "</b>" +
+  beats.map(([beat, named]) =>
+    '<div class="beat' + (named ? " beat--name" : "") + '"><span><i>' +
+    ++beatNo + "</i>" + beat + "</span></div>").join("") +
+  "</div>").join(""));
+
+set("points", Array.from({ length: DEBATE.points }, (_, i) =>
+  '<div class="point"><div class="n">' + (i + 1) + '</div>' +
+  '<div class="lines"><div class="line"></div>' +
+  '<div class="line line--why"><span>because</span></div></div></div>').join(""));
+
+const cell = '<div class="cell">' + '<div class="line"></div>'.repeat(2) + "</div>";
+const row = (n) => '<div class="row"><div class="n">' + n + "</div>" + cell + cell + "</div>";
+
+let n = 0;
+set("rows", DEBATE.rows.map(([label, count]) =>
+  '<div class="round-label">' + label + "</div>" +
+  Array.from({ length: count }, () => row(++n)).join("")).join(""));
+</script>

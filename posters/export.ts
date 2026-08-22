@@ -1,6 +1,7 @@
 import { chromium, type Page } from "playwright";
 import { createServer } from "vite";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { crc32 } from "node:zlib";
 import { resolve } from "node:path";
 import { FORMATS, type FormatId } from "./src/core/formats";
 import type { WorkManifestEntry } from "./src/core/registry";
@@ -15,6 +16,43 @@ import type { WorkManifestEntry } from "./src/core/registry";
 // No Chromium download needed. Uses your installed Google Chrome (channel).
 
 const SCALE = 2; // retina export; 1080-wide art ships at 2160-wide pixels
+
+// Print canvases are drawn at 300px per inch (see formats.ts), so an export at
+// SCALE lands at this many dots per inch on paper.
+const PRINT_DPI = 300 * SCALE;
+
+/** Stamp a PNG's physical size into its pHYs chunk.
+ *
+ *  A screenshot has no idea it is going to a press, so it ships tagged 72dpi
+ *  and a printer placing it gets a 16 x 50 inch bookmark. The pixels are
+ *  right either way, but the person on the other end should not have to know
+ *  that: the file should say how big it is. */
+function stampDpi(file: string, dpi: number) {
+  const png = readFileSync(file);
+  const perMetre = Math.round(dpi / 0.0254);
+
+  const data = Buffer.alloc(9);
+  data.writeUInt32BE(perMetre, 0);
+  data.writeUInt32BE(perMetre, 4);
+  data.writeUInt8(1, 8); // unit: metres
+
+  const type = Buffer.from("pHYs", "latin1");
+  const chunk = Buffer.concat([
+    Buffer.from([0, 0, 0, 9]),
+    type,
+    data,
+    (() => {
+      const crc = Buffer.alloc(4);
+      crc.writeUInt32BE(crc32(Buffer.concat([type, data])) >>> 0, 0);
+      return crc;
+    })(),
+  ]);
+
+  // IHDR is always first and always 13 bytes of data: 8 signature + 8 header
+  // + 13 + 4 crc. pHYs goes after it, before the image data.
+  const at = 8 + 8 + 13 + 4;
+  writeFileSync(file, Buffer.concat([png.subarray(0, at), chunk, png.subarray(at)]));
+}
 const FALLBACK_FORMATS: FormatId[] = ["ig-portrait", "ig-square", "ig-story"];
 
 /** The specs import images, which only Vite can resolve, so node cannot read
@@ -109,9 +147,12 @@ async function main() {
             ? { path: file, type: "png" }
             : { path: file, type: "jpeg", quality: 92 },
         );
-        console.log(
-          `  ✓ ${name.padEnd(22)} ${fmt.width * SCALE}×${fmt.height * SCALE}  → ${file}`,
-        );
+        if (fmt.print) stampDpi(file, PRINT_DPI);
+
+        const size = fmt.print
+          ? `${fmt.width / 300} x ${fmt.height / 300}in @ ${PRINT_DPI}dpi`
+          : `${fmt.width * SCALE}×${fmt.height * SCALE}`;
+        console.log(`  ✓ ${name.padEnd(22)} ${size.padEnd(24)} → ${file}`);
         await page.close();
       }
     }

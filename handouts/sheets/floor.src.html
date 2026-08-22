@@ -1,0 +1,174 @@
+<meta charset="utf-8">
+<title>Open floor handout</title>
+
+<!--
+  THE CONTRARIAN DEBATE CLUB, open floor handout.
+  One A4 side, for everyone in the room. The same argument the speakers get,
+  then the rules for taking the floor and somewhere to draft the question.
+
+  The copy lives in the motion folder's debate.js. The rules below are the
+  club's standing ones and are the same for every motion, so they live here.
+
+      node handouts/build.cjs handouts/<yyyy-mm-dd>-<slug> --pdf
+-->
+
+<style>
+__SHEET_CSS__
+
+/* The open floor sheet, one side ---------------------------------------- */
+
+.floor-rules { flex: none; padding: 3.5mm 0 3mm; }
+
+.rules {
+  margin-top: 3.5mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5mm 10mm;
+}
+
+.rules li { list-style: none; display: grid; grid-template-columns: 6.5mm 1fr; }
+
+.rules i {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: normal;
+  font-size: 9.5pt;
+  color: var(--gold);
+  line-height: 1.25;
+}
+
+.rules p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+
+.ask { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 4mm; }
+
+.ask .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
+.ask .head .hint { max-width: 122mm; text-align: right; }
+
+.slots { flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 3mm; }
+
+.slot { display: flex; gap: 4mm; align-items: flex-start; }
+
+.slot .n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--gold);
+  width: 7mm;
+  flex: none;
+  line-height: 1;
+  padding-top: 4mm;
+}
+
+.slot .line { flex: 1; border-bottom: 0.35mm solid var(--rule); height: 9.5mm; }
+
+/* The one that gets asked, marked off from the drafts above it. */
+.chosen { flex: none; border-top: 0.4mm solid var(--gold); margin-top: 4mm; padding-top: 4mm; }
+.chosen .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
+.chosen .head .hint { max-width: 112mm; text-align: right; }
+.chosen .line { border-bottom: 0.35mm solid var(--rule); height: 11mm; margin-top: 2.5mm; }
+</style>
+
+<section class="sheet" id="floor">
+  <header class="band band--front">
+    <img class="wordmark" alt="The Contrarian Debate Club" src="__LOGO_DARK__">
+    <div class="meta">
+      <div class="no" data-bind="number"></div>
+      <div class="when" data-bind="when"></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="motion-block">
+      <div class="kicker">The motion</div>
+      <h1 class="motion"><span class="formula" data-bind="formula"></span><span data-bind="motion"></span></h1>
+      <div class="stance">
+        <p class="ask">Mark where you stand, now and on the way out</p>
+        <div class="scale">
+          <span class="pole" data-bind="poleAgainst"></span>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <i class="tick tick--mid"></i>
+          <i class="tick"></i><i class="tick"></i><i class="tick"></i>
+          <span class="pole" data-bind="poleFor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule" style="margin-top: 5mm;"></div>
+
+    <section class="terms">
+      <div class="kicker">What the words mean</div>
+      <dl class="band-row band-row--3" data-bind="terms"></dl>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="clash">
+      <div class="kicker">The real disagreement</div>
+      <div class="band-row band-row--2">
+        <div>
+          <div class="label">Both sides agree</div>
+          <p data-bind="agreed"></p>
+        </div>
+        <div class="contested">
+          <div class="label">They split on</div>
+          <p data-bind="split"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="benches">
+      <div class="kicker">Where each side starts</div>
+      <div class="band-row band-row--2" data-bind="benches"></div>
+    </section>
+
+    <div class="rule"></div>
+
+    <div class="rule"></div>
+
+    <section class="floor-rules">
+      <div class="kicker">Taking the floor</div>
+      <ol class="rules" data-bind="rules"></ol>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="ask">
+      <div class="head">
+        <div class="kicker" style="flex: none;">Write it down first</div>
+        <p class="hint">Draft them here while you listen. One sentence each, and if it does not fit on the line it is not ready.</p>
+      </div>
+      <div class="slots" data-bind="slots"></div>
+      <div class="chosen">
+        <div class="head">
+          <div class="kicker" style="flex: none;">The one you will ask</div>
+          <p class="hint">Pick the best of them. One question, put to the room.</p>
+        </div>
+        <div class="line"></div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script>
+__DEBATE__
+__RENDER__
+
+// The club's standing rules for the open floor. The same at every debate, so
+// they belong to the sheet and not to the motion.
+const RULES = [
+  "Write your question down before you raise your hand. If it does not fit in one sentence, it is not ready.",
+  "One question at a time, put to the room and not to one person. If you have several, pick the best one.",
+  "Sharp and specific. The best questions are not opinions in disguise, they are questions the other side has to answer.",
+  "No personal anecdotes. We are stress-testing arguments, not swapping experiences. If it opens with \"I once knew someone who\", hold it.",
+  "A warning at sixty seconds, a hard cutoff at ninety. The buzzer is not a suggestion.",
+];
+
+const DRAFTS = 3;
+
+set("rules", RULES.map((rule, i) => "<li><i>" + (i + 1) + "</i><p>" + rule + "</p></li>").join(""));
+
+set("slots", Array.from({ length: DRAFTS }, (_, i) =>
+  '<div class="slot"><div class="n">' + (i + 1) + '</div><div class="line"></div></div>').join(""));
+</script>

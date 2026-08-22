@@ -29,6 +29,11 @@ lossless PNG of one is four times the bytes for no visible gain; on paper that
 reverses. JPEG artefacts live in large flat dark areas, which is most of what
 a gallery-at-night piece is made of, and a press finds them.
 
+A print export is stamped with its physical size (a PNG pHYs chunk) on the way
+out. A screenshot ships tagged 72dpi, so a printer placing a bookmark would
+get a 16 x 50 inch image and have to know to resize it. The pixels are right
+either way; the file should say how big it is.
+
 Formats carry trim only. No bleed box, no crop marks, no CMYK conversion: the
 press-ready step is a printer's job and is done per print run, on the exported
 file.
