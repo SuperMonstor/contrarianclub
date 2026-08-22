@@ -95,16 +95,19 @@ async function main() {
         await page.waitForSelector('body[data-ready="true"]', { timeout: 15000 });
 
         // A poster is just <format>.<ext>. A carousel numbers its slides.
-        const ext = hasImage ? "jpg" : "png";
+        // Print goes out lossless whatever it carries; on screen a painting
+        // ships as JPEG, since a lossless PNG of one is four times the bytes.
+        const lossless = fmt.print || !hasImage;
+        const ext = lossless ? "png" : "jpg";
         const n = String(slide + 1).padStart(2, "0");
         const name =
           work.slides.length > 1 ? `${fmtId}-${n}.${ext}` : `${fmtId}.${ext}`;
         const file = resolve(outDir, name);
 
         await page.locator("#poster").screenshot(
-          hasImage
-            ? { path: file, type: "jpeg", quality: 92 }
-            : { path: file, type: "png" },
+          lossless
+            ? { path: file, type: "png" }
+            : { path: file, type: "jpeg", quality: 92 },
         );
         console.log(
           `  ✓ ${name.padEnd(22)} ${fmt.width * SCALE}×${fmt.height * SCALE}  → ${file}`,

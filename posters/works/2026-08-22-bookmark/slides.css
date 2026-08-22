@@ -8,6 +8,21 @@
    edge here, which is inside a guillotine's tolerance. Each bookmark paints
    a full-bleed sheet over it and carries its own grain and vignette, tuned
    for a tall narrow object rather than a square one.
+
+   Tuned for ink, not for a screen. Three things follow from that and they are
+   the reason these numbers look wrong next to a social piece:
+
+     The black floor sits at #0d0a08 rather than #080604. A press cannot hold
+     a ramp that runs into solid, and the last few levels were invisible on
+     screen anyway, so nothing is lost and the vignette survives.
+
+     The grain runs at 0.09 rather than 0.055. It is dither: it breaks the
+     long dark ramps into noise the screening can resolve, which is what keeps
+     six inches of near-black from banding.
+
+     The paintings run lighter than they want to look. Ink gains on paper and
+     the shadows close up, so a treatment judged on a monitor prints muddy.
+     These are set about a stop above where they looked right on screen.
    ========================================================================== */
 
 .bm-sheet {
@@ -16,7 +31,7 @@
   overflow: hidden;
   background:
     radial-gradient(130% 34% at 50% -6%, rgba(200, 162, 74, 0.12), transparent 62%),
-    linear-gradient(180deg, #0c0a07 0%, #0a0806 58%, #080604 100%),
+    linear-gradient(180deg, #100c09 0%, #0e0b08 58%, #0d0a08 100%),
     var(--cc-black);
 }
 
@@ -27,7 +42,7 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.09;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -40,7 +55,7 @@
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(76% 62% at 50% 46%, transparent 42%, rgba(0, 0, 0, 0.62) 100%);
+  background: radial-gradient(76% 62% at 50% 46%, transparent 42%, rgba(0, 0, 0, 0.52) 100%);
 }
 
 .bm-body {
@@ -66,18 +81,18 @@
 }
 /* Raphael's fresco is chalk-pale end to end and needs a hard knock-back */
 .bm-art--fresco {
-  filter: saturate(0.76) contrast(1.08) brightness(0.66) sepia(0.16);
+  filter: saturate(0.78) contrast(1.06) brightness(0.69) sepia(0.15);
 }
 /* the two studies: mid-toned to begin with, so only warmed and settled */
 .bm-art--study {
-  filter: saturate(0.84) contrast(1.05) brightness(0.8) sepia(0.12);
+  filter: saturate(0.86) contrast(1.03) brightness(0.87) sepia(0.11);
 }
 .bm-art--figure {
-  filter: saturate(0.82) contrast(1.06) brightness(0.74) sepia(0.13);
+  filter: saturate(0.84) contrast(1.03) brightness(0.81) sepia(0.12);
 }
 /* held back until it is texture rather than picture */
 .bm-art--ghost {
-  filter: saturate(0.5) contrast(1.02) brightness(0.55) sepia(0.2);
+  filter: saturate(0.5) contrast(1.0) brightness(0.6) sepia(0.2);
 }
 
 /* --- Legibility scrims, one per composition ------------------------------ */
@@ -91,48 +106,48 @@
 .bm-scrim--column {
   background: linear-gradient(
     180deg,
-    rgba(8, 6, 4, 0.94) 0%,
-    rgba(8, 6, 4, 0.5) 13%,
-    rgba(8, 6, 4, 0.08) 26%,
-    rgba(8, 6, 4, 0.1) 50%,
-    rgba(8, 6, 4, 0.62) 66%,
-    rgba(8, 6, 4, 0.96) 77%,
-    #080604 100%
+    rgba(13, 10, 8, 0.94) 0%,
+    rgba(13, 10, 8, 0.5) 13%,
+    rgba(13, 10, 8, 0.08) 26%,
+    rgba(13, 10, 8, 0.1) 50%,
+    rgba(13, 10, 8, 0.62) 66%,
+    rgba(13, 10, 8, 0.96) 77%,
+    #0d0a08 100%
   );
 }
 /* 4. Ticket: the art block alone, fading into the stub */
 .bm-scrim--ticket {
   background: linear-gradient(
     180deg,
-    rgba(8, 6, 4, 0.82) 0%,
-    rgba(8, 6, 4, 0.28) 22%,
-    rgba(8, 6, 4, 0.22) 44%,
-    rgba(8, 6, 4, 0.86) 78%,
-    rgba(8, 6, 4, 0.99) 100%
+    rgba(13, 10, 8, 0.82) 0%,
+    rgba(13, 10, 8, 0.28) 22%,
+    rgba(13, 10, 8, 0.22) 44%,
+    rgba(13, 10, 8, 0.86) 78%,
+    rgba(13, 10, 8, 0.99) 100%
   );
 }
 /* 5. Index: the painting is wallpaper, so the scrim is nearly flat */
 .bm-scrim--index {
   background: linear-gradient(
     180deg,
-    rgba(8, 6, 4, 0.94) 0%,
-    rgba(8, 6, 4, 0.88) 34%,
-    rgba(8, 6, 4, 0.86) 62%,
-    rgba(8, 6, 4, 0.62) 78%,
-    rgba(8, 6, 4, 0.72) 90%,
-    rgba(8, 6, 4, 0.94) 100%
+    rgba(13, 10, 8, 0.94) 0%,
+    rgba(13, 10, 8, 0.88) 34%,
+    rgba(13, 10, 8, 0.86) 62%,
+    rgba(13, 10, 8, 0.62) 78%,
+    rgba(13, 10, 8, 0.72) 90%,
+    rgba(13, 10, 8, 0.94) 100%
   );
 }
 /* 6. Spine: a dark head for the statement, the figure left alone below */
 .bm-scrim--spine {
   background: linear-gradient(
     180deg,
-    rgba(8, 6, 4, 0.96) 0%,
-    rgba(8, 6, 4, 0.88) 26%,
-    rgba(8, 6, 4, 0.3) 44%,
-    rgba(8, 6, 4, 0.18) 62%,
-    rgba(8, 6, 4, 0.82) 88%,
-    rgba(8, 6, 4, 0.97) 100%
+    rgba(13, 10, 8, 0.96) 0%,
+    rgba(13, 10, 8, 0.88) 26%,
+    rgba(13, 10, 8, 0.3) 44%,
+    rgba(13, 10, 8, 0.18) 62%,
+    rgba(13, 10, 8, 0.82) 88%,
+    rgba(13, 10, 8, 0.97) 100%
   );
 }
 

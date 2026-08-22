@@ -18,6 +18,10 @@ export interface Format {
   label: string;
   width: number;
   height: number;
+  /** Headed for paper rather than a feed. Print formats always export
+   *  lossless: JPEG artefacts live in large flat dark areas, which is most of
+   *  what a gallery-at-night piece is made of, and a press will find them. */
+  print?: boolean;
 }
 
 export const FORMATS: Record<FormatId, Format> = {
@@ -26,7 +30,7 @@ export const FORMATS: Record<FormatId, Format> = {
   "ig-story": { id: "ig-story", label: "IG Story", width: 1080, height: 1920 },
   "carousel-slide": { id: "carousel-slide", label: "Carousel Slide", width: 1080, height: 1350 },
   // print: 2 x 6 in at 300px/in, ships at 1200x3600 (600dpi)
-  bookmark: { id: "bookmark", label: "Bookmark (2x6in)", width: 600, height: 1800 },
+  bookmark: { id: "bookmark", label: "Bookmark (2x6in)", width: 600, height: 1800, print: true },
 };
 
 export const FORMAT_LIST: Format[] = Object.values(FORMATS);
