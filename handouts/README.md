@@ -2,11 +2,12 @@
 
 One A4 sheet, printed both sides, handed out as people sit down.
 
-The front is what the room needs before anyone speaks: the motion, the two or
-three words the argument will otherwise be fought over, the one question the
-evening actually turns on, the running order, and five numbered blocks to jot
-a case into. The back is taken live: five rows of what the other side said
-against what you will answer, and one line for the sentence you close on.
+The two sides split by job. The front is the argument: the motion, the two or
+three words it will otherwise be fought over, the one question the evening
+actually turns on, where each bench starts, and five numbered blocks to jot a
+case into. The back is the night: what a speaker is being asked to do, the
+running order with room to write who is speaking, a rebuttal grid split by
+round, and one line for the sentence you close on.
 
 It is a form, so it is on white paper. The gallery-at-night palette is for
 things people look at. This is a thing people write on, and a dark sheet is
@@ -30,18 +31,26 @@ node handouts/build.cjs --pdf
 **Edit the `DEBATE` object at the bottom of `handout.src.html` and nothing
 else.** Everything that changes between debates lives there: the edition, the
 line under it, the ritual formula, the claim, the poles of the scale, the
-terms, the agreed ground, the split, where each bench starts, the running
-order, and how many writing blocks and rebuttal rows to draw. The layout above
-it is not a per-event decision.
+terms, the agreed ground, the split, where each bench starts, what a speaker
+is asked to do, the running order, and how many writing blocks and rebuttal
+rows to draw. The layout above it is not a per-event decision.
+
+`rounds` is the format itself. Each round is a label and its beats, and a beat
+marked `true` gets a rule to write the speaker's name on. The beats are
+numbered straight through every round, so "you speak fifth" means something.
+`rows` mirrors it: one entry per round, and the number of exchanges to rule
+under it. Change the format and both follow.
 
 A night with two motions gets two sheets, one per motion. The `when` field is
 free text, and is worth more as "Motion two of two" than as a date: everybody
 holding one is already in the room.
 
-The front page is a fixed budget. Long definitions and five writing blocks do
-not both fit, and the honest trade is to drop `points` to four rather than
-crowd the lines against the trim edge. Rebuild and look at it. If the last
-rule sits within a centimetre of the paper edge, cut copy or cut a block.
+Both pages are a fixed budget and neither scrolls. Long definitions and five
+writing blocks do not both fit on the front, and more rebuttal rows on the
+back buy themselves out of the height of every line. Rebuild and look at it.
+If the last rule sits within a centimetre of the paper edge, or a writing line
+has dropped under about 8mm, cut copy or cut a row. A line nobody can write on
+is not a line.
 
 `build.cjs` inlines the fonts and the wordmark as data URIs and writes
 `handout.html`, then `--pdf` renders `out/handout.pdf` at true A4. The built

@@ -282,31 +282,6 @@ body {
 
 .benches p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
 
-/* Front, how the night runs --------------------------------------------- */
-
-.runs { flex: none; padding: 3.5mm 0; }
-
-.steps {
-  margin-top: 3.5mm;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-}
-
-.steps li { list-style: none; padding-right: 4mm; border-right: 0.3mm solid var(--rule-faint); }
-.steps li + li { padding-left: 4mm; }
-.steps li:last-child { border-right: 0; padding-right: 0; }
-
-.steps .n {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 11pt;
-  color: var(--gold);
-  line-height: 1;
-}
-
-.steps p { font-size: 7.2pt; line-height: 1.35; color: var(--ink-soft); margin-top: 1.4mm; }
-
 /* Front, your case ------------------------------------------------------ */
 
 .case { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 6mm; }
@@ -352,20 +327,88 @@ body {
   color: #c6ba9f;
 }
 
+/* Back, how to do this, and the order --------------------------------- */
+
+.how { flex: none; padding: 3.5mm 0 3mm; }
+
+.how li { list-style: none; }
+
+.how b {
+  display: block;
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 1.2mm;
+}
+
+.how p { font-size: 8pt; line-height: 1.38; color: var(--ink-soft); }
+
+.order { flex: none; padding: 3.5mm 0 3mm; }
+
+.rounds { margin-top: 3.5mm; display: flex; flex-direction: column; gap: 3.5mm; }
+
+.round {
+  display: grid;
+  grid-template-columns: 24mm 1.35fr 1.35fr 1fr 1fr;
+  gap: 5mm;
+  align-items: stretch;
+}
+
+.round > b {
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 8.4pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+/* Every beat is the same height, so the four labels sit on one line. The two
+   that name a person carry a rule at the foot of it. */
+.beat { display: flex; flex-direction: column; min-height: 11mm; }
+
+.beat i {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: normal;
+  font-size: 9pt;
+  color: var(--gold);
+  margin-right: 1.6mm;
+}
+
+.beat span {
+  display: block;
+  font-size: 7.4pt;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-bottom: auto;
+}
+
+/* The two speeches carry a rule to write the speaker's name on. The other
+   two beats are things that happen, not people, so they carry none. */
+.beat--name { border-bottom: 0.35mm solid var(--rule); }
+.beat--name span { color: var(--ink); }
+
+.order .after {
+  margin-top: 3mm;
+  font-size: 7.4pt;
+  line-height: 1.4;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
 /* Back, the rebuttal grid ----------------------------------------------- */
 
 .back-head { flex: none; padding: 7mm 0 0; }
 
-.back-head h2 {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 15pt;
-  margin-top: 3mm;
-}
+.grid { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 3.5mm; }
 
-.back-head .hint { margin-top: 2mm; max-width: 132mm; }
+.grid .hint { margin-top: 1.5mm; max-width: 150mm; }
 
-.grid { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 6mm; }
+.grid .cols { margin-top: 3.5mm; }
 
 .grid .cols {
   display: grid;
@@ -387,6 +430,20 @@ body {
 .grid .cols span:first-child { padding-left: 0; }
 
 .rows { flex: 1; display: flex; flex-direction: column; }
+
+.rows .round-label {
+  flex: none;
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 7.4pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  padding: 2.2mm 0 1.2mm;
+  border-top: 0.3mm solid var(--rule);
+}
+
+.rows .round-label:first-child { border-top: 0; padding-top: 1.5mm; }
 
 .row {
   flex: 1;
@@ -423,7 +480,7 @@ body {
 
 .closer .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8mm; }
 .closer .head .hint { max-width: 112mm; text-align: right; }
-.closer .line { border-bottom: 0.35mm solid var(--rule); height: 9.5mm; margin-top: 3mm; }
+.closer .line { border-bottom: 0.35mm solid var(--rule); height: 11mm; margin-top: 2.5mm; }
 
 .foot {
   flex: none;
@@ -515,17 +572,10 @@ body {
 
     <div class="rule"></div>
 
-    <section class="runs">
-      <div class="kicker">How the night runs</div>
-      <ol class="steps" data-bind="steps"></ol>
-    </section>
-
-    <div class="rule"></div>
-
     <section class="case">
       <div class="head">
         <div class="kicker" style="flex: none;">Your case</div>
-        <p class="hint">Your points, in your own words. Write the trigger, not the speech. The rest you say on stage.</p>
+        <p class="hint">Four or five points, one line each, in your own words. On stage you take them one at a time and elaborate, so write the trigger and not the speech.</p>
       </div>
       <div class="points" data-bind="points"></div>
     </section>
@@ -539,23 +589,33 @@ body {
   </header>
 
   <div class="body">
-    <div class="back-head">
-      <div class="kicker">While they speak</div>
-      <h2>Answer what was said.</h2>
-      <p class="hint">Write down their claim as they made it, not the weaker version that is easy to knock over. Then write your answer beside it. One row, one exchange.</p>
-    </div>
+    <section class="how">
+      <div class="kicker">How to do this</div>
+      <ol class="band-row band-row--3" data-bind="how"></ol>
+    </section>
 
-    <div class="grid">
+    <div class="rule"></div>
+
+    <section class="order">
+      <div class="kicker">The order</div>
+      <div class="rounds" data-bind="rounds"></div>
+      <p class="after" data-bind="afterOrder"></p>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="grid">
+      <div class="kicker">While they speak</div>
+      <p class="hint">One row, one exchange. Their claim on the left, your answer on the right.</p>
       <div class="cols"><span></span><span>They said</span><span>My answer</span></div>
       <div class="rows" data-bind="rows"></div>
-    </div>
+    </section>
 
     <section class="closer">
       <div class="head">
         <div class="kicker" style="flex: none;">The one sentence</div>
         <p class="hint">The last thing you say is the thing the room votes on. Write it before you stand up.</p>
       </div>
-      <div class="line"></div>
       <div class="line"></div>
     </section>
 
@@ -607,17 +667,27 @@ const DEBATE = {
     ["Against", "Autonomy is not absolute. Where the harm is severe or irreversible, or consent is compromised, society may legitimately restrict the choice."],
   ],
 
-  // The running order. Keep each step to a line.
-  steps: [
-    "The motion is revealed. Nobody saw it beforehand.",
-    "Vote on it before a word is spoken.",
-    "Debaters are drawn at random.",
-    "The teams speak, then the floor opens.",
-    "Vote again. The room decides who moved it.",
+  // What a speaker is actually being asked to do, in the order they do it.
+  how: [
+    ["Before you speak",
+     "Write your four or five strongest points on the front, one line each. Not a speech, just what will remind you of one."],
+    ["On stage",
+     "Take them one at a time and elaborate. A couple of minutes, so roughly thirty seconds a point."],
+    ["In the rebuttal",
+     "Write down the claim the other side actually made, then answer that one, not the one you wish they had made."],
   ],
 
-  points: 4,   // writing blocks on the front
-  rows: 5,     // rebuttal rows on the back
+  // The night runs the same cycle twice. Beats marked true get a rule to
+  // write the speaker's name on.
+  rounds: [
+    ["Round one", [["Speech, for", true], ["Speech, against", true], ["Rebuttals", false], ["Open floor", false]]],
+    ["Round two", [["Speech, for", true], ["Speech, against", true], ["Rebuttals", false], ["Open floor", false]]],
+  ],
+
+  afterOrder: "The room votes before the first speech and again after the last. Anyone may take an open floor, drawn or not.",
+
+  points: 5,   // writing blocks on the front
+  rows: [["Round one", 3], ["Round two", 3]],   // rebuttal rows, per round
 };
 
 const $ = (name) => document.querySelectorAll('[data-bind="' + name + '"]');
@@ -633,15 +703,29 @@ set("benches", (DEBATE.benches || []).map(([side, line]) =>
 set("terms", DEBATE.terms.map(([term, meaning]) =>
   "<div><dt>" + term + "</dt><dd>" + meaning + "</dd></div>").join(""));
 
-set("steps", DEBATE.steps.map((text, i) =>
-  '<li><div class="n">' + (i + 1) + "</div><p>" + text + "</p></li>").join(""));
+set("afterOrder", DEBATE.afterOrder);
+
+set("how", DEBATE.how.map(([when, what]) =>
+  "<li><b>" + when + "</b><p>" + what + "</p></li>").join(""));
+
+let beatNo = 0;
+set("rounds", DEBATE.rounds.map(([label, beats]) =>
+  "<div class=\"round\"><b>" + label + "</b>" +
+  beats.map(([beat, named]) =>
+    '<div class="beat' + (named ? " beat--name" : "") + '"><span><i>' +
+    ++beatNo + "</i>" + beat + "</span></div>").join("") +
+  "</div>").join(""));
 
 set("points", Array.from({ length: DEBATE.points }, (_, i) =>
   '<div class="point"><div class="n">' + (i + 1) + '</div>' +
   '<div class="lines"><div class="line"></div>' +
   '<div class="line line--why"><span>because</span></div></div></div>').join(""));
 
-const cell = '<div class="cell">' + '<div class="line"></div>'.repeat(3) + "</div>";
-set("rows", Array.from({ length: DEBATE.rows }, (_, i) =>
-  '<div class="row"><div class="n">' + (i + 1) + "</div>" + cell + cell + "</div>").join(""));
+const cell = '<div class="cell">' + '<div class="line"></div>'.repeat(2) + "</div>";
+const row = (n) => '<div class="row"><div class="n">' + n + "</div>" + cell + cell + "</div>";
+
+let n = 0;
+set("rows", DEBATE.rows.map(([label, count]) =>
+  '<div class="round-label">' + label + "</div>" +
+  Array.from({ length: count }, () => row(++n)).join("")).join(""));
 </script>
