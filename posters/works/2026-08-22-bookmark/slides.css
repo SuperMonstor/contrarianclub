@@ -26,6 +26,10 @@
    ========================================================================== */
 
 .bm-sheet {
+  /* how far the surface runs past the trim. 0 unless the format bleeds, in
+     which case everything measured from the edge moves out by this much and
+     the layout itself does not move at all. */
+  --bm-bleed: 0px;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -60,7 +64,7 @@
 
 .bm-body {
   position: absolute;
-  inset: 0;
+  inset: var(--bm-bleed);
   z-index: 4;
   display: flex;
   flex-direction: column;
@@ -154,7 +158,7 @@
 /* --- The engraved frame, at a print-safe inset --------------------------- */
 .bm-frame {
   position: absolute;
-  inset: 34px;
+  inset: calc(34px + var(--bm-bleed));
   z-index: 1;
   pointer-events: none;
   border: 1px solid var(--cc-line);
@@ -213,8 +217,8 @@
 /* --- The spine strip (variation 6) --------------------------------------- */
 .bm-spine-strip {
   position: absolute;
-  left: 44px;
-  bottom: 300px;
+  left: calc(44px + var(--bm-bleed));
+  bottom: calc(300px + var(--bm-bleed));
   z-index: 4;
   writing-mode: vertical-rl;
   transform: rotate(180deg);

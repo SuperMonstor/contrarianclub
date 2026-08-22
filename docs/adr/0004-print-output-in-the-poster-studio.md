@@ -34,9 +34,24 @@ out. A screenshot ships tagged 72dpi, so a printer placing a bookmark would
 get a 16 x 50 inch image and have to know to resize it. The pixels are right
 either way; the file should say how big it is.
 
-Formats carry trim only. No bleed box, no crop marks, no CMYK conversion: the
-press-ready step is a printer's job and is done per print run, on the exported
-file.
+A format may carry a bleed: extra canvas outside the trim on every side, with
+the layout staying exactly where it is and the surface running out past where
+the guillotine lands. A piece that reaches its edges wants one, since a cut
+drifts and a white sliver on a near-black card is the usual way a print run
+comes back looking amateur. The bookmark's is an eighth of an inch rather than
+a round 3mm, because Chrome rounds a PDF page to the nearest eighth and a 3mm
+allowance would leave a hairline of white in the press-ready file.
+
+Trim and bleed are separate formats, so a work ships both and hands the
+printer whichever they ask for.
+
+Still no crop marks and no CMYK conversion: both are per-run decisions and
+belong to the printer, or to a prepress step once the run is booked.
+
+Output splits by audience. The trim renders are the archive and are committed.
+Anything press-ready (any bleed render, every PDF) lands in out/press/, which
+is gitignored: it is derivable, an order of magnitude heavier, and regenerated
+per print run.
 
 Treatment for ink is the work's own, not core's. A screen treatment judged on
 a monitor prints muddy: ink gains on paper and the shadows close up. A print
@@ -64,9 +79,9 @@ printer asks for one, and a soft-proof, since the exports are sRGB. Near-black
 surfaces want a rich black build rather than 100 percent K, and a proof on the
 actual stock before the run.
 
-Print exports are several megabytes each and they are committed, so a print
-work costs an order of magnitude more in the repo than a social one. That is
-the price of handing a printer a file that has never been through JPEG.
+Print exports are several megabytes each. Only the trim renders are committed,
+so a print work costs more in the repo than a social one but not the hundred
+megabytes a full press pack runs to.
 
 Type sized for a 1080-wide social canvas is meaningless on a print canvas and
 vice versa, so a work declares print or social formats, not both.

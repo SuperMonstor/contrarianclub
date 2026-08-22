@@ -19,13 +19,14 @@ import { Back, Column, Index, Manifesto, Plate, Spine, Ticket } from "./slides";
 const work: WorkSpec = {
   title: "Bookmark, six variations",
   date: "2026-08-22",
-  formats: ["bookmark"],
+  formats: ["bookmark", "bookmark-bleed"],
   slides: [
     {
       label: "1. The Column",
       hasImage: true,
-      render: () => (
+      render: ({ format }) => (
         <Column
+          bleed={format.bleed}
           art={{ src: athens, position: "center 44%" }}
           line={
             <>
@@ -44,8 +45,9 @@ const work: WorkSpec = {
     {
       label: "2. The Plate",
       hasImage: true,
-      render: () => (
+      render: ({ format }) => (
         <Plate
+          bleed={format.bleed}
           art={{ src: jerome, position: "center 46%" }}
           caption="Antonello da Messina, Saint Jerome in His Study, c. 1475"
           kicker="Rules of Engagement"
@@ -61,8 +63,9 @@ const work: WorkSpec = {
     {
       label: "3. The Manifesto",
       hasImage: false,
-      render: () => (
+      render: ({ format }) => (
         <Manifesto
+          bleed={format.bleed}
           kicker="For the reader who argues back"
           lead="The other side deserves a"
           accent="better argument"
@@ -74,8 +77,9 @@ const work: WorkSpec = {
     {
       label: "4. The Ticket",
       hasImage: true,
-      render: () => (
+      render: ({ format }) => (
         <Ticket
+          bleed={format.bleed}
           art={{ src: augustine, position: "58% 34%" }}
           kicker="Admit One"
           line={
@@ -98,8 +102,9 @@ const work: WorkSpec = {
     {
       label: "5. The Index",
       hasImage: true,
-      render: () => (
+      render: ({ format }) => (
         <Index
+          bleed={format.bleed}
           art={{ src: athens, position: "center 42%" }}
           kicker="Motions from the floor"
           motions={[
@@ -124,8 +129,9 @@ const work: WorkSpec = {
     {
       label: "6. The Spine",
       hasImage: true,
-      render: () => (
+      render: ({ format }) => (
         <Spine
+          bleed={format.bleed}
           art={{ src: augustine, position: "62% 46%" }}
           line={
             <>
@@ -140,8 +146,9 @@ const work: WorkSpec = {
     {
       label: "7. The Back (shared)",
       hasImage: false,
-      render: () => (
+      render: ({ format }) => (
         <Back
+          bleed={format.bleed}
           qr={qr}
           kicker="Scan for the next debate"
           blurb={

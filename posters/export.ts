@@ -116,7 +116,12 @@ async function main() {
       ? asked
       : ((work.formats as FormatId[] | undefined) ?? FALLBACK_FORMATS);
 
+    // The archive keeps the trim renders. Press-ready output (anything with
+    // bleed, and every PDF) is derivable, an order of magnitude heavier, and
+    // regenerated per print run, so it sits in its own folder and stays out
+    // of git.
     const outDir = resolve("works", work.id, "out");
+    const pressDir = resolve(outDir, "press");
     mkdirSync(outDir, { recursive: true });
 
     for (const fmtId of formats) {
@@ -140,14 +145,34 @@ async function main() {
         const n = String(slide + 1).padStart(2, "0");
         const name =
           work.slides.length > 1 ? `${fmtId}-${n}.${ext}` : `${fmtId}.${ext}`;
-        const file = resolve(outDir, name);
+        const dir = fmt.bleed ? pressDir : outDir;
+        if (fmt.bleed) mkdirSync(pressDir, { recursive: true });
+        const file = resolve(dir, name);
 
         await page.locator("#poster").screenshot(
           lossless
             ? { path: file, type: "png" }
             : { path: file, type: "jpeg", quality: 92 },
         );
-        if (fmt.print) stampDpi(file, PRINT_DPI);
+        if (fmt.print) {
+          stampDpi(file, PRINT_DPI);
+
+          // Print also gets a PDF, which is what a press actually wants: the
+          // type and the logo stay vector, and the page carries its physical
+          // size so nobody has to scale anything. CSS pixels are 1/96in when
+          // Chrome prints and a print canvas is drawn at 1/300in, so the page
+          // is scaled by exactly 96/300 to land at true size.
+          mkdirSync(pressDir, { recursive: true });
+          await page.pdf({
+            path: resolve(pressDir, name.replace(/\.png$/, ".pdf")),
+            width: `${fmt.width / 300}in`,
+            height: `${fmt.height / 300}in`,
+            scale: 96 / 300,
+            printBackground: true,
+            margin: { top: "0", right: "0", bottom: "0", left: "0" },
+            pageRanges: "1",
+          });
+        }
 
         const size = fmt.print
           ? `${fmt.width / 300} x ${fmt.height / 300}in @ ${PRINT_DPI}dpi`

@@ -11,7 +11,8 @@ export type FormatId =
   | "ig-portrait"
   | "ig-story"
   | "carousel-slide"
-  | "bookmark";
+  | "bookmark"
+  | "bookmark-bleed";
 
 export interface Format {
   id: FormatId;
@@ -22,6 +23,12 @@ export interface Format {
    *  lossless: JPEG artefacts live in large flat dark areas, which is most of
    *  what a gallery-at-night piece is made of, and a press will find them. */
   print?: boolean;
+
+  /** Extra canvas outside the trim, in px, on every side. The layout does not
+   *  move: the surface runs out past where the guillotine lands so a cut that
+   *  drifts still lands in ink. A piece that reaches its edges wants this; one
+   *  with a white border does not. */
+  bleed?: number;
 }
 
 export const FORMATS: Record<FormatId, Format> = {
@@ -31,6 +38,18 @@ export const FORMATS: Record<FormatId, Format> = {
   "carousel-slide": { id: "carousel-slide", label: "Carousel Slide", width: 1080, height: 1350 },
   // print: 2 x 6 in at 300px/in, ships at 1200x3600 (600dpi)
   bookmark: { id: "bookmark", label: "Bookmark (2x6in)", width: 600, height: 1800, print: true },
+  // the same piece with 1/8in (3.175mm) of bleed on every side. An eighth
+  // rather than a round 3mm because Chrome rounds a PDF page to the nearest
+  // eighth: at 3mm the page comes out 0.25mm larger than the artwork and the
+  // press-ready file carries a hairline of white at two edges.
+  "bookmark-bleed": {
+    id: "bookmark-bleed",
+    label: "Bookmark (2x6in + 1/8in bleed)",
+    width: 675,
+    height: 1875,
+    print: true,
+    bleed: 37.5,
+  },
 };
 
 export const FORMAT_LIST: Format[] = Object.values(FORMATS);

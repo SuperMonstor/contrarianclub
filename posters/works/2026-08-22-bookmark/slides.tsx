@@ -45,6 +45,13 @@ export interface Art {
   position?: string;
 }
 
+/** Every piece takes the format's bleed and hands it to its sheet. The layout
+ *  reads it back through --bm-bleed, so nothing inside a slide has to know
+ *  whether it is being drawn at trim or with 3mm around it. */
+function sheetStyle(bleed = 0): CSSProperties {
+  return { ["--bm-bleed" as string]: `${bleed}px` } as CSSProperties;
+}
+
 /** Gold micro caps. The smallest voice on the piece: the address, the kickers,
  *  the labels. 22px is 5.3pt, which is small but this is held in a hand. */
 function Micro({
@@ -107,9 +114,9 @@ const ADDRESS = "@thecontrarian.club";
 // from across a table.
 // ---------------------------------------------------------------------------
 
-export function Column({ art, line }: { art: Art; line: ReactNode }) {
+export function Column({ art, line, bleed }: { art: Art; line: ReactNode; bleed?: number }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <img className="bm-art bm-art--fresco" src={art.src} alt="" style={{ objectPosition: art.position }} />
       <div className="bm-scrim bm-scrim--column" />
 
@@ -155,15 +162,17 @@ export function Plate({
   kicker,
   rules,
   closing,
+  bleed,
 }: {
   art: Art;
   caption: string;
   kicker: string;
   rules: Rule[];
   closing: string;
+  bleed?: number;
 }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <div className="bm-frame" />
 
       <div className="bm-body" style={{ padding: "88px 62px 74px", alignItems: "center" }}>
@@ -249,15 +258,17 @@ export function Manifesto({
   tail,
   kicker,
   closing,
+  bleed,
 }: {
   lead: string;
   accent: string;
   tail: string;
   kicker: string;
   closing: string;
+  bleed?: number;
 }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <span
         aria-hidden
         style={{
@@ -322,16 +333,18 @@ export function Ticket({
   line,
   terms,
   closing,
+  bleed,
 }: {
   art: Art;
   kicker: string;
   line: ReactNode;
   terms: Term[];
   closing: string;
+  bleed?: number;
 }) {
   return (
-    <div className="bm-sheet">
-      <div style={{ position: "absolute", inset: "0 0 auto 0", height: 700, zIndex: 0 }}>
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
+      <div style={{ position: "absolute", inset: "0 0 auto 0", height: 700 + (bleed ?? 0), zIndex: 0 }}>
         <img
           className="bm-art bm-art--figure"
           src={art.src}
@@ -356,7 +369,10 @@ export function Ticket({
         </h1>
 
         <div style={{ height: 74 }} />
-        <div className="bm-perf" style={{ width: "calc(100% + 112px)", marginLeft: -56 }} />
+        <div
+          className="bm-perf"
+          style={{ width: `calc(100% + ${112 + 2 * (bleed ?? 0)}px)`, marginLeft: -(56 + (bleed ?? 0)) }}
+        />
         <div style={{ height: 62 }} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 46 }}>
@@ -404,14 +420,16 @@ export function Index({
   kicker,
   motions,
   foot,
+  bleed,
 }: {
   art: Art;
   kicker: string;
   motions: { numeral: string; text: string }[];
   foot: string;
+  bleed?: number;
 }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <img
         className="bm-art bm-art--ghost"
         src={art.src}
@@ -490,14 +508,16 @@ export function Back({
   kicker,
   blurb,
   url,
+  bleed,
 }: {
   qr: string;
   kicker: string;
   blurb: ReactNode;
   url: string;
+  bleed?: number;
 }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <div className="bm-frame" />
 
       <div className="bm-body" style={{ padding: "92px 62px 76px", alignItems: "center" }}>
@@ -549,9 +569,9 @@ export function Back({
 // six and the best of them at small sizes.
 // ---------------------------------------------------------------------------
 
-export function Spine({ art, line }: { art: Art; line: ReactNode }) {
+export function Spine({ art, line, bleed }: { art: Art; line: ReactNode; bleed?: number }) {
   return (
-    <div className="bm-sheet">
+    <div className="bm-sheet" style={sheetStyle(bleed)}>
       <img
         className="bm-art bm-art--figure"
         src={art.src}
