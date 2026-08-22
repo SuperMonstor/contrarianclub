@@ -1,0 +1,67 @@
+/* ==========================================================================
+   THE CONTRARIAN DEBATE CLUB, cards
+
+   A6, one side, nothing to write on. A card is the club saying one thing to
+   one person, so it holds the wordmark, a rule, who it is for and the
+   sentence. Anything more and it stops being a card. Needs tokens.css.
+   ========================================================================== */
+
+@page { size: 105mm 148mm; margin: 0; }
+
+.card {
+  position: relative;
+  width: 105mm;
+  height: 148mm;
+  overflow: hidden;
+  background: #fff;
+  padding: 17mm 13mm 13mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.card .wordmark { display: block; width: 46mm; height: auto; }
+
+.card .middle {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* One gold rule, short and centred. The only ornament a card gets. */
+.card .flourish {
+  width: 15mm;
+  height: 0.4mm;
+  background: var(--gold);
+  margin-bottom: 8mm;
+}
+
+.card .to {
+  font-family: var(--condensed);
+  font-weight: 600;
+  font-size: 8.6pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 6mm;
+}
+
+.card .note {
+  font-family: var(--display);
+  font-size: 11.5pt;
+  line-height: 1.58;
+  color: var(--ink);
+  max-width: 74mm;
+}
+
+.card .sign {
+  flex: none;
+  font-size: 6.8pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}

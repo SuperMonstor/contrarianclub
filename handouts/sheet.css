@@ -1,37 +1,14 @@
 /* ==========================================================================
-   THE CONTRARIAN DEBATE CLUB, printed sheets
+   THE CONTRARIAN DEBATE CLUB, A4 sheets
 
-   The design system for everything handed out in the room. Event-agnostic and
-   shared by every sheet in every motion folder: build.cjs inlines it. Anything
-   that is true of one motion only belongs in that motion's own file, not here.
+   The system behind everything printed on A4 and written on: the masthead
+   band, the argument bands, the writing rules. Event-agnostic and shared by
+   every sheet in every motion folder. Anything true of one motion only belongs
+   in that motion's own file, not here. Needs tokens.css.
    ========================================================================== */
 
-:root {
-  --ink: #16110b;
-  --ink-soft: #4a4034;
-  --ink-faint: #8d8271;
-  --rule: #cfc4ad;
-  --rule-faint: #e2d9c6;
-  --gold: #c8a24a;
-  --gold-deep: #8a6c2c;
-  --band: #0b0907;
-  --parchment: #ddceac;
+@page { size: A4 portrait; margin: 0; }
 
-  --display: "Playfair Display", Georgia, "Times New Roman", serif;
-  --ui: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
-  --condensed: "Oswald", "Inter", Arial, sans-serif;
-
-  --margin: 14mm;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--ui);
-  color: var(--ink);
-  background: #6f6a63;
-  -webkit-font-smoothing: antialiased;
-}
 
 /* The sheet ------------------------------------------------------------- */
 
@@ -484,16 +461,3 @@ body {
 }
 
 /* Screen preview only --------------------------------------------------- */
-
-@media screen {
-  body { padding: 14mm; display: flex; flex-direction: column; align-items: center; gap: 14mm; }
-  .sheet { box-shadow: 0 3mm 12mm rgba(0, 0, 0, 0.35); }
-}
-
-@media print {
-  @page { size: A4 portrait; margin: 0; }
-  body { background: #fff; padding: 0; }
-  .sheet { box-shadow: none; break-after: page; page-break-after: always; }
-  .sheet:last-child { break-after: auto; page-break-after: auto; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-}

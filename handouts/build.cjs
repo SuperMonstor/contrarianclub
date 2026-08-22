@@ -1,12 +1,13 @@
-// Build a motion's handouts.
+// Build what the club prints.
 //
-//   node handouts/build.cjs <motion-folder>          inline everything
-//   node handouts/build.cjs <motion-folder> --pdf    and render the PDFs
+//   node handouts/build.cjs <folder>          inline everything
+//   node handouts/build.cjs <folder> --pdf    and render the PDFs
 //
-// A sheet is a layout (sheets/*.src.html) plus a motion's copy
-// (<motion-folder>/debate.js). Every sheet type is built for the motion you
-// name, and the results land in that motion's folder: handout.html to open
-// and print, out/*.pdf for the print shop.
+// Two kinds of folder. A motion folder holds a debate.js and no layout of its
+// own: every sheet type in sheets/ is built against that motion's copy. Any
+// other folder holds its own .src.html files, which are one-offs, and they are
+// built where they sit. Either way the results land in the folder: .html to
+// open and print, out/*.pdf for the print shop.
 //
 // The fonts, the wordmark, the shared stylesheet and the shared renderers are
 // all inlined as data URIs or text, so a built file renders identically on any
@@ -55,20 +56,26 @@ if (!target) {
 }
 
 const BASE = path.resolve(target);
+const read = (file) => fs.readFileSync(path.join(DIR, file), "utf8");
 const fonts = FACES.map(fontFace).join("\n");
-const css = fs.readFileSync(path.join(DIR, "sheet.css"), "utf8");
-const render = fs.readFileSync(path.join(DIR, "render.js"), "utf8");
-const debate = fs.readFileSync(path.join(BASE, "debate.js"), "utf8");
+
+// A motion folder is copy without a layout. Anything else is a one-off that
+// brought its own.
+const motion = fs.existsSync(path.join(BASE, "debate.js"));
+const from = motion ? SHEETS : BASE;
+const debate = motion ? fs.readFileSync(path.join(BASE, "debate.js"), "utf8") : "";
 
 const built = fs
-  .readdirSync(SHEETS)
+  .readdirSync(from)
   .filter((f) => f.endsWith(".src.html"))
   .map((file) => {
     const html = fs
-      .readFileSync(path.join(SHEETS, file), "utf8")
-      .replace("__SHEET_CSS__", fonts + "\n\n" + css)
-      .replace("__DEBATE__", debate)
-      .replace("__RENDER__", render)
+      .readFileSync(path.join(from, file), "utf8")
+      .replace("__BASE__", fonts + "\n\n" + read("tokens.css"))
+      .replace("__SHEET__", () => read("sheet.css"))
+      .replace("__CARD__", () => read("card.css"))
+      .replace("__DEBATE__", () => debate)
+      .replace("__RENDER__", () => read("render.js"))
       .replace(/__LOGO_DARK__/g, dataUri(path.join(BRAND, "logo-dark.svg"), "image/svg+xml"))
       .replace(/__LOGO_LIGHT__/g, dataUri(path.join(BRAND, "logo-light.svg"), "image/svg+xml"));
 
@@ -92,7 +99,9 @@ if (!process.argv.includes("--pdf")) return;
     await page.goto("file://" + path.join(BASE, name + ".html"));
     await page.waitForTimeout(1200);
     const pdf = path.join(BASE, "out", name + ".pdf");
-    await page.pdf({ path: pdf, format: "A4", printBackground: true, preferCSSPageSize: true });
+    // preferCSSPageSize means each sheet's own @page decides the paper, so an
+    // A4 handout and an A6 card come out of the same call at their true size.
+    await page.pdf({ path: pdf, printBackground: true, preferCSSPageSize: true });
     console.log("  " + path.relative(ROOT, pdf));
   }
 

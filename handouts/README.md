@@ -1,6 +1,6 @@
 # Handouts
 
-What the club prints and hands out in the room. Two sheets per motion.
+What the club prints and gives people. Two sheets per motion, plus cards.
 
 **The speaker handout**, one A4 printed both sides, for anyone who might be
 drawn to argue. The front is the argument: the motion, the two or three words
@@ -23,10 +23,13 @@ Playfair motion instead.
 ## The shape of this thing
 
 ```
-sheet.css      the design system. Every type role, band and writing rule.
+tokens.css     the palette, the type families, the reset. Every printed piece.
+sheet.css      the A4 system: the masthead, the bands, the writing rules.
+card.css       the A6 system: a wordmark, a rule, a line and a sentence.
 render.js      the renderers for the parts that come from the motion.
 sheets/        one file per kind of sheet. Layout and standing copy.
 <motion>/      one folder per motion: its debate.js, its builds, its out/.
+cards/         one-offs. A card brings its own layout and its own words.
 ```
 
 The split is the point, and it is the same one `posters/` makes. A sheet type
@@ -34,6 +37,11 @@ is a form and every motion gets the identical form, so layouts live in
 `sheets/` and never in a motion folder. A motion folder holds only what is
 true of that motion, which means the motion is worded in exactly one place and
 a reworded motion cannot disagree with itself across four sheets.
+
+`build.cjs` tells the two kinds of folder apart by whether it holds a
+`debate.js`. One that does is copy without a layout, and every sheet type is
+built against it. One that does not holds its own `.src.html` files, which are
+built where they sit.
 
 Anything that is true of every debate, like the rules for taking the floor,
 belongs to the sheet that prints it. Anything true of one night, like the
@@ -71,6 +79,22 @@ you.
 
 The `when` field is free text, and is worth more as "Motion two of two" than
 as a date: everybody holding one is already in the room.
+
+## Cards
+
+A6, one side, white. The wordmark, a short gold rule, who it is for and one
+sentence. A card is the club saying one thing to one person, and anything more
+than that stops being a card.
+
+```
+node handouts/build.cjs handouts/cards --pdf
+```
+
+There is no shared copy and no data file: each card is a one-off, so its words
+live in its own `.src.html` next to the markup. Make another by copying one.
+
+The bottom third is deliberately quiet. If a card is going to be signed by
+hand, that is where the pen goes.
 
 ## Writing the copy
 
@@ -114,7 +138,8 @@ about 8mm, cut copy or cut a row. A line nobody can write on is not a line.
   so a mono photocopy still reads correctly, but it loses the thing that makes
   it look like ours.
 - 100gsm or heavier if the shop offers it. 80gsm buckles under a ballpoint on
-  a lap and the back page shows through the front.
+  a lap and the back page shows through the front. Cards want card: 300gsm,
+  uncoated, so the gold does not sit on a shine.
 - The floor handout is for the whole room, the speaker handout only for the
   drawn speakers and anyone who wants one. Print a handful more than the RSVP
   count either way. People take them home.
