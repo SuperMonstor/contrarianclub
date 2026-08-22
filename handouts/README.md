@@ -1,42 +1,56 @@
-# Debate handout
+# Handouts
 
-One A4 sheet, printed both sides, handed out as people sit down.
+What the club prints and hands out in the room. Two sheets per motion.
 
-The two sides split by job. The front is the argument: the motion, the two or
-three words it will otherwise be fought over, the one question the evening
-actually turns on, where each bench starts, and five numbered blocks to jot a
-case into. The back is the night: what a speaker is being asked to do, the
-running order with room to write who is speaking, a rebuttal grid split by
-round, and one line for the sentence you close on.
+**The speaker handout**, one A4 printed both sides, for anyone who might be
+drawn to argue. The front is the argument: the motion, the two or three words
+it will otherwise be fought over, the one question the evening actually turns
+on, where each bench starts, and five numbered blocks to jot a case into. The
+back is the night: what a speaker is being asked to do, the running order with
+room to write who is speaking, a rebuttal grid split by round, and one line
+for the sentence you close on.
 
-It is a form, so it is on white paper. The gallery-at-night palette is for
-things people look at. This is a thing people write on, and a dark sheet is
-unwritable, expensive to print and unreadable at arm's length in a dim room.
-The brand carries in the black masthead, the gold hairlines and the Playfair
-motion instead.
+**The open floor handout**, one A4 side, for everyone. The same argument, then
+the rules for taking the floor and somewhere to draft the question before the
+hand goes up.
 
-## Making one for a debate
+Both are forms, so they are on white paper. The gallery-at-night palette is
+for things people look at. These are things people write on, and a dark sheet
+is unwritable, expensive to print and unreadable at arm's length in a dim
+room. The brand carries in the black masthead, the gold hairlines and the
+Playfair motion instead.
 
-One folder per motion, named `<yyyy-mm-dd>-<slug>`, holding its
-`handout.src.html`, the built `handout.html` and its committed `out/`. A night
-with two motions is two folders. Nothing registers them, so adding a handout
-means adding a folder.
+## The shape of this thing
 
 ```
-cp -r handouts/2026-08-16-debate-9-self-destruction handouts/2026-09-13-some-motion
+sheet.css      the design system. Every type role, band and writing rule.
+render.js      the renderers for the parts that come from the motion.
+sheets/        one file per kind of sheet. Layout and standing copy.
+<motion>/      one folder per motion: its debate.js, its builds, its out/.
+```
+
+The split is the point, and it is the same one `posters/` makes. A sheet type
+is a form and every motion gets the identical form, so layouts live in
+`sheets/` and never in a motion folder. A motion folder holds only what is
+true of that motion, which means the motion is worded in exactly one place and
+a reworded motion cannot disagree with itself across four sheets.
+
+Anything that is true of every debate, like the rules for taking the floor,
+belongs to the sheet that prints it. Anything true of one night, like the
+running order, belongs to `debate.js`.
+
+## Making a motion's handouts
+
+```
+cp -r handouts/2026-08-16-debate-9-familial-obligation handouts/2026-09-13-some-motion
+rm -rf handouts/2026-09-13-some-motion/out handouts/2026-09-13-some-motion/*.html
 node handouts/build.cjs handouts/2026-09-13-some-motion --pdf
 ```
 
-There is no template. The last handout is the template, which is the point:
-whatever the last one learned about fitting real copy onto the page comes with
-it. `build.cjs` with no folder lists the ones that exist.
-
-**Edit the `DEBATE` object at the bottom of `handout.src.html` and nothing
-else.** Everything that changes between debates lives there: the edition, the
-line under it, the ritual formula, the claim, the poles of the scale, the
-terms, the agreed ground, the split, where each bench starts, what a speaker
-is asked to do, the running order, and how many writing blocks and rebuttal
-rows to draw. The layout above it is not a per-event decision.
+**Edit `debate.js` and nothing else.** The edition, the line under it, the
+ritual formula, the claim, the poles of the scale, the terms, the agreed
+ground, the split, where each bench starts, what a speaker is asked to do, the
+running order, and how many writing blocks and rebuttal rows to draw.
 
 `rounds` is the format itself. Each round is a label and its beats, and a beat
 marked `true` gets a rule to write the speaker's name on. The beats are
@@ -44,28 +58,23 @@ numbered straight through every round, so "you speak fifth" means something.
 `rows` mirrors it: one entry per round, and the number of exchanges to rule
 under it. Change the format and both follow.
 
+Every sheet in `sheets/` is built for the motion you name, and the results
+land in that motion's folder: `handout.html` and `floor.html` to open and
+print, `out/*.pdf` for the print shop. `build.cjs` with no folder lists the
+motions that exist.
+
+The built HTML is self-contained. Fonts, the wordmark, the stylesheet and the
+renderers are all inlined, so it renders identically on any machine and at any
+print shop with no network and no sibling assets. Do not preview a file in
+`sheets/` directly: its fonts are still placeholders and the type will lie to
+you.
+
 The `when` field is free text, and is worth more as "Motion two of two" than
 as a date: everybody holding one is already in the room.
 
-Both pages are a fixed budget and neither scrolls. Long definitions and five
-writing blocks do not both fit on the front, and more rebuttal rows on the
-back buy themselves out of the height of every line. Rebuild and look at it.
-If the last rule sits within a centimetre of the paper edge, or a writing line
-has dropped under about 8mm, cut copy or cut a row. A line nobody can write on
-is not a line.
-
-`build.cjs` inlines the fonts and the wordmark as data URIs and writes
-`handout.html`, then `--pdf` renders `out/handout.pdf` at true A4. The built
-HTML is self-contained: it renders identically on any machine and at any print
-shop with no network and no sibling asset folder. Open `handout.html` and
-print from Chrome if you would rather not run the PDF step.
-
-Do not preview `handout.src.html` directly. Its fonts are still placeholders
-at that point and the type will lie to you.
-
 ## Writing the copy
 
-Three things decide whether this sheet is worth the paper.
+Three things decide whether a sheet is worth the paper.
 
 **The terms.** Define them so that neither side would object to the wording
 before the debate starts. A loaded definition settles the motion in advance
@@ -78,20 +87,34 @@ grant.
 **They split on.** One sentence, phrased as a question. If it takes two
 sentences, the motion has two debates in it and one of them should be cut.
 
-Three terms is the ceiling. Two is usually right.
+Three terms is the ceiling. Two is usually right. Spend the third on the word
+doing the quiet work: "tolerate" is not "approve", and "move towards" is not
+"replace".
 
 `benches` states where each side starts, one sentence each. It is the most
 useful thing on the sheet for anyone who might be drawn to argue, and it has
 to be fair to both benches or it is campaigning. Delete the key and the band
 does not draw.
 
+## Fitting it
+
+Every sheet is a fixed budget and none of them scroll. Long definitions and
+five writing blocks do not both fit on the speaker front, more rebuttal rows
+buy themselves out of the height of every line, and a three line motion costs
+the floor sheet a draft slot. Rebuild and look at it. If the last rule sits
+within a centimetre of the paper edge, or a writing line has dropped under
+about 8mm, cut copy or cut a row. A line nobody can write on is not a line.
+
 ## Printing
 
-- A4, portrait, **double sided, flipped on the long edge**. Flipped on the
-  short edge, the back page comes out upside down.
+- A4, portrait. The speaker handout is **double sided, flipped on the long
+  edge**. Flipped on the short edge, the back page comes out upside down. The
+  floor handout is single sided.
 - Colour. The gold is a hairline accent and nothing load-bearing is set in it,
   so a mono photocopy still reads correctly, but it loses the thing that makes
   it look like ours.
 - 100gsm or heavier if the shop offers it. 80gsm buckles under a ballpoint on
   a lap and the back page shows through the front.
-- Print a handful more than the RSVP count. People take them home.
+- The floor handout is for the whole room, the speaker handout only for the
+  drawn speakers and anyone who wants one. Print a handful more than the RSVP
+  count either way. People take them home.
