@@ -17,16 +17,19 @@ motion instead.
 
 ## Making one for a debate
 
+One folder per motion, named `<yyyy-mm-dd>-<slug>`, holding its
+`handout.src.html`, the built `handout.html` and its committed `out/`. A night
+with two motions is two folders. Nothing registers them, so adding a handout
+means adding a folder.
+
 ```
-cp -r handouts/template handouts/2026-09-13-some-motion   # first time only, see below
+cp -r handouts/2026-08-16-debate-9-self-destruction handouts/2026-09-13-some-motion
 node handouts/build.cjs handouts/2026-09-13-some-motion --pdf
 ```
 
-For the next debate in the calendar, just edit the template in place:
-
-```
-node handouts/build.cjs --pdf
-```
+There is no template. The last handout is the template, which is the point:
+whatever the last one learned about fitting real copy onto the page comes with
+it. `build.cjs` with no folder lists the ones that exist.
 
 **Edit the `DEBATE` object at the bottom of `handout.src.html` and nothing
 else.** Everything that changes between debates lives there: the edition, the
@@ -41,9 +44,8 @@ numbered straight through every round, so "you speak fifth" means something.
 `rows` mirrors it: one entry per round, and the number of exchanges to rule
 under it. Change the format and both follow.
 
-A night with two motions gets two sheets, one per motion. The `when` field is
-free text, and is worth more as "Motion two of two" than as a date: everybody
-holding one is already in the room.
+The `when` field is free text, and is worth more as "Motion two of two" than
+as a date: everybody holding one is already in the room.
 
 Both pages are a fixed budget and neither scrolls. Long definitions and five
 writing blocks do not both fit on the front, and more rebuttal rows on the

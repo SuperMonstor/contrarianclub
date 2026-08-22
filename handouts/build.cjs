@@ -1,8 +1,11 @@
 // Build the debate handout.
 //
-//   node handouts/build.cjs                     the current template
-//   node handouts/build.cjs --pdf               and render out/handout.pdf
-//   node handouts/build.cjs <dir> --pdf         an archived debate's handout
+//   node handouts/build.cjs <dir>               inline everything into handout.html
+//   node handouts/build.cjs <dir> --pdf         and render out/handout.pdf
+//
+// One folder per motion, named <yyyy-mm-dd>-<slug>. A night with two motions
+// is two folders. Nothing registers them: start the next one by copying the
+// last, which is the only template there is.
 //
 // handout.src.html is the file you edit. This step inlines the fonts and the
 // wordmark as data URIs so the result renders identically on any machine, at
@@ -36,10 +39,19 @@ const fontFace = ([family, weight, file]) =>
   ";font-display:block;src:url(" + dataUri(path.join(MODULES, file), "font/woff2") +
   ") format('woff2');}";
 
-// Either the template at the root of handouts/, or an archived debate's own
-// folder passed as the first argument.
 const target = process.argv.slice(2).find((a) => !a.startsWith("--"));
-const BASE = target ? path.resolve(target) : DIR;
+
+if (!target) {
+  const folders = fs
+    .readdirSync(DIR, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && fs.existsSync(path.join(DIR, e.name, "handout.src.html")))
+    .map((e) => e.name);
+  console.error("Which handout? Pass its folder:\n" +
+    folders.map((f) => "  node handouts/build.cjs handouts/" + f + " --pdf").join("\n"));
+  process.exit(1);
+}
+
+const BASE = path.resolve(target);
 
 const html = fs
   .readFileSync(path.join(BASE, "handout.src.html"), "utf8")
