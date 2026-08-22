@@ -23,7 +23,22 @@ const work: WorkSpec = {
     {
       label: "1. The Column",
       hasImage: true,
-      render: () => <Column art={{ src: athens, position: "center 44%" }} />,
+      render: () => (
+        <Column
+          art={{ src: athens, position: "center 44%" }}
+          line={
+            <>
+              Somewhere in
+              <br />
+              this book is
+              <br />
+              your next
+              <br />
+              argument.
+            </>
+          }
+        />
+      ),
     },
     {
       label: "2. The Plate",

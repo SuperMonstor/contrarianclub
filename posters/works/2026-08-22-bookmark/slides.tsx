@@ -107,7 +107,7 @@ const ADDRESS = "contrarian.club";
 // from across a table.
 // ---------------------------------------------------------------------------
 
-export function Column({ art }: { art: Art }) {
+export function Column({ art, line }: { art: Art; line: ReactNode }) {
   return (
     <div className="bm-sheet">
       <img className="bm-art bm-art--fresco" src={art.src} alt="" style={{ objectPosition: art.position }} />
@@ -123,13 +123,9 @@ export function Column({ art }: { art: Art }) {
 
         <h1
           className="hero"
-          style={{ fontSize: 76, lineHeight: 1.06, textAlign: "center", margin: 0 }}
+          style={{ fontSize: 62, lineHeight: 1.1, textAlign: "center", margin: 0 }}
         >
-          Read it.
-          <br />
-          Then argue
-          <br />
-          with it.
+          {line}
         </h1>
 
         <div style={{ height: 40 }} />
