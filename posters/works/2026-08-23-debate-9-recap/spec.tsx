@@ -177,8 +177,8 @@ const work: WorkSpec = {
           note="Everyone agrees you owe your family something. Nobody agrees how much."
           fact={
             <>
-              Here a family can be a taxpayer in its own right. The <G>Hindu Undivided Family</G>{" "}
-              holds its own PAN and files its own return.
+              In the India Human Development Survey, <G>5%</G> of married women said they chose
+              their husband themselves. Another 37% chose jointly with their parents.
             </>
           }
         />

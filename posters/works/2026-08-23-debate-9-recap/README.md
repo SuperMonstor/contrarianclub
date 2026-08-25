@@ -45,16 +45,24 @@ of these motions somebody has already decided for you.
   the state to bring about prohibition of intoxicating drinks. Gujarat, Bihar,
   Mizoram, Nagaland and Lakshadweep enforce it, which is the "five states and
   territories" on the slide.
-- **Motion two.** The Hindu Undivided Family is a "person" under Section 2(31)
-  of the Income Tax Act, 1961, assessed separately from its members: it holds
-  its own PAN and files its own return.
+- **Motion two.** The India Human Development Survey asked ever-married women
+  aged 25 to 49 who chose their husband. 5% said they chose alone, and 37% said
+  they chose jointly with their parents. The survey round is 2011-12, so the
+  slide names the survey rather than a year, and a later round should be
+  checked before this copy is reused.
 
-Two facts that were on these slides and came off, kept here because they are
-still true and still good: attempting suicide was a crime until Section 115 of
-the Mental Healthcare Act, 2017 replaced the presumption of guilt with a
-presumption of severe stress; and under the Maintenance and Welfare of Parents
-and Senior Citizens Act, 2007, children owe their parents maintenance and
-abandoning a senior citizen carries up to three months' imprisonment.
+Three facts that were on these slides and came off, kept here because they are
+still true. Attempting suicide was a crime until Section 115 of the Mental
+Healthcare Act, 2017 replaced the presumption of guilt with a presumption of
+severe stress. Under the Maintenance and Welfare of Parents and Senior Citizens
+Act, 2007, children owe their parents maintenance and abandoning a senior
+citizen carries up to three months' imprisonment. And a Hindu Undivided Family
+is a "person" under Section 2(31) of the Income Tax Act, 1961, with its own PAN
+and its own return.
+
+That last one came off because it is a fact about the family as a property and
+tax unit, and the motion is about obligation and autonomy. Surprising is not
+the same as relevant, and on a motion slide relevant wins.
 
 ## Everything on the odds and ends slide
 
