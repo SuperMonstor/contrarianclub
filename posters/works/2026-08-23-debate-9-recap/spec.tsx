@@ -85,8 +85,8 @@ const work: WorkSpec = {
           note="You would stop a friend from wrecking their life. They never asked you to."
           fact={
             <>
-              Article 47 of the Constitution directs the state to work toward prohibition.{" "}
-              <G>Five</G> states and territories have taken it up, Gujarat and Bihar among them.
+              Drinking is the self destructive choice India has already ruled on. Alcohol is{" "}
+              <G>banned outright</G> in Gujarat, Bihar, Mizoram, Nagaland and Lakshadweep.
             </>
           }
         />

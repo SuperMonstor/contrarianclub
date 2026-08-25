@@ -41,10 +41,12 @@ numbers by hand.
 Both are checked, and both say the same thing in different registers: on each
 of these motions somebody has already decided for you.
 
-- **Motion one.** Article 47 of the Constitution (Directive Principles) asks
-  the state to bring about prohibition of intoxicating drinks. Gujarat, Bihar,
-  Mizoram, Nagaland and Lakshadweep enforce it, which is the "five states and
-  territories" on the slide.
+- **Motion one.** Alcohol is prohibited in Gujarat, Bihar, Mizoram, Nagaland
+  and Lakshadweep. Article 47 of the Constitution (Directive Principles) asks
+  states to bring about prohibition of intoxicating drinks, and those five have.
+  An earlier cut of this slide led with Article 47 and never said the word
+  alcohol, so the reader had to work out for themselves that a self destructive
+  choice was under discussion. Name the thing, then the ruling.
 - **Motion two.** The India Human Development Survey asked ever-married women
   aged 25 to 49 who chose their husband. 5% said they chose alone, and 37% said
   they chose jointly with their parents. The survey round is 2011-12, so the
