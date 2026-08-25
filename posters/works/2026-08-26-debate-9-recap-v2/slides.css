@@ -1,0 +1,151 @@
+/* This deck's treatments and scrims.
+
+   Four of the ten slides carry a picture. The five result slides are flat
+   ground on purpose: a distribution read against a painting is a distribution
+   nobody reads. */
+
+/* --- The cover photograph ------------------------------------------------ */
+
+/* The window the photograph lives in. Full width, stopping under half way
+   down, close to the picture's own landscape shape, so the room is barely
+   cropped and barely enlarged. */
+.r9b-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 590px;
+  z-index: 1;
+  overflow: hidden;
+  background: var(--cc-black);
+}
+
+.r9b-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
+  /* A phone frame of a room lit in club purple. Most of the colour comes out
+     and what is left is pushed warm, because magenta and blue are the one
+     thing the palette cannot hold. */
+  filter: saturate(0.3) contrast(1.02) brightness(0.86) sepia(0.42);
+}
+
+/* Dark at the top so the lockup has quiet ground, and a long ramp at the foot
+   so the picture ends in the same black the type sits on rather than at an
+   edge. */
+.r9b-window-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.88) 0%,
+      rgba(11, 9, 7, 0.6) 10%,
+      rgba(11, 9, 7, 0.34) 20%,
+      rgba(11, 9, 7, 0.3) 42%,
+      rgba(11, 9, 7, 0.46) 58%,
+      rgba(11, 9, 7, 0.72) 72%,
+      rgba(11, 9, 7, 0.92) 86%,
+      var(--cc-black) 100%
+    ),
+    radial-gradient(130% 90% at 50% 30%, transparent 44%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* --- The painting -------------------------------------------------------- */
+
+/* The field covers the canvas and is painted near-black, so the crop has no
+   edge of its own anywhere. */
+.r9b-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--cc-black);
+}
+
+/* A close crop of the Degas, carrying the treatment only. Matched to the
+   deck that announced this debate, which is the point of using the same
+   canvas. */
+.r9b-detail {
+  position: absolute;
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.7) contrast(1.15) brightness(0.84) sepia(0.28);
+}
+
+/* --- Motion slides: the picture on top, the motion at the foot ----------- */
+.r9b-motion-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.3) 9%,
+      rgba(11, 9, 7, 0.16) 20%,
+      rgba(11, 9, 7, 0.22) 30%,
+      rgba(11, 9, 7, 0.4) 38%,
+      rgba(11, 9, 7, 0.62) 45%,
+      rgba(11, 9, 7, 0.8) 52%,
+      rgba(11, 9, 7, 0.9) 59%,
+      rgba(11, 9, 7, 0.95) 68%,
+      rgba(11, 9, 7, 0.96) 100%
+    ),
+    radial-gradient(125% 85% at 50% 24%, transparent 46%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* The father's corner of the canvas is his black coat against a dark wall. It
+   needs the picture lifted out of the scrim rather than pushed further in. */
+.r9b-lift {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.24) 10%,
+      rgba(11, 9, 7, 0.06) 22%,
+      rgba(11, 9, 7, 0.12) 32%,
+      rgba(11, 9, 7, 0.32) 39%,
+      rgba(11, 9, 7, 0.58) 46%,
+      rgba(11, 9, 7, 0.78) 53%,
+      rgba(11, 9, 7, 0.9) 60%,
+      rgba(11, 9, 7, 0.95) 69%,
+      rgba(11, 9, 7, 0.96) 100%
+    ),
+    radial-gradient(125% 85% at 50% 26%, transparent 50%, rgba(0, 0, 0, 0.44) 100%);
+}
+
+/* --- The close: type top and bottom, the room kept in the middle --------- */
+.r9b-close-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.92) 0%,
+      rgba(11, 9, 7, 0.72) 9%,
+      rgba(11, 9, 7, 0.28) 19%,
+      rgba(11, 9, 7, 0.24) 30%,
+      rgba(11, 9, 7, 0.5) 40%,
+      rgba(11, 9, 7, 0.8) 49%,
+      rgba(11, 9, 7, 0.93) 57%,
+      rgba(11, 9, 7, 0.96) 68%,
+      rgba(11, 9, 7, 0.97) 100%
+    ),
+    radial-gradient(120% 80% at 50% 26%, transparent 42%, rgba(0, 0, 0, 0.54) 100%);
+}
+
+/* --- Result slides: flat ground, with the faintest warmth off the top ---- */
+.r9b-flat {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(34, 27, 18, 0.9) 0%, rgba(11, 9, 7, 0) 62%),
+    var(--cc-black);
+}
