@@ -1,7 +1,7 @@
 import type { WorkSpec } from "../../src/core/types";
 import bellelli from "./assets/bellelli.jpg";
 import room from "./assets/room.jpg";
-import { Closing, Cover, Distribution, G, Motion, Swing, Verdict } from "./slides";
+import { Closing, Cover, Distribution, G, Motion, Numbers, Swing, Verdict } from "./slides";
 
 // Instagram carousel recapping Debate #9, run on 23 August: personal autonomy
 // against social obligation, two motions. The design reasoning is in
@@ -85,8 +85,8 @@ const work: WorkSpec = {
           note="You would stop a friend from wrecking their life. They never asked you to."
           fact={
             <>
-              Attempting suicide was a crime in India until the Mental Healthcare Act of{" "}
-              <G>2017</G>. The law now presumes severe stress where it used to presume guilt.
+              Article 47 of the Constitution directs the state to work toward prohibition.{" "}
+              <G>Five</G> states and territories have taken it up, Gujarat and Bihar among them.
             </>
           }
         />
@@ -177,8 +177,8 @@ const work: WorkSpec = {
           note="Everyone agrees you owe your family something. Nobody agrees how much."
           fact={
             <>
-              Here the obligation is not only a culture, it is a statute. Since <G>2007</G> children
-              owe their parents maintenance by law, and abandoning one carries three months in jail.
+              Here a family can be a taxpayer in its own right. The <G>Hindu Undivided Family</G>{" "}
+              holds its own PAN and files its own return.
             </>
           }
         />
@@ -245,8 +245,8 @@ const work: WorkSpec = {
           ]}
           reading={
             <>
-              The largest move of the night, out of the side that was surest. The lead lost{" "}
-              <G>more than half</G> its size.
+              <G>Ten</G> people opened absolutely sure. Three left that way, and two ended up on
+              the other side.
             </>
           }
           footnote={MATCHED_NOTE}
@@ -284,11 +284,53 @@ const work: WorkSpec = {
               move one way.
             </>
           }
+          footnote="Where somebody stood on the first motion told you nothing about the second. The two opening votes barely correlate at all."
         />
       ),
     },
 
-    // 11. The close, back in the painted room.
+    // 11. Three figures counted across the whole night, which no single round
+    //     can show. The one slide in the deck allowed to be light.
+    {
+      label: "Numbers",
+      render: () => (
+        <Numbers
+          kicker="Odds and ends"
+          headline="Three things the charts do not show."
+          rows={[
+            {
+              figure: "2",
+              line: (
+                <>
+                  Seventeen people voted in all four rounds. <G>Two</G> of them finished with the
+                  answers they came in with.
+                </>
+              ),
+            },
+            {
+              figure: "9",
+              line: (
+                <>
+                  Of the 131 votes cast all night, <G>nine</G> were too close to call. This room
+                  does not sit on fences.
+                </>
+              ),
+            },
+            {
+              figure: "40",
+              line: (
+                <>
+                  The room took ten minutes to say where it stood, and <G>forty seconds</G> to say
+                  where it had ended up.
+                </>
+              ),
+            },
+          ]}
+        />
+      ),
+    },
+
+    // 12. The close, back in the painted room.
     {
       label: "Close",
       hasImage: true,
@@ -297,8 +339,8 @@ const work: WorkSpec = {
           src={bellelli}
           focus={{ x: 0.5, y: 0.46, scale: 1.35 }}
           lead="A room that argues well goes home less sure than it arrived."
-          rest="Thank you to everyone who put their name in, took the floor, and changed their mind out loud. That last one is the hard part."
-          cta="Next debate announced soon"
+          rest="Thank you to everyone who spoke, and to everyone who only listened and then voted differently. Both of those are the point."
+          cta="The next one is being arranged"
         />
       ),
     },

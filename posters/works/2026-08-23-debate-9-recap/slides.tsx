@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { ArtTone, Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Eleven slides recapping Debate #9. The deck exists to land one comparison,
+// Twelve slides recapping Debate #9. The deck exists to land one comparison,
 // so its grammar is built to make two rounds of the same poll directly
 // legible against each other, and then to make the two motions legible
 // against each other.
@@ -41,7 +41,12 @@ import "./slides.css";
 //              payoff of the deck and it gets a slide to itself rather than a
 //              paragraph on the close.
 //
-//   Close      slide 11. The painting entire. The deck opens in the real room
+//   Numbers    slide 11. Flat ground. Three figures the charts cannot show,
+//              because they are counted across the whole night rather than
+//              inside one round. A light beat after the verdict and before
+//              the thanks, and the only slide that is allowed to be fun.
+//
+//   Close      slide 12. The painting entire. The deck opens in the real room
 //              and ends in the painted one.
 //
 // Every block of copy in this deck is one or two short sentences. These are
@@ -54,7 +59,7 @@ import "./slides.css";
 // The art:
 //
 //   1      room      a photograph of the night itself, and the only one here.
-//   2,6,11 bellelli  Degas, The Bellelli Family (1858-67), public domain via
+//   2,6,12 bellelli  Degas, The Bellelli Family (1858-67), public domain via
 //                    Wikimedia Commons. The same painting and the same two
 //                    crops that announced this debate: motion one sits on the
 //                    father, who has turned his chair away from his family,
@@ -920,12 +925,16 @@ export function Verdict({
   headline,
   columns,
   reading,
+  footnote,
 }: {
   kicker: string;
   headline: string;
   /** one per motion, in the order they were argued */
   columns: { label: string; summary: string; before: number; after: number; note: string }[];
   reading: ReactNode;
+  /** the one thing true of the two motions together that the columns cannot
+   *  show, because it lives in how the same person voted on both. */
+  footnote?: ReactNode;
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -1061,6 +1070,20 @@ export function Verdict({
           >
             {reading}
           </p>
+          {footnote && (
+            <p
+              style={{
+                fontFamily: "var(--cc-font-ui)",
+                fontSize: 22,
+                lineHeight: 1.45,
+                color: "var(--cc-muted)",
+                margin: "20px 0 0",
+                maxWidth: "52ch",
+              }}
+            >
+              {footnote}
+            </p>
+          )}
         </div>
       </div>
     </div>
@@ -1068,7 +1091,103 @@ export function Verdict({
 }
 
 // ---------------------------------------------------------------------------
-// 11. The close, in the painted room.
+// 11. Three figures from the whole night.
+// ---------------------------------------------------------------------------
+
+export function Numbers({
+  kicker,
+  headline,
+  rows,
+}: {
+  kicker: string;
+  headline: string;
+  /** the figure, then what it is. Three of them: a fourth turns the slide
+   *  into a list and the last one never gets read. */
+  rows: { figure: string; line: ReactNode }[];
+}) {
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      <div className="r9-flat" />
+
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          padding: "84px 78px 84px",
+        }}
+      >
+        <Mark />
+
+        <div style={{ marginTop: 40 }}>
+          <Kicker text={kicker} />
+          <h2
+            style={{
+              fontFamily: "var(--cc-font-display)",
+              fontWeight: 500,
+              fontSize: 60,
+              lineHeight: 1.08,
+              letterSpacing: "-0.018em",
+              color: "var(--cc-ivory)",
+              margin: "20px 0 0",
+              maxWidth: "16ch",
+            }}
+          >
+            {headline}
+          </h2>
+        </div>
+
+        {/* A figure column of fixed width and a sentence beside it, so the
+            three numbers stack into a single left edge and the eye can run
+            down them without reading the prose first. */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          {rows.map((r, i) => (
+            <div
+              key={r.figure}
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: 40,
+                padding: "38px 0",
+                borderTop: i === 0 ? "none" : "1px solid var(--cc-line)",
+              }}
+            >
+              <span
+                style={{
+                  flex: "0 0 190px",
+                  fontFamily: "var(--cc-font-display)",
+                  fontSize: 82,
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                  color: GOLD_BRIGHT,
+                }}
+              >
+                {r.figure}
+              </span>
+              <p
+                style={{
+                  fontFamily: "var(--cc-font-display)",
+                  fontSize: 29,
+                  lineHeight: 1.38,
+                  letterSpacing: "-0.006em",
+                  color: "var(--cc-parchment)",
+                  margin: 0,
+                }}
+              >
+                {r.line}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 12. The close, in the painted room.
 // ---------------------------------------------------------------------------
 
 export function Closing({
