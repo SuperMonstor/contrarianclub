@@ -62,8 +62,8 @@ const work: WorkSpec = {
           subtitle="recapped"
           lead="Two motions on where personal autonomy ends and social obligation begins."
           context={[
-            "Nobody saw the motions before the room did. Debaters were drawn at random, then the floor opened to everyone.",
-            "We polled the room before a word was said, and again after the floor closed. Here is what the arguments did to it.",
+            "Nobody saw the motions before the room did. Debaters were drawn at random.",
+            "We polled the room before a word was said, and again after the floor closed.",
           ]}
           swipeHint="Swipe for the results"
         />
@@ -83,6 +83,12 @@ const work: WorkSpec = {
           kicker="Motion One"
           motion={MOTION_ONE}
           note="You would stop a friend from wrecking their life. They never asked you to."
+          fact={
+            <>
+              Attempting suicide was a crime in India until the Mental Healthcare Act of{" "}
+              <G>2017</G>. The law now presumes severe stress where it used to presume guilt.
+            </>
+          }
         />
       ),
     },
@@ -101,7 +107,7 @@ const work: WorkSpec = {
           fact={
             <>
               Twenty against, eighteen for, and only <G>two</G> who would not pick a side. The
-              balance came from certainty at both ends, not from a room without opinions.
+              balance was made of certainty, not indifference.
             </>
           }
         />
@@ -114,15 +120,15 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Post-debate vote"
-          headline="An hour of argument later, it was still split down the middle."
+          headline="An hour of argument later, still split down the middle."
           counts={[3, 8, 5, 3, 2, 7, 4]}
           leftLabel={AGAINST}
           rightLabel={FOR}
           average={-0.1}
           fact={
             <>
-              The average moved by <G>four hundredths</G> of a point. If anything the room hardened:
-              a larger share of it finished at one of the two extremes than started there.
+              The average moved <G>four hundredths</G> of a point. A larger share of the room
+              finished at an extreme than started at one.
             </>
           }
         />
@@ -148,9 +154,8 @@ const work: WorkSpec = {
           ]}
           reading={
             <>
-              Two in three people changed their answer, and <G>ten</G> of the twenty seven crossed
-              to the other side. One travelled the entire scale, from absolutely sure Against to
-              absolutely sure For. All of it cancelled out.
+              Two in three changed their answer, and <G>ten</G> crossed to the other side. One
+              travelled the whole scale, sure Against to sure For.
             </>
           }
           footnote={MATCHED_NOTE}
@@ -170,6 +175,12 @@ const work: WorkSpec = {
           kicker="Motion Two"
           motion={MOTION_TWO}
           note="Everyone agrees you owe your family something. Nobody agrees how much."
+          fact={
+            <>
+              Here the obligation is not only a culture, it is a statute. Since <G>2007</G> children
+              owe their parents maintenance by law, and abandoning one carries three months in jail.
+            </>
+          }
         />
       ),
     },
@@ -187,8 +198,8 @@ const work: WorkSpec = {
           average={1.5}
           fact={
             <>
-              <G>Thirteen</G> of twenty nine were absolutely sure, and the far end against had
-              nobody standing in it at all. The strongest opening position of the night.
+              <G>Thirteen</G> of twenty nine were absolutely sure, and nobody at all stood at the
+              far end against.
             </>
           }
         />
@@ -201,15 +212,15 @@ const work: WorkSpec = {
       render: () => (
         <Distribution
           kicker="Post-debate vote"
-          headline="By the end, the certain end of the room had thinned out."
+          headline="By the end, the certain end had thinned out."
           counts={[2, 4, 5, 2, 7, 2, 8]}
           leftLabel={AGAINST}
           rightLabel={FOR}
           average={0.5}
           fact={
             <>
-              The absolutely sure bloc fell from thirteen to <G>eight</G>, and the end of the scale
-              nobody had chosen before the debate finished with <G>two</G> people standing in it.
+              The absolutely sure bloc fell from thirteen to <G>eight</G>. The end nobody had
+              chosen now has <G>two</G> people standing in it.
             </>
           }
         />
@@ -222,7 +233,7 @@ const work: WorkSpec = {
       render: () => (
         <Swing
           kicker="Motion Two · The swing"
-          verdict="The room swung against the motion, and gave up most of its lead."
+          verdict="The room swung against the motion."
           before={1.3}
           after={0.5}
           leftLabel={AGAINST}
@@ -234,8 +245,8 @@ const work: WorkSpec = {
           ]}
           reading={
             <>
-              The largest move of the night, and it came out of the side that was surest. More than
-              half the room gave ground, and the lead lost <G>more than half</G> its size.
+              The largest move of the night, out of the side that was surest. The lead lost{" "}
+              <G>more than half</G> its size.
             </>
           }
           footnote={MATCHED_NOTE}
@@ -257,20 +268,20 @@ const work: WorkSpec = {
               summary: "Walked in split down the middle. Left split down the middle.",
               before: -0.1,
               after: -0.1,
-              note: "Two in three people changed their answer to get back to the same place.",
+              note: "Two in three changed their answer to get back to the same place.",
             },
             {
               label: "Motion Two",
-              summary: "Walked in surer than the room was about anything else all night.",
+              summary: "Walked in surer than about anything else all night.",
               before: 1.3,
               after: 0.5,
-              note: "The side holding the most certainty is the side that gave the most ground.",
+              note: "The side with the most certainty gave the most ground.",
             },
           ]}
           reading={
             <>
-              A divided room moves in every direction at once and ends up where it started. A room
-              that agrees can only move one way.
+              A divided room moves every way at once and stays put. A room that agrees can only
+              move one way.
             </>
           }
         />
@@ -286,7 +297,7 @@ const work: WorkSpec = {
           src={bellelli}
           focus={{ x: 0.5, y: 0.46, scale: 1.35 }}
           lead="A room that argues well goes home less sure than it arrived."
-          rest="Thank you to everyone who put their name in, took the floor, and admitted in front of a room full of strangers that they had changed their mind. That last one is the hard part."
+          rest="Thank you to everyone who put their name in, took the floor, and changed their mind out loud. That last one is the hard part."
           cta="Next debate announced soon"
         />
       ),

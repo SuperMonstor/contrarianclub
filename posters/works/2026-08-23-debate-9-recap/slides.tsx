@@ -18,8 +18,10 @@ import "./slides.css";
 //              material it is mostly made of.
 //
 //   Motion     slides 2 and 6. A crop of the painting that announced this
-//              debate, and the motion set at the foot. The only slides where
-//              the argument is stated rather than measured.
+//              debate, and the motion set at the foot over the club's line on
+//              it, then one fact about the world the motion argues over,
+//              under its own rule. The only slides where the argument is
+//              stated rather than measured.
 //
 //   Result     slides 3, 4, 7, 8. Flat ground. The seven point distribution
 //              from the live poll, drawn as the presenter display draws it on
@@ -41,6 +43,9 @@ import "./slides.css";
 //
 //   Close      slide 11. The painting entire. The deck opens in the real room
 //              and ends in the painted one.
+//
+// Every block of copy in this deck is one or two short sentences. These are
+// read at a swipe, and a paragraph on a slide is a paragraph nobody reads.
 //
 // Vote counts stay off the swing slides. Movement is given as a share of the
 // people who voted in both rounds, which is the only denominator that
@@ -304,6 +309,7 @@ export function Motion({
   motion,
   motionSize = 52,
   note,
+  fact,
 }: {
   src: string;
   focus: Focus;
@@ -316,6 +322,11 @@ export function Motion({
   /** the question under the motion, in the club's own words from the night.
    *  Not a fact about the vote: the vote gets the next two slides. */
   note?: ReactNode;
+  /** something true about the world the motion is arguing over, which the
+   *  reader almost certainly does not know. It sits at the foot under its own
+   *  rule because it is the one thing on the slide that is not the club
+   *  talking. Two sentences at the outside. */
+  fact?: ReactNode;
 }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -374,16 +385,35 @@ export function Motion({
           {note && (
             <p
               style={{
-                fontFamily: "var(--cc-font-ui)",
-                fontSize: 25,
-                lineHeight: 1.45,
-                color: "var(--cc-muted)",
+                fontFamily: "var(--cc-font-display)",
+                fontSize: 30,
+                lineHeight: 1.4,
+                letterSpacing: "-0.006em",
+                color: "var(--cc-parchment)",
                 margin: 0,
-                maxWidth: "36ch",
+                maxWidth: "32ch",
               }}
             >
               {note}
             </p>
+          )}
+
+          {fact && (
+            <div style={{ borderTop: "1px solid var(--cc-line)", paddingTop: 24 }}>
+              <Kicker text="For the record" />
+              <p
+                style={{
+                  fontFamily: "var(--cc-font-ui)",
+                  fontSize: 23,
+                  lineHeight: 1.5,
+                  color: "var(--cc-muted)",
+                  margin: "16px 0 0",
+                  maxWidth: "42ch",
+                }}
+              >
+                {fact}
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -771,7 +801,10 @@ export function Swing({
               letterSpacing: "-0.008em",
               color: "var(--cc-parchment)",
               margin: 0,
-              maxWidth: "30ch",
+              /* wide enough that two short sentences fill the measure. A
+                 tightened line in a narrow column leaves half the foot of the
+                 slide empty and reads as something missing. */
+              maxWidth: "38ch",
             }}
           >
             {reading}
@@ -1023,7 +1056,7 @@ export function Verdict({
               letterSpacing: "-0.008em",
               color: "var(--cc-parchment)",
               margin: 0,
-              maxWidth: "30ch",
+              maxWidth: "41ch",
             }}
           >
             {reading}

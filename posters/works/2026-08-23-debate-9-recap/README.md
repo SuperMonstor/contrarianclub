@@ -36,6 +36,18 @@ audience that changed between rounds.
 numbers were read.** If a late vote lands, recompute rather than editing the
 numbers by hand.
 
+## The two facts on the motion slides
+
+Both are on the law, because on both motions the law has already taken a side.
+
+- **Motion one.** Section 115 of the Mental Healthcare Act, 2017 (in force from
+  May 2018) presumes that anyone attempting suicide is under severe stress and
+  bars trial under Section 309 of the IPC, which had made the attempt a crime.
+- **Motion two.** The Maintenance and Welfare of Parents and Senior Citizens
+  Act, 2007 obliges children to maintain their parents (Section 4), and
+  abandoning a senior citizen carries up to three months' imprisonment or a
+  five thousand rupee fine (Section 24).
+
 ## Re-exporting
 
 ```
