@@ -61,7 +61,7 @@ export const PARTNER_DECKS: PartnerDeck[] = [
         kind: "evidence",
         label: "In the room today",
         heading: "Why an OpenAI partnership just makes sense",
-        lead: "We've noticed people already using ChatGPT extensively at our debates.",
+        lead: "Show up to one of our debates and half the room is already on ChatGPT.",
         kicker: "No one asked them to.",
         items: [
           "Research",
