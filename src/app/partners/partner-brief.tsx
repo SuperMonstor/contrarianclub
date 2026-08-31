@@ -228,7 +228,10 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
             <div className={styles.evidenceCopy}>
               <p className={styles.sectionLabel}>{page.label}</p>
               <h2>{page.heading}</h2>
-              <p className={styles.evidenceLead}>{page.lead}</p>
+              <p className={styles.evidenceLead}>
+                <span className={styles.evidenceOpener}>{page.lead}</span>{" "}
+                {page.body}
+              </p>
             </div>
           </section>
         ) : (

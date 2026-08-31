@@ -23,7 +23,10 @@ export type DeckPage =
       kind: "evidence";
       label: string;
       heading: string;
+      /** the opening sentence, picked out in gold */
       lead: string;
+      /** the rest of the paragraph, running on from it */
+      body: string;
       image: DeckImage;
     }
   /** the offer: a photograph beside the two things we would build */
@@ -57,7 +60,8 @@ export const PARTNER_DECKS: PartnerDeck[] = [
         kind: "evidence",
         label: "In the room today",
         heading: "Why an OpenAI partnership just makes sense",
-        lead: "Show up to one of our debates and half the room is already on ChatGPT. Debaters research with it, and the audience uses it to understand the motion, validate claims, come up with rebuttals and stress test arguments.",
+        lead: "Show up to one of our debates and half the room is already on ChatGPT.",
+        body: "Debaters research with it, and the audience uses it to understand the motion, validate claims, come up with rebuttals and stress test arguments.",
         image: {
           src: "/media/speaker-with-phone.jpg",
           alt: "A speaker at the mic making a point with his phone in his hand",
