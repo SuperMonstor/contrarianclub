@@ -55,7 +55,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         <section className={styles.intro}>
           <p className={styles.sectionLabel}>The story</p>
           <div className={styles.storyGrid}>
-            <h2>Bengaluru&apos;s most prominent debate club in 2 months.</h2>
+            <h2>How we built Bengaluru&apos;s biggest debate club in 2 months.</h2>
             <div>
               <p>
                 We originally planned Contrarian for eight or nine friends. Then
@@ -73,15 +73,15 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           </div>
         </section>
 
-        <section className={styles.stats} aria-label="Progress in two months">
-          <p className={styles.statsHeading}>Progress in 2 months</p>
+        <section className={styles.stats} aria-label="Progress in four months">
+          <p className={styles.statsHeading}>Progress in 4 months</p>
           <div className={styles.statsGrid}>
             <article>
               <strong>12.5K</strong>
               <span>Instagram followers</span>
             </article>
             <article>
-              <strong>600</strong>
+              <strong>600+</strong>
               <span>live attendees</span>
             </article>
             <article>
