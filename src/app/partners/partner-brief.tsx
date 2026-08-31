@@ -164,27 +164,25 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
 
       <section className={styles.fit}>
         <div className={styles.fitTop}>
-          <div className={styles.fitHeader}>
-            <p className={styles.sectionLabel}>Why partner with Contrarian</p>
-            {partner && (
-              <p className={styles.fitLockup}>
-                <span className={styles.fitPartnerMark}>{partner.name}</span>
-                <span className={styles.fitLockupCross} aria-hidden="true">
-                  ×
-                </span>
-                <Image
-                  src="/media/contrarian-logo-light.svg"
-                  alt="The Contrarian Debate Club"
-                  width={745}
-                  height={346}
-                />
-              </p>
-            )}
-          </div>
+          <p className={styles.sectionLabel}>Why partner with Contrarian</p>
+          {partner && (
+            <p className={styles.fitLockup}>
+              <span className={styles.fitPartnerMark}>{partner.name}</span>
+              <span className={styles.fitLockupCross} aria-hidden="true">
+                ×
+              </span>
+              <Image
+                src="/media/contrarian-logo-light.svg"
+                alt="The Contrarian Debate Club"
+                width={745}
+                height={346}
+              />
+            </p>
+          )}
           <h2>One partnership. A live room and a content engine.</h2>
           <p className={styles.fitLead}>
-            Contrarian gives a partner rare access to a high-trust live room,
-            then carries that association into the content around the debate.
+            Rare access to a high-trust live room. Then everything we publish
+            carries it.
           </p>
         </div>
         <div className={styles.fitPanels}>
@@ -203,13 +201,13 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           <figure>
             <Image
               src="/media/filming-the-room.jpg"
-              alt="The room mid-debate with a camera rig filming it"
+              alt="A camera filming the room mid-debate"
               width={1600}
               height={1067}
             />
             <figcaption>
               <strong>The content engine</strong>
-              <span>More than a million views between shows.</span>
+              <span>Every debate filmed. More than a million views.</span>
             </figcaption>
           </figure>
         </div>
