@@ -174,45 +174,56 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
       </section>
 
       {partner?.pitch.map((page) =>
-        page.kind === "band" ? (
+        page.kind === "evidence" ? (
           <section key={page.heading} className={styles.evidence}>
-            <div className={styles.pageTop}>
-              <div className={styles.pageHead}>
-                <p className={styles.sectionLabel}>{page.label}</p>
-                <h2>{page.heading}</h2>
-              </div>
-              <div className={styles.evidenceFoot}>
-                <p className={styles.evidenceLead}>{page.lead}</p>
-                <p className={styles.evidenceKicker}>{page.kicker}</p>
-              </div>
+            <Image
+              className={styles.evidenceImage}
+              style={{ objectPosition: page.image.focus }}
+              src={page.image.src}
+              alt={page.image.alt}
+              width={1600}
+              height={1067}
+            />
+            <div className={styles.evidenceShade} />
+            <div className={styles.evidenceCopy}>
+              <p className={styles.sectionLabel}>{page.label}</p>
+              <h2>{page.heading}</h2>
+              <p className={styles.evidenceLead}>{page.lead}</p>
+              <p className={styles.evidenceKicker}>{page.kicker}</p>
             </div>
-            <div className={styles.evidenceBand}>
+            <ul className={styles.evidenceItems}>
               {page.items.map((item) => (
-                <article key={item.what}>
-                  <strong>{item.what}</strong>
-                  <span>{item.who}</span>
-                </article>
+                <li key={item}>{item}</li>
               ))}
-            </div>
+            </ul>
           </section>
         ) : (
-          <section key={page.heading} className={styles.plan}>
-            <div className={styles.pageTop}>
-              <div className={styles.pageHead}>
-                <p className={styles.sectionLabel}>{page.label}</p>
-                <h2>{page.heading}</h2>
-              </div>
+          <section key={page.heading} className={styles.offer}>
+            <div className={styles.offerImageWrap}>
+              <Image
+                className={styles.offerImage}
+                style={{ objectPosition: page.image.focus }}
+                src={page.image.src}
+                alt={page.image.alt}
+                width={1600}
+                height={1067}
+              />
             </div>
-            <div className={styles.planBand}>
-              {page.blocks.map((block, index) => (
-                <article key={block.title}>
-                  <p className={styles.planNumber}>
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3>{block.title}</h3>
-                  <p>{block.body}</p>
-                </article>
-              ))}
+            <div className={styles.offerCopy}>
+              <p className={styles.sectionLabel}>{page.label}</p>
+              <h2>{page.heading}</h2>
+              <p className={styles.offerLead}>{page.lead}</p>
+              <div className={styles.offerBlocks}>
+                {page.blocks.map((block, index) => (
+                  <article key={block.title}>
+                    <p className={styles.offerNumber}>
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <h3>{block.title}</h3>
+                    <p>{block.body}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
         ),

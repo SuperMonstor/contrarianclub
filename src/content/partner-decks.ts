@@ -5,28 +5,39 @@
 // A new partner is a new entry here. Nothing else needs touching, and
 // /partners/<slug> starts working.
 
+/** a photograph from one of our rooms, carrying the page */
+export interface DeckImage {
+  src: string;
+  alt: string;
+  /** object-position, to keep the subject clear of the type */
+  focus?: string;
+}
+
 /**
  * A bespoke page comes in one of two shapes, and the shape decides the layout.
- * Both fill the page rather than floating a paragraph in the middle of it.
+ * Both lead with a photograph, so the point lands before anything is read.
  */
 export type DeckPage =
-  /** evidence: a headline, a line of proof, and a full-bleed band of specifics */
+  /** the evidence: a headline over a full-bleed photograph of it happening */
   | {
-      kind: "band";
+      kind: "evidence";
       label: string;
       heading: string;
       lead: string;
-      /** the line to land on, set big beside the lead */
+      /** the line to land on, set big under the lead */
       kicker: string;
-      /** the band's cells: what it is, and who does it */
-      items: { what: string; who: string }[];
+      /** the specifics, set as one scannable line */
+      items: string[];
+      image: DeckImage;
     }
-  /** the plan: a headline over numbered columns */
+  /** the offer: a photograph beside the two things we would build */
   | {
-      kind: "blocks";
+      kind: "offer";
       label: string;
       heading: string;
+      lead: string;
       blocks: { title: string; body: string }[];
+      image: DeckImage;
     };
 
 export interface PartnerDeck {
@@ -47,24 +58,30 @@ export const PARTNER_DECKS: PartnerDeck[] = [
     name: "OpenAI",
     pitch: [
       {
-        kind: "band",
+        kind: "evidence",
         label: "In the room today",
         heading: "Why an OpenAI partnership just makes sense",
         lead: "We've noticed people already using ChatGPT extensively at our debates.",
         kicker: "No one asked them to.",
         items: [
-          { what: "Research", who: "Debaters" },
-          { what: "Understanding the motion", who: "Audience" },
-          { what: "Validating claims", who: "Audience" },
-          { what: "Rebuttals", who: "Audience" },
-          { what: "Stress testing arguments", who: "Audience" },
+          "Research",
+          "Understanding the motion",
+          "Validating claims",
+          "Rebuttals",
+          "Stress testing arguments",
         ],
+        image: {
+          src: "/media/speaker-with-phone.jpg",
+          alt: "A speaker at the mic making a point with his phone in his hand",
+          focus: "62% center",
+        },
       },
       {
-        kind: "blocks",
+        kind: "offer",
         label: "What we would build",
         // non-breaking hyphen: never split the word across lines
         heading: "So let's make it AI‑native.",
+        lead: "ChatGPT in the room, and in everything we publish afterwards.",
         blocks: [
           {
             title: "In the room",
@@ -75,6 +92,11 @@ export const PARTNER_DECKS: PartnerDeck[] = [
             body: "Not only that, we tie it into the content itself, validating and fact checking claims on screen. ChatGPT becomes an integral part of the experience.",
           },
         ],
+        image: {
+          src: "/media/room-and-screen.jpg",
+          alt: "The Contrarian room watching the stage, the screen lit behind the speakers",
+          focus: "center 42%",
+        },
       },
     ],
   },
