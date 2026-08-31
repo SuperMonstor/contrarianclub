@@ -4,13 +4,15 @@ import badge from "./assets/btw-badge.png";
 import quaySrc from "./assets/quay.jpg";
 import rooftopsSrc from "./assets/rooftops.jpg";
 import towerSrc from "./assets/tower.jpg";
-import { Beat, Hook, type Plate, Poster } from "./slides";
+import { Beat, type Plate, Poster } from "./slides";
 
 // Debate Club #10, at Bengaluru Tech Week 2026. Announcing the first of the
 // two motions, revealed outright, on the last slide.
 //
-// The copy is one continuous voice across eight slides and is meant to be read
-// straight through. Anyone editing a line should read the slide before it and
+// The motion is slide 1 rather than the reveal at the end: it is the most
+// interesting thing the club has to say, and holding it back spent it on the
+// people who were already going to swipe that far. Slides 2 to 8 are the case
+// for it, one continuous voice, meant to be read straight through. Anyone editing a line should read the slide before it and
 // the slide after it first: every one of them opens on a connective and closes
 // on something unfinished, and that is the whole reason the deck gets swiped.
 //
@@ -19,9 +21,9 @@ import { Beat, Hook, type Plate, Poster } from "./slides";
 // The art, all public domain via Wikimedia Commons:
 //
 //   avenue    Meindert Hobbema, The Avenue at Middelharnis (1689). An empty
-//             lane, tall trees, a big sky, almost nobody in it. Opens the deck
-//             as the slow town, and returns on slide 7 as the argument for
-//             less, which was on the page before anyone made it.
+//             lane, tall trees, a big sky, almost nobody in it. Opens the
+//             story as the slow town, and closes the deck on slide 8 as the
+//             case for less, which was on the page before anyone made it.
 //   rooftops  Gustave Doré, Over London by Rail, from London: A Pilgrimage
 //             (1872). Back to back housing packed to the horizon under a
 //             railway arch. A city with no room left in it.
@@ -84,27 +86,52 @@ const work: WorkSpec = {
   formats: ["carousel-slide"],
 
   slides: [
-    // 1. The question, on the empty lane. The picture is doing the second half
-    //    of the copy's job before the copy gets there.
+    // 1. The motion, up front, and the whole night with it. Held back to the
+    //    end it only reached the people who were already going to swipe that
+    //    far; it is the most interesting thing the club has to say.
     {
-      label: "The question",
+      label: "The motion",
       hasImage: true,
       render: () => (
-        <Hook
-          plate={avenue}
-          crop={{ x: 0.5, y: 0.5, scale: 1.82 }}
+        <Poster
+          plate={tower}
+          crop={{ x: 0.5, y: 0.38, scale: 1.78 }}
           badge={badge}
-          question={["So, how did", "Bengaluru become", "Bengaluru?"]}
-          lines={[
-            "For most of the last century it was a retirement town: gardens, pensioners and cheap rent.",
-          ]}
-          cta="Swipe to see what happened next →"
-          ctaNote="The motion is on the last slide"
+          motion={["Bengaluru", "needs to burst", "its tech bubble."]}
+          note="One of two motions. The second is announced closer to the night."
+          swipe="Swipe for how we got here →"
+          when="Sunday, 6 September"
+          where="Big Pitcher, Indiranagar"
+          lines={HOW_IT_WORKS}
+          cta="Tickets out now"
         />
       ),
     },
 
-    // 2. Doré's rooftops, and the deck changes material. The lane had gaps in
+    // 2. The story starts on the empty lane. No badge, no band, no instruction:
+    //    slide 1 did all of that, and this page is the club talking.
+    {
+      label: "The question",
+      hasImage: true,
+      render: () => (
+        <Beat
+          plate={avenue}
+          crop={{ x: 0.5, y: 0.5, scale: 1.82 }}
+          n={2}
+          of={OF}
+          shout={{ lines: ["So, how did", "Bengaluru become", "Bengaluru?"], size: 84 }}
+          lines={[
+            {
+              text: "For most of the last century it was a retirement town: gardens, pensioners and cheap rent.",
+              size: 32,
+              tone: "parchment",
+            },
+          ]}
+        />
+      ),
+    },
+
+    // 3. Doré's rooftops, and the deck changes material. The lane had gaps in
     //    it; this has none.
     {
       label: "They arrived",
@@ -113,21 +140,23 @@ const work: WorkSpec = {
         <Beat
           plate={rooftops}
           crop={{ x: 0.5, y: 0.45, scale: 2.2 }}
-          n={2}
+          n={3}
           of={OF}
           footnote="40% of India's IT exports. Over two million tech jobs."
           lines={[
             "Then the software companies arrived, and the startups after them.",
-            { text: "A generation moved here to work for one or the other, and never stopped coming.", tone: "parchment" },
+            {
+              text: "A generation moved here to work for one or the other, and never stopped coming.",
+              tone: "parchment",
+            },
           ]}
           size={42}
         />
       ),
     },
 
-    // 3. The tower, and the one slide where the type does what the sentence
-    //    says: three lines about growth set at three growing sizes, then two
-    //    lines about the city that stay where they were.
+    // 4. The tower, and the one slide where the type does what the sentence
+    //    says: the second line is set larger than the first.
     {
       label: "It grew",
       hasImage: true,
@@ -135,7 +164,7 @@ const work: WorkSpec = {
         <Beat
           plate={tower}
           crop={{ x: 0.5, y: 0.42, scale: 1.74 }}
-          n={3}
+          n={4}
           of={OF}
           footnote="96 km of metro in fifteen years. Delhi has 420."
           lines={[
@@ -148,7 +177,7 @@ const work: WorkSpec = {
       ),
     },
 
-    // 4. Grimshaw's quay: the only plate that is lifted rather than knocked
+    // 5. Grimshaw's quay: the only plate that is lifted rather than knocked
     //    back. One person walking home in the wet, which is what the numbers
     //    on this slide actually mean.
     {
@@ -158,44 +187,47 @@ const work: WorkSpec = {
         <Beat
           plate={quay}
           crop={{ x: 0.68, y: 0.5, scale: 2.0 }}
-          n={4}
+          n={5}
           of={OF}
           footnote="TomTom Traffic Index 2025. Reporting on the 2024 water crisis."
           lines={[
             "You probably know what that feels like.",
             "",
-            { text: "Thirty-six minutes to cross ten kilometres. Borewells running dry.", tone: "parchment" },
+            {
+              text: "Thirty-six minutes to cross ten kilometres. Borewells running dry.",
+              tone: "parchment",
+            },
           ]}
           size={44}
         />
       ),
     },
 
-    // 5. No picture. The word is the picture, and it is the only slide where
+    // 6. No picture. The word is the picture, and it is the only slide where
     //    repetition is the content rather than a failure of one.
     {
       label: "More",
       render: () => (
         <Beat
-          n={5}
+          n={6}
           of={OF}
-          shout={{ text: "More.", size: 128 }}
+          shout={{ lines: ["More."], size: 128 }}
           lines={["More flyovers.", "More layouts.", "More people.", "More growth."]}
           size={46}
         />
       ),
     },
 
-    // 6. The tower again, almost a silhouette. The turn, and a real question
+    // 7. The tower again, almost a silhouette. The turn, and a real question
     //    rather than a jab: the deck has to leave both sides of this arguable.
     {
-      label: "The turn",
+      label: "Too much",
       hasImage: true,
       render: () => (
         <Beat
           plate={towerDusk}
           crop={{ x: 0.5, y: 0.46, scale: 1.68 }}
-          n={6}
+          n={7}
           of={OF}
           lines={[
             {
@@ -215,9 +247,9 @@ const work: WorkSpec = {
       ),
     },
 
-    // 7. The avenue returns, close on the lane this time. The slide arguing
-    //    for less is the picture the deck opened on, which is the quietest way
-    //    to make that case.
+    // 8. The avenue returns, close on the lane this time, and closes the deck.
+    //    The slide arguing for less is the picture the story opened on, which
+    //    is the quietest way to make that case.
     {
       label: "Or less",
       hasImage: true,
@@ -225,7 +257,7 @@ const work: WorkSpec = {
         <Beat
           plate={avenue}
           crop={{ x: 0.5, y: 0.66, scale: 2.6 }}
-          n={7}
+          n={8}
           of={OF}
           lines={[
             // the club's draft had an em dash here; the repo does not use them
@@ -238,26 +270,6 @@ const work: WorkSpec = {
               size: 38,
             },
           ]}
-        />
-      ),
-    },
-
-    // 8. The motion, and the poster. This slide has to stand alone as a single
-    //    image, so it carries the mark, the motion, the night and the festival.
-    {
-      label: "Motion and poster",
-      hasImage: true,
-      render: () => (
-        <Poster
-          plate={tower}
-          crop={{ x: 0.5, y: 0.38, scale: 1.78 }}
-          badge={badge}
-          motion={["Bengaluru", "needs to burst", "its tech bubble."]}
-          note="One of two motions. The second is announced closer to the night."
-          when="Sunday, 6 September"
-          where="Big Pitcher, Indiranagar"
-          lines={HOW_IT_WORKS}
-          cta="Tickets out now"
         />
       ),
     },

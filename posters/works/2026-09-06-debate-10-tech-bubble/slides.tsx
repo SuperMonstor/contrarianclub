@@ -6,73 +6,76 @@ import "./slides.css";
 // Bengaluru Tech Week 2026.
 //
 // ---------------------------------------------------------------------------
-// The whole thing is one person talking
+// The motion first, then the case for it
 //
-// Read end to end the deck is a single continuous voice, and every slide is
-// built to hand off to the next one:
+//   1  the motion, and the whole night              the poster, up front
+//   2  so, how did Bengaluru become Bengaluru?      it was a retirement town
+//   3  then the software companies arrived          and they kept coming
+//   4  the industry grew, and grew                  the city did not
+//   5  you probably know what that feels like       here is what it costs
+//   6  and the answer is always more                we build our way out
+//   7  what if it has grown too much                a real question, not a jab
+//   8  and if so, does it need less tech            which is arguable, so argue
 //
-//   1  so, how did Bengaluru become Bengaluru?      it was a retirement town
-//   2  then the software companies arrived          and they kept coming
-//   3  the industry grew, and grew, and grew        the city did not
-//   4  you probably know what that feels like       here is what it costs
-//   5  so what is always the answer? more           we build our way out
-//   6  what if it has grown too much               a real question, not a jab
-//   7  and if so, does it need less tech            which is arguable, so argue
-//   8  so somebody should say it out loud          the motion, and the poster
+// The motion is the most interesting thing the club has to say, so it is not
+// held back for a reveal. It is the first frame, it carries the date and the
+// tickets, and it stands alone if somebody screenshots it or it goes out as a
+// single image. Everything after it is the case, and the deck closes on the
+// question the motion is really asking rather than on a repeat of the poster.
 //
-// Every slide opens on a connective and closes on something unfinished. That
-// is the actual mechanism: nobody swipes because a slide was interesting, they
-// swipe because the sentence has not landed yet.
+// Slides 2 to 8 are still one continuous voice, each opening on a connective
+// and closing on something unfinished. That is the mechanism: nobody swipes
+// because a slide was interesting, they swipe because the sentence has not
+// landed yet.
 //
 // ---------------------------------------------------------------------------
 // The grammar
 //
 // SIX PICTURES, FIVE MATERIALS, AND NO TWO NEIGHBOURS ALIKE:
 //
-//   1  Hobbema, The Avenue at Middelharnis (1689)      light oil, open sky
-//   2  Doré, Over London by Rail (1872)                ink engraving
-//   3  Bruegel, The Tower of Babel (Rotterdam)         warm oil
-//   4  Grimshaw, Greenock (1882)                       night oil, gaslight
-//   5  nothing at all                                  near-black
-//   6  the tower again, at dusk, nearly a silhouette
-//   7  the avenue again, close on the empty lane
-//   8  the tower, for the poster
+//   1  Bruegel, The Tower of Babel (Rotterdam)         warm oil, for the poster
+//   2  Hobbema, The Avenue at Middelharnis (1689)      light oil, open sky
+//   3  Doré, Over London by Rail (1872)                ink engraving
+//   4  the tower again, closer                         warm oil
+//   5  Grimshaw, Greenock (1882)                       night oil, gaslight
+//   6  nothing at all                                  near-black
+//   7  the tower again, at dusk, nearly a silhouette
+//   8  the avenue again, close on the empty lane
 //
-// The two reprises are load bearing rather than economical. The tower returns
-// at slide 6 as a silhouette under "what if it has grown too much", because
-// the tower is the thing that got built. The avenue returns at slide 7 under
-// "does Bengaluru need less tech", and it is the quiet empty lane the deck
-// opened on: the case for less, already on the page in slide 1, before anyone
-// had made it. Slide 5 has no picture because the word on it is the picture.
+// The reprises are load bearing rather than economical. The tower is the thing
+// that got built, so it carries the motion and comes back under both "it grew
+// a lot" and "what if it has grown too much". The avenue is the slow town, so
+// it opens the story on slide 2 and returns to close it on slide 8, under
+// "does Bengaluru need less tech": the case for less, already on the page
+// before anyone made it. Slide 6 has no picture because the word on it is the
+// picture.
 //
-// Slides 6 and 7 are a matched pair and are set as one: a quiet line, the
-// question in gold, then a second question that widens it. Six asks, seven
-// answers, and they should look like they were cut from the same sheet.
+// Slides 7 and 8 are a matched pair and are set as one: a quiet line, the
+// question in gold, then a second question that widens it. Seven asks, eight
+// answers, and they should look cut from the same sheet.
 //
 // THREE TYPEFACES, AND OSWALD ONLY WHERE THE VOICE STOPS NARRATING. Playfair
 // at reading size carries all the talking; the middle of a carousel is
 // somebody speaking, and narration set in poster caps reads as a list of
-// claims. Oswald condensed caps appear three times only: the opening question,
-// the single word MORE, and the motion. Those are the three moments the deck
-// stops telling you something and hits you with it.
+// claims. Oswald condensed caps appear three times only: the motion, the
+// opening question, and the single word MORE. Those are the three moments the
+// deck stops telling you something and hits you with it.
 //
 // LINE BREAKS ARE COPY, NOT LAYOUT. Each slide is given its lines, not a
 // paragraph, so the rhythm of the writing survives contact with the column.
-// Slide 3 sets its three lines about growth at three growing sizes, which is
-// the sentence drawing itself.
+// Slide 4 sets its two lines about growth at two growing sizes, which is the
+// sentence drawing itself.
 //
 // ONE DIVISION, LOW ON THE PAGE, AT THE SAME HEIGHT EVERY TIME. On the story
-// slides it is a gold hairline with sourced numbers underneath. On slides 1
-// and 8 it is the top edge of the cream festival band. See .tb-band in
-// slides.css for why the band exists and what it is carrying.
+// slides it is a gold hairline with sourced numbers underneath. On slide 1 it
+// is the top edge of the cream festival band. See .tb-band in slides.css for
+// why the band exists and what it is carrying.
 //
-// NOTHING OF THE CLUB'S GOES IN THE BAND EXCEPT ON THE POSTER. The swipe
-// instruction on slide 1 sits in gold above the band, not in ink inside it:
-// set on cream beside the festival's own card it read as the festival's
-// furniture rather than as the club talking. Gold on black is the club's voice
-// everywhere else in the deck, so it is the club's voice here. Slide 1's strip
-// carries the badge and nothing else. Only the poster, which is the club's own
-// page, is allowed to print the club's details in the band.
+// THE FESTIVAL APPEARS ONCE, ON THE POSTER. It used to sit on the opener too,
+// which is where it stopped being a credential and started being decoration.
+// Now it is on the one page that is a printed piece, next to the club's own
+// details, in the band that was built to hold it. The seven pages after it are
+// the club talking and carry nothing of anybody else's.
 //
 // FLUSH LEFT THROUGHOUT, to one margin at x=92, which is why the lockup takes
 // its left cut.
@@ -303,88 +306,7 @@ function Band({
 
 /* --- The slides ----------------------------------------------------------- */
 
-/** 1. THE QUESTION. Opens on the quiet lane, because the first thing the deck
- *  has to say is that this used to be a slow place. Nothing is sold here: no
- *  date, no venue, no ticket line. A first slide that opens with a date is a
- *  first slide nobody swipes. */
-export function Hook({
-  plate,
-  crop,
-  badge,
-  question,
-  lines,
-  cta,
-  ctaNote,
-}: {
-  plate: Plate;
-  crop: Crop;
-  badge: string;
-  question: string[];
-  lines: Line[];
-  cta: string;
-  ctaNote: string;
-}) {
-  return (
-    <Ground plate={plate} crop={crop}>
-      <div style={{ position: "absolute", left: MARGIN, top: 92 }}>
-        <Lockup width={248} artwork="left" />
-        <div
-          className="kicker tb-on-art"
-          style={{ marginTop: 28, fontSize: 15, letterSpacing: "0.32em" }}
-        >
-          Debate Club #10
-        </div>
-      </div>
-
-      <div
-        className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (RULE - 132) }}
-      >
-        {question.map((line) => (
-          <div key={line} style={{ ...CONDENSED, fontSize: 92 }}>
-            {line}
-          </div>
-        ))}
-        <div style={{ marginTop: 34 }}>
-          <Narration lines={lines} size={30} />
-        </div>
-      </div>
-
-      <div
-        className="kicker tb-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: RULE - 74,
-          fontSize: 20,
-          letterSpacing: "0.2em",
-        }}
-      >
-        {cta}
-      </div>
-      <div
-        className="tb-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: RULE - 40,
-          fontFamily: "var(--cc-font-ui)",
-          fontWeight: 600,
-          fontSize: 14,
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "var(--cc-muted)",
-        }}
-      >
-        {ctaNote}
-      </div>
-
-      <Band height={H - RULE} badge={badge} badgeWidth={286} />
-    </Ground>
-  );
-}
-
-/** 2 to 7. A beat of the story: the talking, and the sourced number under the
+/** 2 to 8. A beat of the case: the talking, and the sourced number under the
  *  rule if there is one. The block is bottom-anchored so its last line lands
  *  on the division however long it runs. */
 export function Beat({
@@ -403,8 +325,8 @@ export function Beat({
   of: number;
   lines: Line[];
   size?: number;
-  /** the one word this beat is allowed to shout, set above the lines */
-  shout?: { text: string; size: number };
+  /** the words this beat is allowed to shout, set above the lines */
+  shout?: { lines: string[]; size: number };
   footnote?: ReactNode;
 }) {
   return (
@@ -415,7 +337,13 @@ export function Beat({
         style={{ position: "absolute", left: MARGIN, width: 856, bottom: H - TEXT_BASE }}
       >
         {shout && (
-          <div style={{ ...CONDENSED, fontSize: shout.size, marginBottom: 30 }}>{shout.text}</div>
+          <div style={{ marginBottom: 34 }}>
+            {shout.lines.map((line) => (
+              <div key={line} style={{ ...CONDENSED, fontSize: shout.size }}>
+                {line}
+              </div>
+            ))}
+          </div>
         )}
         <Narration lines={lines} size={size} />
       </div>
@@ -425,9 +353,13 @@ export function Beat({
   );
 }
 
-/** 8. THE MOTION, AND THE POSTER. The one slide that has to work alone if
- *  somebody screenshots it or it goes out as a single image: the mark, the
- *  motion, the night, the tickets, the festival. */
+/** 1. THE MOTION, AND THE POSTER. First, because the motion is the most
+ *  interesting thing the club has to say and holding it back for slide eight
+ *  spent it on the people who were already going to swipe that far.
+ *
+ *  It is also the one page that has to work alone, if somebody screenshots it
+ *  or it goes out as a single image: the mark, the motion, the night, the
+ *  tickets, and the festival badge in the band built to carry it. */
 export function Poster({
   plate,
   crop,
@@ -436,6 +368,7 @@ export function Poster({
   note,
   lines,
   cta,
+  swipe,
   when,
   where,
 }: {
@@ -446,6 +379,8 @@ export function Poster({
   note: string;
   lines: string[];
   cta: string;
+  /** the instruction the opener used to carry, in gold above the band */
+  swipe: string;
   when: string;
   where: string;
 }) {
@@ -454,11 +389,17 @@ export function Poster({
     <Ground plate={plate} crop={crop}>
       <div style={{ position: "absolute", left: MARGIN, top: 88 }}>
         <Lockup width={248} artwork="left" />
+        <div
+          className="kicker tb-on-art"
+          style={{ marginTop: 28, fontSize: 15, letterSpacing: "0.32em" }}
+        >
+          Debate Club #10
+        </div>
       </div>
 
       <div
         className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 72 }}
+        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 104 }}
       >
         <div
           className="kicker"
@@ -481,6 +422,19 @@ export function Poster({
         >
           {note}
         </div>
+      </div>
+
+      <div
+        className="kicker tb-on-art"
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          bottom: BAND + 34,
+          fontSize: 19,
+          letterSpacing: "0.2em",
+        }}
+      >
+        {swipe}
       </div>
 
       <Band height={BAND} badge={badge} badgeWidth={318}>
