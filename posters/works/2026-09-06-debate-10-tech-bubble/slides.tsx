@@ -16,6 +16,7 @@ import "./slides.css";
 //   6  and the answer is always more                we build our way out
 //   7  what if it has grown too much                a real question, not a jab
 //   8  and if so, does it need less tech            which is arguable, so argue
+//   9  so come and argue it                          the back cover
 //
 // The motion is the most interesting thing the club has to say, so it is not
 // held back for a reveal. It is the first frame, it carries the date and the
@@ -71,14 +72,23 @@ import "./slides.css";
 // is the top edge of the cream festival band. See .tb-band in slides.css for
 // why the band exists and what it is carrying.
 //
-// THE FESTIVAL APPEARS ONCE, ON THE POSTER. It used to sit on the opener too,
+// THE FESTIVAL APPEARS ON THE TWO PRINTED PAGES, the poster and the closing
+// card, and nowhere else. It used to sit on the opener too,
 // which is where it stopped being a credential and started being decoration.
-// Now it is on the one page that is a printed piece, next to the club's own
-// details, in the band that was built to hold it. The seven pages after it are
-// the club talking and carry nothing of anybody else's.
+// Those are the two pages that are printed pieces rather than photographs,
+// they are the two that carry the club's own details, and cream is the ground
+// both of them are made of. The seven pages between them are the club talking
+// and carry nothing of anybody else's.
+//
+// THE SWIPE INSTRUCTION SITS ON SLIDE 2, NOT ON THE POSTER. Slide 1 is the
+// whole offer and does not need to argue for the next page; slide 2 is where
+// the question gets asked, so it is the page that can promise an answer. It
+// goes under the rule in gold, in the slot a footnote would take, and no other
+// beat carries one.
 //
 // FLUSH LEFT THROUGHOUT, to one margin at x=92, which is why the lockup takes
-// its left cut.
+// its left cut. The closing card is the single exception and inverts the rule
+// along with every other one: see .tb-page in slides.css.
 // ---------------------------------------------------------------------------
 
 // This work ships one format, so the canvas is a constant rather than a set of
@@ -318,6 +328,7 @@ export function Beat({
   size,
   shout,
   footnote,
+  cta,
 }: {
   plate?: Plate;
   crop?: Crop;
@@ -328,6 +339,11 @@ export function Beat({
   /** the words this beat is allowed to shout, set above the lines */
   shout?: { lines: string[]; size: number };
   footnote?: ReactNode;
+  /** the swipe instruction, under the rule. It sits on the slide that poses
+   *  the question rather than on the poster: the poster is already the whole
+   *  offer, and telling someone to keep going works better one page after they
+   *  have decided to. Only one beat carries it. */
+  cta?: string;
 }) {
   return (
     <Ground plate={plate} crop={crop}>
@@ -349,6 +365,20 @@ export function Beat({
       </div>
       <hr className="tb-rule" style={{ top: RULE }} />
       {footnote && <Footnote>{footnote}</Footnote>}
+      {cta && (
+        <div
+          className="kicker tb-on-art"
+          style={{
+            position: "absolute",
+            left: MARGIN,
+            top: RULE + 44,
+            fontSize: 19,
+            letterSpacing: "0.2em",
+          }}
+        >
+          {cta}
+        </div>
+      )}
     </Ground>
   );
 }
@@ -368,7 +398,6 @@ export function Poster({
   note,
   lines,
   cta,
-  swipe,
   when,
   where,
 }: {
@@ -379,8 +408,6 @@ export function Poster({
   note: string;
   lines: string[];
   cta: string;
-  /** the instruction the opener used to carry, in gold above the band */
-  swipe: string;
   when: string;
   where: string;
 }) {
@@ -399,7 +426,7 @@ export function Poster({
 
       <div
         className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 104 }}
+        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 76 }}
       >
         <div
           className="kicker"
@@ -424,19 +451,6 @@ export function Poster({
         </div>
       </div>
 
-      <div
-        className="kicker tb-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          bottom: BAND + 34,
-          fontSize: 19,
-          letterSpacing: "0.2em",
-        }}
-      >
-        {swipe}
-      </div>
-
       <Band height={BAND} badge={badge} badgeWidth={318}>
         <div style={{ fontFamily: "var(--cc-font-display)", fontSize: 46, lineHeight: 1.28 }}>
           {when}
@@ -458,5 +472,100 @@ export function Poster({
         </div>
       </Band>
     </Ground>
+  );
+}
+
+/** 9. THE BACK COVER. The deck has spent eight pages arguing; this one asks
+ *  the reader to turn up and do it in person, and repeats the practical
+ *  details so nobody who read to the end has to swipe back to the start for
+ *  them.
+ *
+ *  It is the inverse of every other page: cream, centred, no painting. See
+ *  .tb-page in slides.css for why, including why centring it is what lets the
+ *  lockup appear in its light colourway at all. */
+export function Closer({
+  badge,
+  invitation,
+  when,
+  where,
+  lines,
+  cta,
+}: {
+  badge: string;
+  invitation: string;
+  when: string;
+  where: string;
+  lines: string[];
+  cta: string;
+}) {
+  return (
+    <div
+      className="tb-page"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: `0 ${MARGIN}px`,
+        boxSizing: "border-box",
+      }}
+    >
+      <Lockup width={300} variant="light" align="center" />
+
+      <div
+        className="tb-band-cta"
+        style={{ marginTop: 36, fontSize: 15, letterSpacing: "0.32em" }}
+      >
+        Debate Club #10
+      </div>
+
+      <div
+        style={{
+          marginTop: 28,
+          fontFamily: "var(--cc-font-display)",
+          fontSize: 62,
+          lineHeight: 1.16,
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {invitation}
+      </div>
+
+      <hr className="tb-band-line" style={{ marginTop: 46, width: 280 }} />
+
+      <div
+        style={{
+          marginTop: 42,
+          fontFamily: "var(--cc-font-display)",
+          fontSize: 46,
+          lineHeight: 1.34,
+        }}
+      >
+        {when}
+        <br />
+        {where}
+      </div>
+
+      <div style={{ marginTop: 40 }}>
+        {lines.map((line) => (
+          <div
+            key={line}
+            className="tb-band-meta"
+            style={{ fontSize: 15, letterSpacing: "0.11em", lineHeight: 1.9 }}
+          >
+            {line}
+          </div>
+        ))}
+      </div>
+
+      <div className="tb-band-cta" style={{ marginTop: 32, fontSize: 18, letterSpacing: "0.26em" }}>
+        {cta}
+      </div>
+
+      <div style={{ marginTop: 54 }}>
+        <Badge src={badge} width={300} />
+      </div>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import badge from "./assets/btw-badge.png";
 import quaySrc from "./assets/quay.jpg";
 import rooftopsSrc from "./assets/rooftops.jpg";
 import towerSrc from "./assets/tower.jpg";
-import { Beat, type Plate, Poster } from "./slides";
+import { Beat, Closer, type Plate, Poster } from "./slides";
 
 // Debate Club #10, at Bengaluru Tech Week 2026. Announcing the first of the
 // two motions, revealed outright, on the last slide.
@@ -72,7 +72,10 @@ const quay: Plate = {
   scrim: "tb-scrim-open",
 };
 
-const OF = 8;
+// The counter tells the truth about the carousel's length, so it counts the
+// covers even though neither of them carries one: on slide 8 a reader needs to
+// know there is one page left, not that they have reached the end.
+const OF = 9;
 
 const HOW_IT_WORKS = [
   "Debaters drawn at random.",
@@ -99,7 +102,6 @@ const work: WorkSpec = {
           badge={badge}
           motion={["Bengaluru", "needs to burst", "its tech bubble."]}
           note="One of two motions. The second is announced closer to the night."
-          swipe="Swipe for how we got here →"
           when="Sunday, 6 September"
           where="Big Pitcher, Indiranagar"
           lines={HOW_IT_WORKS}
@@ -120,6 +122,7 @@ const work: WorkSpec = {
           n={2}
           of={OF}
           shout={{ lines: ["So, how did", "Bengaluru become", "Bengaluru?"], size: 84 }}
+          cta="Swipe for how we got here →"
           lines={[
             {
               text: "For most of the last century it was a retirement town: gardens, pensioners and cheap rent.",
@@ -270,6 +273,24 @@ const work: WorkSpec = {
               size: 38,
             },
           ]}
+        />
+      ),
+    },
+
+    // 9. The back cover. Eight pages of argument, then the one page that asks
+    //    the reader to turn up and do it, with the details repeated so nobody
+    //    who read to the end has to swipe back to the start for them.
+    {
+      label: "Back cover",
+      hasImage: true,
+      render: () => (
+        <Closer
+          badge={badge}
+          invitation="Come and take a side."
+          when="Sunday, 6 September"
+          where="Big Pitcher, Indiranagar"
+          lines={HOW_IT_WORKS}
+          cta="Tickets out now"
         />
       ),
     },

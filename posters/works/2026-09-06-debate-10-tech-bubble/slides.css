@@ -211,3 +211,43 @@
 .tb-badge {
   display: block;
 }
+
+/* --- The back cover ------------------------------------------------------- */
+
+/* The closing card, and the one page in the deck that inverts every rule the
+   other eight hold: light instead of dark, centred instead of flush left,
+   printed instead of photographic, no painting at all.
+
+   That is not a whim. The band already established cream as the second colour
+   this piece is printed in, and making the last page entirely that colour
+   turns it into an object rather than one more slide: the back of the
+   programme, where the practical information lives. It is also why this page
+   is allowed to centre its type. The brand guide is strict that the centred
+   cut of the lockup belongs over centred type and the left cut over flush
+   left, so a page that wants the light colourway, which only exists in the
+   centred cut, has to be a centred page throughout. */
+.tb-page {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 250, 236, 0.9), transparent 60%),
+    linear-gradient(180deg, #f7eed9 0%, var(--cc-ivory) 44%, #e6d8b7 100%);
+  color: #17120b;
+}
+
+/* the tooth of the stock, so the page reads as paper and not as a fill */
+.tb-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.tb-page > * {
+  position: relative;
+  z-index: 1;
+}
