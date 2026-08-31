@@ -4,51 +4,44 @@ import badge from "./assets/btw-badge.png";
 import quaySrc from "./assets/quay.jpg";
 import rooftopsSrc from "./assets/rooftops.jpg";
 import towerSrc from "./assets/tower.jpg";
-import { Beat, Hook, type Plate, Poster, Turn } from "./slides";
+import { Beat, Hook, type Plate, Poster } from "./slides";
 
 // Debate Club #10, at Bengaluru Tech Week 2026. Announcing the first of the
 // two motions, revealed outright, on the last slide.
 //
-// The story the deck tells: the city was a slow, cheap, pleasant place, then
-// an industry arrived and never stopped arriving, and the city underneath it
-// was never built to match. Which is an argument for hitting the brakes, or
-// an argument that the brakes are the wrong thing to reach for. That is the
-// debate.
+// The copy is one continuous voice across eight slides and is meant to be read
+// straight through. Anyone editing a line should read the slide before it and
+// the slide after it first: every one of them opens on a connective and closes
+// on something unfinished, and that is the whole reason the deck gets swiped.
 //
 // The design reasoning, and why each picture is where it is, is in slides.tsx.
 //
 // The art, all public domain via Wikimedia Commons:
 //
+//   avenue    Meindert Hobbema, The Avenue at Middelharnis (1689). An empty
+//             lane, tall trees, a big sky, almost nobody in it. Opens the deck
+//             as the slow town, and returns on slide 7 as the argument for
+//             less, which was on the page before anyone made it.
+//   rooftops  Gustave Doré, Over London by Rail, from London: A Pilgrimage
+//             (1872). Back to back housing packed to the horizon under a
+//             railway arch. A city with no room left in it.
 //   tower     Pieter Bruegel the Elder, The Tower of Babel (c. 1568, Museum
 //             Boijmans Van Beuningen, Rotterdam). The smaller, darker second
 //             Babel, not the Vienna panel that appears in the national pride
 //             deck. Raw brick still going up at the top, finished storeys
-//             already in shadow below, a harbour town at the foot that never
-//             grew at all.
-//   avenue    Meindert Hobbema, The Avenue at Middelharnis (1689). An empty
-//             lane, tall trees, a big sky, and almost nobody in it.
-//   rooftops  Gustave Doré, Over London by Rail, from London: A Pilgrimage
-//             (1872). Back to back housing packed to the horizon under a
-//             railway arch. A city with no room left in it.
+//             already in shadow below. The thing that outgrew its own footing.
 //   quay      John Atkinson Grimshaw, Greenock (1882). A wet quay at dusk,
 //             gaslight, masts, and one figure walking home.
 //
-// Every number on slide 3, 4 and 5 is sourced. If one ages out, change the
-// number and its source together:
+// The numbers in the footnotes are sourced. If one ages out, change the number
+// and its source together:
 //
 //   40% of India's IT exports, 2m+ tech jobs   industry reporting, 2024-25
-//   3.3m (1991), 8.5m (2011), ~14m now         Census of India, projections
+//   3.3m (1991), ~14m now                      Census of India, projections
 //   96 km of metro, Delhi 420                  BMRCL and DMRC, 2026
 //   36 min per 10 km, second slowest           TomTom Traffic Index 2025
 //   7,000 of ~16,000 borewells dry             reporting, summer 2024
 
-const tower: Plate = {
-  src: towerSrc,
-  ratio: 4945 / 3973,
-  art: "tb-art-tower",
-  scrim: "tb-scrim",
-};
-const towerDusk: Plate = { ...tower, art: "tb-art-tower-dusk" };
 const avenue: Plate = {
   src: avenueSrc,
   ratio: 4200 / 3110,
@@ -61,6 +54,13 @@ const rooftops: Plate = {
   art: "tb-art-engraving",
   scrim: "tb-scrim-dense",
 };
+const tower: Plate = {
+  src: towerSrc,
+  ratio: 4945 / 3973,
+  art: "tb-art-tower",
+  scrim: "tb-scrim",
+};
+const towerDusk: Plate = { ...tower, art: "tb-art-tower-dusk" };
 const quay: Plate = {
   src: quaySrc,
   ratio: 4455 / 2880,
@@ -69,6 +69,8 @@ const quay: Plate = {
   // which on this plate is the row of lit windows the slide is for
   scrim: "tb-scrim-open",
 };
+
+const OF = 8;
 
 const HOW_IT_WORKS = [
   "Debaters drawn at random.",
@@ -82,102 +84,179 @@ const work: WorkSpec = {
   formats: ["carousel-slide"],
 
   slides: [
-    // 1. The tower entire, before any slide is allowed to crop into anything.
+    // 1. The question, on the empty lane. The picture is doing the second half
+    //    of the copy's job before the copy gets there.
     {
-      label: "Hook",
+      label: "The question",
       hasImage: true,
       render: () => (
-        <Hook plate={tower} crop={{ x: 0.5, y: 0.5, scale: 1.62 }} badge={badge} />
+        <Hook
+          plate={avenue}
+          crop={{ x: 0.5, y: 0.5, scale: 1.82 }}
+          badge={badge}
+          question={["So, how did", "Bengaluru become", "Bengaluru?"]}
+          lines={[
+            "For most of the last century, it was basically a retirement town.",
+            { text: "Gardens, pensioners, cheap rent, and not much else.", tone: "parchment" },
+          ]}
+          cta="Swipe to see what happened next →"
+          ctaNote="The motion is on the last slide"
+        />
       ),
     },
 
-    // 2. The empty lane. The one slide in the deck that is allowed to be
-    //    light, because it is the slide about the city being pleasant.
+    // 2. Doré's rooftops, and the deck changes material. The lane had gaps in
+    //    it; this has none.
     {
-      label: "What it was",
-      hasImage: true,
-      render: () => (
-        <Beat plate={avenue} crop={{ x: 0.5, y: 0.55, scale: 1.9 }} kicker="1980">
-          This was a retirement town. Gardens, pensioners, cheap rent, and a reputation
-          for being pleasant and slow.
-        </Beat>
-      ),
-    },
-
-    // 3. Doré's rooftops, and the deck changes material. The industry arrives
-    //    and the picture goes from an empty lane to a place with no gaps in it.
-    {
-      label: "What happened",
+      label: "They arrived",
       hasImage: true,
       render: () => (
         <Beat
           plate={rooftops}
           crop={{ x: 0.5, y: 0.45, scale: 2.2 }}
-          kicker="Then"
+          n={2}
+          of={OF}
           footnote="Roughly 40% of India's IT exports. Over two million people working in tech."
-        >
-          The software companies put down roots. The startups followed them. A generation
-          moved here to work for one or the other, and kept coming.
-        </Beat>
+          lines={[
+            "Then, somewhere along the way, the software companies arrived.",
+            "Startups came next.",
+            "And then an entire generation started moving here to work for one or the other.",
+            { text: "And they just… kept coming.", tone: "parchment" },
+          ]}
+          size={42}
+        />
       ),
     },
 
-    // 4. No picture. The slide about the part of the city that was never built
-    //    is the one slide with nothing behind the words, and it is the only
-    //    place in the deck where that reads as meaning rather than as a gap.
+    // 3. The tower, and the one slide where the type does what the sentence
+    //    says: three lines about growth set at three growing sizes, then two
+    //    lines about the city that stay where they were.
     {
-      label: "What did not",
+      label: "It grew",
+      hasImage: true,
       render: () => (
         <Beat
-          kicker="Meanwhile"
-          size={54}
-          footnote={
-            <>
-              3.3 million people in 1991. Around 14 million now.
-              <br />
-              96 km of metro in fifteen years. Delhi has 420.
-            </>
-          }
-        >
-          The industry doubled, and doubled again. The city underneath it stayed roughly
-          the size it always was.
-        </Beat>
+          plate={tower}
+          crop={{ x: 0.5, y: 0.42, scale: 1.74 }}
+          n={3}
+          of={OF}
+          footnote="3.3 million people in 1991, around 14 million now. 96 km of metro. Delhi has 420."
+          lines={[
+            { text: "The tech industry grew.", size: 42 },
+            { text: "Then it grew some more.", size: 56 },
+            { text: "And then it grew a lot.", size: 76 },
+            "",
+            { text: "The city, though?", size: 42, tone: "parchment" },
+            { text: "It didn't quite keep up.", size: 42, tone: "parchment" },
+          ]}
+        />
       ),
     },
 
-    // 5. Grimshaw's quay: the only slide where the picture is lifted rather
-    //    than knocked back. One person walking home in the wet, which is the
-    //    whole of what the numbers under it actually mean.
+    // 4. Grimshaw's quay: the only plate that is lifted rather than knocked
+    //    back. One person walking home in the wet, which is what the numbers
+    //    on this slide actually mean.
     {
-      label: "The cost",
+      label: "What it feels like",
       hasImage: true,
       render: () => (
         <Beat
           plate={quay}
           crop={{ x: 0.68, y: 0.5, scale: 2.0 }}
-          kicker="Where you feel it"
+          n={4}
+          of={OF}
           footnote="TomTom Traffic Index 2025. Reporting on the 2024 water crisis."
-        >
-          It takes 36 minutes to cross ten kilometres, and only Mexico City is slower. In
-          the summer of 2024, seven thousand borewells ran dry.
-        </Beat>
+          lines={[
+            "You probably know what that feels like.",
+            "",
+            "Thirty-six minutes to cross ten kilometres.",
+            "Borewells running dry.",
+            {
+              text: "Roads, water, housing and public transport struggling to keep up with a city that keeps getting bigger.",
+              size: 36,
+              tone: "parchment",
+            },
+          ]}
+          size={44}
+        />
       ),
     },
 
-    // 6. The tower again, almost a silhouette. The pause, and the sentence the
-    //    motion answers.
+    // 5. No picture. The word is the picture, and it is the only slide where
+    //    repetition is the content rather than a failure of one.
+    {
+      label: "More",
+      render: () => (
+        <Beat
+          n={5}
+          of={OF}
+          shout={{ text: "More.", size: 128 }}
+          lines={[
+            "More flyovers.",
+            "More layouts.",
+            "More people.",
+            "More growth.",
+            "",
+            {
+              text: "We keep trying to build our way out of the problem.",
+              size: 36,
+              tone: "parchment",
+            },
+          ]}
+          size={44}
+        />
+      ),
+    },
+
+    // 6. The tower again, almost a silhouette. The turn, and a real question
+    //    rather than a jab: the deck has to leave both sides of this arguable.
     {
       label: "The turn",
       hasImage: true,
       render: () => (
-        <Turn plate={towerDusk} crop={{ x: 0.5, y: 0.48, scale: 1.68 }}>
-          Every answer so far has been more. More flyovers, more layouts, more people.
-          Nobody has argued for less.
-        </Turn>
+        <Beat
+          plate={towerDusk}
+          crop={{ x: 0.5, y: 0.46, scale: 1.68 }}
+          n={6}
+          of={OF}
+          lines={[
+            { text: "But here's the interesting question:", size: 38, tone: "parchment" },
+            "",
+            { text: "What if more is actually the problem?", size: 48, tone: "gold" },
+            "",
+            {
+              text: "What if Bengaluru's tech industry grew faster than the city could accommodate?",
+              size: 42,
+            },
+          ]}
+        />
       ),
     },
 
-    // 7. The motion, and the poster. This slide has to stand alone as a single
+    // 7. The avenue returns, close on the lane this time. The slide arguing
+    //    for less is the picture the deck opened on, which is the quietest way
+    //    to make that case.
+    {
+      label: "Or less",
+      hasImage: true,
+      render: () => (
+        <Beat
+          plate={avenue}
+          crop={{ x: 0.5, y: 0.66, scale: 2.6 }}
+          n={7}
+          of={OF}
+          lines={[
+            "And if that's true, maybe the answer isn't to make the tech bubble bigger.",
+            { text: "Maybe it's to make it smaller.", tone: "parchment" },
+            "",
+            { text: "Could we actually need less tech to save Bengaluru?", size: 56, tone: "gold" },
+          ]}
+          size={42}
+        />
+      ),
+    },
+
+    // 8. The motion, and the poster. This slide has to stand alone as a single
     //    image, so it carries the mark, the motion, the night and the festival.
     {
       label: "Motion and poster",
@@ -187,6 +266,7 @@ const work: WorkSpec = {
           plate={tower}
           crop={{ x: 0.5, y: 0.38, scale: 1.78 }}
           badge={badge}
+          handoff="That's what we're debating this Sunday."
           motion={["Bengaluru", "needs to burst", "its tech bubble."]}
           note="One of two motions. The second is announced closer to the night."
           when="Sunday, 6 September"

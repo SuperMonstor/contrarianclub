@@ -2,54 +2,65 @@ import type { CSSProperties, ReactNode } from "react";
 import { Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Debate Club #10. Seven slides announcing the first of two motions, at
+// Debate Club #10. Eight slides announcing the first of two motions, at
 // Bengaluru Tech Week 2026.
 //
 // ---------------------------------------------------------------------------
-// The argument, which is a story and not a set of statistics
+// The whole thing is one person talking
 //
-//   1  the hook       nobody planned this city, and the motion is at the end
-//   2  what it was    a slow, pleasant, cheap town
-//   3  what happened  the industry arrived and never stopped arriving
-//   4  what did not   the city underneath stayed the size it always was
-//   5  the cost       where a person actually feels it
-//   6  the turn       every answer so far has been more
-//   7  the motion     said outright, and the poster for the night
+// Read end to end the deck is a single continuous voice, and every slide is
+// built to hand off to the next one:
 //
-// The numbers are real and they are sourced, but they are never the content of
-// a slide. Each one sits under the rule in small caps, as a footnote to a
-// sentence somebody could have said out loud. A carousel that puts a table on
-// screen is a carousel people swipe past.
+//   1  so, how did Bengaluru become Bengaluru?      it was a retirement town
+//   2  then the software companies arrived          and they kept coming
+//   3  the industry grew, and grew, and grew        the city did not
+//   4  you probably know what that feels like       here is what it costs
+//   5  so what is always the answer? more           we build our way out
+//   6  but what if more is the problem              a real question, not a jab
+//   7  then maybe the answer is less                and if it is, say so
+//   8  that is what we are debating                 the motion, and the poster
+//
+// Every slide opens on a connective and closes on something unfinished. That
+// is the actual mechanism: nobody swipes because a slide was interesting, they
+// swipe because the sentence has not landed yet.
 //
 // ---------------------------------------------------------------------------
 // The grammar
 //
-// FIVE PICTURES, FOUR REGISTERS. The deck moves from paint to soot and back:
+// SIX PICTURES, FIVE MATERIALS, AND NO TWO NEIGHBOURS ALIKE:
 //
-//   1  Bruegel, The Tower of Babel (Rotterdam, c. 1568)   warm oil
-//   2  Hobbema, The Avenue at Middelharnis (1689)         light oil, open sky
-//   3  Doré, Over London by Rail (1872)                   ink engraving
-//   4  nothing at all                                     near-black
-//   5  Grimshaw, Greenock (1882)                          night oil, gaslight
+//   1  Hobbema, The Avenue at Middelharnis (1689)      light oil, open sky
+//   2  Doré, Over London by Rail (1872)                ink engraving
+//   3  Bruegel, The Tower of Babel (Rotterdam)         warm oil
+//   4  Grimshaw, Greenock (1882)                       night oil, gaslight
+//   5  nothing at all                                  near-black
 //   6  the tower again, at dusk, nearly a silhouette
-//   7  the tower, for the poster
+//   7  the avenue again, close on the empty lane
+//   8  the tower, for the poster
 //
-// The tower opens and closes it: the thing that got built. Between them the
-// picture changes material every slide, which is the point. Slide 4 is the
-// only one with no picture, because it is the slide about the part of the city
-// that was never built, and an absence is the one thing a photograph of
-// something cannot show.
+// The two reprises are load bearing rather than economical. The tower returns
+// at slide 6 as a silhouette under "what if more is the problem", because the
+// tower is the thing that got built. The avenue returns at slide 7 under
+// "maybe the answer is less", and it is the quiet empty lane the deck opened
+// on: the argument for less, already on the page in slide 1, before anyone had
+// made it. Slide 5 has no picture because the word on it is the picture.
 //
-// TWO TYPEFACES, TWO JOBS. Oswald condensed caps appear exactly twice: the
-// hook and the motion. Those are the two things a reader has to leave with.
-// Everything in between is Playfair at reading size, because the middle of the
-// deck is somebody talking, and setting narration in poster caps is what makes
-// a story read as a list of claims.
+// THREE TYPEFACES, AND OSWALD ONLY WHERE THE VOICE STOPS NARRATING. Playfair
+// at reading size carries all the talking; the middle of a carousel is
+// somebody speaking, and narration set in poster caps reads as a list of
+// claims. Oswald condensed caps appear three times only: the opening question,
+// the single word MORE, and the motion. Those are the three moments the deck
+// stops telling you something and hits you with it.
+//
+// LINE BREAKS ARE COPY, NOT LAYOUT. Each slide is given its lines, not a
+// paragraph, so the rhythm of the writing survives contact with the column.
+// Slide 3 sets its three lines about growth at three growing sizes, which is
+// the sentence drawing itself.
 //
 // ONE DIVISION, LOW ON THE PAGE, AT THE SAME HEIGHT EVERY TIME. On the story
-// slides it is a gold hairline with the numbers underneath. On slides 1 and 7
-// it is the top edge of the cream festival band. See .tb-band in slides.css
-// for why the band exists.
+// slides it is a gold hairline with sourced numbers underneath. On slides 1
+// and 8 it is the top edge of the cream festival band. See .tb-band in
+// slides.css for why the band exists and what it is carrying.
 //
 // FLUSH LEFT THROUGHOUT, to one margin at x=92, which is why the lockup takes
 // its left cut.
@@ -64,13 +75,13 @@ const MARGIN = 92;
 /** The division. Same height on every slide. */
 const RULE = 1150;
 /** Where the last line of narration lands, clear of the division. */
-const TEXT_BASE = RULE - 66;
+const TEXT_BASE = RULE - 62;
 
 /* --- Plates ---------------------------------------------------------------- */
 
 /** A picture, plus the two things the layout needs to know about it: its
  *  aspect, so a crop can be positioned, and the treatment it was tuned for.
- *  Four plates in four materials cannot share one filter. */
+ *  Plates in five materials cannot share one filter. */
 export interface Plate {
   src: string;
   ratio: number;
@@ -114,8 +125,7 @@ function CropArt({ plate, crop }: { plate: Plate; crop: Crop }) {
   );
 }
 
-/** Every slide: the picture, its scrim, then the content. Slides that carry
- *  the hairline draw it themselves; the two band slides do not. */
+/** Every slide: the picture, its scrim, then the content. */
 function Ground({ plate, crop, children }: { plate?: Plate; crop?: Crop; children: ReactNode }) {
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
@@ -132,7 +142,8 @@ function Ground({ plate, crop, children }: { plate?: Plate; crop?: Crop; childre
 
 /* --- Type roles this deck defines for itself ------------------------------ */
 
-/** The two headline moments, and only those two. */
+/** The three moments the voice stops narrating: the question, MORE, the
+ *  motion. Nothing else in the deck is allowed to shout. */
 const CONDENSED: CSSProperties = {
   fontFamily: "var(--cc-font-condensed)",
   fontWeight: 700,
@@ -143,30 +154,73 @@ const CONDENSED: CSSProperties = {
   margin: 0,
 };
 
-/** The narration. Everything between the hook and the motion. */
-const NARRATION: CSSProperties = {
-  fontFamily: "var(--cc-font-display)",
-  fontWeight: 400,
-  fontSize: 50,
-  lineHeight: 1.34,
-  letterSpacing: "-0.005em",
-  color: "var(--cc-ivory)",
-  margin: 0,
+const TONES = {
+  ivory: "var(--cc-ivory)",
+  parchment: "var(--cc-parchment)",
+  gold: "var(--cc-gold-bright)",
+  muted: "var(--cc-muted)",
 };
 
-function Kicker({ children }: { children: ReactNode }) {
+/** One line of the talking. An empty string is a beat of silence, which the
+ *  copy uses as punctuation and which a paragraph could not express. */
+export type Line =
+  | string
+  | { text: string; size?: number; tone?: keyof typeof TONES; italic?: boolean };
+
+function Narration({ lines, size = 46 }: { lines: Line[]; size?: number }) {
+  return (
+    <>
+      {lines.map((line, i) => {
+        const l = typeof line === "string" ? { text: line } : line;
+        if (!l.text) return <div key={i} style={{ height: Math.round(size * 0.62) }} />;
+        return (
+          <p
+            key={i}
+            style={{
+              margin: 0,
+              marginTop: i === 0 ? 0 : Math.round((l.size ?? size) * 0.3),
+              fontFamily: "var(--cc-font-display)",
+              fontWeight: 400,
+              fontStyle: l.italic ? "italic" : "normal",
+              fontSize: l.size ?? size,
+              lineHeight: 1.3,
+              letterSpacing: "-0.005em",
+              color: TONES[l.tone ?? "ivory"],
+            }}
+          >
+            {l.text}
+          </p>
+        );
+      })}
+    </>
+  );
+}
+
+/** Where the reader is, and how far to the motion. It replaces the labels an
+ *  earlier cut put here ("1980", "Then", "Meanwhile"), which said out loud
+ *  what the writing now says for itself, and it backs up the instruction on
+ *  slide 1 by telling the reader exactly how much is left. */
+function Counter({ n, of }: { n: number; of: number }) {
   return (
     <div
       className="kicker tb-on-art"
-      style={{ position: "absolute", left: MARGIN, top: 92, fontSize: 15, letterSpacing: "0.32em" }}
+      style={{
+        position: "absolute",
+        left: MARGIN,
+        top: 92,
+        fontSize: 15,
+        letterSpacing: "0.3em",
+        color: "var(--cc-gold-deep)",
+      }}
     >
-      {children}
+      {String(n).padStart(2, "0")} <span style={{ opacity: 0.6 }}>/</span>{" "}
+      {String(of).padStart(2, "0")}
     </div>
   );
 }
 
-/** The sourced number, under the rule, subordinate to the sentence above it
- *  by construction: small, gold, set in caps, and never more than two lines. */
+/** The sourced number, under the rule, subordinate to the talking above it by
+ *  construction: small, gold, set in caps, never more than two lines. */
 function Footnote({ children }: { children: ReactNode }) {
   return (
     <div
@@ -175,7 +229,7 @@ function Footnote({ children }: { children: ReactNode }) {
         position: "absolute",
         left: MARGIN,
         top: RULE + 44,
-        width: 830,
+        width: 840,
         fontFamily: "var(--cc-font-ui)",
         fontWeight: 600,
         fontSize: 19,
@@ -203,8 +257,8 @@ function Badge({ src, width }: { src: string; width: number }) {
   );
 }
 
-/** The cream foot. Left column is whatever the slide has to say in ink, right
- *  is the badge, both on one optical centre line. */
+/** The cream foot. Left column is whatever the slide says in ink, right is the
+ *  badge, both on one optical centre line. */
 function Band({
   height,
   badge,
@@ -237,11 +291,27 @@ function Band({
 
 /* --- The slides ----------------------------------------------------------- */
 
-/** 1. THE HOOK. The tower entire, the thesis in three words, and the only
- *  instruction the deck gives: keep going, the motion is at the end. Nothing
- *  is sold here. A first slide that opens with a date is a first slide nobody
- *  swipes. */
-export function Hook({ plate, crop, badge }: { plate: Plate; crop: Crop; badge: string }) {
+/** 1. THE QUESTION. Opens on the quiet lane, because the first thing the deck
+ *  has to say is that this used to be a slow place. Nothing is sold here: no
+ *  date, no venue, no ticket line. A first slide that opens with a date is a
+ *  first slide nobody swipes. */
+export function Hook({
+  plate,
+  crop,
+  badge,
+  question,
+  lines,
+  cta,
+  ctaNote,
+}: {
+  plate: Plate;
+  crop: Crop;
+  badge: string;
+  question: string[];
+  lines: Line[];
+  cta: string;
+  ctaNote: string;
+}) {
   return (
     <Ground plate={plate} crop={crop}>
       <div style={{ position: "absolute", left: MARGIN, top: 92 }}>
@@ -256,122 +326,99 @@ export function Hook({ plate, crop, badge }: { plate: Plate; crop: Crop; badge: 
 
       <div
         className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (RULE - 96) }}
+        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (RULE - 82) }}
       >
-        {["Bengaluru", "happened", "by accident."].map((line) => (
-          <div key={line} style={{ ...CONDENSED, fontSize: 138 }}>
+        {question.map((line) => (
+          <div key={line} style={{ ...CONDENSED, fontSize: 92 }}>
             {line}
           </div>
         ))}
-        <p style={{ ...NARRATION, fontSize: 34, color: "var(--cc-parchment)", marginTop: 30 }}>
-          Nobody planned for the city it turned into.
-        </p>
+        <div style={{ marginTop: 34 }}>
+          <Narration lines={lines} size={30} />
+        </div>
       </div>
 
       <Band height={H - RULE} badge={badge} badgeWidth={276}>
-        <div style={{ fontFamily: "var(--cc-font-display)", fontSize: 38, fontStyle: "italic" }}>
-          Keep swiping.
+        <div style={{ fontFamily: "var(--cc-font-display)", fontSize: 36, fontStyle: "italic" }}>
+          {cta}
         </div>
         <div className="tb-band-meta" style={{ fontSize: 15, letterSpacing: "0.16em", marginTop: 10 }}>
-          The motion is on the last slide
+          {ctaNote}
         </div>
       </Band>
     </Ground>
   );
 }
 
-/** 2 to 5. A beat of the story: what it is called, what happened, and the
- *  number underneath if there is one. The narration is bottom-anchored so its
- *  last line lands on the division whatever length it runs to. */
+/** 2 to 7. A beat of the story: the talking, and the sourced number under the
+ *  rule if there is one. The block is bottom-anchored so its last line lands
+ *  on the division however long it runs. */
 export function Beat({
   plate,
   crop,
-  kicker,
-  children,
+  n,
+  of,
+  lines,
+  size,
+  shout,
   footnote,
-  size = 50,
 }: {
   plate?: Plate;
   crop?: Crop;
-  kicker: string;
-  children: ReactNode;
-  footnote?: ReactNode;
+  n: number;
+  of: number;
+  lines: Line[];
   size?: number;
+  /** the one word this beat is allowed to shout, set above the lines */
+  shout?: { text: string; size: number };
+  footnote?: ReactNode;
 }) {
   return (
     <Ground plate={plate} crop={crop}>
-      <Kicker>{kicker}</Kicker>
-      <p
+      <Counter n={n} of={of} />
+      <div
         className="tb-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          width: 848,
-          bottom: H - TEXT_BASE,
-          ...NARRATION,
-          fontSize: size,
-        }}
+        style={{ position: "absolute", left: MARGIN, width: 856, bottom: H - TEXT_BASE }}
       >
-        {children}
-      </p>
+        {shout && (
+          <div style={{ ...CONDENSED, fontSize: shout.size, marginBottom: 30 }}>{shout.text}</div>
+        )}
+        <Narration lines={lines} size={size} />
+      </div>
       <hr className="tb-rule" style={{ top: RULE }} />
       {footnote && <Footnote>{footnote}</Footnote>}
     </Ground>
   );
 }
 
-/** 6. THE TURN. The tower at dusk and one line in gold, set high with the rest
- *  of the page left empty. After five slides of argument the reader has earned
- *  a page that asks for nothing. */
-export function Turn({ plate, crop, children }: { plate: Plate; crop: Crop; children: ReactNode }) {
-  return (
-    <Ground plate={plate} crop={crop}>
-      <p
-        className="tb-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: 208,
-          width: 848,
-          ...NARRATION,
-          fontStyle: "italic",
-          fontSize: 54,
-          lineHeight: 1.36,
-          color: "var(--cc-gold-bright)",
-        }}
-      >
-        {children}
-      </p>
-      <hr className="tb-rule" style={{ top: RULE }} />
-    </Ground>
-  );
-}
-
-/** 7. THE MOTION, AND THE POSTER. The one slide that has to work alone if
+/** 8. THE MOTION, AND THE POSTER. The one slide that has to work alone if
  *  somebody screenshots it or it goes out as a single image: the mark, the
  *  motion, the night, the tickets, the festival. */
 export function Poster({
   plate,
   crop,
   badge,
+  handoff,
   motion,
+  note,
   lines,
   cta,
   when,
   where,
   time,
-  note,
 }: {
   plate: Plate;
   crop: Crop;
   badge: string;
+  /** the sentence slide 7 left hanging, finished here */
+  handoff: string;
   motion: string[];
+  note: string;
   lines: string[];
   cta: string;
   when: string;
   where: string;
   time: string;
-  note: string;
 }) {
   const BAND = 428;
   return (
@@ -382,29 +429,36 @@ export function Poster({
 
       <div
         className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (H - BAND - 76) }}
+        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 72 }}
       >
         <div
           style={{
             fontFamily: "var(--cc-font-display)",
             fontStyle: "italic",
-            fontSize: 40,
+            fontSize: 36,
+            lineHeight: 1.3,
             color: "var(--cc-parchment)",
-            marginBottom: 20,
+            marginBottom: 26,
           }}
+        >
+          {handoff}
+        </div>
+        <div
+          className="kicker"
+          style={{ fontSize: 15, letterSpacing: "0.32em", marginBottom: 20 }}
         >
           This club believes
         </div>
         {motion.map((line) => (
-          <div key={line} style={{ ...CONDENSED, fontSize: 96 }}>
+          <div key={line} style={{ ...CONDENSED, fontSize: 92 }}>
             {line}
           </div>
         ))}
         <div
           style={{
-            marginTop: 26,
+            marginTop: 24,
             fontFamily: "var(--cc-font-ui)",
-            fontSize: 21,
+            fontSize: 20,
             color: "var(--cc-muted)",
           }}
         >
