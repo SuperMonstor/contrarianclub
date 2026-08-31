@@ -36,8 +36,7 @@ export type DeckPage =
       label: string;
       heading: string;
       lead: string;
-      /** each block: a short line, then the specifics as a scannable list */
-      blocks: { title: string; body: string; points: string[] }[];
+      blocks: { title: string; body: string }[];
       image: DeckImage;
     };
 
@@ -86,21 +85,11 @@ export const PARTNER_DECKS: PartnerDeck[] = [
         blocks: [
           {
             title: "In the room",
-            body: "Every event, we actively encourage the room to lean on ChatGPT.",
-            points: [
-              "Understand the motion",
-              "Check claims",
-              "Stress test questions and rebuttals",
-            ],
+            body: "Every event, we actively encourage the room to lean on ChatGPT: understand the motion, check claims, stress test questions and rebuttals.",
           },
           {
             title: "In the content",
-            body: "Then we tie it into everything we publish.",
-            points: [
-              "Fact checks on screen",
-              "Claims validated in the clips",
-              "An integral part of the experience",
-            ],
+            body: "Then we tie it into everything we publish, with fact checks on screen and claims validated in the clips. ChatGPT becomes an integral part of the experience.",
           },
         ],
         image: {

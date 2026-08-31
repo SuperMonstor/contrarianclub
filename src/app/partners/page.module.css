@@ -132,7 +132,6 @@
 .offerNumber { margin: 0; color: #f7c767; font-family: var(--font-display), Georgia, serif; font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1; }
 .offerBlocks h3 { margin: 8px 0 0; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.5rem, 2.2vw, 2.1rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
 .offerBlocks p:not(.offerNumber) { max-width: 440px; margin: 10px 0 0; color: #d1c7b8; font-size: 1.02rem; line-height: 1.55; }
-.offerBlocks .chips { margin-top: 16px; }
 
 .socialProof { display: grid; grid-template-columns: minmax(280px, 0.74fr) minmax(0, 1fr); gap: clamp(52px, 10vw, 170px); align-items: center; padding: clamp(74px, 10vw, 150px) clamp(24px, 14vw, 220px); background: #dcbf84; }
 .instagramFrame { width: min(100%, 390px); justify-self: end; padding: 12px; background: #faf6ee; box-shadow: 14px 14px 0 var(--ink); }
@@ -226,7 +225,6 @@
   .evidenceKicker { margin-top: 5mm; font-size: 23pt; }
   .chips { gap: 3mm 6mm; }
   .chips li { gap: 6mm; font-size: 8pt; }
-  .offerBlocks .chips { margin-top: 4mm; }
   .evidenceItems { padding: 0 22mm 16mm; }
   .offer { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); }
   .offerCopy { display: flex; flex-direction: column; justify-content: center; padding: 15mm 18mm; }

@@ -261,11 +261,6 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
                     </p>
                     <h3>{block.title}</h3>
                     <p>{block.body}</p>
-                    <ul className={styles.chips}>
-                      {block.points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
                   </article>
                 ))}
               </div>
