@@ -163,14 +163,56 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
       </section>
 
       <section className={styles.fit}>
-        <p className={styles.sectionLabel}>Why partner with Contrarian</p>
-        <h2>One partnership. A live room and a content engine.</h2>
-        <p className={styles.fitLead}>
-          Contrarian gives a partner rare access to a high-trust live room, then
-          carries that association into social content around the debate. The
-          result is both lived cultural relevance and a growing library of
-          moments people can discover, share and debate again.
-        </p>
+        <div className={styles.fitTop}>
+          <div className={styles.fitHeader}>
+            <p className={styles.sectionLabel}>Why partner with Contrarian</p>
+            {partner && (
+              <p className={styles.fitLockup}>
+                <span className={styles.fitPartnerMark}>{partner.name}</span>
+                <span className={styles.fitLockupCross} aria-hidden="true">
+                  ×
+                </span>
+                <Image
+                  src="/media/contrarian-logo-light.svg"
+                  alt="The Contrarian Debate Club"
+                  width={745}
+                  height={346}
+                />
+              </p>
+            )}
+          </div>
+          <h2>One partnership. A live room and a content engine.</h2>
+          <p className={styles.fitLead}>
+            Contrarian gives a partner rare access to a high-trust live room,
+            then carries that association into the content around the debate.
+          </p>
+        </div>
+        <div className={styles.fitPanels}>
+          <figure>
+            <Image
+              src="/media/room-listening.jpg"
+              alt="A full Contrarian room following the debate"
+              width={1600}
+              height={1067}
+            />
+            <figcaption>
+              <strong>The live room</strong>
+              <span>Eight sold-out debates and counting.</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <Image
+              src="/media/filming-the-room.jpg"
+              alt="The room mid-debate with a camera rig filming it"
+              width={1600}
+              height={1067}
+            />
+            <figcaption>
+              <strong>The content engine</strong>
+              <span>More than a million views between shows.</span>
+            </figcaption>
+          </figure>
+        </div>
       </section>
 
       {partner?.pitch.map((page) =>
@@ -191,7 +233,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
               <p className={styles.evidenceLead}>{page.lead}</p>
               <p className={styles.evidenceKicker}>{page.kicker}</p>
             </div>
-            <ul className={styles.evidenceItems}>
+            <ul className={`${styles.chips} ${styles.evidenceItems}`}>
               {page.items.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -221,6 +263,11 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
                     </p>
                     <h3>{block.title}</h3>
                     <p>{block.body}</p>
+                    <ul className={styles.chips}>
+                      {block.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
                   </article>
                 ))}
               </div>
