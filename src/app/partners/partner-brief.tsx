@@ -173,25 +173,50 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         </p>
       </section>
 
-      {partner?.pitch.map((page, index) => (
-        <section
-          key={page.heading}
-          className={
-            index % 2 === 1 ? `${styles.pitch} ${styles.pitchDark}` : styles.pitch
-          }
-        >
-          <p className={styles.sectionLabel}>{page.label}</p>
-          <div className={styles.pitchGrid}>
-            <h2>{page.heading}</h2>
-            <div>
-              {page.body.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-              {page.kicker && <p className={styles.pitchKicker}>{page.kicker}</p>}
+      {partner?.pitch.map((page) =>
+        page.kind === "band" ? (
+          <section key={page.heading} className={styles.evidence}>
+            <div className={styles.pageTop}>
+              <div className={styles.pageHead}>
+                <p className={styles.sectionLabel}>{page.label}</p>
+                <h2>{page.heading}</h2>
+              </div>
+              <div className={styles.evidenceFoot}>
+                <p className={styles.evidenceLead}>{page.lead}</p>
+                <p className={styles.evidenceKicker}>{page.kicker}</p>
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+            <div className={styles.evidenceBand}>
+              {page.items.map((item) => (
+                <article key={item.what}>
+                  <strong>{item.what}</strong>
+                  <span>{item.who}</span>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <section key={page.heading} className={styles.plan}>
+            <div className={styles.pageTop}>
+              <div className={styles.pageHead}>
+                <p className={styles.sectionLabel}>{page.label}</p>
+                <h2>{page.heading}</h2>
+              </div>
+            </div>
+            <div className={styles.planBand}>
+              {page.blocks.map((block, index) => (
+                <article key={block.title}>
+                  <p className={styles.planNumber}>
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3>{block.title}</h3>
+                  <p>{block.body}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        ),
+      )}
 
       <section className={styles.socialProof}>
         <div className={styles.instagramFrame}>
