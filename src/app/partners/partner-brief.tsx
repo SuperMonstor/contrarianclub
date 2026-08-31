@@ -74,7 +74,6 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         </section>
 
         <section className={styles.stats} aria-label="Progress in four months">
-          <p className={styles.statsHeading}>Progress in 4 months</p>
           <div className={styles.statsGrid}>
             <article>
               <strong>12.5K</strong>

@@ -52,7 +52,6 @@
 .highlight { padding: 0.04em 0.14em 0.07em; background: var(--gold); color: var(--ink); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 
 .stats { background: var(--brick); color: var(--cc-ivory); }
-.statsHeading { margin: 0; padding: 28px clamp(24px, 5vw, 72px) 0; font-size: 11px; font-weight: 800; letter-spacing: 0.17em; text-transform: uppercase; }
 .statsGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .stats article { padding: clamp(28px, 4vw, 52px) clamp(24px, 5vw, 72px); border-right: 1px solid rgba(244, 234, 210, 0.3); }
 .stats article:last-child { border-right: 0; }
@@ -172,12 +171,12 @@
 }
 
 @media print {
-  @page { size: A4 landscape; margin: 0; }
+  @page { size: 338.667mm 190.5mm; margin: 0; }
 
-  html, body { width: 297mm; min-height: 210mm; }
+  html, body { width: 338.667mm; min-height: 190.5mm; }
   .page, .page * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .page { width: 297mm; background: var(--paper); }
-  .hero, .tractionPage, .elevation, .audience, .fit, .evidence, .offer, .socialProof { box-sizing: border-box; width: 297mm; height: 210mm; min-height: 210mm; max-height: 210mm; overflow: hidden; break-after: page; break-inside: avoid; page-break-after: always; page-break-inside: avoid; }
+  .page { width: 338.667mm; background: var(--paper); }
+  .hero, .tractionPage, .elevation, .audience, .fit, .evidence, .offer, .socialProof { box-sizing: border-box; width: 338.667mm; height: 190.5mm; min-height: 190.5mm; max-height: 190.5mm; overflow: hidden; break-after: page; break-inside: avoid; page-break-after: always; page-break-inside: avoid; }
   .heroCopy { width: 108mm; margin: auto 20mm 20mm; padding: 9mm 0; transform: translateY(3mm); }
   .hero h1 { max-width: 108mm; font-size: 34pt; line-height: 0.94; }
   .hero .lead { max-width: 102mm; margin-top: 7mm; font-size: 11.5pt; line-height: 1.48; }
@@ -187,8 +186,8 @@
   .intro, .elevation, .audience, .socialProof { padding: 15mm 22mm; }
   .evidence { padding: 0; }
   .tractionPage { display: flex; flex-direction: column; }
-  .tractionPage .intro { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; height: 132mm; min-height: 132mm; max-height: 132mm; padding: 12mm 22mm 10mm; overflow: hidden; }
-  .tractionPage .stats { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; width: 100%; height: 78mm; min-height: 78mm; max-height: 78mm; }
+  .tractionPage .intro { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; height: 138mm; min-height: 138mm; max-height: 138mm; padding: 12mm 24mm 10mm; overflow: hidden; }
+  .tractionPage .stats { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; width: 100%; height: 52.5mm; min-height: 52.5mm; max-height: 52.5mm; }
   .tractionPage .statsGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tractionPage .stats article { display: block; min-width: 0; }
   .sectionLabel, .eyebrow, .elevationKicker { font-size: 8pt; }
@@ -202,7 +201,7 @@
   .fitCopy { padding: 15mm 16mm 15mm 22mm; }
   .fitLead { margin-top: 6mm; font-size: 15pt; }
   .fitLockup { margin-bottom: 6mm; }
-  .fitPanels figure { height: 105mm; min-height: 0; }
+  .fitPanels figure { height: 95.25mm; min-height: 0; }
   .fitPanels figcaption { padding: 16mm 12mm 7mm; }
   .fitPanels span { font-size: 13pt; }
   .fitLockup img { width: 28mm; }
@@ -228,14 +227,13 @@
   .profileGrid > div { min-height: 23mm; padding: 4mm 3mm 3mm 0; }
   .profileGrid dt { font-size: 7pt; }
   .profileGrid dd { font-size: 12pt; }
-  .statsHeading { padding: 0 12mm 7mm; font-size: 8pt; }
   .stats article { padding: 0 12mm; }
   .stats strong { font-size: 30pt; }
   .stats span { margin-top: 3mm; font-size: 8pt; }
-  .audienceImageWrap { height: 170mm; aspect-ratio: auto; }
-  .socialProof { gap: 28mm; padding-left: 42mm; padding-right: 42mm; }
-  .instagramFrame { width: 56mm; }
-  .footer { display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; width: 297mm; height: 210mm; min-height: 210mm; max-height: 210mm; margin: 0; padding: 0; border: 0; background: var(--ink); color: #f8f1e4; text-align: center; break-after: auto; page-break-after: auto; }
+  .audienceImageWrap { height: 150mm; aspect-ratio: auto; }
+  .socialProof { gap: 26mm; padding-left: 26mm; padding-right: 26mm; }
+  .instagramFrame { width: 68mm; }
+  .footer { display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; width: 338.667mm; height: 190.5mm; min-height: 190.5mm; max-height: 190.5mm; margin: 0; padding: 0; border: 0; background: var(--ink); color: #f8f1e4; text-align: center; break-after: auto; page-break-after: auto; }
   .footer .logoDark { display: none; }
   .footer .logoLightFooter { display: block; width: 70mm; height: auto; }
   .footer > :nth-child(3) { margin: 10mm 0 0; color: #f8f1e4; font-size: 15pt; text-align: center; }
