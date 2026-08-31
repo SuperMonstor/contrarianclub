@@ -108,17 +108,12 @@
 /* photo grade is baked into the JPEGs: a CSS filter here forces the PDF
    exporter to rasterize each photo losslessly and triples the file */
 .evidenceShade { background: linear-gradient(90deg, rgba(4, 6, 15, 0.93) 0%, rgba(4, 6, 15, 0.76) 36%, rgba(4, 6, 15, 0.18) 70%, rgba(4, 6, 15, 0.02) 100%), linear-gradient(0deg, rgba(2, 3, 7, 0.8), transparent 48%); }
-.evidenceCopy, .evidenceItems { position: relative; z-index: 1; }
-.evidenceCopy { width: min(720px, 100%); margin-top: auto; padding: clamp(64px, 9vw, 128px) clamp(24px, 8vw, 128px) clamp(28px, 3vw, 40px); }
+.evidenceCopy { position: relative; z-index: 1; }
+.evidenceCopy { width: min(720px, 100%); margin-top: auto; padding: clamp(64px, 9vw, 128px) clamp(24px, 8vw, 128px) clamp(44px, 5vw, 72px); }
 .evidence .sectionLabel { color: #f7c767; }
 .evidence h2 { max-width: 16ch; }
 .evidenceLead { max-width: 480px; margin: clamp(24px, 3vw, 36px) 0 0; font-size: 1.1rem; line-height: 1.6; }
 .evidenceKicker { margin: clamp(16px, 2vw, 24px) 0 0; color: #f7c767; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.9rem, 3.2vw, 3.1rem); line-height: 1.02; letter-spacing: -0.05em; }
-.chips { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 0; padding: 0; list-style: none; }
-.chips li { display: flex; align-items: center; gap: 22px; color: rgba(248, 241, 228, 0.82); font-size: 11px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; }
-.chips li::after { width: 4px; height: 4px; background: #f7c767; border-radius: 50%; content: ""; }
-.chips li:last-child::after { display: none; }
-.evidenceItems { padding: 0 clamp(24px, 8vw, 128px) clamp(38px, 5vw, 66px); }
 
 .offer { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); background: var(--ink); color: #f8f1e4; }
 .offerImageWrap { position: relative; min-height: 420px; overflow: hidden; }
@@ -220,12 +215,9 @@
   .fitLockup img { width: 28mm; }
   .fitPartnerMark { font-size: 14pt; }
   .evidence h2 { max-width: 120mm; font-size: 34pt; }
-  .evidenceCopy { width: 160mm; padding: 0 22mm 6mm; }
+  .evidenceCopy { width: 160mm; padding: 0 22mm 16mm; }
   .evidenceLead { max-width: 108mm; margin-top: 7mm; }
   .evidenceKicker { margin-top: 5mm; font-size: 23pt; }
-  .chips { gap: 3mm 6mm; }
-  .chips li { gap: 6mm; font-size: 8pt; }
-  .evidenceItems { padding: 0 22mm 16mm; }
   .offer { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); }
   .offerCopy { display: flex; flex-direction: column; justify-content: center; padding: 15mm 18mm; }
   .offerLead { margin-top: 6mm; font-size: 15pt; }

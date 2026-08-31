@@ -231,11 +231,6 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
               <p className={styles.evidenceLead}>{page.lead}</p>
               <p className={styles.evidenceKicker}>{page.kicker}</p>
             </div>
-            <ul className={`${styles.chips} ${styles.evidenceItems}`}>
-              {page.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
           </section>
         ) : (
           <section key={page.heading} className={styles.offer}>
