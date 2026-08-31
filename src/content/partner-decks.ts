@@ -24,8 +24,6 @@ export type DeckPage =
       label: string;
       heading: string;
       lead: string;
-      /** the line to land on, set big under the lead */
-      kicker: string;
       image: DeckImage;
     }
   /** the offer: a photograph beside the two things we would build */
@@ -60,7 +58,6 @@ export const PARTNER_DECKS: PartnerDeck[] = [
         label: "In the room today",
         heading: "Why an OpenAI partnership just makes sense",
         lead: "Show up to one of our debates and half the room is already on ChatGPT. Debaters research with it, and the audience uses it to understand the motion, validate claims, come up with rebuttals and stress test arguments.",
-        kicker: "No one asked them to.",
         image: {
           src: "/media/speaker-with-phone.jpg",
           alt: "A speaker at the mic making a point with his phone in his hand",

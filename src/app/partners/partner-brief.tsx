@@ -229,7 +229,6 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
               <p className={styles.sectionLabel}>{page.label}</p>
               <h2>{page.heading}</h2>
               <p className={styles.evidenceLead}>{page.lead}</p>
-              <p className={styles.evidenceKicker}>{page.kicker}</p>
             </div>
           </section>
         ) : (

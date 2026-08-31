@@ -113,7 +113,6 @@
 .evidence .sectionLabel { color: #f7c767; }
 .evidence h2 { max-width: 16ch; }
 .evidenceLead { max-width: 480px; margin: clamp(24px, 3vw, 36px) 0 0; font-size: 1.1rem; line-height: 1.6; }
-.evidenceKicker { margin: clamp(16px, 2vw, 24px) 0 0; color: #f7c767; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.9rem, 3.2vw, 3.1rem); line-height: 1.02; letter-spacing: -0.05em; }
 
 .offer { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); background: var(--ink); color: #f8f1e4; }
 .offerImageWrap { position: relative; min-height: 420px; overflow: hidden; }
@@ -217,7 +216,6 @@
   .evidence h2 { max-width: 120mm; font-size: 34pt; }
   .evidenceCopy { width: 160mm; padding: 0 22mm 16mm; }
   .evidenceLead { max-width: 108mm; margin-top: 7mm; }
-  .evidenceKicker { margin-top: 5mm; font-size: 23pt; }
   .offer { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); }
   .offerCopy { display: flex; flex-direction: column; justify-content: center; padding: 15mm 18mm; }
   .offerLead { margin-top: 6mm; font-size: 15pt; }
