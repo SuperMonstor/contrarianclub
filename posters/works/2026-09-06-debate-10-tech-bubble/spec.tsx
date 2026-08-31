@@ -96,8 +96,7 @@ const work: WorkSpec = {
           badge={badge}
           question={["So, how did", "Bengaluru become", "Bengaluru?"]}
           lines={[
-            "For most of the last century, it was basically a retirement town.",
-            { text: "Gardens, pensioners, cheap rent, and not much else.", tone: "parchment" },
+            "For most of the last century it was a retirement town: gardens, pensioners and cheap rent.",
           ]}
           cta="Swipe to see what happened next →"
           ctaNote="The motion is on the last slide"
@@ -116,12 +115,10 @@ const work: WorkSpec = {
           crop={{ x: 0.5, y: 0.45, scale: 2.2 }}
           n={2}
           of={OF}
-          footnote="Roughly 40% of India's IT exports. Over two million people working in tech."
+          footnote="40% of India's IT exports. Over two million tech jobs."
           lines={[
-            "Then, somewhere along the way, the software companies arrived.",
-            "Startups came next.",
-            "And then an entire generation started moving here to work for one or the other.",
-            { text: "And they just… kept coming.", tone: "parchment" },
+            "Then the software companies arrived, and the startups after them.",
+            { text: "A generation moved here to work for one or the other, and never stopped coming.", tone: "parchment" },
           ]}
           size={42}
         />
@@ -140,14 +137,12 @@ const work: WorkSpec = {
           crop={{ x: 0.5, y: 0.42, scale: 1.74 }}
           n={3}
           of={OF}
-          footnote="3.3 million people in 1991, around 14 million now. 96 km of metro. Delhi has 420."
+          footnote="96 km of metro in fifteen years. Delhi has 420."
           lines={[
-            { text: "The tech industry grew.", size: 42 },
-            { text: "Then it grew some more.", size: 56 },
-            { text: "And then it grew a lot.", size: 76 },
+            { text: "The tech industry grew.", size: 46 },
+            { text: "Then it grew a lot.", size: 82 },
             "",
-            { text: "The city, though?", size: 42, tone: "parchment" },
-            { text: "It didn't quite keep up.", size: 42, tone: "parchment" },
+            { text: "The city didn't.", size: 46, tone: "parchment" },
           ]}
         />
       ),
@@ -169,13 +164,7 @@ const work: WorkSpec = {
           lines={[
             "You probably know what that feels like.",
             "",
-            "Thirty-six minutes to cross ten kilometres.",
-            "Borewells running dry.",
-            {
-              text: "Roads, water, housing and public transport struggling to keep up with a city that keeps getting bigger.",
-              size: 36,
-              tone: "parchment",
-            },
+            { text: "Thirty-six minutes to cross ten kilometres. Borewells running dry.", tone: "parchment" },
           ]}
           size={44}
         />
@@ -191,19 +180,8 @@ const work: WorkSpec = {
           n={5}
           of={OF}
           shout={{ text: "More.", size: 128 }}
-          lines={[
-            "More flyovers.",
-            "More layouts.",
-            "More people.",
-            "More growth.",
-            "",
-            {
-              text: "We keep trying to build our way out of the problem.",
-              size: 36,
-              tone: "parchment",
-            },
-          ]}
-          size={44}
+          lines={["More flyovers.", "More layouts.", "More people.", "More growth."]}
+          size={46}
         />
       ),
     },
@@ -223,11 +201,6 @@ const work: WorkSpec = {
             { text: "But here's the interesting question:", size: 38, tone: "parchment" },
             "",
             { text: "What if more is actually the problem?", size: 48, tone: "gold" },
-            "",
-            {
-              text: "What if Bengaluru's tech industry grew faster than the city could accommodate?",
-              size: 42,
-            },
           ]}
         />
       ),
@@ -246,8 +219,7 @@ const work: WorkSpec = {
           n={7}
           of={OF}
           lines={[
-            "And if that's true, maybe the answer isn't to make the tech bubble bigger.",
-            { text: "Maybe it's to make it smaller.", tone: "parchment" },
+            { text: "So maybe the answer isn't a bigger bubble.", tone: "parchment" },
             "",
             { text: "Could we actually need less tech to save Bengaluru?", size: 56, tone: "gold" },
           ]}
@@ -271,7 +243,6 @@ const work: WorkSpec = {
           note="One of two motions. The second is announced closer to the night."
           when="Sunday, 6 September"
           where="Big Pitcher, Indiranagar"
-          time="Time announced soon"
           lines={HOW_IT_WORKS}
           cta="Tickets out now"
         />

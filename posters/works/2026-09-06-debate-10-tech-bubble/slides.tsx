@@ -62,6 +62,14 @@ import "./slides.css";
 // and 8 it is the top edge of the cream festival band. See .tb-band in
 // slides.css for why the band exists and what it is carrying.
 //
+// NOTHING OF THE CLUB'S GOES IN THE BAND EXCEPT ON THE POSTER. The swipe
+// instruction on slide 1 sits in gold above the band, not in ink inside it:
+// set on cream beside the festival's own card it read as the festival's
+// furniture rather than as the club talking. Gold on black is the club's voice
+// everywhere else in the deck, so it is the club's voice here. Slide 1's strip
+// carries the badge and nothing else. Only the poster, which is the club's own
+// page, is allowed to print the club's details in the band.
+//
 // FLUSH LEFT THROUGHOUT, to one margin at x=92, which is why the lockup takes
 // its left cut.
 // ---------------------------------------------------------------------------
@@ -268,7 +276,7 @@ function Band({
   height: number;
   badge: string;
   badgeWidth: number;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <div
@@ -283,7 +291,7 @@ function Band({
         boxSizing: "border-box",
       }}
     >
-      <div>{children}</div>
+      <div>{children ?? null}</div>
       <Badge src={badge} width={badgeWidth} />
     </div>
   );
@@ -326,7 +334,7 @@ export function Hook({
 
       <div
         className="tb-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (RULE - 82) }}
+        style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: H - (RULE - 132) }}
       >
         {question.map((line) => (
           <div key={line} style={{ ...CONDENSED, fontSize: 92 }}>
@@ -338,14 +346,36 @@ export function Hook({
         </div>
       </div>
 
-      <Band height={H - RULE} badge={badge} badgeWidth={276}>
-        <div style={{ fontFamily: "var(--cc-font-display)", fontSize: 36, fontStyle: "italic" }}>
-          {cta}
-        </div>
-        <div className="tb-band-meta" style={{ fontSize: 15, letterSpacing: "0.16em", marginTop: 10 }}>
-          {ctaNote}
-        </div>
-      </Band>
+      <div
+        className="kicker tb-on-art"
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          top: RULE - 74,
+          fontSize: 20,
+          letterSpacing: "0.2em",
+        }}
+      >
+        {cta}
+      </div>
+      <div
+        className="tb-on-art"
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          top: RULE - 40,
+          fontFamily: "var(--cc-font-ui)",
+          fontWeight: 600,
+          fontSize: 14,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "var(--cc-muted)",
+        }}
+      >
+        {ctaNote}
+      </div>
+
+      <Band height={H - RULE} badge={badge} badgeWidth={286} />
     </Ground>
   );
 }
@@ -405,7 +435,6 @@ export function Poster({
   cta,
   when,
   where,
-  time,
 }: {
   plate: Plate;
   crop: Crop;
@@ -418,7 +447,6 @@ export function Poster({
   cta: string;
   when: string;
   where: string;
-  time: string;
 }) {
   const BAND = 428;
   return (
@@ -472,10 +500,7 @@ export function Poster({
           <br />
           {where}
         </div>
-        <div className="tb-band-meta" style={{ fontSize: 16, letterSpacing: "0.14em", marginTop: 12 }}>
-          {time}
-        </div>
-        <hr className="tb-band-line" style={{ margin: "26px 0 22px", width: 480 }} />
+        <hr className="tb-band-line" style={{ margin: "28px 0 24px", width: 480 }} />
         {lines.map((line) => (
           <div
             key={line}
