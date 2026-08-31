@@ -1,33 +1,80 @@
 import type { WorkSpec } from "../../src/core/types";
+import avenueSrc from "./assets/avenue.jpg";
 import badge from "./assets/btw-badge.png";
-import tower from "./assets/tower.jpg";
-import { Boom, Growth, Hook, Ledger, Motion, Night, Numeral, Turn } from "./slides";
+import quaySrc from "./assets/quay.jpg";
+import rooftopsSrc from "./assets/rooftops.jpg";
+import towerSrc from "./assets/tower.jpg";
+import { Beat, Hook, type Plate, Poster, Turn } from "./slides";
 
-// Debate Club #10. Announcing the first of two motions, at Bengaluru Tech
-// Week 2026. The design reasoning is in slides.tsx.
+// Debate Club #10, at Bengaluru Tech Week 2026. Announcing the first of the
+// two motions, revealed outright, on the last slide.
 //
-// The art, public domain via Wikimedia Commons: Pieter Bruegel the Elder,
-// The Tower of Babel (c. 1568, Museum Boijmans Van Beuningen, Rotterdam).
-// This is the smaller, darker second Babel, not the Vienna panel that appears
-// as one slide of the national pride deck. Reusing the subject is deliberate:
-// the unfinished tower is the club's picture for building past your own
-// footings, and this motion is that argument about one city. Using a
-// different canvas of it keeps the archive from repeating an image.
+// The story the deck tells: the city was a slow, cheap, pleasant place, then
+// an industry arrived and never stopped arriving, and the city underneath it
+// was never built to match. Which is an argument for hitting the brakes, or
+// an argument that the brakes are the wrong thing to reach for. That is the
+// debate.
 //
-// Every crop below is a fraction of that one painting. Which crop lands on
-// which slide carries the argument: the boom on the raw red top storeys that
-// are still going up, the ledger on the finished masonry, the last two slides
-// on the small harbour town at the foot that never grew at all.
+// The design reasoning, and why each picture is where it is, is in slides.tsx.
 //
-// The numbers are all sourced and printed on slide 4. If any of them age out,
-// change the number and the source line together.
+// The art, all public domain via Wikimedia Commons:
+//
+//   tower     Pieter Bruegel the Elder, The Tower of Babel (c. 1568, Museum
+//             Boijmans Van Beuningen, Rotterdam). The smaller, darker second
+//             Babel, not the Vienna panel that appears in the national pride
+//             deck. Raw brick still going up at the top, finished storeys
+//             already in shadow below, a harbour town at the foot that never
+//             grew at all.
+//   avenue    Meindert Hobbema, The Avenue at Middelharnis (1689). An empty
+//             lane, tall trees, a big sky, and almost nobody in it.
+//   rooftops  Gustave Doré, Over London by Rail, from London: A Pilgrimage
+//             (1872). Back to back housing packed to the horizon under a
+//             railway arch. A city with no room left in it.
+//   quay      John Atkinson Grimshaw, Greenock (1882). A wet quay at dusk,
+//             gaslight, masts, and one figure walking home.
+//
+// Every number on slide 3, 4 and 5 is sourced. If one ages out, change the
+// number and its source together:
+//
+//   40% of India's IT exports, 2m+ tech jobs   industry reporting, 2024-25
+//   3.3m (1991), 8.5m (2011), ~14m now         Census of India, projections
+//   96 km of metro, Delhi 420                  BMRCL and DMRC, 2026
+//   36 min per 10 km, second slowest           TomTom Traffic Index 2025
+//   7,000 of ~16,000 borewells dry             reporting, summer 2024
 
-const LINES = [
+const tower: Plate = {
+  src: towerSrc,
+  ratio: 4945 / 3973,
+  art: "tb-art-tower",
+  scrim: "tb-scrim",
+};
+const towerDusk: Plate = { ...tower, art: "tb-art-tower-dusk" };
+const avenue: Plate = {
+  src: avenueSrc,
+  ratio: 4200 / 3110,
+  art: "tb-art-avenue",
+  scrim: "tb-scrim-open",
+};
+const rooftops: Plate = {
+  src: rooftopsSrc,
+  ratio: 3904 / 3160,
+  art: "tb-art-engraving",
+  scrim: "tb-scrim-dense",
+};
+const quay: Plate = {
+  src: quaySrc,
+  ratio: 4455 / 2880,
+  art: "tb-art-night",
+  // the open scrim, not the default: the default darkens the middle band,
+  // which on this plate is the row of lit windows the slide is for
+  scrim: "tb-scrim-open",
+};
+
+const HOW_IT_WORKS = [
   "Debaters drawn at random.",
   "The floor opens to everyone.",
   "Limited seats, so everyone speaks.",
 ];
-const CTA = "Tickets out now";
 
 const work: WorkSpec = {
   title: "Debate Club #10, Bengaluru's tech bubble",
@@ -35,80 +82,118 @@ const work: WorkSpec = {
   formats: ["carousel-slide"],
 
   slides: [
-    // 1. The tower entire, and the thesis in three words. The room is
-    //    established before any slide is allowed to crop into it.
+    // 1. The tower entire, before any slide is allowed to crop into anything.
     {
       label: "Hook",
       hasImage: true,
-      render: () => <Hook src={tower} crop={{ x: 0.5, y: 0.5, scale: 1.62 }} badge={badge} />,
+      render: () => (
+        <Hook plate={tower} crop={{ x: 0.5, y: 0.5, scale: 1.62 }} badge={badge} />
+      ),
     },
 
-    // 2. The raw red crown, still under construction. What the industry is
-    //    worth, before anything about what it cost.
+    // 2. The empty lane. The one slide in the deck that is allowed to be
+    //    light, because it is the slide about the city being pleasant.
     {
-      label: "Boom",
-      hasImage: true,
-      render: () => <Boom src={tower} crop={{ x: 0.45, y: 0.36, scale: 2.2 }} />,
-    },
-
-    // 3. The stacked storeys, because the slide is a stack. Three years, three
-    //    numbers, and a year column that refuses to grow with them.
-    {
-      label: "Growth",
-      hasImage: true,
-      render: () => <Growth src={tower} crop={{ x: 0.46, y: 0.5, scale: 2.0 }} />,
-    },
-
-    // 4. The masonry, reduced to a surface, so the arches sit behind the rows
-    //    as a grid and never compete with them.
-    {
-      label: "Ledger",
-      hasImage: true,
-      render: () => <Ledger src={tower} crop={{ x: 0.42, y: 0.62, scale: 2.4 }} />,
-    },
-
-    // 5. The base of the tower, where the ramps meet the ground. One number at
-    //    the size of a picture.
-    {
-      label: "Commute",
-      hasImage: true,
-      render: () => <Numeral src={tower} crop={{ x: 0.4, y: 0.69, scale: 2.6 }} />,
-    },
-
-    // 6. Out to the open sky and the harbour on the right, and nothing on the
-    //    page but the question. The only slide with no number on it.
-    {
-      label: "Turn",
+      label: "What it was",
       hasImage: true,
       render: () => (
-        <Turn src={tower} crop={{ x: 0.7, y: 0.5, scale: 1.8 }}>
-          What happens when the industry that made a city outgrows the city?
+        <Beat plate={avenue} crop={{ x: 0.5, y: 0.55, scale: 1.9 }} kicker="1980">
+          This was a retirement town. Gardens, pensioners, cheap rent, and a reputation
+          for being pleasant and slow.
+        </Beat>
+      ),
+    },
+
+    // 3. Doré's rooftops, and the deck changes material. The industry arrives
+    //    and the picture goes from an empty lane to a place with no gaps in it.
+    {
+      label: "What happened",
+      hasImage: true,
+      render: () => (
+        <Beat
+          plate={rooftops}
+          crop={{ x: 0.5, y: 0.45, scale: 2.2 }}
+          kicker="Then"
+          footnote="Roughly 40% of India's IT exports. Over two million people working in tech."
+        >
+          The software companies put down roots. The startups followed them. A generation
+          moved here to work for one or the other, and kept coming.
+        </Beat>
+      ),
+    },
+
+    // 4. No picture. The slide about the part of the city that was never built
+    //    is the one slide with nothing behind the words, and it is the only
+    //    place in the deck where that reads as meaning rather than as a gap.
+    {
+      label: "What did not",
+      render: () => (
+        <Beat
+          kicker="Meanwhile"
+          size={54}
+          footnote={
+            <>
+              3.3 million people in 1991. Around 14 million now.
+              <br />
+              96 km of metro in fifteen years. Delhi has 420.
+            </>
+          }
+        >
+          The industry doubled, and doubled again. The city underneath it stayed roughly
+          the size it always was.
+        </Beat>
+      ),
+    },
+
+    // 5. Grimshaw's quay: the only slide where the picture is lifted rather
+    //    than knocked back. One person walking home in the wet, which is the
+    //    whole of what the numbers under it actually mean.
+    {
+      label: "The cost",
+      hasImage: true,
+      render: () => (
+        <Beat
+          plate={quay}
+          crop={{ x: 0.68, y: 0.5, scale: 2.0 }}
+          kicker="Where you feel it"
+          footnote="TomTom Traffic Index 2025. Reporting on the 2024 water crisis."
+        >
+          It takes 36 minutes to cross ten kilometres, and only Mexico City is slower. In
+          the summer of 2024, seven thousand borewells ran dry.
+        </Beat>
+      ),
+    },
+
+    // 6. The tower again, almost a silhouette. The pause, and the sentence the
+    //    motion answers.
+    {
+      label: "The turn",
+      hasImage: true,
+      render: () => (
+        <Turn plate={towerDusk} crop={{ x: 0.5, y: 0.48, scale: 1.68 }}>
+          Every answer so far has been more. More flyovers, more layouts, more people.
+          Nobody has argued for less.
         </Turn>
       ),
     },
 
-    // 7. Back to the tower entire, from slightly lower, and the motion said
-    //    outright. No redactions this time.
+    // 7. The motion, and the poster. This slide has to stand alone as a single
+    //    image, so it carries the mark, the motion, the night and the festival.
     {
-      label: "Motion",
-      hasImage: true,
-      render: () => <Motion src={tower} crop={{ x: 0.48, y: 0.46, scale: 1.74 }} />,
-    },
-
-    // 8. The harbour and the town at the foot of the tower, and the practical
-    //    page. The club's mark at the left margin, the festival's at the right.
-    //    Lifted off the very bottom corner, which is unlit paint and reads as a
-    //    blank rectangle rather than as a place.
-    {
-      label: "The night",
+      label: "Motion and poster",
       hasImage: true,
       render: () => (
-        <Night
-          src={tower}
-          crop={{ x: 0.84, y: 0.58, scale: 2.9 }}
+        <Poster
+          plate={tower}
+          crop={{ x: 0.5, y: 0.38, scale: 1.78 }}
           badge={badge}
-          lines={LINES}
-          cta={CTA}
+          motion={["Bengaluru", "needs to burst", "its tech bubble."]}
+          note="One of two motions. The second is announced closer to the night."
+          when="Sunday, 6 September"
+          where="Big Pitcher, Indiranagar"
+          time="Time announced soon"
+          lines={HOW_IT_WORKS}
+          cta="Tickets out now"
         />
       ),
     },

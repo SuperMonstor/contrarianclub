@@ -2,43 +2,68 @@
    Work-local treatment only. Classes are prefixed .tb- because work CSS
    shares one global namespace. */
 
-/* --- The painting -------------------------------------------------------- */
+/* --- The four plates, each treated for what it actually is ---------------- */
 
-/* Bruegel's Rotterdam Babel is brighter than the club's usual backdrop: a
-   pale sky sits across the middle of the canvas and the top storeys are raw
-   red brick in full light. The kit's standard .art is not enough here, so
-   this is a harder knock-back with the sepia pushed up to pull the red brick
-   toward the gold rather than letting it read as terracotta.
+/* Bruegel's Rotterdam Babel. Brighter than the club's usual backdrop: a pale
+   sky across the middle, raw red brick at the top in full light. Knocked back
+   harder than the kit's standard .art, with the sepia up so the brick pulls
+   toward gold instead of reading as terracotta.
 
-   It stops at brightness 0.7. Past that the tower's storeys collapse into one
-   dark mass and the swarm of tiny figures on the ramps, which is the whole
-   reason for using this painting, disappears. */
-.tb-art {
+   It stops at brightness 0.7. Past that the storeys collapse into one dark
+   mass and the swarm of figures on the ramps, which is the reason for using
+   this painting at all, disappears. */
+.tb-art-tower {
   position: absolute;
   z-index: 0;
   filter: saturate(0.72) contrast(1.08) brightness(0.7) sepia(0.16);
 }
 
-/* The painting reduced to a surface. Used on the two slides that are
-   documents rather than pictures: the masonry keeps its grid of arches
-   behind the rows without ever competing with them. */
-.tb-art-texture {
+/* The same panel taken almost to silhouette, for the pause before the motion.
+   The tower survives as a shape and nothing else does. */
+.tb-art-tower-dusk {
   position: absolute;
   z-index: 0;
-  filter: saturate(0.52) contrast(1.04) brightness(0.68) sepia(0.28);
-  opacity: 0.85;
+  filter: saturate(0.45) contrast(1.16) brightness(0.36) sepia(0.3);
+}
+
+/* Hobbema's avenue. A blue and green Dutch landscape, the lightest thing in
+   the deck by a distance, and it has to stay light: this is the slide about
+   the town being pleasant, and a pleasant place rendered in soot argues
+   against its own caption. So it is warmed hard rather than darkened, and only
+   the bottom third goes near-black under the type. */
+.tb-art-avenue {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.46) contrast(1.0) brightness(1.02) sepia(0.52);
+}
+
+/* Doré's engraving. Black ink on white paper, so the standard treatment would
+   leave a glaring page. Inverting it would be a trick; instead the paper is
+   taken down to a warm brown ground with the contrast up, which leaves the
+   line work reading as pale gold scratches. It is the only image in the deck
+   made of lines rather than paint and it should look like it. */
+.tb-art-engraving {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.28) contrast(1.14) brightness(0.66) sepia(0.62);
+}
+
+/* Grimshaw's quay at dusk. Already dark, already gold: this one gets a lift,
+   not a knock-back, or it lands in the feed as a black rectangle. */
+.tb-art-night {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.44) contrast(1.12) brightness(1.4) sepia(0.52);
 }
 
 /* --- Legibility ---------------------------------------------------------- */
 
-/* Where type is allowed to sit on this picture, and nowhere else.
+/* Type sits low and flush left on every slide, so each scrim opens a window
+   across the middle where the picture is left alone and ramps to near-black
+   under the words. Three of them, because three of the plates need genuinely
+   different handling and one shared scrim would be tuned for none of them. */
 
-   Every slide sets its type flush left and low, so the scrim does two things.
-   Vertically it opens a window across the middle where the tower is left
-   alone, then ramps to near-black below the horizon rule at 1080. That band
-   is where the claims and the evidence live. Horizontally it weights the left
-   third, because a left-aligned column on a busy painting needs its own
-   ground and a symmetric scrim would darken the harbour we want to keep. */
+/* Default: the tower, which carries its subject in the upper two thirds. */
 .tb-scrim {
   position: absolute;
   inset: 0;
@@ -46,72 +71,69 @@
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.82) 0%,
-      rgba(11, 9, 7, 0.34) 13%,
-      rgba(11, 9, 7, 0.08) 33%,
-      rgba(11, 9, 7, 0.46) 56%,
-      rgba(11, 9, 7, 0.88) 73%,
-      rgba(8, 6, 4, 0.97) 88%,
-      rgba(8, 6, 4, 0.99) 100%
+      rgba(11, 9, 7, 0.8) 0%,
+      rgba(11, 9, 7, 0.3) 14%,
+      rgba(11, 9, 7, 0.06) 34%,
+      rgba(11, 9, 7, 0.42) 55%,
+      rgba(11, 9, 7, 0.86) 72%,
+      rgba(8, 6, 4, 0.97) 86%
     ),
-    linear-gradient(
-      90deg,
-      rgba(11, 9, 7, 0.58) 0%,
-      rgba(11, 9, 7, 0.2) 44%,
-      rgba(11, 9, 7, 0) 74%
-    );
+    linear-gradient(90deg, rgba(11, 9, 7, 0.5) 0%, rgba(11, 9, 7, 0.16) 46%, rgba(11, 9, 7, 0) 76%);
 }
 
-/* The document slides want the picture gone, not managed. */
-.tb-scrim-flat {
+/* The avenue keeps its sky and the quay keeps its gaslight. The window opens
+   higher and the ramp starts later, so the light stays in the top half where
+   the trees, and on the other slide the lit windows, actually are. */
+.tb-scrim-open {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.88) 0%,
-      rgba(11, 9, 7, 0.7) 34%,
-      rgba(11, 9, 7, 0.82) 66%,
-      rgba(8, 6, 4, 0.93) 100%
-    ),
-    linear-gradient(
-      90deg,
       rgba(11, 9, 7, 0.72) 0%,
-      rgba(11, 9, 7, 0.36) 52%,
-      rgba(11, 9, 7, 0.1) 100%
-    );
+      rgba(11, 9, 7, 0.16) 16%,
+      rgba(11, 9, 7, 0) 40%,
+      rgba(11, 9, 7, 0.34) 60%,
+      rgba(11, 9, 7, 0.9) 76%,
+      rgba(8, 6, 4, 0.98) 88%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.34) 0%, rgba(11, 9, 7, 0.08) 44%, rgba(11, 9, 7, 0) 72%);
 }
 
-/* The one slide that keeps the picture open: the pause before the motion.
-   Only the very top is darkened, enough to carry one line of serif. */
-.tb-scrim-open {
+/* The engraving is detailed edge to edge with no empty quarter to sit in, so
+   its scrim is heavier everywhere and heaviest at the bottom. */
+.tb-scrim-dense {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(11, 9, 7, 0.9) 0%,
-    rgba(11, 9, 7, 0.72) 26%,
-    rgba(11, 9, 7, 0.24) 46%,
-    rgba(11, 9, 7, 0.34) 74%,
-    rgba(8, 6, 4, 0.82) 100%
-  );
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.82) 0%,
+      rgba(11, 9, 7, 0.3) 16%,
+      rgba(11, 9, 7, 0.12) 36%,
+      rgba(11, 9, 7, 0.5) 56%,
+      rgba(11, 9, 7, 0.92) 72%,
+      rgba(8, 6, 4, 0.98) 86%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.58) 0%, rgba(11, 9, 7, 0.22) 48%, rgba(11, 9, 7, 0) 78%);
 }
 
 /* Type sitting over paint still needs its own edge. */
 .tb-on-art {
   text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.55),
-    0 4px 22px rgba(0, 0, 0, 0.6);
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(0, 0, 0, 0.62);
 }
 
-/* --- The horizon --------------------------------------------------------- */
+/* --- The line, and the band ---------------------------------------------- */
 
-/* The deck's one fixed element: a hairline at the same y on all eight slides,
-   running the full width with no inset. Claims grow above it, evidence stays
-   the same size below it, and it never moves. */
-.tb-horizon {
+/* Every slide is divided once, low on the page, by a full width horizontal at
+   the same height. On the story slides that division is this hairline, with
+   the sourced numbers printed under it. On the two covers it is the top edge
+   of the cream band. One division, two materials. */
+.tb-rule {
   position: absolute;
   left: 0;
   right: 0;
@@ -121,27 +143,71 @@
   z-index: 3;
   background: linear-gradient(
     90deg,
-    rgba(200, 162, 74, 0.62) 0%,
-    rgba(200, 162, 74, 0.5) 46%,
-    rgba(200, 162, 74, 0.14) 100%
+    rgba(200, 162, 74, 0.6) 0%,
+    rgba(200, 162, 74, 0.46) 48%,
+    rgba(200, 162, 74, 0.12) 100%
   );
 }
 
-/* Row separators in the ledger, quieter than the horizon so the horizon
-   stays the only line the eye tracks between slides. */
-.tb-row-line {
+/* The festival band.
+
+   This is how the Bengaluru Tech Week badge is carried. The badge is a cream
+   card with an orange wordmark and it cannot be recoloured: it belongs to
+   somebody else. Dropped straight onto the club's near-black it reads as a
+   sticker, which is exactly how it read before.
+
+   So the page gives it ground of its own. The foot of the first slide and the
+   foot of the poster are a solid band of the club's ivory, printed in dark
+   ink, and the badge sits inside it on a cream almost identical to its own.
+   The cut edge stops being visible and the band reads as the second colour the
+   piece was always printed in. The deck opens and closes on it, which is also
+   what makes the last slide read as a poster instead of one more slide.
+
+   Its top edge is the same gold as the rule on the story slides, so the
+   division stays in one place across the whole deck. */
+.tb-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  /* Two gradients. The vertical one gives the band the slight curve of a
+     printed second colour rather than a flat fill. The horizontal one warms
+     the right hand end toward the yellow the badge's own card fades into, so
+     the card's edge stops being findable at the one place it would show. */
+  background:
+    linear-gradient(90deg, rgba(249, 234, 190, 0) 52%, rgba(249, 234, 190, 0.75) 100%),
+    linear-gradient(180deg, #f7eed9 0%, var(--cc-ivory) 46%, #e7dabb 100%);
+  border-top: 1px solid rgba(138, 108, 44, 0.6);
+  color: #17120b;
+}
+
+/* Ink on the band. None of the --cc- text tokens appear here: every one of
+   them is tuned to sit on near-black and disappears on cream. */
+.tb-band-line {
   height: 1px;
   border: 0;
   margin: 0;
-  background: linear-gradient(90deg, rgba(200, 162, 74, 0.26) 0%, rgba(200, 162, 74, 0.04) 82%);
+  background: rgba(23, 18, 11, 0.2);
 }
 
-/* --- The festival badge -------------------------------------------------- */
+.tb-band-meta {
+  font-family: var(--cc-font-ui);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(23, 18, 11, 0.6);
+}
 
-/* A foreign object, held deliberately. It is cream and orange and everything
-   around it is warm near-black, so it is given real air and no frame of our
-   own: a seal sitting on the page, not a graphic pretending to belong. */
+.tb-band-cta {
+  font-family: var(--cc-font-ui);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6d520f;
+}
+
+/* The badge itself, unretouched, with real air around it. No border and no
+   shadow: on ground this close to its own, either would put back the cut out
+   edge the band exists to remove. */
 .tb-badge {
   display: block;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
 }
