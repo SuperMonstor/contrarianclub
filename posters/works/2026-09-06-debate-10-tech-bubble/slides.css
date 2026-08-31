@@ -1,0 +1,147 @@
+/* Debate Club #10, Bengaluru's tech bubble.
+   Work-local treatment only. Classes are prefixed .tb- because work CSS
+   shares one global namespace. */
+
+/* --- The painting -------------------------------------------------------- */
+
+/* Bruegel's Rotterdam Babel is brighter than the club's usual backdrop: a
+   pale sky sits across the middle of the canvas and the top storeys are raw
+   red brick in full light. The kit's standard .art is not enough here, so
+   this is a harder knock-back with the sepia pushed up to pull the red brick
+   toward the gold rather than letting it read as terracotta.
+
+   It stops at brightness 0.7. Past that the tower's storeys collapse into one
+   dark mass and the swarm of tiny figures on the ramps, which is the whole
+   reason for using this painting, disappears. */
+.tb-art {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.72) contrast(1.08) brightness(0.7) sepia(0.16);
+}
+
+/* The painting reduced to a surface. Used on the two slides that are
+   documents rather than pictures: the masonry keeps its grid of arches
+   behind the rows without ever competing with them. */
+.tb-art-texture {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.52) contrast(1.04) brightness(0.68) sepia(0.28);
+  opacity: 0.85;
+}
+
+/* --- Legibility ---------------------------------------------------------- */
+
+/* Where type is allowed to sit on this picture, and nowhere else.
+
+   Every slide sets its type flush left and low, so the scrim does two things.
+   Vertically it opens a window across the middle where the tower is left
+   alone, then ramps to near-black below the horizon rule at 1080. That band
+   is where the claims and the evidence live. Horizontally it weights the left
+   third, because a left-aligned column on a busy painting needs its own
+   ground and a symmetric scrim would darken the harbour we want to keep. */
+.tb-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.82) 0%,
+      rgba(11, 9, 7, 0.34) 13%,
+      rgba(11, 9, 7, 0.08) 33%,
+      rgba(11, 9, 7, 0.46) 56%,
+      rgba(11, 9, 7, 0.88) 73%,
+      rgba(8, 6, 4, 0.97) 88%,
+      rgba(8, 6, 4, 0.99) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(11, 9, 7, 0.58) 0%,
+      rgba(11, 9, 7, 0.2) 44%,
+      rgba(11, 9, 7, 0) 74%
+    );
+}
+
+/* The document slides want the picture gone, not managed. */
+.tb-scrim-flat {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.88) 0%,
+      rgba(11, 9, 7, 0.7) 34%,
+      rgba(11, 9, 7, 0.82) 66%,
+      rgba(8, 6, 4, 0.93) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(11, 9, 7, 0.72) 0%,
+      rgba(11, 9, 7, 0.36) 52%,
+      rgba(11, 9, 7, 0.1) 100%
+    );
+}
+
+/* The one slide that keeps the picture open: the pause before the motion.
+   Only the very top is darkened, enough to carry one line of serif. */
+.tb-scrim-open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.9) 0%,
+    rgba(11, 9, 7, 0.72) 26%,
+    rgba(11, 9, 7, 0.24) 46%,
+    rgba(11, 9, 7, 0.34) 74%,
+    rgba(8, 6, 4, 0.82) 100%
+  );
+}
+
+/* Type sitting over paint still needs its own edge. */
+.tb-on-art {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.55),
+    0 4px 22px rgba(0, 0, 0, 0.6);
+}
+
+/* --- The horizon --------------------------------------------------------- */
+
+/* The deck's one fixed element: a hairline at the same y on all eight slides,
+   running the full width with no inset. Claims grow above it, evidence stays
+   the same size below it, and it never moves. */
+.tb-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  z-index: 3;
+  background: linear-gradient(
+    90deg,
+    rgba(200, 162, 74, 0.62) 0%,
+    rgba(200, 162, 74, 0.5) 46%,
+    rgba(200, 162, 74, 0.14) 100%
+  );
+}
+
+/* Row separators in the ledger, quieter than the horizon so the horizon
+   stays the only line the eye tracks between slides. */
+.tb-row-line {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg, rgba(200, 162, 74, 0.26) 0%, rgba(200, 162, 74, 0.04) 82%);
+}
+
+/* --- The festival badge -------------------------------------------------- */
+
+/* A foreign object, held deliberately. It is cream and orange and everything
+   around it is warm near-black, so it is given real air and no frame of our
+   own: a seal sitting on the page, not a graphic pretending to belong. */
+.tb-badge {
+  display: block;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+}
