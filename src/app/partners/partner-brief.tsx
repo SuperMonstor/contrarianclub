@@ -8,9 +8,10 @@ import styles from "./page.module.css";
 const instagramHandle = "thecontrarian.club";
 const instagramUrl = `https://www.instagram.com/${instagramHandle}/`;
 
-// The deck. Everything in it is true of the club whoever is reading it. The one
-// partner-specific piece is the proposal card, which is why it is a prop (see
-// src/content/partner-decks.ts). With no partner, this is the general brief.
+// The deck. Everything in it is true of the club whoever is reading it. The
+// partner-specific piece is the pair of pitch pages after "why partner", which
+// is why it is a prop (see src/content/partner-decks.ts). With no partner, this
+// is the general brief.
 export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
   return (
     <main className={styles.page}>
@@ -163,35 +164,34 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
 
       <section className={styles.fit}>
         <p className={styles.sectionLabel}>Why partner with Contrarian</p>
-        <div
+        <h2>One partnership. A live room and a content engine.</h2>
+        <p className={styles.fitLead}>
+          Contrarian gives a partner rare access to a high-trust live room, then
+          carries that association into social content around the debate. The
+          result is both lived cultural relevance and a growing library of
+          moments people can discover, share and debate again.
+        </p>
+      </section>
+
+      {partner?.pitch.map((page, index) => (
+        <section
+          key={page.heading}
           className={
-            partner ? styles.fitGrid : `${styles.fitGrid} ${styles.fitGridSolo}`
+            index % 2 === 1 ? `${styles.pitch} ${styles.pitchDark}` : styles.pitch
           }
         >
-          <div>
-            <h2>One partnership. A live room and a content engine.</h2>
-            <p>
-              Contrarian gives a partner rare access to a high-trust live room,
-              then carries that association into social content around the
-              debate. The result is both lived cultural relevance and a growing
-              library of moments people can discover, share and debate again.
-            </p>
-          </div>
-          {partner && (
-            <div className={styles.proposal}>
-              <p className={styles.proposalLabel}>
-                A {partner.name} partnership thought
-              </p>
-              <h3>
-                {partner.proposal.presents}
-                <br />
-                {partner.proposal.title}
-              </h3>
-              <p>{partner.proposal.body}</p>
+          <p className={styles.sectionLabel}>{page.label}</p>
+          <div className={styles.pitchGrid}>
+            <h2>{page.heading}</h2>
+            <div>
+              {page.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+              {page.kicker && <p className={styles.pitchKicker}>{page.kicker}</p>}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ))}
 
       <section className={styles.socialProof}>
         <div className={styles.instagramFrame}>
