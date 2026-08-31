@@ -44,7 +44,7 @@ export const PARTNER_DECKS: PartnerDeck[] = [
       },
       {
         label: "What we would build",
-        heading: "So let's make it AI-native.",
+        heading: "So let's make it AI‑native.", // non-breaking hyphen: never split the word across lines
         body: [
           "Every event, we would actively encourage people to use ChatGPT: understand the motion, check claims, stress test audience questions and rebuttals.",
           "Not only that, we tie it into the content itself, validating and fact checking claims on screen. ChatGPT becomes an integral part of the experience.",
