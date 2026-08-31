@@ -55,7 +55,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         <section className={styles.intro}>
           <p className={styles.sectionLabel}>The story</p>
           <div className={styles.storyGrid}>
-            <h2>It was supposed to be a small night out. It became a scene.</h2>
+            <h2>Bengaluru&apos;s most prominent debate club in 2 months.</h2>
             <div>
               <p>
                 We originally planned Contrarian for eight or nine friends. Then
@@ -63,7 +63,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
                 and saw <strong>demand for 110 tickets in under 12 hours</strong>.
               </p>
               <p>
-                We have now sold out <strong>eight shows</strong>.
+                We have now sold out <strong>nine shows</strong>.
                 The live debate is the starting point. <mark className={styles.highlight}>We
                 turn the best arguments, prompts and moments into content that
                 brings new people into the conversation</mark>, then back into
@@ -77,7 +77,11 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           <p className={styles.statsHeading}>Progress in 2 months</p>
           <div className={styles.statsGrid}>
             <article>
-              <strong>&gt;500</strong>
+              <strong>12.5K</strong>
+              <span>Instagram followers</span>
+            </article>
+            <article>
+              <strong>600</strong>
               <span>live attendees</span>
             </article>
             <article>
@@ -85,7 +89,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
               <span>views</span>
             </article>
             <article>
-              <strong>8</strong>
+              <strong>9</strong>
               <span>sold-out shows</span>
             </article>
           </div>
@@ -94,7 +98,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
 
       <section className={styles.elevation}>
         <div className={styles.elevationAside}>
-          <p className={styles.sectionLabel}>Coming next</p>
+          <p className={styles.sectionLabel}>Where we are</p>
           <p className={styles.elevationKicker}>Part of</p>
           <div className={styles.elevationLockup} aria-label="Elevation Capital">
             <span className={styles.elevationMark} aria-hidden="true"><i /><i /></span>
@@ -109,13 +113,13 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         <div>
           <h2>Contrarian at Basecamp<br />and Bengaluru Tech Week.</h2>
           <p>
-            This month we bring the Contrarian room to Basecamp, Elevation
-            Capital&apos;s founder week, and in September we join Bengaluru Tech
+            Last month we brought the Contrarian room to Basecamp, Elevation
+            Capital&apos;s founder week. This week we are at Bengaluru Tech
             Week, the citywide festival that gathers more than 10,000 builders,
             founders and investors. Both put the format in front of exactly the
-            people it is built for. Beyond Bengaluru, we are also planning
-            future live events in more cities, taking the format to the wider
-            community already engaging with our content.
+            people it is built for. Beyond Bengaluru, we are planning live
+            events in more cities, taking the format to the wider community
+            already engaging with our content.
           </p>
         </div>
       </section>
@@ -162,6 +166,29 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
         </div>
       </section>
 
+      <section className={styles.socialProof}>
+        <div className={styles.instagramFrame}>
+          <Image
+            src="/media/instagram-post-16.png"
+            alt="A Contrarian Debate Club post from Instagram"
+            width={1080}
+            height={1350}
+          />
+        </div>
+        <div className={styles.socialCopy}>
+          <p className={styles.sectionLabel}>On Instagram</p>
+          <h2>The debate does not end when the room empties.</h2>
+          <p>
+            Our Instagram is both the front door and the afterparty: debate
+            prompts, provocative points of view, event moments and the content
+            that keeps an argument alive between shows.
+          </p>
+          <a className={styles.instagramLink} href={instagramUrl} target="_blank" rel="noreferrer">
+            Review @{instagramHandle} on Instagram <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+
       <section className={styles.fit}>
         <div className={styles.fitCopy}>
           <p className={styles.sectionLabel}>Why partner with Contrarian</p>
@@ -181,8 +208,9 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           )}
           <h2>One partnership. A live room and a content engine.</h2>
           <p className={styles.fitLead}>
-            Rare access to a high-trust live room. Then everything we publish
-            carries it.
+            A room of high-intent, high-earning, intellectually curious people
+            in Bengaluru. Then a content engine that puts you in front of the
+            same people across India.
           </p>
         </div>
         <div className={styles.fitPanels}>
@@ -195,7 +223,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
             />
             <figcaption>
               <strong>The live room</strong>
-              <span>Eight sold-out debates and counting.</span>
+              <span>Nine sold-out debates of Bengaluru&apos;s sharpest.</span>
             </figcaption>
           </figure>
           <figure>
@@ -207,7 +235,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
             />
             <figcaption>
               <strong>The content engine</strong>
-              <span>Every debate filmed. More than a million views.</span>
+              <span>The same audience, reached across India.</span>
             </figcaption>
           </figure>
         </div>
@@ -265,57 +293,6 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           </section>
         ),
       )}
-
-      <section className={styles.socialProof}>
-        <div className={styles.instagramFrame}>
-          <Image
-            src="/media/instagram-post-16.png"
-            alt="A Contrarian Debate Club post from Instagram"
-            width={1080}
-            height={1350}
-          />
-        </div>
-        <div className={styles.socialCopy}>
-          <p className={styles.sectionLabel}>On Instagram</p>
-          <h2>The debate does not end when the room empties.</h2>
-          <p>
-            Our Instagram is both the front door and the afterparty: debate
-            prompts, provocative points of view, event moments and the content
-            that keeps an argument alive between shows.
-          </p>
-          <a className={styles.instagramLink} href={instagramUrl} target="_blank" rel="noreferrer">
-            Review @{instagramHandle} on Instagram <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </section>
-
-      <section className={styles.gallery}>
-        <div className={styles.galleryHeader}>
-          <div>
-            <p className={styles.sectionLabel}>The room</p>
-            <h2>Ideas land differently when they are live.</h2>
-          </div>
-          <a href={instagramUrl} target="_blank" rel="noreferrer">
-            See more on Instagram <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-        <div className={styles.galleryGrid}>
-          <Image
-            className={styles.galleryWide}
-            src="/media/speaker-and-audience.jpg"
-            alt="A speaker facing a gathered Contrarian Debate Club audience"
-            width={1600}
-            height={900}
-          />
-          <Image
-            className={styles.galleryTall}
-            src="/media/attendees-watching.jpg"
-            alt="Attendees watching the debate closely"
-            width={1600}
-            height={900}
-          />
-        </div>
-      </section>
 
       <footer className={styles.footer}>
         <Image
