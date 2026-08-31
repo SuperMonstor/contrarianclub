@@ -16,8 +16,8 @@ import "./slides.css";
 //   3  the industry grew, and grew, and grew        the city did not
 //   4  you probably know what that feels like       here is what it costs
 //   5  so what is always the answer? more           we build our way out
-//   6  but what if more is the problem              a real question, not a jab
-//   7  then maybe the answer is less                and if it is, say so
+//   6  what if it has grown too much               a real question, not a jab
+//   7  and if so, does it need less tech            which is arguable, so argue
 //   8  so somebody should say it out loud          the motion, and the poster
 //
 // Every slide opens on a connective and closes on something unfinished. That
@@ -39,11 +39,15 @@ import "./slides.css";
 //   8  the tower, for the poster
 //
 // The two reprises are load bearing rather than economical. The tower returns
-// at slide 6 as a silhouette under "what if more is the problem", because the
-// tower is the thing that got built. The avenue returns at slide 7 under
-// "maybe the answer is less", and it is the quiet empty lane the deck opened
-// on: the argument for less, already on the page in slide 1, before anyone had
-// made it. Slide 5 has no picture because the word on it is the picture.
+// at slide 6 as a silhouette under "what if it has grown too much", because
+// the tower is the thing that got built. The avenue returns at slide 7 under
+// "does Bengaluru need less tech", and it is the quiet empty lane the deck
+// opened on: the case for less, already on the page in slide 1, before anyone
+// had made it. Slide 5 has no picture because the word on it is the picture.
+//
+// Slides 6 and 7 are a matched pair and are set as one: a quiet line, the
+// question in gold, then a second question that widens it. Six asks, seven
+// answers, and they should look like they were cut from the same sheet.
 //
 // THREE TYPEFACES, AND OSWALD ONLY WHERE THE VOICE STOPS NARRATING. Playfair
 // at reading size carries all the talking; the middle of a carousel is

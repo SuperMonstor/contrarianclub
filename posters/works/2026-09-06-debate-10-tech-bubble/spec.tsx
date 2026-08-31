@@ -198,9 +198,18 @@ const work: WorkSpec = {
           n={6}
           of={OF}
           lines={[
-            { text: "But here's the interesting question:", size: 38, tone: "parchment" },
+            {
+              text: "But what if the problem isn't that Bengaluru hasn't grown enough?",
+              size: 40,
+              tone: "parchment",
+            },
             "",
-            { text: "What if more is actually the problem?", size: 48, tone: "gold" },
+            { text: "What if it has grown too much?", size: 46, tone: "gold" },
+            "",
+            {
+              text: "Did Bengaluru's ambition outpace the city's ability to accommodate it?",
+              size: 38,
+            },
           ]}
         />
       ),
@@ -219,11 +228,16 @@ const work: WorkSpec = {
           n={7}
           of={OF}
           lines={[
-            { text: "So maybe the answer isn't a bigger bubble.", tone: "parchment" },
+            // the club's draft had an em dash here; the repo does not use them
+            { text: "And if so…", size: 40, tone: "parchment" },
             "",
-            { text: "Could we actually need less tech to save Bengaluru?", size: 56, tone: "gold" },
+            { text: "Does Bengaluru need less tech, not more?", size: 46, tone: "gold" },
+            "",
+            {
+              text: "Can we dilute the tech bubble enough to save the city underneath it?",
+              size: 38,
+            },
           ]}
-          size={42}
         />
       ),
     },
