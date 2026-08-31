@@ -18,7 +18,7 @@ import "./slides.css";
 //   5  so what is always the answer? more           we build our way out
 //   6  but what if more is the problem              a real question, not a jab
 //   7  then maybe the answer is less                and if it is, say so
-//   8  that is what we are debating                 the motion, and the poster
+//   8  so somebody should say it out loud          the motion, and the poster
 //
 // Every slide opens on a connective and closes on something unfinished. That
 // is the actual mechanism: nobody swipes because a slide was interesting, they
@@ -428,7 +428,6 @@ export function Poster({
   plate,
   crop,
   badge,
-  handoff,
   motion,
   note,
   lines,
@@ -439,8 +438,6 @@ export function Poster({
   plate: Plate;
   crop: Crop;
   badge: string;
-  /** the sentence slide 7 left hanging, finished here */
-  handoff: string;
   motion: string[];
   note: string;
   lines: string[];
@@ -460,20 +457,8 @@ export function Poster({
         style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: BAND + 72 }}
       >
         <div
-          style={{
-            fontFamily: "var(--cc-font-display)",
-            fontStyle: "italic",
-            fontSize: 36,
-            lineHeight: 1.3,
-            color: "var(--cc-parchment)",
-            marginBottom: 26,
-          }}
-        >
-          {handoff}
-        </div>
-        <div
           className="kicker"
-          style={{ fontSize: 15, letterSpacing: "0.32em", marginBottom: 20 }}
+          style={{ fontSize: 15, letterSpacing: "0.32em", marginBottom: 22 }}
         >
           This club believes
         </div>

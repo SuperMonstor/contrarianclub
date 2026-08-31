@@ -238,7 +238,6 @@ const work: WorkSpec = {
           plate={tower}
           crop={{ x: 0.5, y: 0.38, scale: 1.78 }}
           badge={badge}
-          handoff="That's what we're debating this Sunday."
           motion={["Bengaluru", "needs to burst", "its tech bubble."]}
           note="One of two motions. The second is announced closer to the night."
           when="Sunday, 6 September"
