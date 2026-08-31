@@ -37,11 +37,12 @@
 .heroCopy .heroCta:hover { transform: translateY(-2px); background: #fff0bf; }
 .scrollNote { margin: 0 clamp(24px, 5vw, 72px) 30px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
 
-.intro, .audience, .fit, .gallery { padding: clamp(74px, 10vw, 150px) clamp(24px, 8vw, 128px); }
+.intro, .audience, .gallery { padding: clamp(74px, 10vw, 150px) clamp(24px, 8vw, 128px); }
 .tractionPage { background: var(--paper); }
 .sectionLabel { color: var(--brick); }
 .storyGrid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(44px, 9vw, 160px); }
-.intro h2, .audience h2, .fit h2, .offer h2, .gallery h2 { font-size: clamp(2.65rem, 5.8vw, 6.25rem); line-height: 0.92; }
+.intro h2, .audience h2, .gallery h2 { font-size: clamp(2.65rem, 5.8vw, 6.25rem); line-height: 0.92; }
+.fit h2, .offer h2 { max-width: 14ch; font-size: clamp(2.4rem, 4.4vw, 4.4rem); line-height: 0.94; }
 .evidence h2 { font-size: clamp(3.15rem, 5.6vw, 5.7rem); line-height: 0.93; }
 .storyGrid > div { max-width: 470px; font-size: 1.1rem; line-height: 1.65; }
 .storyGrid p { margin: 0 0 22px; }
@@ -81,21 +82,23 @@
 .profileGrid dt { color: var(--brick); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
 .profileGrid dd { margin: 9px 0 0; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.2rem, 1.75vw, 1.7rem); line-height: 1.05; letter-spacing: -0.04em; }
 
-.fit { display: flex; flex-direction: column; justify-content: space-between; background: var(--ink); color: #f8f1e4; }
+/* The fit page: the claim on the left, the two halves of it pictured down the
+   right. Mirrors the audience page's split rather than repeating it. */
+.fit { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr); background: var(--ink); color: #f8f1e4; }
 .fit .sectionLabel { color: #f7c767; }
-.fitTop { padding: clamp(68px, 9vw, 120px) clamp(24px, 8vw, 128px) clamp(44px, 5vw, 72px); }
+.fitCopy { display: flex; flex-direction: column; justify-content: center; padding: clamp(64px, 8vw, 112px) clamp(24px, 6vw, 92px); }
 .fitLockup { display: flex; align-items: center; gap: 18px; margin: 0 0 clamp(20px, 2.4vw, 30px); }
 .fitPartnerMark { font-family: var(--font-ui), sans-serif; font-size: clamp(1.3rem, 1.8vw, 1.7rem); font-weight: 800; letter-spacing: -0.04em; }
 .fitLockupCross { color: #f7c767; font-size: clamp(1rem, 1.4vw, 1.3rem); }
 .fitLockup img { width: clamp(96px, 9vw, 132px); height: auto; }
-.fit h2 { max-width: 18ch; margin-top: 8px; }
-.fitLead { max-width: 620px; margin: clamp(20px, 2.5vw, 30px) 0 0; color: #f7c767; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.3rem, 1.9vw, 1.8rem); line-height: 1.15; letter-spacing: -0.04em; }
-.fitPanels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.fitPanels figure { position: relative; height: clamp(260px, 30vw, 420px); margin: 0; overflow: hidden; }
+.fitLead { max-width: 460px; margin: clamp(22px, 2.6vw, 32px) 0 0; color: #f7c767; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.3rem, 1.9vw, 1.8rem); line-height: 1.15; letter-spacing: -0.04em; }
+.fitPanels { display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.fitPanels figure { position: relative; min-height: clamp(240px, 26vw, 330px); margin: 0; overflow: hidden; }
 .fitPanels img { width: 100%; height: 100%; object-fit: cover; }
-.fitPanels figcaption { position: absolute; inset: auto 0 0 0; padding: 56px clamp(24px, 4vw, 48px) 26px; background: linear-gradient(0deg, rgba(2, 3, 7, 0.88), rgba(2, 3, 7, 0.45) 60%, transparent); }
+.fitPanels figcaption { position: absolute; inset: auto 0 0 0; padding: 54px clamp(24px, 3.4vw, 44px) 24px; background: linear-gradient(0deg, rgba(2, 3, 7, 0.9), rgba(2, 3, 7, 0.45) 58%, transparent); }
 .fitPanels strong { display: block; color: #f7c767; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
-.fitPanels span { display: block; margin-top: 8px; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.2rem, 1.7vw, 1.6rem); letter-spacing: -0.03em; }
+.fitPanels span { display: block; margin-top: 8px; font-family: var(--font-display), Georgia, serif; font-size: clamp(1.15rem, 1.5vw, 1.5rem); letter-spacing: -0.03em; }
+
 /* The two bespoke pitch pages both lead with a photograph, so the point lands
    before a word is read: the evidence page is a full-bleed frame of it already
    happening, the offer page sets the room beside the two things we would build. */
@@ -162,7 +165,7 @@
   .logoLight { width: 138px; }
   .hero { min-height: 760px; }
   .heroCopy { margin: auto 24px; padding: 72px 0; }
-  .storyGrid, .elevation, .audience, .offer, .galleryGrid, .socialProof { grid-template-columns: 1fr; }
+  .storyGrid, .elevation, .audience, .fit, .offer, .galleryGrid, .socialProof { grid-template-columns: 1fr; }
   .storyGrid { gap: 28px; }
   .statsGrid { grid-template-columns: 1fr; }
   .stats article { border-right: 0; border-bottom: 1px solid rgba(255, 247, 232, 0.3); }
@@ -172,7 +175,7 @@
   .profileGrid { grid-template-columns: 1fr; }
   .profileGrid > div, .profileGrid > div:nth-child(odd), .profileGrid > div:nth-child(even) { min-height: auto; padding: 18px 0; border-left: 0; }
   .offerImageWrap { min-height: 260px; }
-  .fitPanels { grid-template-columns: 1fr; }
+  .fitPanels figure { min-height: 240px; }
   .instagramFrame { justify-self: start; }
   .galleryHeader, .footer { grid-template-columns: 1fr; display: grid; }
   .galleryHeader { align-items: start; }
@@ -202,21 +205,21 @@
   .tractionPage .statsGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tractionPage .stats article { display: block; min-width: 0; }
   .sectionLabel, .eyebrow, .elevationKicker { font-size: 8pt; }
-  .intro h2, .audience h2, .fit h2, .gallery h2, .socialCopy h2 { font-size: 38pt; }
+  .intro h2, .audience h2, .gallery h2, .socialCopy h2 { font-size: 38pt; }
+  .fit h2, .offer h2 { font-size: 30pt; }
 
   .storyGrid { grid-template-columns: 1.12fr 0.88fr; gap: 24mm; }
   .elevation { grid-template-columns: minmax(42mm, 0.34fr) minmax(0, 1fr); }
   .audience { grid-template-columns: minmax(0, 1fr) minmax(75mm, 0.86fr); gap: 24mm; }
-  .fit { padding: 0; }
-  .fitTop { padding: 15mm 22mm 10mm; }
+  .fit { padding: 0; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr); }
+  .fitCopy { padding: 15mm 16mm 15mm 22mm; }
   .fitLead { margin-top: 6mm; font-size: 15pt; }
   .fitLockup { margin-bottom: 6mm; }
-  .fitPanels figure { height: 92mm; }
-  .fitPanels figcaption { padding: 14mm 10mm 7mm; }
-  .fitPanels figure:first-child figcaption { padding-left: 22mm; }
+  .fitPanels figure { height: 105mm; min-height: 0; }
+  .fitPanels figcaption { padding: 16mm 12mm 7mm; }
   .fitPanels span { font-size: 13pt; }
-  .fitLockup img { width: 30mm; }
-  .fitPartnerMark { font-size: 15pt; }
+  .fitLockup img { width: 28mm; }
+  .fitPartnerMark { font-size: 14pt; }
   .evidence h2 { max-width: 120mm; font-size: 34pt; }
   .evidenceCopy { width: 160mm; padding: 0 22mm 6mm; }
   .evidenceLead { max-width: 108mm; margin-top: 7mm; }

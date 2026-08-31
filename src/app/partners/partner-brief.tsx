@@ -163,7 +163,7 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
       </section>
 
       <section className={styles.fit}>
-        <div className={styles.fitTop}>
+        <div className={styles.fitCopy}>
           <p className={styles.sectionLabel}>Why partner with Contrarian</p>
           {partner && (
             <p className={styles.fitLockup}>
@@ -200,8 +200,8 @@ export function PartnerBrief({ partner }: { partner?: PartnerDeck }) {
           </figure>
           <figure>
             <Image
-              src="/media/filming-the-room.jpg"
-              alt="A camera filming the room mid-debate"
+              src="/media/stage-and-poll.jpg"
+              alt="Two panellists on stage, the audience poll on the screen behind them"
               width={1600}
               height={1067}
             />
