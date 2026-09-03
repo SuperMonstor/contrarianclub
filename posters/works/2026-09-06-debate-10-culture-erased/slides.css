@@ -1,0 +1,266 @@
+/* Debate Club #10, the second motion. Work-local treatment only. Classes are
+   prefixed .ce- because work CSS shares one global namespace.
+
+   Every plate in this deck is a coloured aquatint printed on cream laid paper
+   around 1800, which means every one of them arrives pale, cool and bright:
+   wide chalky skies, green wash, and paper showing through everywhere. The
+   club's ground is warm near-black. So the treatments here all pull in one
+   direction, hard sepia and a real knock-back, and the differences between
+   them are only about what each plate cannot afford to lose. */
+
+/* --- The plates ----------------------------------------------------------- */
+
+/* Colebrooke's east view: Bangalore as a low line of wall on the horizon under
+   an enormous sky. The sky is the subject, so this is the lightest treatment
+   in the deck. Taken any darker the town stops being findable and the slide
+   becomes a picture of a field. */
+.ce-art-open {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.4) contrast(1.12) brightness(0.94) sepia(0.6);
+}
+
+/* The same plate at dusk, for the turn. The town survives as a line and
+   nothing else does. */
+.ce-art-dusk {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.3) contrast(1.2) brightness(0.42) sepia(0.44);
+}
+
+/* Hunter's west front of Tipu's palace. The only plate in the deck with strong
+   local colour: lacquer red, gold columns, blue soffits, and a deep shadow the
+   figures stand in. Knocking it back to the deck's average would throw away
+   the one thing it is here for, so it keeps its brightness and loses only
+   saturation. */
+.ce-art-interior {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.7) contrast(1.08) brightness(0.84) sepia(0.24);
+}
+
+/* The east view again, for the motion. The one slide where ivory poster caps
+   run across the middle of the frame, so the picture has to be dark exactly
+   where the tech bubble deck's tower was dark: a warm sky at the top, the town
+   as a lit line just above the cream band, and near-black between them for the
+   words to sit on. */
+.ce-art-motion {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.36) contrast(1.16) brightness(0.56) sepia(0.52);
+}
+
+/* The two plates carrying figures on the ground: the tents at Laulbaug and the
+   temple square at Strupermador. Mid-tone all over with nothing to protect, so
+   they take the standard treatment. */
+.ce-art {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.4) contrast(1.1) brightness(0.66) sepia(0.42);
+}
+
+/* Sewandroog under attack. The gun smoke on the right is the whole point of
+   the plate and it is white on pale rock, so contrast goes up rather than
+   down and the brightness stays where the smoke still reads. */
+.ce-art-smoke {
+  position: absolute;
+  z-index: 0;
+  filter: saturate(0.34) contrast(1.24) brightness(0.6) sepia(0.4);
+}
+
+/* --- Legibility ----------------------------------------------------------- */
+
+/* Type sits low and flush left on every slide, so each scrim opens a window
+   over the picture and ramps to near-black under the words. Four of them,
+   because these plates put their subject at four different heights and one
+   shared scrim would be tuned for none of them. */
+
+/* Default. For plates whose subject sits in the middle band. */
+.ce-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.78) 0%,
+      rgba(11, 9, 7, 0.28) 15%,
+      rgba(11, 9, 7, 0.08) 34%,
+      rgba(11, 9, 7, 0.44) 55%,
+      rgba(11, 9, 7, 0.88) 72%,
+      rgba(8, 6, 4, 0.97) 86%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.48) 0%, rgba(11, 9, 7, 0.14) 46%, rgba(11, 9, 7, 0) 76%);
+}
+
+/* For the east view, where the horizon and the sky above it are the picture.
+   The window opens higher and stays open longer. */
+.ce-scrim-open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.14) 17%,
+      rgba(11, 9, 7, 0) 42%,
+      rgba(11, 9, 7, 0.32) 60%,
+      rgba(11, 9, 7, 0.9) 76%,
+      rgba(8, 6, 4, 0.98) 88%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.32) 0%, rgba(11, 9, 7, 0.08) 44%, rgba(11, 9, 7, 0) 72%);
+}
+
+/* For the landscapes, and this is the scrim the deck was built around.
+
+   Every plate in Colebrooke's portfolio is a wide view with an enormous sky
+   and the subject sitting low: the town on the horizon at three fifths down,
+   the tents lower than that, the gun smoke lower still. A scrim that opens its
+   window across the middle, which is the right answer for a painting, puts all
+   of that either in the dark band or under the words. So this one opens low
+   and late, from two fifths down to seven tenths, and lets the sky above it go
+   almost to black.
+
+   That turns out to be the better picture anyway. A dark sky, one lit band of
+   country, then black and the words. */
+.ce-scrim-low {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.9) 0%,
+      rgba(11, 9, 7, 0.72) 18%,
+      rgba(11, 9, 7, 0.4) 34%,
+      rgba(11, 9, 7, 0.05) 48%,
+      rgba(11, 9, 7, 0.1) 64%,
+      rgba(11, 9, 7, 0.7) 76%,
+      rgba(8, 6, 4, 0.98) 88%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.42) 0%, rgba(11, 9, 7, 0.12) 46%, rgba(11, 9, 7, 0) 74%);
+}
+
+/* For the palace, which is architecture drawn edge to edge with no empty
+   quarter anywhere in it. Heavier throughout, and heaviest at the foot. */
+.ce-scrim-dense {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.84) 0%,
+      rgba(11, 9, 7, 0.34) 16%,
+      rgba(11, 9, 7, 0.14) 36%,
+      rgba(11, 9, 7, 0.54) 56%,
+      rgba(11, 9, 7, 0.93) 72%,
+      rgba(8, 6, 4, 0.98) 86%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.56) 0%, rgba(11, 9, 7, 0.2) 48%, rgba(11, 9, 7, 0) 78%);
+}
+
+/* Type sitting over paint still needs its own edge. */
+.ce-on-art {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(0, 0, 0, 0.62);
+}
+
+/* --- The division, and the label ------------------------------------------ */
+
+/* Every slide is divided once, low on the page, at the same height. On the
+   story slides that division is this hairline with the sourced numbers under
+   it; on the motion it is the top edge of the cream band. The height matches
+   the tech bubble deck's on purpose: the two go out two days apart for the
+   same night and scroll past each other in the same feed. */
+.ce-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  z-index: 3;
+  background: linear-gradient(
+    90deg,
+    rgba(200, 162, 74, 0.6) 0%,
+    rgba(200, 162, 74, 0.46) 48%,
+    rgba(200, 162, 74, 0.12) 100%
+  );
+}
+
+/* The wall label. Bottom right of every slide that carries a picture, set at
+   the smallest size in the deck and in the deep gold, so it is available to
+   anyone who looks for it and invisible to anyone who does not.
+
+   It is here because the labels are half the argument. Every picture in this
+   deck is of this place, drawn between 1791 and 1805, and every one of them
+   was drawn by an Englishman who had just finished besieging it. A reader who
+   never reads a single label still gets the deck. A reader who reads one gets
+   the joke underneath it. */
+.ce-label {
+  position: absolute;
+  right: 92px;
+  bottom: 64px;
+  z-index: 3;
+  max-width: 470px;
+  text-align: right;
+  font-family: var(--cc-font-ui);
+  text-transform: uppercase;
+  color: var(--cc-gold-deep);
+}
+
+/* --- The band ------------------------------------------------------------- */
+
+/* The cream foot of the motion slide, and the ground the Bengaluru Tech Week
+   badge is carried on. The badge is a cream card with an orange wordmark and
+   it cannot be recoloured, because it belongs to somebody else: dropped
+   straight onto near-black it reads as a sticker. So the page gives it ground
+   of its own, and the cut edge stops being visible.
+
+   Its top edge is the same gold as the rule on the story slides, so the deck's
+   one division stays at one height from the first slide to the last. */
+.ce-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  background:
+    linear-gradient(90deg, rgba(249, 234, 190, 0) 52%, rgba(249, 234, 190, 0.75) 100%),
+    linear-gradient(180deg, #f7eed9 0%, var(--cc-ivory) 46%, #e7dabb 100%);
+  border-top: 1px solid rgba(138, 108, 44, 0.6);
+  color: #17120b;
+}
+
+/* Ink on the band. None of the --cc- text tokens appear here: every one of
+   them is tuned to sit on near-black and disappears on cream. */
+.ce-band-line {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: rgba(23, 18, 11, 0.2);
+}
+
+.ce-band-meta {
+  font-family: var(--cc-font-ui);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(23, 18, 11, 0.6);
+}
+
+.ce-band-cta {
+  font-family: var(--cc-font-ui);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6d520f;
+}
+
+/* Unretouched, with real air around it. No border and no shadow: on ground
+   this close to its own, either would put back the cut out edge the band
+   exists to remove. */
+.ce-badge {
+  display: block;
+}
