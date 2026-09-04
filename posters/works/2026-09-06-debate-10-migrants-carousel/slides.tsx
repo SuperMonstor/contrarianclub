@@ -393,7 +393,10 @@ export function Motion({
   invitation: string;
   when: string;
   lines: string[];
-  cta: string;
+  /** the closing call, one line per instruction. "Link in bio" is the second
+   *  of them because a carousel cannot carry a link: the page has to say where
+   *  the link is, and it says it last, under everything it is a link to. */
+  cta: string[];
 }) {
   const BAND = 404;
   return (
@@ -419,12 +422,32 @@ export function Motion({
           This club believes
         </div>
         {motion.map((line) => (
-          // 63px, which is what the poster in works/2026-09-06-debate-10-migrants
-          // sets this motion at. Sixteen words break into five lines, and five
-          // lines at 63 carry the same mass on the page as the first motion's
-          // three lines at 92. The type is sized to the motion, never the
-          // motion trimmed to the type.
-          <div key={line} style={{ ...CONDENSED, fontSize: 63 }}>
+          // The motion is set in the display serif, not in the condensed caps
+          // the rest of the deck shouts in, and this is the one place this deck
+          // departs from its sibling.
+          //
+          // The first motion is six words. Poster caps are built for six words:
+          // three lines at 92px and it reads as a hit. This one is sixteen, and
+          // sixteen words of bold condensed uppercase stop being a headline and
+          // become a paragraph delivered at a shout. It is also a sentence with
+          // a clause in it, "rather than merely adapt to it", and caps flatten
+          // exactly the kind of grammar that clause depends on.
+          //
+          // So it is set the way the deck says everything else it means: 64px
+          // Playfair, sentence case, as written. Bigger per line than the caps
+          // were, easier to read, and still the loudest thing on the page.
+          <div
+            key={line}
+            style={{
+              margin: 0,
+              fontFamily: "var(--cc-font-display)",
+              fontWeight: 600,
+              fontSize: 64,
+              lineHeight: 1.16,
+              letterSpacing: "-0.015em",
+              color: "var(--cc-ivory)",
+            }}
+          >
             {line}
           </div>
         ))}
@@ -472,11 +495,12 @@ export function Motion({
               {line}
             </div>
           ))}
-          <div
-            className="ce-band-cta"
-            style={{ fontSize: 18, letterSpacing: "0.26em", marginTop: 20 }}
-          >
-            {cta}
+          <div className="ce-band-cta" style={{ marginTop: 20 }}>
+            {cta.map((line) => (
+              <div key={line} style={{ fontSize: 18, letterSpacing: "0.26em", lineHeight: 1.5 }}>
+                {line}
+              </div>
+            ))}
           </div>
         </div>
         <img

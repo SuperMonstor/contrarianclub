@@ -161,18 +161,25 @@ const work: WorkSpec = {
           crop={{ x: 0.46, y: 0.52, scale: 2.0 }}
           n={1}
           of={OF}
+          // Seven lines, broken by hand rather than left to wrap, and sized to
+          // the widest of them. This is the only page in the deck with nothing
+          // on it but the question: no narration under it, so the type takes
+          // the whole column from just under the counter down to the rule, and
+          // "here?" lands alone at the foot.
           shout={{
-            lines: ["Is Bengaluru's", "culture being", "erased by the", "people who", "move here?"],
-            size: 76,
+            lines: [
+              "Is",
+              "Bengaluru's",
+              "culture being",
+              "erased by",
+              "the people",
+              "who move",
+              "here?",
+            ],
+            size: 136,
           }}
           cta="Swipe for the argument →"
-          lines={[
-            {
-              text: "Ask it out loud in this city and the room takes sides before you finish the sentence.",
-              size: 32,
-              tone: "parchment",
-            },
-          ]}
+          lines={[]}
         />
       ),
     },
@@ -388,7 +395,7 @@ const work: WorkSpec = {
           invitation="Continue the discussion this Sunday."
           when="6 September, Big Pitcher, Indiranagar"
           lines={HOW_IT_WORKS}
-          cta="Tickets out now"
+          cta={["Tickets out now", "Link in bio"]}
         />
       ),
     },
