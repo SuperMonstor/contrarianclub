@@ -19,7 +19,12 @@ import { Beat, Motion, type Plate } from "./slides";
 // the deck gets swiped. Anyone editing a line should read the slide before it
 // and the slide after it first.
 //
-// The motion runs verbatim on slide 9 and is never compressed into a slogan.
+// The motion runs verbatim on slide 9, exactly as it is printed on the poster
+// in works/2026-09-06-debate-10-migrants, and is never compressed into a
+// slogan. The only editorial act is where the lines break, and they break at
+// phrase boundaries. Slide 1 is not a second version of it: it is the
+// accusation the motion answers, which is the sentence people already argue
+// about and the reason anybody stops to read the rest.
 //
 // The design reasoning, and why each picture is where it is, is in slides.tsx.
 //
@@ -139,10 +144,14 @@ const work: WorkSpec = {
   formats: ["carousel-slide"],
 
   slides: [
-    // 1. The question, asked flat, over the town as it was before anybody had
-    //    a position on it. The swipe instruction lives here rather than on the
-    //    poster: this page asks something, so it is the page that can promise
-    //    an answer.
+    // 1. The motion, turned back into the question the city actually argues
+    //    about, over the town as it was before anybody had a position on it.
+    //    Slide 9 puts the club's proposition; this page puts the accusation it
+    //    answers, because that is the sentence a reader already has an opinion
+    //    on and the reason they stop scrolling.
+    //
+    //    The swipe instruction lives here rather than on the motion: this page
+    //    asks something, so it is the page that can promise an answer.
     {
       label: "The question",
       hasImage: true,
@@ -152,7 +161,10 @@ const work: WorkSpec = {
           crop={{ x: 0.46, y: 0.52, scale: 2.0 }}
           n={1}
           of={OF}
-          shout={{ lines: ["Who does", "Bengaluru", "belong to?"], size: 92 }}
+          shout={{
+            lines: ["Is Bengaluru's", "culture being", "erased by the", "people who", "move here?"],
+            size: 76,
+          }}
           cta="Swipe for the argument →"
           lines={[
             {
@@ -346,7 +358,7 @@ const work: WorkSpec = {
             { text: "It is about whether what it changed into is worse.", size: 46, tone: "gold" },
             "",
             {
-              text: "And whether a city is something you can be owed, or only something you can join.",
+              text: "And whether people who move to a city are meant to fit into it, or to change it.",
               size: 38,
             },
           ]}
@@ -365,7 +377,13 @@ const work: WorkSpec = {
           plate={bangaloreMotion}
           crop={{ x: 0.4, y: 0.42, scale: 1.9 }}
           badge={badge}
-          motion={["Bengaluru's culture", "is being erased", "by the people", "who move here."]}
+          motion={[
+            "Migrants to Bengaluru have",
+            "the right to reshape",
+            "the city's culture,",
+            "rather than merely",
+            "adapt to it.",
+          ]}
           note="The second of two motions. The first: Bengaluru needs to burst its tech bubble."
           invitation="Continue the discussion this Sunday."
           when="6 September, Big Pitcher, Indiranagar"

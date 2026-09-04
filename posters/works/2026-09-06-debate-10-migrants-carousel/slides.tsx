@@ -8,7 +8,7 @@ import "./slides.css";
 // ---------------------------------------------------------------------------
 // The story first, the motion last
 //
-//   1  who does Bengaluru belong to?              the question, asked flat
+//   1  is Bengaluru's culture being erased?       the accusation, asked flat
 //   2  it was never one place                     a fort, a palace, a garrison
 //   3  then everyone came                         and never stopped
 //   4  forty-two percent                          the number, alone, on black
@@ -16,7 +16,7 @@ import "./slides.css";
 //   6  so the city asked for it back              signboards, and a jobs bill
 //   7  but                                        the fact that cuts the other way
 //   8  so which is it                             the real question, in gold
-//   9  the motion                                 and come and argue it
+//   9  the motion, and the answer to slide 1      and come and argue it
 //
 // This is the mirror of the tech bubble deck and inverts it on purpose. That
 // one led with its motion because it was the announcement and had to carry the
@@ -25,6 +25,13 @@ import "./slides.css";
 // motion is the thing at the end of the argument rather than the thing on the
 // front of the poster. The last slide is the poster and the back cover at
 // once, which is why there is no tenth.
+//
+// Slide 1 and slide 9 are a pair and they are not the same sentence. Slide 1
+// is the accusation the city already makes, that migrants are erasing the
+// culture. Slide 9 is the club's motion, which claims the opposite right. The
+// deck exists to get a reader from the first to the second, and the last line
+// of slide 8 is the hinge: whether people who move to a city are meant to fit
+// into it, or to change it.
 //
 // Slides 1 to 8 are one continuous voice, each opening on a connective and
 // closing on something unfinished. Anyone editing a line should read the slide
@@ -73,7 +80,8 @@ import "./slides.css";
 //
 // THREE TYPEFACES, AND OSWALD ONLY WHERE THE VOICE STOPS NARRATING. Playfair
 // at reading size carries all the talking. Oswald condensed caps appear three
-// times only: the opening question, the number on slide 4, and the motion.
+// times only: the accusation on slide 1, the number on slide 4, and the
+// motion.
 // Those are the three moments the deck stops telling you something.
 //
 // LINE BREAKS ARE COPY, NOT LAYOUT. Each slide is given its lines, not a
@@ -411,7 +419,12 @@ export function Motion({
           This club believes
         </div>
         {motion.map((line) => (
-          <div key={line} style={{ ...CONDENSED, fontSize: 78 }}>
+          // 63px, which is what the poster in works/2026-09-06-debate-10-migrants
+          // sets this motion at. Sixteen words break into five lines, and five
+          // lines at 63 carry the same mass on the page as the first motion's
+          // three lines at 92. The type is sized to the motion, never the
+          // motion trimmed to the type.
+          <div key={line} style={{ ...CONDENSED, fontSize: 63 }}>
             {line}
           </div>
         ))}
