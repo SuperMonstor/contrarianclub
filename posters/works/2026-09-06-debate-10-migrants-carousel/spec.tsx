@@ -161,11 +161,14 @@ const work: WorkSpec = {
           crop={{ x: 0.46, y: 0.52, scale: 2.0 }}
           n={1}
           of={OF}
-          // Seven lines, broken by hand rather than left to wrap, and sized to
-          // the widest of them. This is the only page in the deck with nothing
-          // on it but the question: no narration under it, so the type takes
-          // the whole column from just under the counter down to the rule, and
-          // "here?" lands alone at the foot.
+          // Seven lines, broken by hand rather than left to wrap: at this size
+          // the column wraps "Is Bengaluru's" by itself and opens the deck on
+          // the weakest word in the sentence. These breaks fall at phrase
+          // boundaries and land "here?" alone at the foot.
+          //
+          // 124px is the largest the question goes with the line under it. The
+          // block runs from just clear of the counter down to the rule, so the
+          // page is the question and almost nothing else.
           shout={{
             lines: [
               "Is",
@@ -176,10 +179,16 @@ const work: WorkSpec = {
               "who move",
               "here?",
             ],
-            size: 136,
+            size: 124,
           }}
           cta="Swipe for the argument →"
-          lines={[]}
+          lines={[
+            {
+              text: "Ask it out loud in this city and the room takes sides before you finish the sentence.",
+              size: 32,
+              tone: "parchment",
+            },
+          ]}
         />
       ),
     },
