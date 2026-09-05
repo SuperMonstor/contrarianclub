@@ -1,0 +1,166 @@
+/* ==========================================================================
+   Debate 10, the two motions, as a pair of bookmarks. 600 x 1800 trim, which
+   is 2 x 6 in at 300px/in, so every number here is a print measurement: 1px
+   is 1/300 in, 12pt is 50px, and a hairline is 1px because that is 0.08mm at
+   the 600dpi export.
+
+   One inset governs the piece: 66px, 0.22in, SAFE in slides.tsx. Type, the
+   plate window and the foot rule all measure from it. Anything that has to
+   run past the trim is written as a negative offset from that number rather
+   than a second number of its own. The 2026-08-22 bookmarks learned this the
+   expensive way, at 34px and 44px, where a guillotine holding a millimetre
+   would have printed one margin half again as wide as the other.
+
+   Tuned for ink, not for a screen, the same three ways the earlier bookmarks
+   were: the black floor sits at #0d0a08 rather than #080604 because a press
+   cannot hold a ramp that runs into solid; the grain runs at 0.09 because it
+   is dither, and it is what keeps six inches of near-black from banding; and
+   both paintings run about a stop lighter than they want to look, because
+   ink gains on paper and a treatment judged on a monitor prints muddy.
+   ========================================================================== */
+
+.d10-sheet {
+  /* how far the surface runs past the trim. 0 unless the format bleeds, in
+     which case everything measured from the edge moves out by this much and
+     the layout itself does not move at all. */
+  --d10-bleed: 0px;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(130% 30% at 50% -4%, rgba(200, 162, 74, 0.13), transparent 60%),
+    linear-gradient(180deg, #100c09 0%, #0e0b08 55%, #0d0a08 100%),
+    var(--cc-black);
+}
+
+/* film grain, over the plate and under the type */
+.d10-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* vignette, stretched tall: a square falloff would darken the middle of a
+   piece this narrow and leave the long ends untouched */
+.d10-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(78% 60% at 50% 44%, transparent 44%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.d10-body {
+  position: absolute;
+  inset: var(--d10-bleed);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* --- The plate window ----------------------------------------------------
+   Both motions get one painting, in a window rather than full bleed. The
+   window is what makes the two read as a set: same width, same inset, same
+   hairline. Only its height changes, and it changes for a reason that is
+   stated rather than aesthetic (see the grammar in slides.tsx).            */
+.d10-plate {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  flex: none;
+  border: 1px solid rgba(200, 162, 74, 0.3);
+  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.62);
+}
+.d10-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* object-position alone can only pan inside what cover already shows, and
+     on a 2in window that is still most of the canvas. A painting whose
+     subject is a crowd needs to be gone into, not panned across, so the plate
+     can push in on a point and let the rest of the picture fall outside. */
+  transform: scale(var(--d10-zoom, 1));
+  transform-origin: var(--d10-focus, 50% 50%);
+}
+
+/* the wash that pulls either painting toward the palette, and seats the
+   window into the sheet instead of letting it float as a bright rectangle */
+.d10-plate-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(42, 30, 12, 0.34) 0%,
+    rgba(20, 14, 8, 0.14) 42%,
+    rgba(11, 9, 7, 0.46) 100%
+  );
+}
+
+/* --- Art treatments ------------------------------------------------------
+   Neither of these is the kit's .art filter, and neither should be: one
+   painting is a dark brick tower and the other is pale ink on silk. They
+   need opposite things. Both run lighter than they look right on a monitor,
+   which is the print correction described at the top of this file.         */
+
+/* Bruegel's Babel, the Rotterdam panel. Already dark, and the tech-bubble
+   deck takes it down to brightness 0.7. On paper that closes up, so this
+   holds it higher and leans a little further into the warm so the raw red
+   brick at the top stays a colour rather than a brown. */
+.d10-art-tower {
+  filter: saturate(0.76) contrast(1.07) brightness(0.8) sepia(0.14);
+}
+
+/* The Qingming scroll: pale ink and colour on silk, the brightest thing in
+   the archive. The standard treatment barely touches it, so this is a real
+   darkening rather than a nudge, with the saturation pulled down first so
+   the crowd does not go orange as the sepia comes up. */
+.d10-art-qingming {
+  filter: saturate(0.6) contrast(1.14) brightness(0.55) sepia(0.3);
+}
+
+/* --- The scale -----------------------------------------------------------
+   The club's own seven point scale, with the motion's two poles in the
+   audience's words. The room votes before the first speech and again after
+   the last, so there are two rows to mark and not one. This is the only
+   thing on either bookmark that a screen cannot do, and it is the reason the
+   object is worth printing.                                                */
+.d10-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* a fixed gutter so BEFORE and AFTER set the boxes on the same left edge */
+.d10-scale-label {
+  flex: none;
+  width: 128px;
+}
+
+.d10-scale-boxes {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 30px is 2.5mm. Small, but it is a box you put one pen stroke in, and the
+   alternative on a 2in wide piece is fewer than seven of them. */
+.d10-scale-box {
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border: 1px solid rgba(200, 162, 74, 0.55);
+}
+
+/* the middle box marks the neutral point, so the scale has a centre to be
+   off from. A fill would make it look already ticked, so it is a stroke. */
+.d10-scale-box--mid {
+  border-color: rgba(200, 162, 74, 0.9);
+}
