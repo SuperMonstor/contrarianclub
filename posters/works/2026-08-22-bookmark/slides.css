@@ -9,6 +9,11 @@
    a full-bleed sheet over it and carries its own grain and vignette, tuned
    for a tall narrow object rather than a square one.
 
+   One inset governs the piece and it is 66px, 0.22in. Type, the engraved
+   frame and the vertical spine strip all measure from it. Anything that has
+   to run past the trim (the perforation, the art) is written as a negative
+   offset from that number rather than a second number of its own.
+
    Tuned for ink, not for a screen. Three things follow from that and they are
    the reason these numbers look wrong next to a social piece:
 
@@ -155,10 +160,15 @@
   );
 }
 
-/* --- The engraved frame, at a print-safe inset --------------------------- */
+/* --- The engraved frame, at a print-safe inset ---------------------------
+   66px is 0.22in, the same inset the layouts use for type (SAFE in
+   slides.tsx). It used to sit at 34px, which is 2.9mm, and a guillotine
+   holding a millimetre would have printed one margin half again as wide as
+   the other. A border is where that shows: nothing else on the piece is read
+   against the edge next to it.                                             */
 .bm-frame {
   position: absolute;
-  inset: calc(34px + var(--bm-bleed));
+  inset: calc(66px + var(--bm-bleed));
   z-index: 1;
   pointer-events: none;
   border: 1px solid var(--cc-line);
@@ -217,14 +227,16 @@
 /* --- The spine strip (variation 6) --------------------------------------- */
 .bm-spine-strip {
   position: absolute;
-  left: calc(44px + var(--bm-bleed));
+  /* the one piece of type that runs up the trim edge, so it is held at the
+     same 0.22in as everything else rather than the 0.147in it had */
+  left: calc(66px + var(--bm-bleed));
   bottom: calc(300px + var(--bm-bleed));
   z-index: 4;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--cc-font-ui);
   font-weight: 600;
-  font-size: 22px;
+  font-size: 26px;
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--cc-gold);

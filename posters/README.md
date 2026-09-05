@@ -174,6 +174,24 @@ reflow across the ones the work declares.
 | `ig-story`       | 1080 x 1920 | story / reel cover |
 | `carousel-slide` | 1080 x 1350 | carousel slides    |
 
+Print is a second family and it measures in inches. A print canvas is its trim
+size at 300 px per inch, so 12pt type is 50px and the 2x export lands on paper
+at 600dpi with its physical size stamped into the file.
+
+| id               | size        | use                       |
+| ---------------- | ----------- | ------------------------- |
+| `bookmark`       | 2 x 6 in    | trim, what `out/` keeps   |
+| `bookmark-bleed` | 2.25 x 6.25 | press, 1/8in on all sides |
+
+Anything with bleed is written to `works/<id>/out/press/`, which is gitignored:
+it is derivable, an order of magnitude heavier, and regenerated per print run.
+A design that runs ink to its edges cannot go to a press as the trim render, so
+run the bleed format before sending anything off:
+
+```bash
+npm run poster <id> bookmark-bleed
+```
+
 Export renders at 2x (`SCALE` in `export.ts`), so a 1080-wide format ships at
 2160 wide.
 

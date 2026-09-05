@@ -13,7 +13,9 @@ import "./slides.css";
 //   showing, so the top band carries identity and nothing that needs finishing.
 //   It is kept for months, so it cannot name a date or an event.
 //   It is cut by a machine with a tolerance, so nothing meaningful goes within
-//   0.2in of the trim.
+//   0.2in of the trim, and a rule line goes further out still: a border is the
+//   one element where a drifting cut is visible, because you read it against
+//   the edge beside it rather than on its own.
 //
 // The grammar the six share, so they read as one family:
 //
@@ -35,6 +37,21 @@ import "./slides.css";
 //   augustine  Botticelli, Saint Augustine in His Study, c. 1480. A man in the
 //              middle of changing his mind, which is the club's best moment.
 
+/** Every horizontal inset on the piece, in px at 300ppi.
+ *
+ *  SAFE is 0.22in. The rule above says 0.2in and this clears it by a
+ *  sixteenth, because a guillotine holds about a millimetre and the last
+ *  thing wanted is type that is inside the rule on paper but not in the file.
+ *
+ *  FRAMED is what a layout carrying .bm-frame uses instead: the frame sits at
+ *  SAFE and the type has to start inside its inner line, not on it.
+ *
+ *  MICRO is the floor for any type here. Trade printers spec 6pt for reversed
+ *  type and 26px is 6.2pt, so the smallest thing on the piece clears it. */
+const SAFE = 66;
+const FRAMED = 96;
+const MICRO = 26;
+
 const GOLD = "var(--cc-gold)";
 const IVORY = "var(--cc-ivory)";
 const SHADOW =
@@ -53,11 +70,13 @@ function sheetStyle(bleed = 0): CSSProperties {
 }
 
 /** Gold micro caps. The smallest voice on the piece: the address, the kickers,
- *  the labels. 22px is 5.3pt, which is small but this is held in a hand. */
+ *  the labels. Sized at MICRO by default, which is the print floor: below it
+ *  the counters close up as ink spreads and gold on near-black is the worst
+ *  case for that. Nothing here asks for less. */
 function Micro({
   children,
   color = GOLD,
-  size = 22,
+  size = MICRO,
   tracking = 0.3,
   style,
 }: {
@@ -122,7 +141,7 @@ export function Column({ art, line, bleed }: { art: Art; line: ReactNode; bleed?
 
       <div
         className="bm-body"
-        style={{ padding: "96px 54px 82px", alignItems: "center", textShadow: SHADOW }}
+        style={{ padding: `96px ${SAFE}px 82px`, alignItems: "center", textShadow: SHADOW }}
       >
         <Lockup width={296} align="center" />
 
@@ -175,14 +194,14 @@ export function Plate({
     <div className="bm-sheet" style={sheetStyle(bleed)}>
       <div className="bm-frame" />
 
-      <div className="bm-body" style={{ padding: "88px 62px 74px", alignItems: "center" }}>
+      <div className="bm-body" style={{ padding: `88px ${FRAMED}px 74px`, alignItems: "center" }}>
         <Lockup width={264} align="center" />
 
         <div style={{ height: 34 }} />
         <Hairline />
         <div style={{ height: 30 }} />
 
-        <div className="bm-plate" style={{ height: 552 }}>
+        <div className="bm-plate" style={{ height: 474 }}>
           <img src={art.src} alt="" style={{ objectPosition: art.position }} className="bm-art--study" />
           <div className="bm-plate-wash" />
         </div>
@@ -190,7 +209,7 @@ export function Plate({
         <div
           className="closing"
           style={{
-            fontSize: 20,
+            fontSize: 24,
             lineHeight: 1.35,
             textAlign: "center",
             textWrap: "balance",
@@ -240,7 +259,7 @@ export function Plate({
           {closing}
         </span>
         <div style={{ height: 24 }} />
-        <Micro color="var(--cc-gold-deep)">{ADDRESS}</Micro>
+        <Micro>{ADDRESS}</Micro>
       </div>
     </div>
   );
@@ -286,10 +305,10 @@ export function Manifesto({
         &ldquo;
       </span>
 
-      <div className="bm-body" style={{ padding: "150px 62px 86px" }}>
+      <div className="bm-body" style={{ padding: `150px ${SAFE}px 86px` }}>
         <Tick width={92} />
         <div style={{ height: 26 }} />
-        <Micro size={21} tracking={0.34}>
+        <Micro tracking={0.34}>
           {kicker}
         </Micro>
 
@@ -307,7 +326,7 @@ export function Manifesto({
         <div style={{ height: 40 }} />
         <Lockup width={252} artwork="left" />
         <div style={{ height: 32 }} />
-        <Micro color="var(--cc-muted)" size={21}>
+        <Micro color="var(--cc-parchment)">
           {ADDRESS}
         </Micro>
       </div>
@@ -354,8 +373,8 @@ export function Ticket({
         <div className="bm-scrim bm-scrim--ticket" />
       </div>
 
-      <div className="bm-body" style={{ padding: "78px 56px 74px" }}>
-        <Micro size={23} tracking={0.36} style={{ textShadow: SHADOW }}>
+      <div className="bm-body" style={{ padding: `78px ${SAFE}px 74px` }}>
+        <Micro tracking={0.36} style={{ textShadow: SHADOW }}>
           {kicker}
         </Micro>
 
@@ -371,7 +390,7 @@ export function Ticket({
         <div style={{ height: 74 }} />
         <div
           className="bm-perf"
-          style={{ width: `calc(100% + ${112 + 2 * (bleed ?? 0)}px)`, marginLeft: -(56 + (bleed ?? 0)) }}
+          style={{ width: `calc(100% + ${2 * SAFE + 2 * (bleed ?? 0)}px)`, marginLeft: -(SAFE + (bleed ?? 0)) }}
         />
         <div style={{ height: 62 }} />
 
@@ -380,7 +399,7 @@ export function Ticket({
             <div key={term.label} style={{ display: "flex", flexDirection: "column", gap: 46 }}>
               {i > 0 && <Hairline opacity={0.55} />}
               <div>
-                <div className="label" style={{ fontSize: 21, letterSpacing: "0.28em" }}>
+                <div className="label" style={{ fontSize: 24, letterSpacing: "0.28em" }}>
                   {term.label}
                 </div>
                 <div className="value" style={{ fontSize: 34, lineHeight: 1.24, marginTop: 10 }}>
@@ -400,7 +419,7 @@ export function Ticket({
         <div style={{ height: 40 }} />
         <Lockup width={244} artwork="left" />
         <div style={{ height: 28 }} />
-        <Micro color="var(--cc-gold-deep)" size={21}>
+        <Micro>
           {ADDRESS}
         </Micro>
       </div>
@@ -438,11 +457,11 @@ export function Index({
       />
       <div className="bm-scrim bm-scrim--index" />
 
-      <div className="bm-body" style={{ padding: "100px 54px 78px", alignItems: "center" }}>
+      <div className="bm-body" style={{ padding: `100px ${SAFE}px 78px`, alignItems: "center" }}>
         <Lockup width={258} align="center" />
 
         <div style={{ height: 44 }} />
-        <Micro size={21} tracking={0.3}>
+        <Micro tracking={0.3}>
           {kicker}
         </Micro>
         <div style={{ height: 20 }} />
@@ -490,7 +509,7 @@ export function Index({
           {foot}
         </span>
         <div style={{ height: 22 }} />
-        <Micro size={21}>{ADDRESS}</Micro>
+        <Micro>{ADDRESS}</Micro>
       </div>
     </div>
   );
@@ -518,7 +537,7 @@ export function Back({
     <div className="bm-sheet" style={sheetStyle(bleed)}>
       <div className="bm-frame" />
 
-      <div className="bm-body" style={{ padding: "92px 62px 76px", alignItems: "center" }}>
+      <div className="bm-body" style={{ padding: `92px ${FRAMED}px 76px`, alignItems: "center" }}>
         <Lockup width={264} align="center" />
 
         <div style={{ height: 36 }} />
@@ -549,7 +568,7 @@ export function Back({
 
         <Hairline />
         <div style={{ height: 28 }} />
-        <Micro color="var(--cc-parchment)" size={21}>
+        <Micro color="var(--cc-parchment)">
           {url}
         </Micro>
       </div>
@@ -579,7 +598,7 @@ export function Spine({ art, line, bleed }: { art: Art; line: ReactNode; bleed?:
 
       <div
         className="bm-body"
-        style={{ padding: "104px 58px 82px 100px", textShadow: SHADOW }}
+        style={{ padding: `104px ${SAFE}px 82px ${SAFE + 46}px`, textShadow: SHADOW }}
       >
         <Tick width={70} />
         <div style={{ height: 34 }} />
@@ -591,7 +610,7 @@ export function Spine({ art, line, bleed }: { art: Art; line: ReactNode; bleed?:
 
         <Lockup width={236} artwork="left" />
         <div style={{ height: 26 }} />
-        <Micro color="var(--cc-muted)" size={20} tracking={0.26}>
+        <Micro color="var(--cc-muted)" tracking={0.26}>
           Bangalore
         </Micro>
       </div>
