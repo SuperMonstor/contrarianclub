@@ -25,20 +25,22 @@ import "./slides.css";
 //                    the night and which motion it is. This is the inch and a
 //                    half that shows above the pages, so it is the whole of
 //                    what identifies the object at rest.
-//   The plate.       One painting in a window, never full bleed. Same width,
-//                    same inset, same hairline on both, which is what makes
-//                    them read as a set. Only the height differs.
-//   The caption.     What the painting is, and in one clause what it is doing
-//                    here. A 2in window strips a painting of every bit of
-//                    context it had; without the caption it is wallpaper.
+//   The plate.       One picture in a window, never full bleed, and a light
+//                    window rather than a dark one because both pictures are
+//                    engravings (the reasoning is in slides.css). Same width,
+//                    same inset, same rule on both, which is what makes them
+//                    read as a set. Only the height differs.
+//   The caption.     What the picture is and when. Both engravings carry the
+//                    city's name printed on the plate, so the caption only
+//                    has to date it: the picture argues nothing on its own,
+//                    it just says this is the same place.
 //   The motion.      Verbatim, the wording the room votes on, under the
 //                    club's own lead-in. Nothing on either piece is allowed
 //                    to be larger.
-//   The facts.       Three lines, hairline separated. Motion one gets the
-//                    sourced numbers from the tech-bubble deck. Motion two
-//                    gets the club's own agreed ground, because there are no
-//                    sourced numbers for it in this repo and a printed piece
-//                    is the wrong place to guess.
+//   The fact.        One line, and one only. Both are measured against 1991,
+//                    so the pair asks the same question of the city twice.
+//                    Sources are listed in spec.tsx; nothing goes in this
+//                    slot that does not have one.
 //   The foot.        The night, the room, the address. Always last, always
 //                    the same size.
 //
@@ -51,7 +53,7 @@ import "./slides.css";
 // The motion is six words on one piece and twenty four on the other, and
 // everything else moves to absorb that. Motion one is set at 58px and takes
 // three lines; motion two at 38px and takes six. The plate takes what is
-// left, which is why one window is 440px tall and the other 356px. That is
+// left, which is why one window is 400px tall and the other 420px. That is
 // the rule: the sentence is fixed and the picture yields, not the reverse.
 
 /** Every horizontal inset on the piece, in px at 300ppi. 66px is 0.22in: the
@@ -134,7 +136,7 @@ function Gap({ h }: { h: number }) {
 
 // ---------------------------------------------------------------------------
 // The shared parts. Both bookmarks are the same object with one variable, so
-// the head, the caption, the facts and the foot are written once here rather
+// the head, the plate, the fact and the foot are written once here rather
 // than twice in two near-identical components.
 // ---------------------------------------------------------------------------
 
@@ -175,8 +177,9 @@ function Head({ numeral, motionLabel }: { numeral: string; motionLabel: string }
 
 export interface Plate {
   src: string;
-  /** the work-local treatment class, since these two paintings need opposite
-   *  corrections and neither wants the kit's standard one */
+  /** the work-local treatment class. Both pictures take the same one, since
+   *  both are engravings off a printed page, and neither wants the kit's
+   *  standard darken-and-warm, which is tuned for a painting. */
   art: string;
   height: number;
   position?: string;
@@ -185,7 +188,7 @@ export interface Plate {
    *  and the window is 2in wide. */
   zoom?: number;
   focus?: string;
-  /** what the painting is, and what it is doing on this bookmark */
+  /** what the picture is, and when */
   caption: string;
 }
 
@@ -223,7 +226,7 @@ function PlateWindow({ plate }: { plate: Plate }) {
   );
 }
 
-function Facts({ lines }: { lines: string[] }) {
+function Fact({ children }: { children: ReactNode }) {
   return (
     <>
       <Hairline />
@@ -231,21 +234,10 @@ function Facts({ lines }: { lines: string[] }) {
       <Micro color="var(--cc-muted)" tracking={0.28}>
         On the table
       </Micro>
-      <Gap h={24} />
-      {lines.map((line, i) => (
-        <div key={line}>
-          {i > 0 && (
-            <>
-              <Gap h={22} />
-              <Hairline opacity={0.5} />
-              <Gap h={22} />
-            </>
-          )}
-          <div className="value" style={{ fontSize: 27, lineHeight: 1.35 }}>
-            {line}
-          </div>
-        </div>
-      ))}
+      <Gap h={22} />
+      <div className="value" style={{ fontSize: 30, lineHeight: 1.36 }}>
+        {children}
+      </div>
     </>
   );
 }
@@ -277,7 +269,7 @@ export function MotionBookmark({
   plate,
   motion,
   motionSize,
-  facts,
+  fact,
   bleed,
 }: {
   numeral: string;
@@ -288,7 +280,8 @@ export function MotionBookmark({
    *  as a paragraph rather than as something being put to a vote. */
   motion: ReactNode;
   motionSize: number;
-  facts: string[];
+  /** one line, and it has a source in spec.tsx */
+  fact: string;
   bleed?: number;
 }) {
   return (
@@ -315,7 +308,7 @@ export function MotionBookmark({
             so the two pieces breathe differently and for a stated reason */}
         <div style={{ flex: 1, minHeight: 40 }} />
 
-        <Facts lines={facts} />
+        <Fact>{fact}</Fact>
         <Gap h={34} />
         <Foot />
       </div>

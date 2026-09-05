@@ -103,8 +103,14 @@ use the `--cc-*` variables.
 
 ## Images: source and treatment
 
-Backdrops are **public-domain old-master paintings** (the reference posters do
-this; they are not the club's own photos). Pick art that fits the theme.
+Backdrops are **public domain**, and the rule is about register, not medium
+(ADR 0005). Old-master paintings are the default and what most pieces want.
+When the piece is about a specific place, person or event, a period photograph,
+print or engraving **of the actual subject** beats a painting that can only be
+a metaphor for it: if the image needs a caption explaining what it has to do
+with the topic, it is not carrying the piece. Never the club's own photos, and
+never rights-encumbered art: check the licence through the Commons API, since
+a CC BY-SA file is not public domain.
 
 Sourcing:
 
@@ -126,6 +132,11 @@ That standard treatment is not always right. A painting that is dark to begin
 with (an ink landscape) needs a **lift**, not a darkening, or the slide reads
 as plain black in the feed. See `.np-conflict-img` in the national pride work
 for that case.
+
+An engraving needs the opposite of both. The hatching is the whole image, so
+darkening it removes the picture. Set it as a **light plate tipped into the
+dark sheet**: parchment ground, the scan multiplied onto it, a gold hairline
+around it. See `works/2026-09-06-debate-10-bookmarks/slides.css`.
 
 Then layer, in your own `slides.css`:
 

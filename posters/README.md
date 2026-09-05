@@ -220,8 +220,20 @@ marks, no emoji, no growth-speak.
 
 ## Images
 
-Backdrops are public-domain old-master paintings (like the reference posters).
-Source high-resolution scans from Wikimedia Commons.
+Backdrops are public domain, and the rule is about register rather than
+medium (ADR 0005). Old-master paintings are the default and what most pieces
+want. When a piece is about a specific place, person or event, a period
+photograph, print or engraving of the actual subject beats a painting that can
+only be a metaphor for it. Source high-resolution scans from Wikimedia
+Commons, and check the licence through the API rather than trusting the page:
+a CC BY-SA file is not public domain and does not go on a piece headed for a
+press.
+
+A painting can be darkened into the near-black card. An engraving cannot: the
+hatching is the whole image and it goes when the picture goes down. Set one as
+a light plate tipped into the sheet instead, on parchment rather than white,
+with the scan multiplied onto the paper. See
+`works/2026-09-06-debate-10-bookmarks/slides.css`.
 
 The kit's `.art` rule is the standard treatment: bright paintings get darkened
 and warmed to sit in the palette. It is not always right. A painting that is

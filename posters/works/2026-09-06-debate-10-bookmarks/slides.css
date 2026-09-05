@@ -66,16 +66,27 @@
 }
 
 /* --- The plate window ----------------------------------------------------
-   Both motions get one painting, in a window rather than full bleed. The
+   Both motions get one picture, in a window rather than full bleed. The
    window is what makes the two read as a set: same width, same inset, same
-   hairline. Only its height changes, and it changes for a reason that is
-   stated rather than aesthetic (see the grammar in slides.tsx).            */
+   rule. Only its height changes, and it changes because the motion above it
+   is a different length (see the grammar in slides.tsx).
+
+   Both pictures are Victorian wood engravings, and an engraving is black
+   lines on white paper. That cannot be dropped onto a near-black card the
+   way a painting can: darken it and the hatching, which is the entire image,
+   goes with it. So the plate is a light one, a printed plate tipped into a
+   dark album, which is the register the club already uses for the QR tile on
+   the 2026-08-22 back. The paper is parchment rather than white so it does
+   not glare against six inches of near-black.                              */
 .d10-plate {
   position: relative;
   width: 100%;
   overflow: hidden;
   flex: none;
-  border: 1px solid rgba(200, 162, 74, 0.3);
+  box-sizing: border-box;
+  padding: 14px;
+  background: var(--cc-parchment);
+  border: 1px solid rgba(200, 162, 74, 0.55);
   box-shadow: 0 10px 38px rgba(0, 0, 0, 0.62);
 }
 .d10-plate img {
@@ -83,84 +94,39 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* multiply drops the engraving's white paper out and lets the tile's own
+     parchment show through it, so the plate is one sheet rather than a grey
+     scan sitting on a cream rectangle */
+  mix-blend-mode: multiply;
+  filter: var(--d10-treatment, none);
   /* object-position alone can only pan inside what cover already shows, and
-     on a 2in window that is still most of the canvas. A painting whose
-     subject is a crowd needs to be gone into, not panned across, so the plate
-     can push in on a point and let the rest of the picture fall outside. */
+     on a 2in window that is still most of the plate. A picture whose subject
+     is a street needs to be gone into, not panned across. */
   transform: scale(var(--d10-zoom, 1));
   transform-origin: var(--d10-focus, 50% 50%);
 }
 
-/* the wash that pulls either painting toward the palette, and seats the
-   window into the sheet instead of letting it float as a bright rectangle */
+/* --- Art treatment -------------------------------------------------------
+   One treatment, not two, because both pictures are the same thing: a steel
+   or wood engraving off a printed page, scanned with a blue cast in the
+   paper. The sepia takes that cast out and the contrast puts the bite back
+   into hatching that a scan always softens. It runs a touch light because
+   ink gains on paper and fine cross-hatching is the first thing to fill in.
+                                                                            */
+.d10-art-engraving {
+  --d10-treatment: sepia(0.5) saturate(0.75) contrast(1.18) brightness(1.04);
+}
+
+/* the wash that seats the tile into the sheet instead of letting it float,
+   and warms the paper toward the gold end of the palette */
 .d10-plate-wash {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(42, 30, 12, 0.34) 0%,
-    rgba(20, 14, 8, 0.14) 42%,
-    rgba(11, 9, 7, 0.46) 100%
+    rgba(42, 30, 12, 0.16) 0%,
+    rgba(20, 14, 8, 0.06) 45%,
+    rgba(42, 30, 12, 0.2) 100%
   );
-}
-
-/* --- Art treatments ------------------------------------------------------
-   Neither of these is the kit's .art filter, and neither should be: one
-   painting is a dark brick tower and the other is pale ink on silk. They
-   need opposite things. Both run lighter than they look right on a monitor,
-   which is the print correction described at the top of this file.         */
-
-/* Bruegel's Babel, the Rotterdam panel. Already dark, and the tech-bubble
-   deck takes it down to brightness 0.7. On paper that closes up, so this
-   holds it higher and leans a little further into the warm so the raw red
-   brick at the top stays a colour rather than a brown. */
-.d10-art-tower {
-  filter: saturate(0.76) contrast(1.07) brightness(0.8) sepia(0.14);
-}
-
-/* The Qingming scroll: pale ink and colour on silk, the brightest thing in
-   the archive. The standard treatment barely touches it, so this is a real
-   darkening rather than a nudge, with the saturation pulled down first so
-   the crowd does not go orange as the sepia comes up. */
-.d10-art-qingming {
-  filter: saturate(0.6) contrast(1.14) brightness(0.55) sepia(0.3);
-}
-
-/* --- The scale -----------------------------------------------------------
-   The club's own seven point scale, with the motion's two poles in the
-   audience's words. The room votes before the first speech and again after
-   the last, so there are two rows to mark and not one. This is the only
-   thing on either bookmark that a screen cannot do, and it is the reason the
-   object is worth printing.                                                */
-.d10-scale-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* a fixed gutter so BEFORE and AFTER set the boxes on the same left edge */
-.d10-scale-label {
-  flex: none;
-  width: 128px;
-}
-
-.d10-scale-boxes {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-}
-
-/* 30px is 2.5mm. Small, but it is a box you put one pen stroke in, and the
-   alternative on a 2in wide piece is fewer than seven of them. */
-.d10-scale-box {
-  width: 30px;
-  height: 30px;
-  box-sizing: border-box;
-  border: 1px solid rgba(200, 162, 74, 0.55);
-}
-
-/* the middle box marks the neutral point, so the scale has a centre to be
-   off from. A fill would make it look already ticked, so it is a stroke. */
-.d10-scale-box--mid {
-  border-color: rgba(200, 162, 74, 0.9);
 }

@@ -1,6 +1,6 @@
 import type { WorkSpec } from "../../src/core/types";
-import qingmingSrc from "./assets/qingming.jpg";
-import towerSrc from "./assets/tower.jpg";
+import bazaarSrc from "./assets/bazaar-1856.jpg";
+import fortSrc from "./assets/fort-1849.jpg";
 import { MotionBookmark, type Plate } from "./slides";
 
 // Debate Club #10, 6 September 2026, at Big Pitcher, Indiranagar. Both motions
@@ -15,55 +15,59 @@ import { MotionBookmark, type Plate } from "./slides";
 // source of truth is handouts/2026-09-06-debate-10-*/debate.js, and if a
 // motion changes there it changes here.
 //
-// The art, both public domain via Wikimedia Commons, and both already in the
-// archive:
+// The pictures. Both are Victorian wood engravings of Bangalore itself, both
+// public domain via Wikimedia Commons, and both carry the city's name printed
+// on the plate, which is the point: the earlier drafts of this pair used a
+// Bruegel and a Song dynasty scroll, and a metaphor that needs a caption to
+// justify it is not working on a 2in strip of card.
 //
-//   tower     Pieter Bruegel the Elder, The Tower of Babel (c. 1568, Museum
-//             Boijmans Van Beuningen, Rotterdam). The darker second Babel,
-//             not the Vienna panel. Raw brick still going up at the top,
-//             finished storeys already in shadow below. It is the club's own
-//             image for this motion: it carries slide 1 of the tech-bubble
-//             deck, where the motion is announced.
-//   qingming  After Zhang Zeduan, Along the River During the Qingming
-//             Festival (c. 1120). Pushed into the packed quay under the
-//             bridge rather than shown whole, because the whole scroll at 2in
-//             reads as a landscape and the point of it is the crowd.
+//   fort      "Fort and Pettah of Bangalore", wood engraving, 1849. A low
+//             town of white houses running to the horizon under a big sky.
+//             This is the same place the motion is about, at 1849.
+//             https://commons.wikimedia.org/wiki/File:Fort_and_Pettah_of_Bangalore_(p.139,_1849)_-_Copy.jpg
+//   bazaar    "A Bazaar, or Shop, in One of the Principal Streets of
+//             Bangalore", wood engraving, 1856. A street, the people trading
+//             on it, and whatever was being spoken across the counter. Which
+//             is exactly what motion two calls the city's culture.
+//             https://commons.wikimedia.org/wiki/File:A_Bazar,_or_Shop,_in_One_of_the_Principal_Streets_of_Bangalore_(p.97,_1856)_-_Copy.jpg
+//
+// They are also the same kind of object as each other, off the same kind of
+// printed page a decade apart, which is what makes the two bookmarks a pair
+// rather than two designs.
 //
 // THE NUMBERS
 //
-// Motion one's three lines are the sourced numbers from the tech-bubble deck,
-// carried over unchanged. If one ages out, change the number and its source
-// together, in both places:
+// One fact each, and both are measured against 1991, so the pair asks the
+// same question of the city twice: how much has it changed, and into what.
 //
-//   40% of India's IT exports        industry reporting, 2024-25
-//   3.3m (1991), ~14m now            Census of India, projections
-//   7,000 of ~16,000 borewells dry   reporting, summer 2024
+//   3.3m (1991), ~14m now                Census of India, projections. Already
+//                                        sourced in the tech-bubble deck.
+//   Kannada 42% (2011), 35% (1991)       Census 2011, reported by Newslaundry,
+//                                        14 November 2024.
 //
-// Motion two has no sourced numbers anywhere in this repo, so its three lines
-// are the club's own agreed ground and open question, taken from the `agreed`
-// and `split` keys of the migrant-culture handout. They are claims the club
-// has already committed to in print, which is the only kind of line that
-// belongs on a piece going to a press without a citation behind it. If real
-// migration or language figures are wanted here, add them with their source
-// to the list above and swap them in.
+// If either ages out, change the number and its source together.
 
-const tower: Plate = {
-  src: towerSrc,
-  art: "d10-art-tower",
-  height: 440,
-  position: "48% 42%",
-  caption: "Bruegel, The Tower of Babel, c. 1568. Built too high, too fast, on its own success.",
+const fort: Plate = {
+  src: fortSrc,
+  art: "d10-art-engraving",
+  height: 400,
+  position: "50% 50%",
+  // the engraving is half empty sky, and the town is a thin band across the
+  // middle of it. Pushed in on that band, which is the only part of the
+  // picture that is the city.
+  zoom: 1.55,
+  focus: "50% 66%",
+  caption: "Fort and Pettah of Bangalore, wood engraving, 1849.",
 };
 
-const qingming: Plate = {
-  src: qingmingSrc,
-  art: "d10-art-qingming",
-  height: 356,
-  position: "0% 50%",
-  zoom: 2.1,
-  focus: "0% 90%",
-  caption:
-    "Zhang Zeduan, Qingming scroll, c. 1120. A city held up by the people arriving in it.",
+const bazaar: Plate = {
+  src: bazaarSrc,
+  art: "d10-art-engraving",
+  height: 420,
+  position: "46% 50%",
+  zoom: 1.15,
+  focus: "46% 42%",
+  caption: "A bazaar in one of the principal streets of Bangalore, 1856.",
 };
 
 const work: WorkSpec = {
@@ -79,7 +83,7 @@ const work: WorkSpec = {
           bleed={format.bleed}
           numeral="I"
           motionLabel="Motion one of two"
-          plate={tower}
+          plate={fort}
           motionSize={58}
           motion={
             <>
@@ -90,11 +94,7 @@ const work: WorkSpec = {
               its tech bubble.
             </>
           }
-          facts={[
-            "40% of India's IT exports.",
-            "3.3 million people in 1991. Around 14 million now.",
-            "7,000 of about 16,000 borewells ran dry in one summer.",
-          ]}
+          fact="3.3 million people lived here in 1991. Around 14 million do now."
         />
       ),
     },
@@ -106,7 +106,7 @@ const work: WorkSpec = {
           bleed={format.bleed}
           numeral="II"
           motionLabel="Motion two of two"
-          plate={qingming}
+          plate={bazaar}
           motionSize={38}
           motion={
             <>
@@ -115,11 +115,7 @@ const work: WorkSpec = {
               rather than merely adapt to it.
             </>
           }
-          facts={[
-            "You can live here ten years without Kannada and get by.",
-            "No other Indian city is this relaxed about newcomers.",
-            "The question is what that costs, and who pays it.",
-          ]}
+          fact="42% of the city calls Kannada its mother tongue. In 1991 it was 35%."
         />
       ),
     },
