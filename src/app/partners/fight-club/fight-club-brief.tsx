@@ -24,56 +24,62 @@ export function FightClubBrief() {
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <Image
-          className={styles.heroImage}
-          src="/media/fight-club/sparring.jpg"
-          alt="A Fight Club Bengaluru sparring session"
-          width={1600}
-          height={900}
-          priority
-        />
-        <div className={styles.heroShade} />
-        <nav className={styles.nav} aria-label="Brief navigation">
-          <Image
-            className={styles.logoLight}
-            src="/media/contrarian-logo-light.svg"
-            alt="The Contrarian Debate Club"
-            width={745}
-            height={346}
-            priority
-          />
-          <span className={styles.lockupCross} aria-hidden="true">
-            &times;
-          </span>
-          <Image
-            className={styles.navCrest}
-            src="/media/fight-club/logo.png"
-            alt="Fight Club Bengaluru"
-            width={280}
-            height={292}
-            priority
-          />
-        </nav>
-        <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>Partnership brief</p>
-          <h1>Body and mind in the same room.</h1>
-          <p className={styles.lead}>
-            Contrarian Club runs Bangalore&apos;s debate events. Fight Club
-            brings people together for a taste of combat. One evening built from
-            both: the room argues, then it settles it with the gloves on.
-            Everyone who shows up performs, intellectually and physically.
-          </p>
+        <div className={styles.heroPanel}>
+          <nav className={styles.nav} aria-label="Brief navigation">
+            <Image
+              className={styles.logoLight}
+              src="/media/contrarian-logo-light.svg"
+              alt="The Contrarian Debate Club"
+              width={745}
+              height={346}
+              priority
+            />
+            <span className={styles.lockupCross} aria-hidden="true">
+              &times;
+            </span>
+            <Image
+              className={styles.navCrest}
+              src="/media/fight-club/logo.png"
+              alt="Fight Club Bengaluru"
+              width={280}
+              height={292}
+              priority
+            />
+          </nav>
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}>Partnership brief</p>
+            <h1>Body and mind in the same room.</h1>
+            <p className={styles.lead}>
+              Contrarian Club runs Bangalore&apos;s debate events. Fight Club
+              brings people together for a taste of combat. One evening built
+              from both: the room argues, then it settles it with the gloves on.
+              Everyone who shows up performs, intellectually and physically.
+            </p>
+          </div>
+          <p className={styles.scrollNote}>Bangalore, India &middot; 2026</p>
         </div>
-        <figure className={styles.heroInset}>
-          <Image
-            src="/media/stage-and-poll.jpg"
-            alt="Two Contrarian Club speakers on stage, the audience poll on the screen behind them"
-            width={1600}
-            height={1067}
-          />
-          <figcaption>Contrarian Club, on stage</figcaption>
-        </figure>
-        <p className={styles.scrollNote}>Bangalore, India &middot; 2026</p>
+        <div className={styles.heroFrames}>
+          <figure>
+            <Image
+              src="/media/stage-and-poll.jpg"
+              alt="Two Contrarian Club speakers on stage, the audience poll on the screen behind them"
+              width={1600}
+              height={1067}
+              priority
+            />
+            <figcaption>Contrarian Club</figcaption>
+          </figure>
+          <figure>
+            <Image
+              src="/media/fight-club/sparring.jpg"
+              alt="A Fight Club Bengaluru sparring session"
+              width={1600}
+              height={900}
+              priority
+            />
+            <figcaption>Fight Club Bengaluru</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section className={styles.rooms} aria-label="The two clubs">

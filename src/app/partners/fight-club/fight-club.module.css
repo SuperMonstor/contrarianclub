@@ -55,55 +55,83 @@
 
 /* Hero ----------------------------------------------------------------- */
 
+/* The opening page is a split: the claim on a near-black panel, then both
+   clubs pictured down the right, one frame each. No floating cut-outs. */
 .hero {
   min-height: min(900px, 100svh);
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   color: #fff8e9;
+  background: #0b0907;
   overflow: hidden;
 }
 
-.heroImage,
-.heroShade {
+.heroPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(120% 90% at 12% 22%, rgba(200, 162, 74, 0.09), transparent 62%),
+    #0b0907;
+}
+
+.heroFrames {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.heroFrames figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Taken out of flow so each frame is exactly half the hero rather than
+   as tall as its own photograph, which stretched the page. */
+.heroFrames img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.heroImage {
   object-fit: cover;
-  object-position: 50% 32%;
 }
 
-.heroShade {
-  background: linear-gradient(
-      90deg,
-      rgba(4, 6, 15, 0.94) 0%,
-      rgba(4, 6, 15, 0.76) 33%,
-      rgba(4, 6, 15, 0.28) 64%,
-      rgba(4, 6, 15, 0.1) 100%
-    ),
-    linear-gradient(0deg, rgba(2, 3, 7, 0.72), transparent 55%);
+.heroFrames figure:first-child img {
+  object-position: center 42%;
 }
 
-.nav,
-.heroCopy,
-.scrollNote {
-  position: relative;
-  z-index: 1;
+.heroFrames figure:last-child img {
+  object-position: 46% center;
+}
+
+.heroFrames figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 52px clamp(20px, 2.6vw, 36px) 20px;
+  background: linear-gradient(0deg, rgba(2, 3, 7, 0.92), rgba(2, 3, 7, 0.4) 55%, transparent);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroFrames figure:first-child figcaption {
+  color: var(--gold);
+}
+
+.heroFrames figure:last-child figcaption {
+  color: var(--flame-bright);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 32px clamp(24px, 5vw, 72px);
+  gap: 18px;
+  padding: 32px clamp(24px, 5vw, 76px);
 }
 
 .logoLight {
-  width: 165px;
+  width: 148px;
   height: auto;
 }
 
@@ -113,17 +141,10 @@
   line-height: 1;
 }
 
-.navFcMark {
-  font-size: 22px;
-  line-height: 0.9;
-  color: #fff8e9;
-  max-width: 8ch;
-}
-
 /* Placeholder crest: a rough crop off Instagram, near-black background that
    blends on the dark hero and footer. Swap for a clean cutout when it lands. */
 .navCrest {
-  width: 84px;
+  width: 72px;
   height: auto;
 }
 
@@ -133,9 +154,8 @@
 }
 
 .heroCopy {
-  width: min(680px, calc(100% - 48px));
-  margin: auto clamp(24px, 7vw, 112px);
-  padding: 76px 0;
+  margin: auto 0;
+  padding: 48px clamp(24px, 5vw, 76px);
 }
 
 .eyebrow {
@@ -148,55 +168,25 @@
 }
 
 .hero h1 {
-  max-width: 12ch;
-  font-size: clamp(3.15rem, 5.6vw, 5.7rem);
-  line-height: 0.93;
+  max-width: 11ch;
+  font-size: clamp(2.6rem, 4vw, 4.35rem);
+  line-height: 0.94;
 }
 
 .lead {
-  max-width: 560px;
-  margin: 28px 0 0;
-  font-size: clamp(1rem, 1.35vw, 1.16rem);
-  line-height: 1.55;
+  max-width: 46ch;
+  margin: 26px 0 0;
+  color: #d9cfbe;
+  font-size: clamp(0.98rem, 1.1vw, 1.08rem);
+  line-height: 1.6;
 }
 
 .scrollNote {
-  margin: 0 clamp(24px, 5vw, 72px) 30px;
+  margin: 0 clamp(24px, 5vw, 76px) 30px;
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-/* A Contrarian stage frame laid over the Fight Club hero, so both clubs are
-   on the opening page rather than one carrying it. */
-.heroInset {
-  position: absolute;
-  right: clamp(24px, 5vw, 76px);
-  bottom: clamp(58px, 7vw, 96px);
-  z-index: 2;
-  width: clamp(200px, 25vw, 350px);
-  margin: 0;
-  padding: 8px 8px 0;
-  background: rgba(11, 9, 7, 0.72);
-  border: 1px solid rgba(240, 211, 106, 0.42);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-}
-
-.heroInset img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-}
-
-.heroInset figcaption {
-  padding: 9px 2px 9px;
-  color: var(--gold);
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--cc-muted);
 }
 
 /* The two rooms ------------------------------------------------------- */
@@ -726,12 +716,6 @@
   color: var(--flame);
 }
 
-.footerFcMark {
-  font-size: 15px;
-  max-width: 8ch;
-  line-height: 0.9;
-}
-
 .footer > p {
   margin: 0;
   text-align: center;
@@ -806,6 +790,7 @@
     margin: auto 24px;
     padding: 72px 0;
   }
+  .hero,
   .rooms,
   .gallery,
   .format,
@@ -813,10 +798,11 @@
   .offer {
     grid-template-columns: 1fr;
   }
-  .heroInset {
-    position: static;
-    width: auto;
-    margin: 26px 24px 0;
+  .hero {
+    min-height: 0;
+  }
+  .heroFrames figure {
+    min-height: 250px;
   }
   .room:first-child {
     border-right: 0;
@@ -914,36 +900,44 @@
     page-break-inside: avoid;
   }
 
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .heroFrames figure {
+    height: 95.25mm;
+    min-height: 0;
+  }
+  .heroFrames figcaption {
+    padding: 16mm 14mm 7mm;
+    font-size: 8pt;
+  }
   .heroCopy {
-    width: 150mm;
-    margin: auto 20mm 20mm;
-    padding: 9mm 0;
+    margin: auto 0;
+    padding: 8mm 18mm;
   }
   .hero h1 {
-    max-width: 140mm;
-    font-size: 34pt;
-    line-height: 0.94;
+    max-width: 120mm;
+    font-size: 30pt;
+    line-height: 0.95;
   }
   .hero .lead {
-    max-width: 120mm;
-    margin-top: 7mm;
-    font-size: 11.5pt;
-    line-height: 1.48;
-  }
-  .hero .nav {
-    padding: 12mm 16mm;
-  }
-  .hero .logoLight {
-    width: 46mm;
-  }
-  .hero .navFcMark {
-    font-size: 15pt;
-  }
-  .hero .navCrest {
-    width: 17mm;
+    max-width: 118mm;
+    margin-top: 6mm;
+    font-size: 10.5pt;
+    line-height: 1.5;
   }
   .hero .scrollNote {
-    margin: 0 16mm 10mm;
+    margin: 0 18mm 12mm;
+  }
+  .hero .nav {
+    gap: 6mm;
+    padding: 12mm 18mm;
+  }
+  .hero .logoLight {
+    width: 38mm;
+  }
+  .hero .navCrest {
+    width: 15mm;
   }
 
   .sectionLabel,
@@ -971,17 +965,6 @@
   }
   .roomFacts li {
     padding: 2mm 3mm;
-    font-size: 7pt;
-  }
-
-  .heroInset {
-    right: 18mm;
-    bottom: 20mm;
-    width: 74mm;
-    padding: 2mm 2mm 0;
-  }
-  .heroInset figcaption {
-    padding: 2.4mm 0.6mm;
     font-size: 7pt;
   }
 
@@ -1157,10 +1140,6 @@
   .footer .footerMarks {
     flex-direction: column;
     gap: 6mm;
-  }
-  .footer .footerFcMark {
-    font-size: 20pt;
-    color: #f8f1e4;
   }
   .footer .footerCrest {
     width: 22mm;
