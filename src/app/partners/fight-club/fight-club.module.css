@@ -167,6 +167,38 @@
   text-transform: uppercase;
 }
 
+/* A Contrarian stage frame laid over the Fight Club hero, so both clubs are
+   on the opening page rather than one carrying it. */
+.heroInset {
+  position: absolute;
+  right: clamp(24px, 5vw, 76px);
+  bottom: clamp(58px, 7vw, 96px);
+  z-index: 2;
+  width: clamp(200px, 25vw, 350px);
+  margin: 0;
+  padding: 8px 8px 0;
+  background: rgba(11, 9, 7, 0.72);
+  border: 1px solid rgba(240, 211, 106, 0.42);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.heroInset img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.heroInset figcaption {
+  padding: 9px 2px 9px;
+  color: var(--gold);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 /* The two rooms ------------------------------------------------------- */
 
 .rooms {
@@ -263,47 +295,112 @@
   text-transform: uppercase;
 }
 
-/* The idea ---------------------------------------------------------- */
+/* The rooms Contrarian already fills -------------------------------- */
 
-/* The concept in one drawing: a table and two chairs in the middle of a ring,
-   gold line on near-black. Set as a background so it prints without needing
-   the image optimiser to serve SVG. */
-.idea {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: clamp(520px, 56vw, 780px);
-  padding: clamp(48px, 6vw, 100px) clamp(24px, 8vw, 128px);
-  background-color: #0b0907;
-  background-image: url("/media/fight-club/ring-table.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #f8f1e4;
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(40px, 7vw, 110px);
+  align-items: center;
+  padding: clamp(64px, 9vw, 140px) clamp(24px, 8vw, 128px);
+  background: #f8f1e4;
 }
 
-.idea .sectionLabel {
-  color: var(--gold);
-}
-
-.ideaCopy {
-  position: relative;
-  z-index: 1;
-  max-width: 30ch;
-}
-
-.idea h2 {
-  font-size: clamp(2.3rem, 4.2vw, 4.1rem);
+.galleryCopy h2 {
+  max-width: 13ch;
+  font-size: clamp(2.3rem, 4.2vw, 4.2rem);
   line-height: 0.94;
 }
 
-.ideaCopy p:not(.sectionLabel) {
-  max-width: 34ch;
-  margin: clamp(18px, 2.2vw, 26px) 0 0;
-  color: #d9cfbe;
+.galleryCopy p:not(.sectionLabel) {
+  max-width: 36ch;
+  margin: clamp(20px, 2.5vw, 30px) 0 0;
+  color: #4b4335;
   font-size: 1.04rem;
   line-height: 1.55;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 16px);
+}
+
+.galleryGrid figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.galleryGrid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.88) contrast(1.04);
+}
+
+/* One roof: the venue both halves of the night happen in ------------ */
+
+.venue {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(520px, 58vw, 780px);
+  overflow: hidden;
+  background: var(--ink);
+  color: #f8f1e4;
+}
+
+.venueImage,
+.venueShade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.venueImage {
+  object-fit: cover;
+  object-position: 58% center;
+}
+
+.venueShade {
+  background: linear-gradient(
+      90deg,
+      rgba(4, 6, 15, 0.93) 0%,
+      rgba(4, 6, 15, 0.74) 38%,
+      rgba(4, 6, 15, 0.16) 72%,
+      rgba(4, 6, 15, 0.02) 100%
+    ),
+    linear-gradient(0deg, rgba(2, 3, 7, 0.78), transparent 52%);
+}
+
+.venueCopy {
+  position: relative;
+  z-index: 1;
+  width: min(660px, 100%);
+  margin-top: auto;
+  padding: clamp(64px, 9vw, 128px) clamp(24px, 8vw, 128px) clamp(44px, 5vw, 72px);
+}
+
+.venue .sectionLabel {
+  color: var(--gold);
+}
+
+.venue h2 {
+  max-width: 14ch;
+  font-size: clamp(2.4rem, 4.6vw, 4.6rem);
+  line-height: 0.94;
+}
+
+.venueCopy p:not(.sectionLabel) {
+  max-width: 44ch;
+  margin: clamp(20px, 2.5vw, 30px) 0 0;
+  font-size: 1.06rem;
+  line-height: 1.58;
 }
 
 /* The format -------------------------------------------------------- */
@@ -710,10 +807,16 @@
     padding: 72px 0;
   }
   .rooms,
+  .gallery,
   .format,
   .audience,
   .offer {
     grid-template-columns: 1fr;
+  }
+  .heroInset {
+    position: static;
+    width: auto;
+    margin: 26px 24px 0;
   }
   .room:first-child {
     border-right: 0;
@@ -793,7 +896,8 @@
 
   .hero,
   .rooms,
-  .idea,
+  .gallery,
+  .venue,
   .format,
   .audience,
   .reach,
@@ -870,14 +974,48 @@
     font-size: 7pt;
   }
 
-  .idea {
-    justify-content: flex-start;
-    padding: 16mm 22mm;
+  .heroInset {
+    right: 18mm;
+    bottom: 20mm;
+    width: 74mm;
+    padding: 2mm 2mm 0;
   }
-  .idea h2 {
+  .heroInset figcaption {
+    padding: 2.4mm 0.6mm;
+    font-size: 7pt;
+  }
+
+  .gallery {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    gap: 20mm;
+    padding: 16mm 22mm;
+    align-items: center;
+  }
+  .galleryCopy h2 {
     font-size: 30pt;
   }
-  .ideaCopy p:not(.sectionLabel) {
+  .galleryCopy p:not(.sectionLabel) {
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+  .galleryGrid {
+    gap: 3mm;
+  }
+
+  .venue {
+    padding: 0;
+  }
+  .venue h2 {
+    max-width: 120mm;
+    font-size: 32pt;
+  }
+  .venueCopy {
+    width: 168mm;
+    padding: 0 22mm 16mm;
+  }
+  .venueCopy p:not(.sectionLabel) {
+    max-width: 110mm;
+    margin-top: 7mm;
     font-size: 10.5pt;
     line-height: 1.45;
   }
