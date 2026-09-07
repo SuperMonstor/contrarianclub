@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="A table and two chairs set in the middle of a boxing ring, drawn in gold line on near-black">
+  <defs>
+    <radialGradient id="pool" cx="50%" cy="46%" r="46%">
+      <stop offset="0%" stop-color="#c8a24a" stop-opacity=".20"/>
+      <stop offset="45%" stop-color="#c8a24a" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#c8a24a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="canvasFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1b160f"/>
+      <stop offset="100%" stop-color="#0e0b08"/>
+    </linearGradient>
+    <linearGradient id="lampGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0d36a" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#f0d36a" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#0b0907"/>
+  <rect width="1600" height="900" fill="url(#pool)"/>
+
+  <!-- the light overhead: the single source everything is modelled by -->
+  <g stroke="#c8a24a" stroke-opacity=".5" stroke-width="2" fill="none">
+    <path d="M800 0 V196"/>
+  </g>
+  <path d="M754 250 L846 250 L826 198 L774 198 Z" fill="#14100b" stroke="#c8a24a" stroke-opacity=".62" stroke-width="2"/>
+  <ellipse cx="800" cy="262" rx="26" ry="8" fill="#f0d36a" fill-opacity=".5" filter="url(#soft)"/>
+  <path d="M770 262 L640 560 L960 560 L830 262 Z" fill="url(#lampGlow)" opacity=".28"/>
+
+  <!-- the ring: apron, posts, ropes. Front ropes stay faint so the table reads through -->
+  <g>
+    <path d="M330 470 L1270 470 L1480 764 L120 764 Z" fill="url(#canvasFill)" stroke="#c8a24a" stroke-opacity=".26" stroke-width="2"/>
+    <path d="M330 470 L1270 470 L1480 764 L120 764 Z" fill="none" stroke="#c8a24a" stroke-opacity=".10" stroke-width="10"/>
+  </g>
+
+  <g stroke="#c8a24a" stroke-width="3" fill="none">
+    <path d="M330 470 V248" stroke-opacity=".46"/>
+    <path d="M1270 470 V248" stroke-opacity=".46"/>
+    <path d="M120 764 V420" stroke-opacity=".72"/>
+    <path d="M1480 764 V420" stroke-opacity=".72"/>
+  </g>
+
+  <!-- back ropes -->
+  <g stroke="#c8a24a" stroke-width="2.5" fill="none" stroke-opacity=".38">
+    <path d="M330 300 H1270"/>
+    <path d="M330 356 H1270"/>
+    <path d="M330 412 H1270"/>
+  </g>
+  <!-- side ropes running to the near posts -->
+  <g stroke="#c8a24a" stroke-width="2.5" fill="none" stroke-opacity=".46">
+    <path d="M330 300 L120 466"/>
+    <path d="M330 356 L120 534"/>
+    <path d="M330 412 L120 602"/>
+    <path d="M1270 300 L1480 466"/>
+    <path d="M1270 356 L1480 534"/>
+    <path d="M1270 412 L1480 602"/>
+  </g>
+  <!-- near ropes, held back so the argument stays visible -->
+  <g stroke="#c8a24a" stroke-width="2.5" fill="none" stroke-opacity=".13">
+    <path d="M120 466 H1480"/>
+    <path d="M120 534 H1480"/>
+    <path d="M120 602 H1480"/>
+  </g>
+
+  <!-- left chair, turned in to face the table -->
+  <g stroke="#c8a24a" fill="none" stroke-width="2.5" stroke-opacity=".8" stroke-linejoin="round">
+    <path d="M470 612 L594 612 L610 650 L486 650 Z" fill="#1b160f"/>
+    <path d="M470 612 L462 486 M594 612 L588 490"/>
+    <path d="M463 508 L589 512 M464 540 L590 543"/>
+    <path d="M486 650 V736 M610 650 V730 M498 646 L512 726" stroke-opacity=".55"/>
+  </g>
+
+  <!-- right chair, its mirror -->
+  <g stroke="#c8a24a" fill="none" stroke-width="2.5" stroke-opacity=".8" stroke-linejoin="round">
+    <path d="M1006 612 L1130 612 L1114 650 L990 650 Z" fill="#1b160f"/>
+    <path d="M1130 612 L1138 486 M1006 612 L1012 490"/>
+    <path d="M1137 508 L1011 512 M1136 540 L1010 543"/>
+    <path d="M1114 650 V736 M990 650 V730 M1102 646 L1088 726" stroke-opacity=".55"/>
+  </g>
+
+  <!-- the table between them -->
+  <g stroke="#c8a24a" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M646 548 L954 548 L1002 596 L598 596 Z" fill="#221b12" stroke-opacity=".85"/>
+    <path d="M598 596 L1002 596" stroke-opacity=".95"/>
+    <g fill="none" stroke-opacity=".6">
+      <path d="M612 596 V716 M988 596 V716"/>
+      <path d="M660 590 V676 M940 590 V676" stroke-opacity=".34"/>
+    </g>
+  </g>
+
+  <!-- a pair of gloves resting on it: the argument's other ending -->
+  <g stroke="#c8a24a" stroke-width="2.4" fill="#14100b" stroke-opacity=".78" stroke-linejoin="round">
+    <path d="M742 548 q-16 -6 -16 -24 q0 -26 24 -30 q26 -4 34 16 q6 16 2 38 Z"/>
+    <path d="M726 528 q-12 2 -12 12 q0 10 12 10" fill="none" stroke-opacity=".6"/>
+    <path d="M786 548 h22 v-10 q0 -6 -8 -6 h-14 Z" stroke-opacity=".6"/>
+    <path d="M818 548 q-16 -6 -16 -24 q0 -26 24 -30 q26 -4 34 16 q6 16 2 38 Z"/>
+    <path d="M802 528 q-12 2 -12 12 q0 10 12 10" fill="none" stroke-opacity=".6"/>
+  </g>
+
+</svg>

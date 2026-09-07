@@ -57,11 +57,10 @@ export function FightClubBrief() {
           <p className={styles.eyebrow}>Partnership brief</p>
           <h1>Body and mind in the same room.</h1>
           <p className={styles.lead}>
-            Contrarian runs Bengaluru&apos;s biggest debate nights. Fight Club
-            trains the city&apos;s strikers and puts them in the ring. One
-            evening built from both: the room spars, then it argues. The people
-            who show up are the people a performance brand spends all year
-            trying to reach.
+            Contrarian Club runs Bengaluru&apos;s biggest nights of argument.
+            Fight Club brings people together for a taste of combat. One evening
+            built from both: the room argues, then it settles it in the ring.
+            Everyone who shows up performs, intellectually and physically.
           </p>
         </div>
         <p className={styles.scrollNote}>Bengaluru, India &middot; 2026</p>
@@ -78,7 +77,7 @@ export function FightClubBrief() {
           />
           <div className={styles.roomShade} />
           <p className={styles.roomKicker}>The argument</p>
-          <h2>The Contrarian Debate Club</h2>
+          <h2>Contrarian Club</h2>
           <p>
             Live debate nights where the room votes on the motion, questions
             come from the floor, and the result is how many minds moved. Nine
@@ -102,9 +101,9 @@ export function FightClubBrief() {
           <p className={styles.roomKicker}>The ring</p>
           <h2 className={styles.fcMark}>Fight Club Bengaluru</h2>
           <p>
-            Morning striking sessions at Concept01 Koramangala, run as numbered
-            volumes. Each one drills a theme, from fundamentals to aggression
-            and composure, and ends with everyone sparring.
+            Striking sessions at Concept01 Koramangala, run as numbered volumes.
+            Each drills a theme, from fundamentals to aggression and composure,
+            and ends with everyone sparring. A room that comes to taste combat.
           </p>
           <ul className={styles.roomFacts}>
             <li>10+ volumes run</li>
@@ -114,51 +113,57 @@ export function FightClubBrief() {
         </article>
       </section>
 
+      <section className={styles.idea} aria-label="The idea">
+        <div className={styles.ideaCopy}>
+          <p className={styles.sectionLabel}>The idea</p>
+          <h2>Two chairs. One ring.</h2>
+          <p>
+            Every argument gets a table. The ones that will not resolve get the
+            ring. Same room, same night, same people, and nobody leaves
+            wondering who was right.
+          </p>
+        </div>
+      </section>
+
       <section className={styles.format}>
         <div className={styles.formatIntro}>
           <p className={styles.sectionLabel}>The format</p>
-          <h2>Train first. Then argue.</h2>
+          <h2>Argue. Then settle it.</h2>
           <p className={styles.formatLead}>
-            One night, run on the Contrarian spine, with a Fight Club session
-            bolted to the front of it.
+            Talk until talking runs out. Then take it to the ring.
           </p>
         </div>
         <ol className={styles.steps}>
           <li>
             <span className={styles.stepNumber}>01</span>
-            <h3>The session</h3>
+            <h3>The room argues</h3>
             <p>
-              A Fight Club striking class opens the night: warm-up, drills on
-              the evening&apos;s theme, and controlled sparring. Some in the
-              room train, the rest watch it happen up close.
+              A motion is put to the room. Two people take opposite sides, the
+              floor joins in, everyone votes first. Standard Contrarian rules.
             </p>
           </li>
           <li>
             <span className={styles.stepNumber}>02</span>
-            <h3>The room takes a side</h3>
+            <h3>Someone calls it</h3>
             <p>
-              A motion drawn from the world we just watched: whether aggression
-              beats composure, whether pain is a good teacher, whether risking
-              the body is worth it. Everyone votes before a word is said.
+              When the argument stops moving, or starts to boil over, either
+              side can call it. Enough talking. Gloves on.
             </p>
           </li>
           <li>
             <span className={styles.stepNumber}>03</span>
-            <h3>The debate</h3>
+            <h3>They settle it in the ring</h3>
             <p>
-              Contrarian&apos;s format: two sides hold the floor, the audience
-              rebuts and asks, claims get checked on screen. Fighters and
-              debaters in the same argument, which is a fight most rooms never
-              get to see.
+              Fight Club takes over. A few refereed rounds in proper gear, the
+              disagreement worked out with hands instead of words.
             </p>
           </li>
           <li>
             <span className={styles.stepNumber}>04</span>
-            <h3>The room votes again</h3>
+            <h3>Next round</h3>
             <p>
-              The swing between the two votes is the result. Then it becomes
-              content: the motion, the best exchanges, the knockout line,
-              published to both audiences.
+              Back to the floor. New motion, new pairing. The room votes again
+              at the end, and the swing between the votes is the result.
             </p>
           </li>
         </ol>

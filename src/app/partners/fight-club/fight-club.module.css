@@ -263,6 +263,49 @@
   text-transform: uppercase;
 }
 
+/* The idea ---------------------------------------------------------- */
+
+/* The concept in one drawing: a table and two chairs in the middle of a ring,
+   gold line on near-black. Set as a background so it prints without needing
+   the image optimiser to serve SVG. */
+.idea {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: clamp(520px, 56vw, 780px);
+  padding: clamp(48px, 6vw, 100px) clamp(24px, 8vw, 128px);
+  background-color: #0b0907;
+  background-image: url("/media/fight-club/ring-table.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #f8f1e4;
+}
+
+.idea .sectionLabel {
+  color: var(--gold);
+}
+
+.ideaCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 30ch;
+}
+
+.idea h2 {
+  font-size: clamp(2.3rem, 4.2vw, 4.1rem);
+  line-height: 0.94;
+}
+
+.ideaCopy p:not(.sectionLabel) {
+  max-width: 34ch;
+  margin: clamp(18px, 2.2vw, 26px) 0 0;
+  color: #d9cfbe;
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
 /* The format -------------------------------------------------------- */
 
 .format {
@@ -750,6 +793,7 @@
 
   .hero,
   .rooms,
+  .idea,
   .format,
   .audience,
   .reach,
@@ -824,6 +868,18 @@
   .roomFacts li {
     padding: 2mm 3mm;
     font-size: 7pt;
+  }
+
+  .idea {
+    justify-content: flex-start;
+    padding: 16mm 22mm;
+  }
+  .idea h2 {
+    font-size: 30pt;
+  }
+  .ideaCopy p:not(.sectionLabel) {
+    font-size: 10.5pt;
+    line-height: 1.45;
   }
 
   .format {
