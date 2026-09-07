@@ -120,6 +120,18 @@
   max-width: 8ch;
 }
 
+/* Placeholder crest: a rough crop off Instagram, near-black background that
+   blends on the dark hero and footer. Swap for a clean cutout when it lands. */
+.navCrest {
+  width: 84px;
+  height: auto;
+}
+
+.footerCrest {
+  width: 76px;
+  height: auto;
+}
+
 .heroCopy {
   width: min(680px, calc(100% - 48px));
   margin: auto clamp(24px, 7vw, 112px);
@@ -779,6 +791,9 @@
   .hero .navFcMark {
     font-size: 15pt;
   }
+  .hero .navCrest {
+    width: 17mm;
+  }
   .hero .scrollNote {
     margin: 0 16mm 10mm;
   }
@@ -952,6 +967,9 @@
   .footer .footerFcMark {
     font-size: 20pt;
     color: #f8f1e4;
+  }
+  .footer .footerCrest {
+    width: 22mm;
   }
   .footer > p {
     margin: 10mm 0 0;

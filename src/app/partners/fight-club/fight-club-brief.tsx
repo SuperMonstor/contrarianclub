@@ -44,11 +44,14 @@ export function FightClubBrief() {
           <span className={styles.lockupCross} aria-hidden="true">
             &times;
           </span>
-          <span className={`${styles.fcMark} ${styles.navFcMark}`}>
-            Fight Club
-            <br />
-            Bengaluru
-          </span>
+          <Image
+            className={styles.navCrest}
+            src="/media/fight-club/logo.png"
+            alt="Fight Club Bengaluru"
+            width={280}
+            height={292}
+            priority
+          />
         </nav>
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>Partnership brief</p>
@@ -314,9 +317,13 @@ export function FightClubBrief() {
           <span className={styles.footerCross} aria-hidden="true">
             &times;
           </span>
-          <span className={`${styles.fcMark} ${styles.footerFcMark}`}>
-            Fight Club Bengaluru
-          </span>
+          <Image
+            className={styles.footerCrest}
+            src="/media/fight-club/logo.png"
+            alt="Fight Club Bengaluru"
+            width={280}
+            height={292}
+          />
         </div>
         <p>Sharper minds. Trained bodies. One room.</p>
         <a href={instagramUrl} target="_blank" rel="noreferrer">
