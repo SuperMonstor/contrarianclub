@@ -13,7 +13,8 @@ import styles from "./fight-club.module.css";
 //   sparring.jpg     hero background
 //   community.jpg    the two-rooms right panel
 //   venue-crowd.jpg  the "one roof" page
-//   venue-hall.jpg   the sponsor page
+//   session.jpg      the "inside Fight Club" page
+//   venue-hall.jpg   spare
 //   logo.png         the crest in the lockup and footer
 // Everything Contrarian is a real photograph from public/media/.
 
@@ -122,7 +123,7 @@ export function FightClubBrief() {
             and ends with everyone sparring. A room that comes to taste combat.
           </p>
           <ul className={styles.roomFacts}>
-            <li>10+ volumes run</li>
+            <li>14 volumes run</li>
             <li>Weekly sessions</li>
             <li>Sparring every time</li>
           </ul>
@@ -314,7 +315,7 @@ export function FightClubBrief() {
           <div className={styles.reachBand}>
             <p className={styles.reachBandName}>Fight Club</p>
             <article>
-              <strong>10+</strong>
+              <strong>14</strong>
               <span>volumes run</span>
             </article>
             <article>
@@ -337,49 +338,49 @@ export function FightClubBrief() {
         </p>
       </section>
 
-      <section className={styles.offer}>
-        <div className={styles.offerImageWrap}>
+      <section className={styles.inside}>
+        <div className={styles.insideImageWrap}>
           <Image
-            className={styles.offerImage}
-            src="/media/fight-club/venue-hall.jpg"
-            alt="The main hall at Concept01 Koramangala, lit red at the far end"
+            className={styles.insideImage}
+            src="/media/fight-club/session.jpg"
+            alt="Gloves up during sparring at the end of a Fight Club session"
             width={1600}
-            height={1067}
+            height={1478}
           />
         </div>
-        <div className={styles.offerCopy}>
-          <p className={styles.sectionLabel}>What a sponsor gets</p>
-          <h2>One night. A physical room and a content engine.</h2>
-          <p className={styles.offerLead}>
-            You reach people who spend on performance, in the moment they care
-            about it most.
+        <div className={styles.insideCopy}>
+          <p className={styles.sectionLabel}>Inside Fight Club</p>
+          <h2>Fourteen volumes of people learning to fight.</h2>
+          <p className={styles.insideLead}>
+            Not a gym with a membership. A room that gathers, drills one idea,
+            and spars.
           </p>
-          <div className={styles.offerBlocks}>
+          <div className={styles.insideBlocks}>
             <article>
-              <p className={styles.offerNumber}>01</p>
-              <h3>In the room</h3>
+              <p className={styles.insideNumber}>01</p>
+              <h3>How a session runs</h3>
               <p>
-                Your brand on the mat and at the door: sampling, gear on the
-                floor, a stand where the training happens. A captive room that
-                just worked up a sweat.
+                Eleven in the morning at Concept01, Koramangala. A warm-up, then
+                an hour on the volume&apos;s theme, then everyone gloves up and
+                spars. Coaches run it from the floor.
               </p>
             </article>
             <article>
-              <p className={styles.offerNumber}>02</p>
-              <h3>In the content</h3>
+              <p className={styles.insideNumber}>02</p>
+              <h3>One idea per volume</h3>
               <p>
-                The motion, the fact-checks and the clips carry you. Combat plus
-                a real argument is unusually watchable, and it runs to both
-                audiences after the night.
+                Vol 08 drilled aggression and composure in striking. Vol 10 went
+                back to the fundamentals. Each one is announced, ticketed and
+                numbered, and the next picks a new theme.
               </p>
             </article>
             <article>
-              <p className={styles.offerNumber}>03</p>
-              <h3>The fit</h3>
+              <p className={styles.insideNumber}>03</p>
+              <h3>Who turns up</h3>
               <p>
-                Apparel, nutrition, recovery, wearables, anything bought by
-                people who optimise both mind and body. One night proves the
-                audience; the content compounds it.
+                Regulars and first-timers on the same mat, most of them there to
+                try the real thing without signing up to a fight gym. It is the
+                nearest thing Bangalore has to a combat sports social.
               </p>
             </article>
           </div>

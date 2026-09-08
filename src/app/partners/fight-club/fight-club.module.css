@@ -630,20 +630,20 @@
 
 /* What a sponsor gets ----------------------------------------- */
 
-.offer {
+.inside {
   display: grid;
   grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
   background: var(--ink);
   color: #f8f1e4;
 }
 
-.offerImageWrap {
+.insideImageWrap {
   position: relative;
   min-height: 420px;
   overflow: hidden;
 }
 
-.offerImage {
+.insideImage {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -651,21 +651,21 @@
   object-fit: cover;
 }
 
-.offerCopy {
+.insideCopy {
   padding: clamp(64px, 8vw, 116px) clamp(24px, 6vw, 96px);
 }
 
-.offer .sectionLabel {
+.inside .sectionLabel {
   color: var(--gold);
 }
 
-.offer h2 {
+.inside h2 {
   max-width: 14ch;
   font-size: clamp(2.4rem, 4.4vw, 4.4rem);
   line-height: 0.94;
 }
 
-.offerLead {
+.insideLead {
   max-width: 40ch;
   margin: clamp(20px, 2.5vw, 30px) 0 0;
   color: var(--gold);
@@ -675,7 +675,7 @@
   letter-spacing: -0.04em;
 }
 
-.offerBlocks {
+.insideBlocks {
   display: grid;
   gap: clamp(26px, 3vw, 38px);
   margin-top: clamp(34px, 4vw, 52px);
@@ -683,11 +683,11 @@
   border-top: 1px solid var(--line-light);
 }
 
-.offerBlocks article {
+.insideBlocks article {
   max-width: 460px;
 }
 
-.offerNumber {
+.insideNumber {
   margin: 0;
   color: var(--gold);
   font-family: var(--font-display), Georgia, serif;
@@ -695,7 +695,7 @@
   line-height: 1;
 }
 
-.offerBlocks h3 {
+.insideBlocks h3 {
   margin: 8px 0 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.5rem, 2.2vw, 2.1rem);
@@ -704,7 +704,7 @@
   letter-spacing: -0.05em;
 }
 
-.offerBlocks p:not(.offerNumber) {
+.insideBlocks p:not(.insideNumber) {
   max-width: 440px;
   margin: 10px 0 0;
   color: #d1c7b8;
@@ -957,7 +957,7 @@
   .gallery,
   .format,
   .audience,
-  .offer,
+  .inside,
   .poll {
     grid-template-columns: 1fr;
   }
@@ -1007,7 +1007,7 @@
   .reachBand article:nth-child(3) {
     border-left: 0;
   }
-  .offerImageWrap {
+  .insideImageWrap {
     min-height: 260px;
   }
   .footer {
@@ -1056,7 +1056,7 @@
   .format,
   .audience,
   .reach,
-  .offer,
+  .inside,
   .poll,
   .proposal {
     box-sizing: border-box;
@@ -1253,10 +1253,10 @@
     font-size: 7.5pt;
   }
 
-  .offer {
+  .inside {
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
   }
-  .offerCopy {
+  .insideCopy {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1265,31 +1265,31 @@
   /* Three blocks plus a three-line heading do not fit at the sizes the other
      pages use, and the last one was being clipped. Everything here is tuned
      down to hold the page. */
-  .offer h2 {
+  .inside h2 {
     max-width: 18ch;
     font-size: 25pt;
   }
-  .offerLead {
+  .insideLead {
     max-width: 60ch;
     margin-top: 5mm;
     font-size: 12.5pt;
   }
-  .offerBlocks {
+  .insideBlocks {
     gap: 5mm;
     margin-top: 6mm;
     padding-top: 5mm;
   }
-  .offerBlocks article {
+  .insideBlocks article {
     max-width: none;
   }
-  .offerNumber {
+  .insideNumber {
     font-size: 9.5pt;
   }
-  .offerBlocks h3 {
+  .insideBlocks h3 {
     margin-top: 1.4mm;
     font-size: 13.5pt;
   }
-  .offerBlocks p:not(.offerNumber) {
+  .insideBlocks p:not(.insideNumber) {
     max-width: none;
     margin-top: 1.6mm;
     font-size: 9pt;
