@@ -13,7 +13,7 @@ import styles from "./fight-club.module.css";
 //   sparring.jpg     hero background
 //   community.jpg    the two-rooms right panel
 //   venue-crowd.jpg  the "one roof" page
-//   session.jpg      the "inside Fight Club" page
+//   session.jpg      spare
 //   venue-hall.jpg   spare
 //   logo.png         the crest in the lockup and footer
 // Everything Contrarian is a real photograph from public/media/.
@@ -338,52 +338,50 @@ export function FightClubBrief() {
         </p>
       </section>
 
-      <section className={styles.inside}>
-        <div className={styles.insideImageWrap}>
-          <Image
-            className={styles.insideImage}
-            src="/media/fight-club/session.jpg"
-            alt="Gloves up during sparring at the end of a Fight Club session"
-            width={1600}
-            height={1478}
-          />
-        </div>
-        <div className={styles.insideCopy}>
-          <p className={styles.sectionLabel}>Inside Fight Club</p>
-          <h2>Fourteen volumes of people learning to fight.</h2>
-          <p className={styles.insideLead}>
-            Not a gym with a membership. A room that gathers, drills one idea,
-            and spars.
+      <section className={styles.stages}>
+        <div className={styles.stagesCopy}>
+          <p className={styles.sectionLabel}>Where we have staged it</p>
+          <h2>We have filled rooms across the city.</h2>
+          <p className={styles.stagesLead}>
+            Contrarian travels. Every night so far has run in one of
+            Bangalore&apos;s own bars and clubs, and sold out in it.
           </p>
-          <div className={styles.insideBlocks}>
-            <article>
-              <p className={styles.insideNumber}>01</p>
-              <h3>How a session runs</h3>
-              <p>
-                Eleven in the morning at Concept01, Koramangala. A warm-up, then
-                an hour on the volume&apos;s theme, then everyone gloves up and
-                spars. Coaches run it from the floor.
-              </p>
-            </article>
-            <article>
-              <p className={styles.insideNumber}>02</p>
-              <h3>One idea per volume</h3>
-              <p>
-                Vol 08 drilled aggression and composure in striking. Vol 10 went
-                back to the fundamentals. Each one is announced, ticketed and
-                numbered, and the next picks a new theme.
-              </p>
-            </article>
-            <article>
-              <p className={styles.insideNumber}>03</p>
-              <h3>Who turns up</h3>
-              <p>
-                Regulars and first-timers on the same mat, most of them there to
-                try the real thing without signing up to a fight gym. It is the
-                nearest thing Bangalore has to a combat sports social.
-              </p>
-            </article>
-          </div>
+          <ul className={styles.stagesList}>
+            <li>
+              <span>Underground Comedy Club</span>
+              <span>Koramangala</span>
+            </li>
+            <li>
+              <span>Woodside Inn</span>
+              <span>Indiranagar</span>
+            </li>
+            <li>
+              <span>Big Pitcher</span>
+              <span>Indiranagar</span>
+            </li>
+            <li className={styles.stagesNext}>
+              <span>Concept01</span>
+              <span>Koramangala, next</span>
+            </li>
+          </ul>
+        </div>
+        <div className={styles.stagesShots}>
+          <figure>
+            <Image
+              src="/media/room-listening.jpg"
+              alt="A full Contrarian Club room following the debate"
+              width={1600}
+              height={1067}
+            />
+          </figure>
+          <figure>
+            <Image
+              src="/media/attendees-watching.jpg"
+              alt="Contrarian Club attendees watching from their tables"
+              width={1600}
+              height={1067}
+            />
+          </figure>
         </div>
       </section>
 
