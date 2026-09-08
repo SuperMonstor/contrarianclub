@@ -198,7 +198,8 @@ export function FightClubBrief() {
       <section className={styles.format}>
         <div className={styles.formatIntro}>
           <p className={styles.sectionLabel}>The format</p>
-          <h2>Argue. Then settle it.</h2>
+          {/* non-breaking space: never leave "it." alone on its own line */}
+          <h2>Argue. Then settle&nbsp;it.</h2>
           <p className={styles.formatLead}>
             Talk until talking runs out. Then put the gloves on.
           </p>

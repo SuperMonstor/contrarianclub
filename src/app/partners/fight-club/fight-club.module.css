@@ -1089,30 +1089,40 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 15mm 18mm;
+    padding: 12mm 16mm;
   }
+  /* Three blocks plus a three-line heading do not fit at the sizes the other
+     pages use, and the last one was being clipped. Everything here is tuned
+     down to hold the page. */
   .offer h2 {
-    font-size: 30pt;
+    max-width: 18ch;
+    font-size: 25pt;
   }
   .offerLead {
-    margin-top: 6mm;
-    font-size: 15pt;
+    max-width: 60ch;
+    margin-top: 5mm;
+    font-size: 12.5pt;
   }
   .offerBlocks {
-    gap: 8mm;
-    margin-top: 10mm;
-    padding-top: 8mm;
+    gap: 5mm;
+    margin-top: 6mm;
+    padding-top: 5mm;
+  }
+  .offerBlocks article {
+    max-width: none;
   }
   .offerNumber {
-    font-size: 11pt;
+    font-size: 9.5pt;
   }
   .offerBlocks h3 {
-    margin-top: 2mm;
-    font-size: 16pt;
+    margin-top: 1.4mm;
+    font-size: 13.5pt;
   }
   .offerBlocks p:not(.offerNumber) {
-    font-size: 9.5pt;
-    line-height: 1.4;
+    max-width: none;
+    margin-top: 1.6mm;
+    font-size: 9pt;
+    line-height: 1.38;
   }
 
   .footer {
