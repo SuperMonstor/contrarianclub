@@ -778,15 +778,20 @@
   object-fit: cover;
 }
 
-/* The proposal: the date, the terms, the next move -------------- */
+/* The proposal: the date, and both rooms side by side ------------ */
 
 .proposal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  background: var(--ink);
+  color: #f8f1e4;
+}
+
+.proposalCopy {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(64px, 9vw, 130px) clamp(24px, 8vw, 128px);
-  background: var(--ink);
-  color: #f8f1e4;
+  padding: clamp(64px, 8vw, 116px) clamp(24px, 6vw, 92px);
 }
 
 .proposal .sectionLabel {
@@ -794,13 +799,13 @@
 }
 
 .proposal h2 {
-  max-width: 18ch;
-  font-size: clamp(2.6rem, 5vw, 5rem);
-  line-height: 0.92;
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 4.6vw, 4.6rem);
+  line-height: 0.93;
 }
 
 .proposalLead {
-  max-width: 44ch;
+  max-width: 40ch;
   margin: clamp(18px, 2.2vw, 26px) 0 0;
   color: var(--gold);
   font-family: var(--font-display), Georgia, serif;
@@ -809,37 +814,55 @@
   letter-spacing: -0.04em;
 }
 
-.proposalBlocks {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 46px);
-  margin-top: clamp(38px, 4.5vw, 62px);
-  padding-top: clamp(26px, 3vw, 38px);
+.proposalBody {
+  max-width: 40ch;
+  margin: clamp(20px, 2.4vw, 28px) 0 0;
+  padding-top: clamp(18px, 2.2vw, 26px);
   border-top: 1px solid var(--line-light);
-}
-
-.proposalNumber {
-  margin: 0;
-  color: var(--gold);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
-  line-height: 1;
-}
-
-.proposalBlocks h3 {
-  margin: 8px 0 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.35rem, 2vw, 1.9rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.proposalBlocks p:not(.proposalNumber) {
-  margin: 10px 0 0;
   color: #d1c7b8;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+/* both clubs, one frame each, closing the deck the way it opened */
+.proposalShots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.proposalShots figure {
+  position: relative;
+  min-height: clamp(320px, 40vw, 620px);
+  margin: 0;
+  overflow: hidden;
+  background: #0b0907;
+}
+
+.proposalShots img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proposalShots figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 52px clamp(16px, 2vw, 28px) 18px;
+  background: linear-gradient(0deg, rgba(2, 3, 7, 0.92), rgba(2, 3, 7, 0.4) 55%, transparent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.proposalShots figure:first-child figcaption {
+  color: var(--gold);
+}
+
+.proposalShots figure:last-child figcaption {
+  color: var(--violet);
 }
 
 /* Footer ----------------------------------------------------- */
@@ -954,8 +977,12 @@
   .fcRooms {
     grid-template-columns: 1fr;
   }
-  .proposalBlocks {
+  .proposal,
+  .proposalShots {
     grid-template-columns: 1fr;
+  }
+  .proposalShots figure {
+    min-height: 260px;
   }
   .hero {
     min-height: 0;
@@ -1304,31 +1331,31 @@
   }
 
   .proposal {
-    padding: 15mm 22mm;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  }
+  .proposalCopy {
+    padding: 14mm 18mm;
   }
   .proposal h2 {
-    font-size: 36pt;
+    font-size: 34pt;
   }
   .proposalLead {
     margin-top: 5mm;
     font-size: 15pt;
   }
-  .proposalBlocks {
-    gap: 12mm;
-    margin-top: 12mm;
-    padding-top: 8mm;
+  .proposalBody {
+    margin-top: 6mm;
+    padding-top: 5mm;
+    font-size: 10.5pt;
+    line-height: 1.45;
   }
-  .proposalNumber {
-    font-size: 10pt;
+  .proposalShots figure {
+    min-height: 0;
+    height: 190.5mm;
   }
-  .proposalBlocks h3 {
-    margin-top: 2mm;
-    font-size: 16pt;
-  }
-  .proposalBlocks p:not(.proposalNumber) {
-    margin-top: 3mm;
-    font-size: 9.5pt;
-    line-height: 1.42;
+  .proposalShots figcaption {
+    padding: 16mm 10mm 7mm;
+    font-size: 7.5pt;
   }
 
   .footer {

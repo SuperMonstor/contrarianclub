@@ -14,7 +14,7 @@ import styles from "./fight-club.module.css";
 //   sparring.jpg  hero frame, still an Instagram crop
 //   crowd.jpg     the two-clubs panel: the room ringed around the floor
 //   neon.jpg      the "one roof" page
-//   fc-*.jpg      the four frames on their own room page
+//   fc-*.jpg      the four frames on the room page, plus the closing one
 //   logo.png      the crest, its fade baked to the page black
 // Everything Contrarian is a real photograph from public/media/.
 
@@ -329,7 +329,7 @@ export function FightClubBrief() {
             </article>
             <article>
               <strong>18th</strong>
-              <span>coming up</span>
+              <span>session coming up</span>
             </article>
           </div>
         </div>
@@ -384,12 +384,12 @@ export function FightClubBrief() {
 
       <section className={styles.fcRooms} aria-label="Fight Club rooms">
         <div className={styles.fcRoomsCopy}>
-          <p className={styles.sectionLabel}>Their room</p>
-          <h2>A hundred people, sat around the floor.</h2>
+          <p className={styles.sectionLabel}>The room</p>
+          <h2>A hundred people on the floor.</h2>
           <p>
             Fight Club has run seventeen of these and sold out fifteen. The room
-            forms a ring on the ground, the fighting happens in the middle, and
-            nobody in it is more than a few feet from the contact.
+            closes into a ring, the fighting happens in the middle, and nobody
+            in it is more than a few feet from the contact.
           </p>
         </div>
         <div className={styles.fcRoomsGrid}>
@@ -429,38 +429,36 @@ export function FightClubBrief() {
       </section>
 
       <section className={styles.proposal}>
-        <div className={styles.proposalHead}>
+        <div className={styles.proposalCopy}>
           <p className={styles.sectionLabel}>The proposal</p>
           <h2>Mid-October. Concept01.</h2>
           <p className={styles.proposalLead}>
             The first date of a series both clubs are building to run.
           </p>
+          <p className={styles.proposalBody}>
+            Mid-October 2026 at Concept01, Koramangala. Roughly five weeks to
+            build the night, sell the room and shoot it properly.
+          </p>
         </div>
-        <div className={styles.proposalBlocks}>
-          <article>
-            <p className={styles.proposalNumber}>01</p>
-            <h3>The date</h3>
-            <p>
-              Mid-October 2026 at Concept01, Koramangala. Roughly five weeks to
-              build the night, sell the room and shoot it properly.
-            </p>
-          </article>
-          <article>
-            <p className={styles.proposalNumber}>02</p>
-            <h3>Category exclusivity</h3>
-            <p>
-              One performance brand in the room. Nothing competing on the floor,
-              in the content, or on the night.
-            </p>
-          </article>
-          <article>
-            <p className={styles.proposalNumber}>03</p>
-            <h3>What happens next</h3>
-            <p>
-              Commercials as discussed separately. Say yes and we lock the first
-              date, name the series and start building the run behind it.
-            </p>
-          </article>
+        <div className={styles.proposalShots}>
+          <figure>
+            <Image
+              src="/media/speaker-with-phone.jpg"
+              alt="A Contrarian Club speaker at the mic, phone in hand"
+              width={1600}
+              height={1067}
+            />
+            <figcaption>Contrarian Club</figcaption>
+          </figure>
+          <figure>
+            <Image
+              src="/media/fight-club/fc-floor.jpg"
+              alt="The Fight Club floor at Concept01, the room closed in around it"
+              width={900}
+              height={1080}
+            />
+            <figcaption>Fight Club Bengaluru</figcaption>
+          </figure>
         </div>
       </section>
 
