@@ -143,15 +143,22 @@
   line-height: 1;
 }
 
-/* The club's own crest, feathered to transparent so it sits on any dark ground */
+/* The club's own crest. Its fade is baked to the page black rather than left
+   transparent, because Chrome flattens image alpha on export. Clipped to a
+   circle so the frame's edge cannot show against the page: colour management
+   nudges the baked black a shade off the CSS one, and a square would show it. */
+.navCrest,
+.footerCrest {
+  border-radius: 50%;
+  height: auto;
+}
+
 .navCrest {
   width: 84px;
-  height: auto;
 }
 
 .footerCrest {
   width: 92px;
-  height: auto;
 }
 
 .heroCopy {
@@ -596,7 +603,7 @@
 }
 
 .reachRow:last-child .reachBandName {
-  color: var(--flame-bright);
+  color: var(--violet);
 }
 
 .reachBand article {
@@ -721,77 +728,54 @@
   object-fit: cover;
 }
 
-/* Ask the room: the live poll, offered as audience data --------- */
+/* Their room: the Contrarian gallery's dark twin ----------------- */
 
-.poll {
+.fcRooms {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
-  background: #f8f1e4;
-  color: var(--ink);
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(40px, 7vw, 110px);
+  align-items: center;
+  padding: clamp(64px, 9vw, 140px) clamp(24px, 8vw, 128px);
+  background: #0b0907;
+  color: #f8f1e4;
 }
 
-.pollCopy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(64px, 8vw, 116px) clamp(24px, 6vw, 96px);
+.fcRooms .sectionLabel {
+  color: var(--violet);
 }
 
-.poll h2 {
+.fcRoomsCopy h2 {
   max-width: 14ch;
   font-size: clamp(2.3rem, 4.2vw, 4.2rem);
   line-height: 0.94;
 }
 
-.pollLead {
-  max-width: 40ch;
+.fcRoomsCopy p:not(.sectionLabel) {
+  max-width: 38ch;
   margin: clamp(20px, 2.5vw, 30px) 0 0;
-  color: var(--flame);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
-  line-height: 1.15;
-  letter-spacing: -0.04em;
+  color: #d9cfbe;
+  font-size: 1.04rem;
+  line-height: 1.55;
 }
 
-.pollBlocks {
+.fcRoomsGrid {
   display: grid;
-  gap: clamp(22px, 2.6vw, 32px);
-  margin-top: clamp(28px, 3.2vw, 42px);
-  padding-top: clamp(22px, 2.6vw, 32px);
-  border-top: 1px solid var(--line);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 16px);
 }
 
-.pollBlocks h3 {
-  margin: 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.25rem, 1.8vw, 1.65rem);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.045em;
-}
-
-.pollBlocks p {
-  max-width: 48ch;
-  margin: 8px 0 0;
-  color: #4b4335;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-.pollImageWrap {
+.fcRoomsGrid figure {
   position: relative;
-  min-height: 420px;
+  margin: 0;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: var(--ink);
+  background: #16130e;
 }
 
-.pollImage {
-  position: absolute;
-  inset: 0;
+.fcRoomsGrid img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 58% center;
 }
 
 /* The proposal: the date, the terms, the next move -------------- */
@@ -967,14 +951,11 @@
   .format,
   .audience,
   .stages,
-  .poll {
+  .fcRooms {
     grid-template-columns: 1fr;
   }
   .proposalBlocks {
     grid-template-columns: 1fr;
-  }
-  .pollImageWrap {
-    min-height: 260px;
   }
   .hero {
     min-height: 0;
@@ -1066,7 +1047,7 @@
   .audience,
   .reach,
   .stages,
-  .poll,
+  .fcRooms,
   .proposal {
     box-sizing: border-box;
     width: 338.667mm;
@@ -1305,34 +1286,21 @@
     font-size: 7pt;
   }
 
-  .poll {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  .fcRooms {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    gap: 20mm;
+    padding: 16mm 22mm;
+    align-items: center;
   }
-  .pollCopy {
-    padding: 13mm 16mm;
+  .fcRoomsCopy h2 {
+    font-size: 30pt;
   }
-  .poll h2 {
-    max-width: 16ch;
-    font-size: 27pt;
+  .fcRoomsCopy p:not(.sectionLabel) {
+    font-size: 10.5pt;
+    line-height: 1.45;
   }
-  .pollLead {
-    max-width: 52ch;
-    margin-top: 5mm;
-    font-size: 13pt;
-  }
-  .pollBlocks {
-    gap: 6mm;
-    margin-top: 7mm;
-    padding-top: 6mm;
-  }
-  .pollBlocks h3 {
-    font-size: 14pt;
-  }
-  .pollBlocks p {
-    max-width: none;
-    margin-top: 2mm;
-    font-size: 9.5pt;
-    line-height: 1.42;
+  .fcRoomsGrid {
+    gap: 3mm;
   }
 
   .proposal {

@@ -14,7 +14,8 @@ import styles from "./fight-club.module.css";
 //   sparring.jpg  hero frame, still an Instagram crop
 //   crowd.jpg     the two-clubs panel: the room ringed around the floor
 //   neon.jpg      the "one roof" page
-//   logo.png      the crest, feathered to transparent for the lockup and footer
+//   fc-*.jpg      the four frames on their own room page
+//   logo.png      the crest, its fade baked to the page black
 // Everything Contrarian is a real photograph from public/media/.
 
 const instagramHandle = "thecontrarian.club";
@@ -29,7 +30,7 @@ export function FightClubBrief() {
             <Image
               className={styles.logoLight}
               src="/media/contrarian-logo-light.svg"
-              alt="The Contrarian Debate Club"
+              alt="Contrarian Club"
               width={745}
               height={346}
               priority
@@ -88,7 +89,7 @@ export function FightClubBrief() {
           <Image
             className={styles.roomImage}
             src="/media/room-listening.jpg"
-            alt="A full Contrarian room following the debate"
+            alt="A full Contrarian Club room following the debate"
             width={1600}
             height={1067}
           />
@@ -124,8 +125,8 @@ export function FightClubBrief() {
           </p>
           <ul className={styles.roomFacts}>
             <li>17 shows done</li>
-            <li>18th coming up</li>
-            <li>Sparring every time</li>
+            <li>15 sold out</li>
+            <li>100 a session</li>
           </ul>
         </article>
       </section>
@@ -215,7 +216,7 @@ export function FightClubBrief() {
             <h3>The room argues</h3>
             <p>
               A motion is put to the room. Two people take opposite sides, the
-              floor joins in, everyone votes first. Standard Contrarian rules.
+              floor joins in, everyone votes first. Standard Contrarian Club rules.
             </p>
           </li>
           <li>
@@ -251,7 +252,7 @@ export function FightClubBrief() {
           <Image
             className={styles.audienceImage}
             src="/media/audience-contributing.jpg"
-            alt="An audience member making a point at a Contrarian debate"
+            alt="An audience member making a point at a Contrarian Club debate"
             width={1600}
             height={2000}
           />
@@ -292,7 +293,7 @@ export function FightClubBrief() {
         <p className={styles.sectionLabel}>Combined reach</p>
         <div className={styles.reachRow}>
           <div className={styles.reachBand}>
-            <p className={styles.reachBandName}>Contrarian</p>
+            <p className={styles.reachBandName}>Contrarian Club</p>
             <article>
               <strong>12.5K</strong>
               <span>Instagram followers</span>
@@ -319,23 +320,19 @@ export function FightClubBrief() {
               <span>shows done</span>
             </article>
             <article>
+              <strong>15</strong>
+              <span>sold out</span>
+            </article>
+            <article>
+              <strong>~100</strong>
+              <span>people a session</span>
+            </article>
+            <article>
               <strong>18th</strong>
               <span>coming up</span>
             </article>
-            <article>
-              <strong>Concept01</strong>
-              <span>Koramangala home</span>
-            </article>
-            <article>
-              <strong>100%</strong>
-              <span>sessions end in sparring</span>
-            </article>
           </div>
         </div>
-        <p className={styles.reachNote}>
-          Fight Club audience figures to be confirmed by the club and added
-          here.
-        </p>
       </section>
 
       <section className={styles.stages}>
@@ -343,7 +340,7 @@ export function FightClubBrief() {
           <p className={styles.sectionLabel}>Where we have staged it</p>
           <h2>We have filled rooms across the city.</h2>
           <p className={styles.stagesLead}>
-            Contrarian travels. Every night so far has run in one of
+            Contrarian Club travels. Every night so far has run in one of
             Bangalore&apos;s own bars and clubs, and sold out in it.
           </p>
           <ul className={styles.stagesList}>
@@ -385,42 +382,49 @@ export function FightClubBrief() {
         </div>
       </section>
 
-      <section className={styles.poll}>
-        <div className={styles.pollCopy}>
-          <p className={styles.sectionLabel}>Beyond impressions</p>
-          <h2>Ask the room anything.</h2>
-          <p className={styles.pollLead}>
-            Every Contrarian night already runs on live audience voting. For one
-            night, that machinery is yours.
+      <section className={styles.fcRooms} aria-label="Fight Club rooms">
+        <div className={styles.fcRoomsCopy}>
+          <p className={styles.sectionLabel}>Their room</p>
+          <h2>A hundred people, sat around the floor.</h2>
+          <p>
+            Fight Club has run seventeen of these and sold out fifteen. The room
+            forms a ring on the ground, the fighting happens in the middle, and
+            nobody in it is more than a few feet from the contact.
           </p>
-          <div className={styles.pollBlocks}>
-            <article>
-              <h3>Put your question to the floor</h3>
-              <p>
-                The room votes from their phones, the result lands on the screen
-                behind the stage, and everyone watches the number move. Your
-                question sits in the run of play, not in a survey nobody opens.
-              </p>
-            </article>
-            <article>
-              <h3>Keep the answers</h3>
-              <p>
-                You get the results the next morning: a clean read on what a
-                room of high-earning, fitness-minded professionals actually
-                thinks. That is first-party research on your target market, not
-                an impression count.
-              </p>
-            </article>
-          </div>
         </div>
-        <div className={styles.pollImageWrap}>
-          <Image
-            className={styles.pollImage}
-            src="/media/speaker-with-phone.jpg"
-            alt="A Contrarian Club speaker at the mic, phone in hand"
-            width={1600}
-            height={1067}
-          />
+        <div className={styles.fcRoomsGrid}>
+          <figure>
+            <Image
+              src="/media/fight-club/fc-coaches.jpg"
+              alt="Fight Club coaches standing before the room at Concept01"
+              width={1200}
+              height={800}
+            />
+          </figure>
+          <figure>
+            <Image
+              src="/media/fight-club/fc-bags.jpg"
+              alt="A Fight Club coach beside a heavy bag under red light"
+              width={1200}
+              height={800}
+            />
+          </figure>
+          <figure>
+            <Image
+              src="/media/fight-club/fc-seated.jpg"
+              alt="The Fight Club audience seated in a ring around the sparring floor"
+              width={1200}
+              height={800}
+            />
+          </figure>
+          <figure>
+            <Image
+              src="/media/fight-club/fc-spar.jpg"
+              alt="Sparring on the floor at Concept01 under red light"
+              width={1200}
+              height={800}
+            />
+          </figure>
         </div>
       </section>
 
@@ -429,7 +433,7 @@ export function FightClubBrief() {
           <p className={styles.sectionLabel}>The proposal</p>
           <h2>Mid-October. Concept01.</h2>
           <p className={styles.proposalLead}>
-            One night to prove it, then a series if it lands.
+            The first date of a series both clubs are building to run.
           </p>
         </div>
         <div className={styles.proposalBlocks}>
@@ -453,8 +457,8 @@ export function FightClubBrief() {
             <p className={styles.proposalNumber}>03</p>
             <h3>What happens next</h3>
             <p>
-              Commercials as discussed separately. Say yes and we lock the date,
-              name the series, and start building it with Fight Club.
+              Commercials as discussed separately. Say yes and we lock the first
+              date, name the series and start building the run behind it.
             </p>
           </article>
         </div>
@@ -465,7 +469,7 @@ export function FightClubBrief() {
           <Image
             className={styles.footerLogo}
             src="/media/contrarian-logo-light.svg"
-            alt="The Contrarian Debate Club"
+            alt="Contrarian Club"
             width={745}
             height={346}
           />
