@@ -138,6 +138,10 @@ export function FightClubBrief() {
             professionals who buy a ticket to spend an evening arguing, and who
             keep coming back.
           </p>
+          <p className={styles.galleryCredits}>
+            <span>Also staged at</span>
+            Elevation Capital Basecamp &middot; Bengaluru Tech Week
+          </p>
         </div>
         <div className={styles.galleryGrid}>
           <figure>
@@ -379,6 +383,81 @@ export function FightClubBrief() {
               </p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.poll}>
+        <div className={styles.pollCopy}>
+          <p className={styles.sectionLabel}>Beyond impressions</p>
+          <h2>Ask the room anything.</h2>
+          <p className={styles.pollLead}>
+            Every Contrarian night already runs on live audience voting. For one
+            night, that machinery is yours.
+          </p>
+          <div className={styles.pollBlocks}>
+            <article>
+              <h3>Put your question to the floor</h3>
+              <p>
+                The room votes from their phones, the result lands on the screen
+                behind the stage, and everyone watches the number move. Your
+                question sits in the run of play, not in a survey nobody opens.
+              </p>
+            </article>
+            <article>
+              <h3>Keep the answers</h3>
+              <p>
+                You get the results the next morning: a clean read on what a
+                room of high-earning, fitness-minded professionals actually
+                thinks. That is first-party research on your target market, not
+                an impression count.
+              </p>
+            </article>
+          </div>
+        </div>
+        <div className={styles.pollImageWrap}>
+          <Image
+            className={styles.pollImage}
+            src="/media/speaker-with-phone.jpg"
+            alt="A Contrarian Club speaker at the mic, phone in hand"
+            width={1600}
+            height={1067}
+          />
+        </div>
+      </section>
+
+      <section className={styles.proposal}>
+        <div className={styles.proposalHead}>
+          <p className={styles.sectionLabel}>The proposal</p>
+          <h2>Mid-October. Concept01.</h2>
+          <p className={styles.proposalLead}>
+            One night to prove it, then a series if it lands.
+          </p>
+        </div>
+        <div className={styles.proposalBlocks}>
+          <article>
+            <p className={styles.proposalNumber}>01</p>
+            <h3>The date</h3>
+            <p>
+              Mid-October 2026 at Concept01, Koramangala. Roughly five weeks to
+              build the night, sell the room and shoot it properly.
+            </p>
+          </article>
+          <article>
+            <p className={styles.proposalNumber}>02</p>
+            <h3>Category exclusivity</h3>
+            <p>
+              One performance brand in the room. Nothing competing on the floor,
+              in the content, or on the night.
+            </p>
+          </article>
+          <article>
+            <p className={styles.proposalNumber}>03</p>
+            <h3>What happens next</h3>
+            <p>
+              Commercials as discussed separately. Say yes and we lock the date,
+              name the series, and start building it with Fight Club.
+            </p>
+          </article>
         </div>
       </section>
 

@@ -208,10 +208,19 @@
   overflow: hidden;
 }
 
+.room > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* After `.room > *` on purpose. Both carry the same specificity, so declaring
+   these first let the relative positioning win and dropped the photograph into
+   the flow instead of behind the copy. */
 .roomImage,
 .roomShade {
   position: absolute;
   inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
 }
@@ -227,11 +236,6 @@
     rgba(2, 3, 7, 0.66) 42%,
     rgba(2, 3, 7, 0.28) 100%
   );
-}
-
-.room > * {
-  position: relative;
-  z-index: 1;
 }
 
 .room:first-child {
@@ -329,6 +333,25 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(0.88) contrast(1.04);
+}
+
+.galleryCredits {
+  margin: clamp(22px, 2.6vw, 32px) 0 0;
+  padding-top: clamp(16px, 1.8vw, 22px);
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.galleryCredits span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--flame);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 /* One roof: the venue both halves of the night happen in ------------ */
@@ -689,6 +712,143 @@
   line-height: 1.55;
 }
 
+/* Ask the room: the live poll, offered as audience data --------- */
+
+.poll {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  background: #f8f1e4;
+  color: var(--ink);
+}
+
+.pollCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(64px, 8vw, 116px) clamp(24px, 6vw, 96px);
+}
+
+.poll h2 {
+  max-width: 14ch;
+  font-size: clamp(2.3rem, 4.2vw, 4.2rem);
+  line-height: 0.94;
+}
+
+.pollLead {
+  max-width: 40ch;
+  margin: clamp(20px, 2.5vw, 30px) 0 0;
+  color: var(--flame);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.pollBlocks {
+  display: grid;
+  gap: clamp(22px, 2.6vw, 32px);
+  margin-top: clamp(28px, 3.2vw, 42px);
+  padding-top: clamp(22px, 2.6vw, 32px);
+  border-top: 1px solid var(--line);
+}
+
+.pollBlocks h3 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.pollBlocks p {
+  max-width: 48ch;
+  margin: 8px 0 0;
+  color: #4b4335;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.pollImageWrap {
+  position: relative;
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.pollImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+}
+
+/* The proposal: the date, the terms, the next move -------------- */
+
+.proposal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(64px, 9vw, 130px) clamp(24px, 8vw, 128px);
+  background: var(--ink);
+  color: #f8f1e4;
+}
+
+.proposal .sectionLabel {
+  color: var(--gold);
+}
+
+.proposal h2 {
+  max-width: 18ch;
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  line-height: 0.92;
+}
+
+.proposalLead {
+  max-width: 44ch;
+  margin: clamp(18px, 2.2vw, 26px) 0 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.proposalBlocks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 46px);
+  margin-top: clamp(38px, 4.5vw, 62px);
+  padding-top: clamp(26px, 3vw, 38px);
+  border-top: 1px solid var(--line-light);
+}
+
+.proposalNumber {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1;
+}
+
+.proposalBlocks h3 {
+  margin: 8px 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.proposalBlocks p:not(.proposalNumber) {
+  margin: 10px 0 0;
+  color: #d1c7b8;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 /* Footer ----------------------------------------------------- */
 
 .footer {
@@ -775,7 +935,9 @@
 
 /* Screen responsive ---------------------------------------- */
 
-@media (max-width: 760px) {
+/* screen only: without this the narrow-viewport rules also apply while
+   printing, which collapsed the profile and proposal grids to one column. */
+@media screen and (max-width: 760px) {
   .nav {
     flex-wrap: wrap;
     padding-top: 24px;
@@ -795,8 +957,15 @@
   .gallery,
   .format,
   .audience,
-  .offer {
+  .offer,
+  .poll {
     grid-template-columns: 1fr;
+  }
+  .proposalBlocks {
+    grid-template-columns: 1fr;
+  }
+  .pollImageWrap {
+    min-height: 260px;
   }
   .hero {
     min-height: 0;
@@ -887,7 +1056,9 @@
   .format,
   .audience,
   .reach,
-  .offer {
+  .offer,
+  .poll,
+  .proposal {
     box-sizing: border-box;
     width: 338.667mm;
     height: 190.5mm;
@@ -1123,6 +1294,74 @@
     margin-top: 1.6mm;
     font-size: 9pt;
     line-height: 1.38;
+  }
+
+  .galleryCredits {
+    margin-top: 7mm;
+    padding-top: 5mm;
+    font-size: 9.5pt;
+  }
+  .galleryCredits span {
+    margin-bottom: 1.6mm;
+    font-size: 7pt;
+  }
+
+  .poll {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  }
+  .pollCopy {
+    padding: 13mm 16mm;
+  }
+  .poll h2 {
+    max-width: 16ch;
+    font-size: 27pt;
+  }
+  .pollLead {
+    max-width: 52ch;
+    margin-top: 5mm;
+    font-size: 13pt;
+  }
+  .pollBlocks {
+    gap: 6mm;
+    margin-top: 7mm;
+    padding-top: 6mm;
+  }
+  .pollBlocks h3 {
+    font-size: 14pt;
+  }
+  .pollBlocks p {
+    max-width: none;
+    margin-top: 2mm;
+    font-size: 9.5pt;
+    line-height: 1.42;
+  }
+
+  .proposal {
+    padding: 15mm 22mm;
+  }
+  .proposal h2 {
+    font-size: 36pt;
+  }
+  .proposalLead {
+    margin-top: 5mm;
+    font-size: 15pt;
+  }
+  .proposalBlocks {
+    gap: 12mm;
+    margin-top: 12mm;
+    padding-top: 8mm;
+  }
+  .proposalNumber {
+    font-size: 10pt;
+  }
+  .proposalBlocks h3 {
+    margin-top: 2mm;
+    font-size: 16pt;
+  }
+  .proposalBlocks p:not(.proposalNumber) {
+    margin-top: 3mm;
+    font-size: 9.5pt;
+    line-height: 1.42;
   }
 
   .footer {
