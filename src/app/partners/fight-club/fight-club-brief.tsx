@@ -8,14 +8,13 @@ import styles from "./fight-club.module.css";
 // Contrarian says about itself is in the shared partner brief; this deck is
 // the co-branded case, so it stands on its own.
 //
-// Fight Club imagery lives in public/media/fight-club/ and is still cropped
-// from Instagram, so all of it is placeholder:
-//   sparring.jpg     hero background
-//   community.jpg    the two-rooms right panel
-//   venue-crowd.jpg  the "one roof" page
-//   session.jpg      spare
-//   venue-hall.jpg   spare
-//   logo.png         the crest in the lockup and footer
+// Fight Club imagery lives in public/media/fight-club/. The crest and the two
+// event photographs came from the club itself; only the hero frame is still a
+// crop off their Instagram.
+//   sparring.jpg  hero frame, still an Instagram crop
+//   crowd.jpg     the two-clubs panel: the room ringed around the floor
+//   neon.jpg      the "one roof" page
+//   logo.png      the crest, feathered to transparent for the lockup and footer
 // Everything Contrarian is a real photograph from public/media/.
 
 const instagramHandle = "thecontrarian.club";
@@ -42,9 +41,10 @@ export function FightClubBrief() {
               className={styles.navCrest}
               src="/media/fight-club/logo.png"
               alt="Fight Club Bengaluru"
-              width={280}
-              height={292}
+              width={640}
+              height={640}
               priority
+              unoptimized
             />
           </nav>
           <div className={styles.heroCopy}>
@@ -109,8 +109,8 @@ export function FightClubBrief() {
         <article className={styles.room}>
           <Image
             className={styles.roomImage}
-            src="/media/fight-club/community.jpg"
-            alt="A Fight Club Bengaluru training session"
+            src="/media/fight-club/crowd.jpg"
+            alt="A Fight Club Bengaluru crowd ringed around the floor at Concept01"
             width={1600}
             height={1067}
           />
@@ -123,8 +123,8 @@ export function FightClubBrief() {
             and ends with everyone sparring. A room that comes to taste combat.
           </p>
           <ul className={styles.roomFacts}>
-            <li>14 volumes run</li>
-            <li>Weekly sessions</li>
+            <li>17 shows done</li>
+            <li>18th coming up</li>
             <li>Sparring every time</li>
           </ul>
         </article>
@@ -183,10 +183,10 @@ export function FightClubBrief() {
       <section className={styles.venue}>
         <Image
           className={styles.venueImage}
-          src="/media/fight-club/venue-crowd.jpg"
-          alt="A room at Concept01 Koramangala gathered in the dark, watching the screen"
-          width={1600}
-          height={1178}
+          src="/media/fight-club/neon.jpg"
+          alt="The floor at Concept01 Koramangala under red light, gloves on"
+          width={1200}
+          height={1100}
         />
         <div className={styles.venueShade} />
         <div className={styles.venueCopy}>
@@ -315,12 +315,12 @@ export function FightClubBrief() {
           <div className={styles.reachBand}>
             <p className={styles.reachBandName}>Fight Club</p>
             <article>
-              <strong>14</strong>
-              <span>volumes run</span>
+              <strong>17</strong>
+              <span>shows done</span>
             </article>
             <article>
-              <strong>Weekly</strong>
-              <span>training sessions</span>
+              <strong>18th</strong>
+              <span>coming up</span>
             </article>
             <article>
               <strong>Concept01</strong>
@@ -476,8 +476,9 @@ export function FightClubBrief() {
             className={styles.footerCrest}
             src="/media/fight-club/logo.png"
             alt="Fight Club Bengaluru"
-            width={280}
-            height={292}
+            width={640}
+            height={640}
+            unoptimized
           />
         </div>
         <p>Sharper minds. Trained bodies. One room.</p>

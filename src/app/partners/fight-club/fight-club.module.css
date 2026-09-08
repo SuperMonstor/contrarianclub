@@ -16,6 +16,8 @@
   --gold-deep: var(--cc-gold);
   --flame: #d1451f;
   --flame-bright: #f26a2e;
+  /* Fight Club's own mark is violet, so their side of every lockup is too */
+  --violet: #b9a3dd;
   --line: rgba(22, 19, 14, 0.2);
   --line-light: rgba(248, 241, 228, 0.22);
   background: var(--paper);
@@ -66,13 +68,13 @@
   overflow: hidden;
 }
 
+/* Flat, not a gradient: the crest's fade is baked to this exact black, and any
+   tint under the lockup shows the edge of its plate. */
 .heroPanel {
   position: relative;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(120% 90% at 12% 22%, rgba(200, 162, 74, 0.09), transparent 62%),
-    #0b0907;
+  background: #0b0907;
 }
 
 .heroFrames {
@@ -120,7 +122,7 @@
 }
 
 .heroFrames figure:last-child figcaption {
-  color: var(--flame-bright);
+  color: var(--violet);
 }
 
 .nav {
@@ -136,20 +138,19 @@
 }
 
 .lockupCross {
-  color: var(--flame-bright);
+  color: var(--violet);
   font-size: 22px;
   line-height: 1;
 }
 
-/* Placeholder crest: a rough crop off Instagram, near-black background that
-   blends on the dark hero and footer. Swap for a clean cutout when it lands. */
+/* The club's own crest, feathered to transparent so it sits on any dark ground */
 .navCrest {
-  width: 72px;
+  width: 84px;
   height: auto;
 }
 
 .footerCrest {
-  width: 76px;
+  width: 92px;
   height: auto;
 }
 
@@ -255,7 +256,7 @@
 }
 
 .room:last-child .roomKicker {
-  color: var(--flame-bright);
+  color: var(--violet);
 }
 
 .room h2 {
@@ -881,7 +882,7 @@
 }
 
 .footerCross {
-  color: var(--flame);
+  color: var(--violet);
 }
 
 .footer > p {
@@ -1116,7 +1117,7 @@
     width: 38mm;
   }
   .hero .navCrest {
-    width: 15mm;
+    width: 19mm;
   }
 
   .sectionLabel,
@@ -1375,7 +1376,8 @@
     margin: 0;
     padding: 0;
     border: 0;
-    background: var(--ink);
+    /* same near-black as the hero panel: the crest's fade is baked to it */
+    background: #0b0907;
     color: #f8f1e4;
     text-align: center;
     break-after: auto;
@@ -1389,7 +1391,7 @@
     gap: 6mm;
   }
   .footer .footerCrest {
-    width: 22mm;
+    width: 27mm;
   }
   .footer > p {
     margin: 10mm 0 0;
