@@ -53,7 +53,6 @@ const work: WorkSpec = {
             theme: ["What can India", "ask of you?"],
             halves: [
               {
-                numeral: "I",
                 label: "For India's image",
                 plate: carnival,
                 // a full height slice through the carnival half of the square,
@@ -62,7 +61,6 @@ const work: WorkSpec = {
                 crop: { x: 0.42, y: 0.5, scale: 1 },
               },
               {
-                numeral: "II",
                 label: "For India's future",
                 plate: collectors,
                 // the clerk who looks back at you, the finger on the ledger,

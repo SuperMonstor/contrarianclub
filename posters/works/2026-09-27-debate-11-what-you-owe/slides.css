@@ -33,80 +33,26 @@
   inset: 0;
 }
 
-/* Type that sits directly on a painting gets a soft dark halo, so a bright
-   passage of the picture behind a letter never takes the letter away. */
+/* A tight shadow only, so a bright passage of the picture behind a letter
+   never takes the letter away. A wide soft glow read as a digital effect. */
 .wo-on-art {
-  text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 2px 24px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-/* --- The printed bill ----------------------------------------------------- */
-
-/* The seam. The two halves are one argument split down the middle, and this
-   is the split. Gold rather than black, so it reads as a rule the club drew
-   and not as a gap between two images. Strongest where the paintings are the
-   content, gone behind the theme and the details, so it never cuts a letter. */
+/* The seam is the gap between two prints laid side by side: a plain dark
+   line, not a gold rule. */
 .wo-seam {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(200, 162, 74, 0) 0%,
-    rgba(200, 162, 74, 0) 34%,
-    rgba(200, 162, 74, 0.6) 44%,
-    rgba(200, 162, 74, 0.6) 72%,
-    rgba(200, 162, 74, 0) 80%
-  );
+  width: 3px;
+  margin-left: -1px;
+  background: #0b0907;
 }
 
-/* The frame, drawn over the paintings rather than under them. The canvas
-   carries the same double rule, but a full bleed picture covers it; over the
-   art it reads as the border of a framed print or a theatre bill, which is
-   most of what makes this page a poster rather than a photograph. */
-.wo-frame {
-  position: absolute;
-  inset: 40px;
-  border: 1px solid rgba(200, 162, 74, 0.5);
-  pointer-events: none;
-}
-.wo-frame::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(200, 162, 74, 0.2);
-}
-
-/* The rule the notice sits under, fading at both ends like the canvas's own
-   hairlines. */
+/* The rule the notice sits under: a plain hairline. */
 .wo-rule {
   position: absolute;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(200, 162, 74, 0.7),
-    rgba(200, 162, 74, 0.45) 60%,
-    rgba(200, 162, 74, 0.08)
-  );
-}
-
-/* The numerals. Gold leaf, with a hard dark edge under each stroke so they
-   read as cut into the picture rather than floated over it. */
-.wo-numeral {
-  color: var(--cc-gold);
-  text-shadow:
-    0 2px 0 rgba(0, 0, 0, 0.55),
-    0 4px 30px rgba(0, 0, 0, 0.6);
-}
-
-/* The mark that opens a label. Small enough to be a tick rather than a rule:
-   it says a new item starts here, which is all a numbered half needs. */
-.wo-tick {
-  display: block;
-  width: 34px;
-  height: 1px;
-  background: var(--cc-gold);
-  opacity: 0.85;
+  background: rgba(244, 234, 210, 0.22);
 }

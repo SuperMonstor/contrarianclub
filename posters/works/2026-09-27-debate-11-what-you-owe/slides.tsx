@@ -35,15 +35,19 @@ import "./slides.css";
 // works out festivals and money from that has earned it; the motions still
 // arrive in the room.
 //
-// A PRINTED BILL, NOT A SLIDE. A gold double rule is drawn over the art, the
-// way a framed print or a theatre bill carries its border. The edition and the
-// details sit in the top right corner opposite the lockup, where a playbill
-// puts them. The two halves are numbered in large engraved numerals.
+// NOTHING DECORATIVE. The edition and the details sit in the top right corner
+// opposite the lockup, where a playbill puts them, and that is the only
+// flourish. An earlier cut drew a gold double frame over the art, put a tick
+// before every label, numbered the halves in gold roman numerals, faded every
+// rule and set a glow behind the type. Each of those made it look generated,
+// so none of them is here: the paintings run to the edge, the halves are
+// plain labels, the rule is a plain hairline and the seam is the gap between
+// two prints.
 //
 // TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
 // Playfair does all the talking: the two halves, the details, the notice that
-// the motions are held back. Inter appears small and gold only where it is pure
-// utility: the edition, the theme label, the format, the call to action.
+// the motions are held back. Inter is the small print, in sentence case. Gold
+// is used once, for the call to action, and only it is set in tracked caps.
 //
 // ---------------------------------------------------------------------------
 // The art, public domain via Wikimedia Commons:
@@ -80,10 +84,9 @@ export interface Crop {
   scale: number;
 }
 
-/** One half of the page: its numeral, what the demand would be for, and the
- *  painting it is argued on. */
+/** One half of the page: what the demand would be for, and the painting it
+ *  is argued on. */
 export interface Half {
-  numeral: string;
   label: string;
   plate: Plate;
   crop: Crop;
@@ -119,8 +122,7 @@ interface Metrics {
   themeLabelSize: number;
   themeTop: number;
   themeSize: number;
-  numeralTop: number;
-  numeralSize: number;
+  labelTop: number;
   labelSize: number;
   ruleTop: number;
   noticeSize: number;
@@ -139,9 +141,8 @@ const PORTRAIT: Metrics = {
   themeLabelSize: 16,
   themeTop: 298,
   themeSize: 112,
-  numeralTop: 820,
-  numeralSize: 104,
-  labelSize: 40,
+  labelTop: 930,
+  labelSize: 50,
   ruleTop: 1062,
   noticeSize: 30,
   ctaSize: 18,
@@ -159,9 +160,8 @@ const STORY: Metrics = {
   themeLabelSize: 18,
   themeTop: 382,
   themeSize: 126,
-  numeralTop: 1250,
-  numeralSize: 120,
-  labelSize: 46,
+  labelTop: 1392,
+  labelSize: 56,
   ruleTop: 1530,
   noticeSize: 34,
   ctaSize: 20,
@@ -222,8 +222,8 @@ function scrim(m: Metrics, format: Format) {
     rgba(11, 9, 7, 0.76) ${pct(themeEnd - 60)},
     rgba(11, 9, 7, 0.3) ${pct(themeEnd + 70)},
     rgba(11, 9, 7, 0.04) ${pct(themeEnd + 150)},
-    rgba(11, 9, 7, 0.08) ${pct(m.numeralTop - 60)},
-    rgba(11, 9, 7, 0.62) ${pct(m.numeralTop + m.numeralSize + 40)},
+    rgba(11, 9, 7, 0.08) ${pct(m.labelTop - 160)},
+    rgba(11, 9, 7, 0.66) ${pct(m.labelTop + m.labelSize + 10)},
     rgba(9, 7, 5, 0.9) ${pct(m.ruleTop - 10)},
     rgba(8, 6, 4, 0.95) 100%)`;
 }
@@ -246,7 +246,15 @@ const SERIF: CSSProperties = {
   margin: 0,
 };
 
-/** One half's numeral and label. The outer margin is the page margin and the
+/** The small print: sentence case, muted, no tracking. */
+const SMALL: CSSProperties = {
+  fontFamily: "var(--cc-font-ui)",
+  fontWeight: 500,
+  color: "var(--cc-muted)",
+  margin: 0,
+};
+
+/** One half's label. The outer margin is the page margin and the
  *  inner one is half of it, so the two blocks sit symmetrically about the
  *  seam and read as a pair rather than two posters that happen to touch. */
 function HalfLabel({
@@ -266,22 +274,14 @@ function HalfLabel({
       className="wo-on-art"
       style={{
         position: "absolute",
-        top: m.numeralTop,
+        top: m.labelTop,
         left: left ? MARGIN : format.width / 2 + 40,
         right: left ? format.width / 2 + 40 : MARGIN,
       }}
     >
       <p
-        className="wo-numeral"
-        style={{ ...SERIF, fontSize: m.numeralSize, lineHeight: 1 }}
-      >
-        {half.numeral}
-      </p>
-      <div className="wo-tick" style={{ marginTop: Math.round(m.numeralSize * 0.14) }} />
-      <p
         style={{
           ...SERIF,
-          marginTop: Math.round(m.labelSize * 0.42),
           fontSize: m.labelSize,
           lineHeight: 1.12,
           letterSpacing: "-0.01em",
@@ -307,7 +307,7 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
       {/* the ground: two paintings, floor to ceiling, meeting at the seam */}
       {copy.halves.map((half, i) => (
         <div
-          key={half.numeral}
+          key={half.label}
           style={{
             position: "absolute",
             top: 0,
@@ -322,7 +322,6 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
       ))}
       <div className="wo-scrim" style={{ background: scrim(m, format) }} />
       <div className="wo-seam" style={{ left: pw }} />
-      <div className="wo-frame" />
 
       {/* the club, and opposite it the edition and the details */}
       <div style={{ position: "absolute", left: MARGIN, top: m.lockupTop }}>
@@ -332,9 +331,7 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
         className="wo-on-art"
         style={{ position: "absolute", right: MARGIN, top: m.lockupTop + 4, textAlign: "right" }}
       >
-        <div className="kicker" style={{ fontSize: m.editionSize, letterSpacing: "0.3em" }}>
-          {copy.edition}
-        </div>
+        <p style={{ ...SMALL, fontSize: m.editionSize + 2 }}>{copy.edition}</p>
         {copy.details.map((line, i) => (
           <p
             key={line}
@@ -352,22 +349,19 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
       </div>
 
       {/* the theme */}
-      <div
-        className="kicker wo-on-art"
+      <p
+        className="wo-on-art"
         style={{
+          ...SMALL,
           position: "absolute",
           left: MARGIN,
           top: m.themeLabelTop,
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          fontSize: m.themeLabelSize,
-          letterSpacing: "0.32em",
+          fontSize: m.themeLabelSize + 6,
+          color: "var(--cc-parchment)",
         }}
       >
-        <span className="wo-tick" />
         {copy.themeLabel}
-      </div>
+      </p>
       <div
         className="wo-on-art"
         style={{ position: "absolute", left: MARGIN, top: m.themeTop, width: W - MARGIN * 2 }}
@@ -400,7 +394,6 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
         <p
           style={{
             ...SERIF,
-            fontStyle: "italic",
             fontSize: m.noticeSize,
             lineHeight: 1.2,
             color: "var(--cc-ivory)",
@@ -414,13 +407,9 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
       </div>
       <div style={{ position: "absolute", left: MARGIN, top: m.linesTop }}>
         {copy.lines.map((line) => (
-          <div
-            key={line}
-            className="label"
-            style={{ fontSize: m.linesSize, letterSpacing: "0.12em", lineHeight: 1.7 }}
-          >
+          <p key={line} style={{ ...SMALL, fontSize: m.linesSize + 2, lineHeight: 1.6 }}>
             {line}
-          </div>
+          </p>
         ))}
       </div>
     </div>
