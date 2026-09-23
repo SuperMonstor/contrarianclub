@@ -1,0 +1,92 @@
+/* Debate Club #11, "What do you owe the country?".
+   Work-local CSS shares one global namespace, so everything here is prefixed
+   wo-. The two art treatments and the scrim belong to this piece: they were
+   tuned for these two paintings and are not right for any others. */
+
+/* --- The two paintings ---------------------------------------------------- */
+
+/* Bruegel's square is a bright sanded ground under a pale winter sky, two
+   stops brighter than anything else this club prints. It comes down hard, and
+   the green in the costumes comes out, or the panel reads as a different
+   brand from the one beside it. */
+.wo-art-carnival {
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.66) contrast(1.06) brightness(0.78) sepia(0.26);
+}
+
+/* Reymerswaele is already night: oak panelling, one candle, a lot of shadow.
+   It gets a lift rather than a knock back, and the red and green of the two
+   clerks come down to sit beside the gold. */
+.wo-art-collectors {
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.56) contrast(1.04) brightness(0.9) sepia(0.22);
+}
+
+/* --- Where type is allowed to sit ----------------------------------------- */
+
+/* One scrim for both panels, because both carry type in the same place: the
+   theme block, low. The top edge is feathered so the band meets the page
+   rather than cutting into it, and the floor of the panel goes to the page's
+   own black so the band and the footer are one surface. */
+.wo-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.72) 0%,
+    rgba(11, 9, 7, 0.06) 13%,
+    rgba(11, 9, 7, 0.1) 50%,
+    rgba(11, 9, 7, 0.6) 70%,
+    rgba(9, 7, 5, 0.94) 86%,
+    #0b0907 100%
+  );
+}
+
+/* --- The division --------------------------------------------------------- */
+
+/* The seam. The two themes are one argument split down the middle, and this
+   is the split. Gold rather than black, so it reads as a rule the club drew
+   and not as a gap between two images. */
+.wo-seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(200, 162, 74, 0) 0%,
+    rgba(200, 162, 74, 0.5) 18%,
+    rgba(200, 162, 74, 0.5) 76%,
+    rgba(200, 162, 74, 0) 100%
+  );
+}
+
+/* The band's two edges, full bleed, so the diptych reads as one plate hung on
+   the page rather than as the page's middle third. */
+.wo-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(200, 162, 74, 0.06),
+    rgba(200, 162, 74, 0.38) 22%,
+    rgba(200, 162, 74, 0.38) 78%,
+    rgba(200, 162, 74, 0.06)
+  );
+}
+
+/* The mark above a theme label. Small enough to be a tick rather than a rule:
+   it says a new item starts here, which is all a numbered exhibit needs. */
+.wo-tick {
+  width: 34px;
+  height: 1px;
+  background: var(--cc-gold);
+  opacity: 0.8;
+}
