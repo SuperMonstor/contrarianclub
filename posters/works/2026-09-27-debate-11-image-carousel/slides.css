@@ -1,67 +1,100 @@
-/* Debate Club #11, the first motion's carousel, "I. For India's image".
+/* Debate Club #11, the first motion's carousel.
    Work-local treatment only. Classes are prefixed .ic- because work CSS
    shares one global namespace. */
 
-/* --- The painting --------------------------------------------------------- */
+/* --- The pictures ----------------------------------------------------------- */
 
-/* Every detail comes from one scan of Bruegel's Carnival and Lent (the Inside
-   Bruegel photograph), so one treatment serves all of them. The square is a
-   bright sanded ground, two stops lighter than anything else the club prints,
-   so it comes down and warms, and the green in the costumes comes out. Tuned
-   alongside the poster's .wo-art-carnival so the two pieces sit together. */
+/* The poster's carnival, treated exactly as the poster treats it, so slide 1
+   is recognisably the same picture. */
 .ic-art {
   z-index: 0;
-  filter: saturate(0.7) contrast(1.06) brightness(0.88) sepia(0.24);
+  filter: saturate(0.64) contrast(1.06) brightness(0.72) sepia(0.28);
 }
 
-/* The same square at dusk, for the back cover: the town survives as a crowd
-   and a set of rooftops, and the page is quiet enough to carry the details. */
+/* The same carnival at dusk, for the motion page: the square survives as a
+   crowd and rooftops, and the page is quiet enough to read a sentence on. */
 .ic-art-dusk {
   z-index: 0;
-  filter: saturate(0.54) contrast(1.08) brightness(0.64) sepia(0.32);
+  filter: saturate(0.5) contrast(1.08) brightness(0.52) sepia(0.34);
+}
+
+/* Photographs taken in daylight: the lake, the temple, the square. They come
+   down a stop, lose most of their colour and pick up the gold, so a news
+   photograph sits in the same printed object as a Flemish painting. */
+.ic-photo {
+  z-index: 0;
+  filter: saturate(0.6) contrast(1.06) brightness(0.8) sepia(0.28);
+}
+
+/* Noon at the memorial, the brightest picture in the deck by a distance, with
+   a white sky. Taken down harder than the rest. */
+.ic-photo-noon {
+  z-index: 0;
+  filter: saturate(0.46) contrast(1.1) brightness(0.62) sepia(0.34);
+}
+
+/* Night photographs: the fireworks courtyard and the lit, empty street. Dark
+   already, and the light in them is the subject, so they are lifted, not
+   knocked back. */
+.ic-photo-night {
+  z-index: 0;
+  filter: saturate(0.72) contrast(1.06) brightness(1.08) sepia(0.2);
 }
 
 /* --- Legibility ------------------------------------------------------------ */
 
-/* Type sits low and flush left on every slide, so each scrim leaves a window
-   across the upper middle where the painting is left alone and ramps to
-   near-black under the words. Bruegel is detailed edge to edge, with no empty
-   sky to write on, so these ramp earlier and harder than the #10 decks'. */
+/* The beats: clippings at the top, which carry their own paper and need no
+   help, the picture clear through the middle, and near-black under the words
+   at the foot. */
 .ic-scrim {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.66) 0%,
-      rgba(11, 9, 7, 0.1) 14%,
-      rgba(11, 9, 7, 0.02) 32%,
-      rgba(11, 9, 7, 0.38) 55%,
-      rgba(11, 9, 7, 0.88) 71%,
-      rgba(8, 6, 4, 0.97) 85%
+      rgba(11, 9, 7, 0.55) 0%,
+      rgba(11, 9, 7, 0.12) 16%,
+      rgba(11, 9, 7, 0.06) 40%,
+      rgba(11, 9, 7, 0.48) 58%,
+      rgba(11, 9, 7, 0.9) 72%,
+      rgba(8, 6, 4, 0.97) 86%
     ),
-    linear-gradient(90deg, rgba(11, 9, 7, 0.46) 0%, rgba(11, 9, 7, 0.14) 46%, rgba(11, 9, 7, 0) 76%);
+    linear-gradient(90deg, rgba(11, 9, 7, 0.36) 0%, rgba(11, 9, 7, 0.1) 46%, rgba(11, 9, 7, 0) 76%);
 }
 
-/* The two covers carry a masthead at the top and a tall block of type at the
-   bottom, so the window is narrower and sits higher. */
+/* The hook: the lockup at the top, a four line question at the foot. */
 .ic-scrim-cover {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       180deg,
-      rgba(11, 9, 7, 0.82) 0%,
-      rgba(11, 9, 7, 0.32) 14%,
-      rgba(11, 9, 7, 0.02) 26%,
-      rgba(11, 9, 7, 0.3) 41%,
-      rgba(11, 9, 7, 0.84) 55%,
-      rgba(8, 6, 4, 0.96) 71%
+      rgba(11, 9, 7, 0.78) 0%,
+      rgba(11, 9, 7, 0.24) 15%,
+      rgba(11, 9, 7, 0.02) 30%,
+      rgba(11, 9, 7, 0.34) 44%,
+      rgba(11, 9, 7, 0.86) 58%,
+      rgba(8, 6, 4, 0.96) 74%
     ),
     linear-gradient(90deg, rgba(11, 9, 7, 0.4) 0%, rgba(11, 9, 7, 0.1) 50%, rgba(11, 9, 7, 0) 80%);
 }
 
-/* Type sitting over paint still needs its own edge. */
+/* The motion page is a document: the painting stays as a texture at the top
+   and the sentence gets a near-black page of its own. */
+.ic-scrim-motion {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.74) 0%,
+    rgba(11, 9, 7, 0.3) 16%,
+    rgba(11, 9, 7, 0.5) 30%,
+    rgba(11, 9, 7, 0.9) 44%,
+    rgba(8, 6, 4, 0.97) 60%
+  );
+}
+
+/* Type sitting over a picture still needs its own edge. */
 .ic-on-art {
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.5),
@@ -70,8 +103,7 @@
 
 /* --- The printed object ---------------------------------------------------- */
 
-/* The poster's frame, drawn over the art on every slide, so the deck reads as
-   the poster opened up rather than a second design. */
+/* The poster's frame, over the picture on every slide. */
 .ic-frame {
   position: absolute;
   inset: 40px;
@@ -85,8 +117,7 @@
   border: 1px solid rgba(200, 162, 74, 0.2);
 }
 
-/* The one division, at the same height on every slide. It runs frame to
-   frame rather than edge to edge, so it reads as ruled inside the border. */
+/* The one division, frame to frame, at the same height on every slide. */
 .ic-rule {
   position: absolute;
   left: 40px;
@@ -102,11 +133,94 @@
   );
 }
 
-/* The mark that opens a label, as on the poster. */
 .ic-tick {
   display: block;
   width: 34px;
   height: 1px;
   background: var(--cc-gold);
   opacity: 0.85;
+}
+
+/* --- The clippings --------------------------------------------------------- */
+
+/* What people said, on cream: the same ivory the Debate #10 decks printed
+   their details band in, and the one light material in this deck, because it
+   is the one thing on each slide that is somebody else talking. Dark ink, no
+   --cc- text tokens (they are tuned for near-black and vanish on cream), and a
+   real shadow, because it is laid on top of the picture, not printed into it. */
+.ic-clipping {
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #f8f0dc 0%, var(--cc-ivory) 55%, #ece0c2 100%);
+  color: #17120b;
+  font-family: var(--cc-font-ui);
+  border: 1px solid rgba(138, 108, 44, 0.45);
+  border-radius: 6px;
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.25),
+    0 22px 50px rgba(0, 0, 0, 0.55);
+  text-shadow: none;
+}
+
+/* Newsprint is a little greyer and a little rougher than the post cards. */
+.ic-newsprint {
+  background: linear-gradient(180deg, #eee5d0 0%, #e6dcc3 100%);
+  border-radius: 2px;
+}
+
+.ic-avatar {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #2a2117;
+  color: var(--cc-ivory);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ic-clipping-meta {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(23, 18, 11, 0.14);
+  font-size: 16px;
+  color: rgba(23, 18, 11, 0.55);
+}
+
+.ic-masthead {
+  font-family: var(--cc-font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(23, 18, 11, 0.7);
+}
+
+/* --- The strike ------------------------------------------------------------ */
+
+/* Words behind a bar drawn by hand. The hidden words set the width, so the
+   letters can be counted. text-shadow is killed because a shadow still paints
+   under transparent text, which would leave every struck word legible as its
+   own shadow. The corners are uneven and the ink filter chews the edges, so it
+   reads as somebody with a marker rather than a typeset rectangle. The same
+   mark as the Debate #9 deck used. */
+.ic-strike {
+  display: inline-block;
+  color: transparent;
+  text-shadow: none;
+  line-height: 1;
+  padding: 0.06em 0.18em;
+  margin: 0 0.02em;
+  border-radius: 5px 11px 6px 13px / 10px 5px 12px 6px;
+  filter: url(#ic-ink);
+}
+.ic-strike-ink {
+  background: #1d160d;
+}
+.ic-strike-ivory {
+  background: var(--cc-ivory);
 }

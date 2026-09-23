@@ -2,70 +2,57 @@ import type { CSSProperties, ReactNode } from "react";
 import { Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Debate Club #11, the first motion. Nine slides on "I. For India's image".
+// Debate Club #11, the first motion. Eight slides that tell one story.
 //
 // ---------------------------------------------------------------------------
-// The argument
+// The story
 //
-//   1  are Indians abroad embarrassing India?       the question, and the swipe
-//   2  take Leicester, this month                   the video, and the headline
-//   3  and it isn't one river                       Brampton, and its fireworks
-//   4  and none of it stays in the street           how one clip becomes all of us
-//   5  whose image?                                 the hinge, no picture
-//   6  because every community heard this first     the Irish, and their parade
-//   7  and the festivals that got tolerated         Leicester's lamps, New York's schools
-//   8  so the question was never whether            the fair question, in gold
-//   9  come and take a side                         the back cover
+//   1  should Indians stop celebrating festivals abroad?   the hook
+//   2  this month in Leicester                             it happened
+//   3  and it wasn't the first clip                        it keeps happening
+//   4  none of this stays local anymore                    and it spreads
+//   5  so people back home have started asking             the ask
+//   6  but would it even work?                             is it worth it
+//   7  and even if it would, is it fair to ask?            is it fair
+//   8  the motion, blacked out                             come and find out
 //
-// Slides 2 to 8 are one continuous voice, the way both Debate #10 decks were:
-// every slide opens on a connective and closes on something unfinished, and
-// that is the whole reason the deck gets swiped. Anyone editing a line should
-// read the slide before it and the slide after it first.
-//
-// Three slides make the case for the motion, two make the case against, and
-// the fourth and eighth are the hinges. The deck has to leave both sides
-// arguable, because the room votes on it.
-//
-// THE MOTION IS NOT IN THE DECK. The poster announced a theme and held both
-// motions back until the day, so this carousel names the topic, which a deck
-// about it cannot avoid, and still never prints the motion's words. The back
-// cover says so out loud.
+// It reads as one person talking, each slide picking up where the last one
+// stopped. Anyone editing a line should read the slide before it and the one
+// after it first. Slides 6 and 7 are the two halves of the crux, worth and
+// fairness, one each and in that order.
 //
 // ---------------------------------------------------------------------------
 // The grammar
 //
-// ONE PAINTING, THE WAY DEBATE #9 USED ONE DEGAS. Every picture slide is a
-// detail of Bruegel's Fight Between Carnival and Lent, the painting the poster
-// set this motion on. It already contains the whole argument: a town
-// celebrating in the open, the respectable half of the same square
-// disapproving of it, and people leaning out of every window to watch. Slide 1
-// shows the square entire, and only then do the slides move in close, because
-// a tight crop with no wide shot before it reads as a damaged reproduction.
+// THE POSTER OPENS AND CLOSES THE DECK. Slides 1 and 8 sit on the same
+// Bruegel carnival as the poster's first panel, so the carousel starts and
+// ends inside the thing people have already seen. Everything between is the
+// real world.
 //
-//   1  the square, entire                 the argument in one frame
-//   2  the well, the fishmonger           water, for the river in the copy
-//   3  the fire, the frying pan           fire, for the fireworks
-//   4  the window full of faces           the watchers, for the internet
-//   5  nothing                            the question is the picture
-//   6  Carnival on his barrel             the celebration, unapologetic
-//   7  the round dance                    a festival the town has absorbed
-//   8  Lent on her cart                   restraint, for the fair question
-//   9  the square again, at dusk          the back cover
+// PHOTOGRAPHS FOR WHAT HAPPENED, CLIPPINGS FOR WHAT PEOPLE SAID. The middle six
+// slides are photographs of the things the copy describes, under the same gold
+// frame and the same warm treatment as the paintings, so they read as one
+// printed object. What people posted is set as a cream clipping laid over the
+// picture: the one light material in the deck, because it is the one thing on
+// each slide that is somebody else talking.
 //
-// THE POSTER'S FRAME RUNS THROUGH THE DECK. The gold double rule drawn over the
-// art on the poster is drawn over every slide here, so the carousel reads as
-// the same printed object opened up, not a second design.
+// EVERY POST IS REAL AND QUOTED EXACTLY. None is invented or paraphrased. Each
+// was found reproduced in the press, and the source sits under the rule.
+// Private people's names and handles are struck out with the same hand-drawn
+// bar that strikes the motion on slide 8; an official account (a city) keeps
+// its name, because being quoted is its job.
 //
-// THREE TYPEFACES, AND OSWALD ONLY WHERE THE VOICE STOPS NARRATING: the
-// question on slide 1, WHOSE IMAGE on slide 5, and the invitation on slide 9.
-// Playfair carries all the talking. Inter is small gold utility: the counter,
-// the footnotes, the swipe, the call to action.
+// THE STRIKE IS ONE MARK, USED TWICE. Ink on the cream clippings, ivory on the
+// dark motion page. It always means the same thing: something is being held
+// back on purpose.
 //
-// ONE DIVISION, LOW ON THE PAGE, AT THE SAME HEIGHT EVERY TIME: a gold
-// hairline with the sourced fact under it. Every number in the deck has a
-// source under the line, and the list is at the top of spec.tsx.
+// THREE TYPEFACES. Oswald shouts once, the question on slide 1. Playfair does
+// all the talking. Inter is the posts themselves, and the small gold utility:
+// counter, sources, credits.
 //
-// FLUSH LEFT THROUGHOUT, to one margin at x=92, with the lockup in its left cut.
+// ONE DIVISION, LOW ON THE PAGE, AT THE SAME HEIGHT EVERY TIME: a gold hairline
+// with the source and the photo credit under it. Every photograph is credited
+// on its own slide, which its licence requires.
 
 const W = 1080;
 const H = 1350;
@@ -74,30 +61,32 @@ const MARGIN = 92;
 /** The division. Same height on every slide. */
 const RULE = 1140;
 /** Where the last line of narration lands, clear of the division. */
-const TEXT_BASE = RULE - 60;
+const TEXT_BASE = RULE - 58;
+/** Where the clippings start, clear of the counter. */
+const CARDS_TOP = 158;
 
-/* --- Plates ---------------------------------------------------------------- */
+/* --- Pictures ------------------------------------------------------------- */
 
-/** A detail of the painting, plus what the layout needs to know about it: its
- *  aspect, so a crop can be positioned, and the treatment and scrim it was
- *  tuned for. */
+/** A picture, its aspect, and the treatment it was tuned for. Photographs of
+ *  a floodlit lake, a night courtyard and a noon memorial cannot share one
+ *  filter, so each names its own. */
 export interface Plate {
   src: string;
   ratio: number;
   art: string;
-  scrim: string;
+  /** who made it and under what licence, printed on the slide */
+  credit: string;
 }
 
-/** Where in the detail to centre, and how far in. x and y are fractions of the
- *  picture; scale 1 means the picture is exactly one slide wide. */
+/** Where in the picture to centre, and how far in. x and y are fractions of
+ *  the picture; scale 1 means the picture is exactly one slide wide. A scale
+ *  too small to cover the slide is raised until it does. */
 export interface Crop {
   x: number;
   y: number;
   scale: number;
 }
 
-/** Keep the picture over the whole canvas. A crop says where the eye should
- *  go, and the position is clamped so the frame stays covered regardless. */
 function CropArt({ plate, crop }: { plate: Plate; crop: Crop }) {
   const minScale = (H / W) * plate.ratio;
   const w = W * Math.max(crop.scale, minScale);
@@ -120,23 +109,44 @@ function CropArt({ plate, crop }: { plate: Plate; crop: Crop }) {
   );
 }
 
+/** The marker the strikes are drawn with: a turbulence filter that chews the
+ *  edges so no two bars are the same shape. Defined once per slide, used by
+ *  every <Strike>. */
+function InkFilter() {
+  return (
+    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden>
+      <filter id="ic-ink">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035 0.18" numOctaves="2" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="5" />
+      </filter>
+    </svg>
+  );
+}
+
 /** Every slide: the picture, its scrim, the frame, then the content. */
-function Ground({ plate, crop, children }: { plate?: Plate; crop?: Crop; children: ReactNode }) {
+function Ground({
+  plate,
+  crop,
+  scrim,
+  children,
+}: {
+  plate: Plate;
+  crop: Crop;
+  scrim: string;
+  children: ReactNode;
+}) {
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-      {plate && crop && (
-        <>
-          <CropArt plate={plate} crop={crop} />
-          <div className={plate.scrim} />
-        </>
-      )}
+      <InkFilter />
+      <CropArt plate={plate} crop={crop} />
+      <div className={scrim} />
       <div className="ic-frame" />
       <div style={{ position: "absolute", inset: 0 }}>{children}</div>
     </div>
   );
 }
 
-/* --- Type ------------------------------------------------------------------ */
+/* --- Type ----------------------------------------------------------------- */
 
 const CONDENSED: CSSProperties = {
   fontFamily: "var(--cc-font-condensed)",
@@ -154,22 +164,20 @@ const TONES = {
   gold: "var(--cc-gold-bright)",
 };
 
-/** One line of the talking. An empty string is a beat of silence, which the
- *  copy uses as punctuation and which a paragraph could not express. */
+/** One line of the talking. An empty string is a beat of silence. */
 export type Line = string | { text: string; size?: number; tone?: keyof typeof TONES };
 
-function Narration({ lines, size = 44 }: { lines: Line[]; size?: number }) {
+function Narration({ lines, size = 40 }: { lines: Line[]; size?: number }) {
   return (
     <>
       {lines.map((line, i) => {
         const l = typeof line === "string" ? { text: line } : line;
-        if (!l.text) return <div key={i} style={{ height: Math.round(size * 0.6) }} />;
+        if (!l.text) return <div key={i} style={{ height: Math.round(size * 0.55) }} />;
         return (
           <p
             key={i}
             style={{
               margin: 0,
-              marginTop: i === 0 ? 0 : Math.round((l.size ?? size) * 0.3),
               fontFamily: "var(--cc-font-display)",
               fontWeight: 400,
               fontSize: l.size ?? size,
@@ -186,7 +194,6 @@ function Narration({ lines, size = 44 }: { lines: Line[]; size?: number }) {
   );
 }
 
-/** Where the reader is, and how much is left. */
 function Counter({ n, of }: { n: number; of: number }) {
   return (
     <div
@@ -226,32 +233,299 @@ function Label({ children, style }: { children: ReactNode; style?: CSSProperties
   );
 }
 
-/** Under the rule: a sourced fact, or on slide 1 the swipe. Small, gold, caps,
- *  never more than two lines, and subordinate to the talking by construction. */
-function UnderRule({ children }: { children: ReactNode }) {
+/** Under the rule: where the facts and the posts came from, then who made
+ *  the picture. Small, and subordinate to the talking by construction. */
+function UnderRule({ source, credit }: { source?: string; credit: string }) {
   return (
     <div
-      className="kicker ic-on-art"
-      style={{
-        position: "absolute",
-        left: MARGIN,
-        top: RULE + 40,
-        width: W - MARGIN * 2,
-        fontSize: 18,
-        letterSpacing: "0.09em",
-        lineHeight: 1.7,
-      }}
+      className="ic-on-art"
+      style={{ position: "absolute", left: MARGIN, top: RULE + 34, width: W - MARGIN * 2 }}
     >
-      {children}
+      {source && (
+        <div
+          className="kicker"
+          style={{ fontSize: 15, letterSpacing: "0.08em", lineHeight: 1.65 }}
+        >
+          {source}
+        </div>
+      )}
+      <div
+        style={{
+          marginTop: source ? 8 : 0,
+          fontFamily: "var(--cc-font-ui)",
+          fontSize: 13,
+          letterSpacing: "0.02em",
+          color: "var(--cc-muted)",
+        }}
+      >
+        {credit}
+      </div>
     </div>
   );
 }
 
-/** The club's mark, and opposite it the edition and the date, as the poster
- *  sets them. Only the two covers carry it. */
-function Masthead({ details }: { details: string[] }) {
+/* --- The strike ----------------------------------------------------------- */
+
+/** Words behind a hand-drawn bar. The hidden words still set the width, so the
+ *  bar is as long as what it hides and the letters can be counted. Ink on the
+ *  cream clippings, ivory on the dark motion page. */
+export function Strike({ children, tone = "ink" }: { children: string; tone?: "ink" | "ivory" }) {
+  const tilt = ((children.length % 3) - 1) * 0.45;
   return (
-    <>
+    <span
+      className={`ic-strike ic-strike-${tone}`}
+      style={{ transform: `rotate(${tilt}deg)` }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/* --- The clippings -------------------------------------------------------- */
+
+/** One post, as it appeared, set on cream. `who` is either an official
+ *  account, printed in full, or a private person, struck out. */
+export interface Post {
+  platform: string;
+  who:
+    | { kind: "official"; name: string; handle: string; initials: string }
+    | { kind: "private"; name: string; handle: string };
+  text: string;
+  meta: string;
+}
+
+function PostCard({ post, width = W - MARGIN * 2, size = 25 }: { post: Post; width?: number; size?: number }) {
+  const who = post.who;
+  return (
+    <div className="ic-clipping" style={{ width, padding: "26px 30px 22px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div className="ic-avatar">{who.kind === "official" ? who.initials : ""}</div>
+        <div style={{ flex: 1, lineHeight: 1.3 }}>
+          <div style={{ fontWeight: 700, fontSize: 21 }}>
+            {who.kind === "official" ? who.name : <Strike>{who.name}</Strike>}
+          </div>
+          <div style={{ fontSize: 18, color: "rgba(23, 18, 11, 0.55)", marginTop: 3 }}>
+            {who.kind === "official" ? who.handle : <Strike>{who.handle}</Strike>}
+          </div>
+        </div>
+      </div>
+      <p style={{ margin: "18px 0 0", fontSize: size, lineHeight: 1.42 }}>{post.text}</p>
+      <div className="ic-clipping-meta">
+        {`${post.platform} \u00b7 ${post.meta}`}
+      </div>
+    </div>
+  );
+}
+
+/** A one-line reply, the way a comment sits under a video. */
+export interface Reply {
+  name: string;
+  text: string;
+}
+
+function ReplyCard({ reply }: { reply: Reply }) {
+  return (
+    <div
+      className="ic-clipping"
+      style={{ display: "inline-flex", alignItems: "center", gap: 16, padding: "18px 26px" }}
+    >
+      <div className="ic-avatar" style={{ width: 40, height: 40 }} />
+      <div>
+        <div style={{ fontWeight: 700, fontSize: 17, lineHeight: 1.2 }}>
+          <Strike>{reply.name}</Strike>
+        </div>
+        <div style={{ fontSize: 28, lineHeight: 1.3, marginTop: 4 }}>{reply.text}</div>
+      </div>
+    </div>
+  );
+}
+
+/** A newspaper headline, cut out. */
+export interface Headline {
+  masthead: string;
+  headline: string;
+  date: string;
+}
+
+function HeadlineCard({ item }: { item: Headline }) {
+  return (
+    <div className="ic-clipping ic-newsprint" style={{ width: 780, padding: "26px 34px 28px" }}>
+      <div className="ic-masthead">{item.masthead}</div>
+      <div
+        style={{
+          marginTop: 14,
+          fontFamily: "var(--cc-font-display)",
+          fontWeight: 700,
+          fontSize: 44,
+          lineHeight: 1.12,
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {item.headline}
+      </div>
+      <div className="ic-clipping-meta" style={{ borderTop: "none", paddingTop: 0 }}>
+        {item.date}
+      </div>
+    </div>
+  );
+}
+
+/** What sits over the picture on a beat: posts, replies, or a headline. */
+export type Clipping =
+  | { kind: "posts"; posts: Post[]; size?: number }
+  | { kind: "replies"; replies: Reply[] }
+  | { kind: "headline"; item: Headline };
+
+function Clippings({ clipping }: { clipping: Clipping }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: MARGIN,
+        top: CARDS_TOP,
+        width: W - MARGIN * 2,
+        display: "flex",
+        flexDirection: "column",
+        gap: 18,
+      }}
+    >
+      {clipping.kind === "posts" &&
+        clipping.posts.map((p) => <PostCard key={p.text} post={p} size={clipping.size} />)}
+      {clipping.kind === "replies" &&
+        clipping.replies.map((r, i) => (
+          // the second reply steps in, the way a thread does
+          <div key={r.text} style={{ marginLeft: i * 120 }}>
+            <ReplyCard reply={r} />
+          </div>
+        ))}
+      {clipping.kind === "headline" && <HeadlineCard item={clipping.item} />}
+    </div>
+  );
+}
+
+/* --- The slides ----------------------------------------------------------- */
+
+/** 1. The hook, on the poster's carnival. */
+export function Hook({
+  plate,
+  crop,
+  label,
+  question,
+  size,
+}: {
+  plate: Plate;
+  crop: Crop;
+  label: string;
+  question: string[];
+  size: number;
+}) {
+  return (
+    <Ground plate={plate} crop={crop} scrim="ic-scrim-cover">
+      <div style={{ position: "absolute", left: MARGIN, top: 84 }}>
+        <Lockup width={214} artwork="left" />
+      </div>
+      <div
+        className="ic-on-art"
+        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
+      >
+        <Label style={{ marginBottom: 30 }}>{label}</Label>
+        {question.map((l) => (
+          <p key={l} style={{ ...CONDENSED, fontSize: size }}>
+            {l}
+          </p>
+        ))}
+      </div>
+      <hr className="ic-rule" style={{ top: RULE }} />
+      <UnderRule credit={plate.credit} />
+    </Ground>
+  );
+}
+
+/** 2 to 7. A beat of the story: the photograph, what people said about it laid
+ *  over the top, and the talking at the foot, bottom-anchored so its last line
+ *  lands on the division however long it runs. */
+export function Beat({
+  plate,
+  crop,
+  n,
+  of,
+  clipping,
+  lines,
+  size,
+  source,
+}: {
+  plate: Plate;
+  crop: Crop;
+  n: number;
+  of: number;
+  clipping?: Clipping;
+  lines: Line[];
+  size?: number;
+  source?: string;
+}) {
+  return (
+    <Ground plate={plate} crop={crop} scrim="ic-scrim">
+      <Counter n={n} of={of} />
+      {clipping && <Clippings clipping={clipping} />}
+      <div
+        className="ic-on-art"
+        style={{ position: "absolute", left: MARGIN, width: 876, bottom: H - TEXT_BASE }}
+      >
+        <Narration lines={lines} size={size} />
+      </div>
+      <hr className="ic-rule" style={{ top: RULE }} />
+      <UnderRule source={source} credit={plate.credit} />
+    </Ground>
+  );
+}
+
+/** The heart, drawn to read as the like button without being anybody's logo:
+ *  an outline, in gold, sat on the baseline of the line it belongs to. */
+function Heart({ size }: { size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ display: "inline-block", verticalAlign: "-0.12em", margin: "0 0.08em" }}
+      aria-label="likes"
+    >
+      <path
+        d="M12 20.3s-7.1-4.4-9.2-8.6C1.2 8.4 3 4.6 6.6 4.3c2.1-.2 3.9.9 5.4 2.8 1.5-1.9 3.3-3 5.4-2.8 3.6.3 5.4 4.1 3.8 7.4-2.1 4.2-9.2 8.6-9.2 8.6z"
+        fill="none"
+        stroke="var(--cc-gold-bright)"
+        strokeWidth="1.9"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** 8. The motion, struck out, and the terms on which it will be read. It is
+ *  the poster's carnival again, at dusk, with the poster's masthead: the deck
+ *  ends where it began, one step closer to the room. */
+export function Motion({
+  plate,
+  crop,
+  label,
+  motion,
+  reveal,
+  details,
+  lines,
+  cta,
+}: {
+  plate: Plate;
+  crop: Crop;
+  label: string;
+  motion: ReactNode;
+  /** the reveal terms, either side of the heart, then a second line */
+  reveal: [string, string, string];
+  details: string[];
+  lines: string[];
+  cta: string[];
+}) {
+  return (
+    <Ground plate={plate} crop={crop} scrim="ic-scrim-motion">
       <div style={{ position: "absolute", left: MARGIN, top: 84 }}>
         <Lockup width={214} artwork="left" />
       </div>
@@ -278,166 +552,43 @@ function Masthead({ details }: { details: string[] }) {
           </p>
         ))}
       </div>
-    </>
-  );
-}
 
-/* --- The slides ------------------------------------------------------------ */
-
-/** 1. The question, over the square entire. It is the accusation the motion
- *  answers rather than the motion, which is the sentence a reader already has
- *  an opinion on, and the reason they stop. The swipe lives here because this
- *  page asks something, so it is the page that can promise an answer. */
-export function Hook({
-  plate,
-  crop,
-  details,
-  label,
-  shout,
-  line,
-  cta,
-}: {
-  plate: Plate;
-  crop: Crop;
-  details: string[];
-  label: string;
-  shout: { lines: string[]; size: number };
-  line: string;
-  cta: string;
-}) {
-  return (
-    <Ground plate={plate} crop={crop}>
-      <Masthead details={details} />
       <div
         className="ic-on-art"
         style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
       >
-        <Label style={{ marginBottom: 26 }}>{label}</Label>
-        {shout.lines.map((l) => (
-          <p key={l} style={{ ...CONDENSED, fontSize: shout.size }}>
-            {l}
-          </p>
-        ))}
-        <div style={{ marginTop: 30, width: 800 }}>
-          <Narration lines={[{ text: line, size: 32, tone: "parchment" }]} />
-        </div>
-      </div>
-      <hr className="ic-rule" style={{ top: RULE }} />
-      <UnderRule>{cta}</UnderRule>
-    </Ground>
-  );
-}
-
-/** 2 to 8. A beat of the case: the talking, bottom-anchored so its last line
- *  lands on the division however long it runs, and the sourced fact under the
- *  rule if there is one. */
-export function Beat({
-  plate,
-  crop,
-  n,
-  of,
-  lines,
-  size,
-  shout,
-  footnote,
-}: {
-  plate?: Plate;
-  crop?: Crop;
-  n: number;
-  of: number;
-  lines: Line[];
-  size?: number;
-  /** the words this beat is allowed to shout, set above the lines */
-  shout?: { lines: string[]; size: number };
-  footnote?: string;
-}) {
-  return (
-    <Ground plate={plate} crop={crop}>
-      <Counter n={n} of={of} />
-      <div
-        className="ic-on-art"
-        style={{ position: "absolute", left: MARGIN, width: 856, bottom: H - TEXT_BASE }}
-      >
-        {shout && (
-          <div style={{ marginBottom: 40 }}>
-            {shout.lines.map((l) => (
-              <p key={l} style={{ ...CONDENSED, fontSize: shout.size }}>
-                {l}
-              </p>
-            ))}
-          </div>
-        )}
-        <Narration lines={lines} size={size} />
-      </div>
-      <hr className="ic-rule" style={{ top: RULE }} />
-      {footnote && <UnderRule>{footnote}</UnderRule>}
-    </Ground>
-  );
-}
-
-/** 9. The back cover. Eight pages of argument, then the one page that asks the
- *  reader to turn up, says out loud that the motion itself is held back, and
- *  repeats the details so nobody who read to the end swipes back for them. */
-export function Closer({
-  plate,
-  crop,
-  details,
-  label,
-  invitation,
-  notice,
-  note,
-  lines,
-  cta,
-}: {
-  plate: Plate;
-  crop: Crop;
-  details: string[];
-  label: string;
-  invitation: string[];
-  notice: string;
-  note: string;
-  lines: string[];
-  cta: string[];
-}) {
-  return (
-    <Ground plate={plate} crop={crop}>
-      <Masthead details={details} />
-      <div
-        className="ic-on-art"
-        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
-      >
-        <Label style={{ marginBottom: 26 }}>{label}</Label>
-        {invitation.map((l) => (
-          <p key={l} style={{ ...CONDENSED, fontSize: 108 }}>
-            {l}
-          </p>
-        ))}
+        <Label style={{ marginBottom: 30 }}>{label}</Label>
         <p
           style={{
             margin: 0,
-            marginTop: 30,
             fontFamily: "var(--cc-font-display)",
-            fontStyle: "italic",
-            fontSize: 32,
-            lineHeight: 1.25,
+            fontSize: 54,
+            lineHeight: 1.42,
+            letterSpacing: "-0.01em",
             color: "var(--cc-ivory)",
           }}
         >
-          {notice}
+          {motion}
         </p>
         <p
           style={{
             margin: 0,
-            marginTop: 10,
+            marginTop: 44,
             fontFamily: "var(--cc-font-display)",
-            fontSize: 24,
+            fontStyle: "italic",
+            fontSize: 34,
             lineHeight: 1.3,
-            color: "var(--cc-parchment)",
+            color: "var(--cc-gold-bright)",
           }}
         >
-          {note}
+          {reveal[0]}
+          <Heart size={34} />
+          {reveal[1]}
+          <br />
+          {reveal[2]}
         </p>
       </div>
+
       <hr className="ic-rule" style={{ top: RULE }} />
       <div
         className="ic-on-art"
@@ -445,7 +596,7 @@ export function Closer({
           position: "absolute",
           left: MARGIN,
           right: MARGIN,
-          top: RULE + 36,
+          top: RULE + 34,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
