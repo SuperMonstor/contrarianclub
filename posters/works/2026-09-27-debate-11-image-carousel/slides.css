@@ -1,0 +1,112 @@
+/* Debate Club #11, the first motion's carousel, "I. For India's image".
+   Work-local treatment only. Classes are prefixed .ic- because work CSS
+   shares one global namespace. */
+
+/* --- The painting --------------------------------------------------------- */
+
+/* Every detail comes from one scan of Bruegel's Carnival and Lent (the Inside
+   Bruegel photograph), so one treatment serves all of them. The square is a
+   bright sanded ground, two stops lighter than anything else the club prints,
+   so it comes down and warms, and the green in the costumes comes out. Tuned
+   alongside the poster's .wo-art-carnival so the two pieces sit together. */
+.ic-art {
+  z-index: 0;
+  filter: saturate(0.7) contrast(1.06) brightness(0.88) sepia(0.24);
+}
+
+/* The same square at dusk, for the back cover: the town survives as a crowd
+   and a set of rooftops, and the page is quiet enough to carry the details. */
+.ic-art-dusk {
+  z-index: 0;
+  filter: saturate(0.54) contrast(1.08) brightness(0.64) sepia(0.32);
+}
+
+/* --- Legibility ------------------------------------------------------------ */
+
+/* Type sits low and flush left on every slide, so each scrim leaves a window
+   across the upper middle where the painting is left alone and ramps to
+   near-black under the words. Bruegel is detailed edge to edge, with no empty
+   sky to write on, so these ramp earlier and harder than the #10 decks'. */
+.ic-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.66) 0%,
+      rgba(11, 9, 7, 0.1) 14%,
+      rgba(11, 9, 7, 0.02) 32%,
+      rgba(11, 9, 7, 0.38) 55%,
+      rgba(11, 9, 7, 0.88) 71%,
+      rgba(8, 6, 4, 0.97) 85%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.46) 0%, rgba(11, 9, 7, 0.14) 46%, rgba(11, 9, 7, 0) 76%);
+}
+
+/* The two covers carry a masthead at the top and a tall block of type at the
+   bottom, so the window is narrower and sits higher. */
+.ic-scrim-cover {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11, 9, 7, 0.82) 0%,
+      rgba(11, 9, 7, 0.32) 14%,
+      rgba(11, 9, 7, 0.02) 26%,
+      rgba(11, 9, 7, 0.3) 41%,
+      rgba(11, 9, 7, 0.84) 55%,
+      rgba(8, 6, 4, 0.96) 71%
+    ),
+    linear-gradient(90deg, rgba(11, 9, 7, 0.4) 0%, rgba(11, 9, 7, 0.1) 50%, rgba(11, 9, 7, 0) 80%);
+}
+
+/* Type sitting over paint still needs its own edge. */
+.ic-on-art {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(0, 0, 0, 0.62);
+}
+
+/* --- The printed object ---------------------------------------------------- */
+
+/* The poster's frame, drawn over the art on every slide, so the deck reads as
+   the poster opened up rather than a second design. */
+.ic-frame {
+  position: absolute;
+  inset: 40px;
+  border: 1px solid rgba(200, 162, 74, 0.5);
+  pointer-events: none;
+}
+.ic-frame::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(200, 162, 74, 0.2);
+}
+
+/* The one division, at the same height on every slide. It runs frame to
+   frame rather than edge to edge, so it reads as ruled inside the border. */
+.ic-rule {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(200, 162, 74, 0.65) 0%,
+    rgba(200, 162, 74, 0.45) 50%,
+    rgba(200, 162, 74, 0.1) 100%
+  );
+}
+
+/* The mark that opens a label, as on the poster. */
+.ic-tick {
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: var(--cc-gold);
+  opacity: 0.85;
+}
