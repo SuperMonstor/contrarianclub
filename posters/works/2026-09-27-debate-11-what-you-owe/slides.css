@@ -1,7 +1,7 @@
-/* Debate Club #11, "What do you owe the country?".
+/* Debate Club #11, "What can India ask of you?".
    Work-local CSS shares one global namespace, so everything here is prefixed
-   wo-. The two art treatments and the scrim belong to this piece: they were
-   tuned for these two paintings and are not right for any others. */
+   wo-. The two art treatments belong to this piece: they were tuned for these
+   two paintings and are not right for any others. */
 
 /* --- The two paintings ---------------------------------------------------- */
 
@@ -12,81 +12,101 @@
 .wo-art-carnival {
   z-index: 0;
   object-fit: cover;
-  filter: saturate(0.66) contrast(1.06) brightness(0.78) sepia(0.26);
+  filter: saturate(0.64) contrast(1.06) brightness(0.72) sepia(0.28);
 }
 
 /* Reymerswaele is already night: oak panelling, one candle, a lot of shadow.
-   It gets a lift rather than a knock back, and the red and green of the two
-   clerks come down to sit beside the gold. */
+   It gets no knock back at all, and the red and green of the two clerks come
+   down to sit beside the gold. */
 .wo-art-collectors {
   z-index: 0;
   object-fit: cover;
-  filter: saturate(0.56) contrast(1.04) brightness(0.9) sepia(0.22);
+  filter: saturate(0.56) contrast(1.04) brightness(0.94) sepia(0.22);
 }
 
 /* --- Where type is allowed to sit ----------------------------------------- */
 
-/* One scrim for both panels, because both carry type in the same place: the
-   theme block, low. The top edge is feathered so the band meets the page
-   rather than cutting into it, and the floor of the panel goes to the page's
-   own black so the band and the footer are one surface. */
+/* The gradient itself is built in slides.tsx from the layout's own numbers,
+   because its zones are the layout. This only places it. */
 .wo-scrim {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    180deg,
-    rgba(11, 9, 7, 0.72) 0%,
-    rgba(11, 9, 7, 0.06) 13%,
-    rgba(11, 9, 7, 0.1) 50%,
-    rgba(11, 9, 7, 0.6) 70%,
-    rgba(9, 7, 5, 0.94) 86%,
-    #0b0907 100%
-  );
 }
 
-/* --- The division --------------------------------------------------------- */
+/* Type that sits directly on a painting gets a soft dark halo, so a bright
+   passage of the picture behind a letter never takes the letter away. */
+.wo-on-art {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 24px rgba(0, 0, 0, 0.55);
+}
 
-/* The seam. The two themes are one argument split down the middle, and this
+/* --- The printed bill ----------------------------------------------------- */
+
+/* The seam. The two halves are one argument split down the middle, and this
    is the split. Gold rather than black, so it reads as a rule the club drew
-   and not as a gap between two images. */
+   and not as a gap between two images. Strongest where the paintings are the
+   content, gone behind the theme and the details, so it never cuts a letter. */
 .wo-seam {
   position: absolute;
   top: 0;
   bottom: 0;
-  z-index: 5;
   width: 1px;
   background: linear-gradient(
     180deg,
     rgba(200, 162, 74, 0) 0%,
-    rgba(200, 162, 74, 0.5) 18%,
-    rgba(200, 162, 74, 0.5) 76%,
-    rgba(200, 162, 74, 0) 100%
+    rgba(200, 162, 74, 0) 34%,
+    rgba(200, 162, 74, 0.6) 44%,
+    rgba(200, 162, 74, 0.6) 72%,
+    rgba(200, 162, 74, 0) 80%
   );
 }
 
-/* The band's two edges, full bleed, so the diptych reads as one plate hung on
-   the page rather than as the page's middle third. */
-.wo-edge {
+/* The frame, drawn over the paintings rather than under them. The canvas
+   carries the same double rule, but a full bleed picture covers it; over the
+   art it reads as the border of a framed print or a theatre bill, which is
+   most of what makes this page a poster rather than a photograph. */
+.wo-frame {
   position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 6;
+  inset: 40px;
+  border: 1px solid rgba(200, 162, 74, 0.5);
+  pointer-events: none;
+}
+.wo-frame::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(200, 162, 74, 0.2);
+}
+
+/* The rule the notice sits under, fading at both ends like the canvas's own
+   hairlines. */
+.wo-rule {
+  position: absolute;
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(200, 162, 74, 0.06),
-    rgba(200, 162, 74, 0.38) 22%,
-    rgba(200, 162, 74, 0.38) 78%,
-    rgba(200, 162, 74, 0.06)
+    rgba(200, 162, 74, 0.7),
+    rgba(200, 162, 74, 0.45) 60%,
+    rgba(200, 162, 74, 0.08)
   );
 }
 
-/* The mark above a theme label. Small enough to be a tick rather than a rule:
-   it says a new item starts here, which is all a numbered exhibit needs. */
+/* The numerals. Gold leaf, with a hard dark edge under each stroke so they
+   read as cut into the picture rather than floated over it. */
+.wo-numeral {
+  color: var(--cc-gold);
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.55),
+    0 4px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* The mark that opens a label. Small enough to be a tick rather than a rule:
+   it says a new item starts here, which is all a numbered half needs. */
 .wo-tick {
+  display: block;
   width: 34px;
   height: 1px;
   background: var(--cc-gold);
-  opacity: 0.8;
+  opacity: 0.85;
 }

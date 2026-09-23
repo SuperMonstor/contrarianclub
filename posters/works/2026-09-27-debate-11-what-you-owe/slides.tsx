@@ -4,78 +4,67 @@ import { Lockup } from "../../src/core/kit";
 import "./slides.css";
 
 // Debate Club #11. One poster, and the job it has is unusual for this club:
-// announce the themes and withhold the motions.
+// announce the theme and withhold the motions.
 //
 // ---------------------------------------------------------------------------
 // The argument the layout is making
 //
 // Both motions are the same question in different clothes. One asks a diaspora
 // to give up a public celebration to protect the country's reputation; the
-// other asks a childfree adult to give up money to fix its birth rate. Neither
-// is about festivals or about tax. Both are about what the country may ask a
-// private life to give up, so the poster asks that out loud and hangs the two
-// answers underneath it.
+// other would tax adults who choose not to have children. Neither is about
+// festivals or about tax. Both are about what a country may demand of a
+// private life, so the theme asks that out loud, and each half of the page
+// names only what the demand would be for.
 //
-// "Sacrifice" rather than "owe", because the word is in the first motion and
-// because it normally means dying in a war. Here the country wants a quieter
-// festival and a tax bracket, and that deflation is the piece's only joke.
+// "Can" rather than "should", because it carries both readings the room will
+// argue: what India is able to ask of you, and what it is entitled to.
 //
-// A DIPTYCH, BECAUSE THE NIGHT IS ONE ARGUMENT IN TWO CASES. Two panels, one
-// band, a gold seam down the middle. Read as a pair they say "two motions, one
-// question", which is the whole reason these two motions are on the same bill.
-// Debate #9 put its two motions on separate slides and needed a sixth slide to
-// tie them together. This is a single image and does not get that chance.
+// A DIPTYCH, FLOOR TO CEILING, BECAUSE THE NIGHT IS ONE ARGUMENT IN TWO CASES.
+// Two paintings meet at a gold seam, each running the full height of the page.
+// The first cut of this poster hung them in a band across the middle with flat
+// black above and below, and two thirds of the page had nothing on it. It read
+// as a slide. The paintings are the ground now, and every piece of type sits
+// on them, which is what the Debate #9 and #10 posters do and why they read
+// as posters.
 //
-// THE PICTURES CARRY WHAT THE COPY WITHHOLDS. Bruegel gives a town celebrating
-// in the open, in front of everyone, with the disapproving half of the same
-// square watching. Reymerswaele gives two clerks, a ledger and a heap of
-// coins, one of them looking straight out at the reader. Neither answer says
-// who is watching, and neither says tax; the paintings do that, which is what
-// keeps the motions unspent while the themes are genuinely on the page.
+// THE PICTURES CARRY WHAT THE COPY WITHHOLDS. The copy says "for India's
+// image" and "for India's future" and nothing else. Bruegel supplies a town
+// celebrating in the open, in front of everyone, with the disapproving half of
+// the same square watching. Reymerswaele supplies two clerks, a ledger and a
+// heap of coins, one of them looking straight out at the reader. A reader who
+// works out festivals and money from that has earned it; the motions still
+// arrive in the room.
 //
-// THE HEADLINE ASKS AND THE PANELS ANSWER, so the whole poster is one
-// sentence: what should you sacrifice for India, your festivals abroad, and
-// what you never spent on children. Both answers are noun phrases opening on a
-// possessive, because the point of the night is that these are yours until
-// somebody argues they are not. A subject line ("diaspora and national image")
-// would be a syllabus entry, and nobody argues with a syllabus.
+// A PRINTED BILL, NOT A SLIDE. A gold double rule is drawn over the art, the
+// way a framed print or a theatre bill carries its border. The edition and the
+// details sit in the top right corner opposite the lockup, where a playbill
+// puts them. The two halves are numbered in large engraved numerals.
 //
-// EACH PANEL'S LABEL CARRIES WHAT THE SACRIFICE IS FOR, and the big line
-// carries what it costs. "For India's image" over the festivals, "For India's
-// future" over the money. That is the only place the poster states the case
-// for the motions, it states it in six words, and it puts the national good
-// in the smallest type on the page, which is the club's opinion of it.
-//
-// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the question
-// both motions sit under. Playfair does all the talking: the two themes, and
-// the details. Inter appears small and gold only where it is pure utility: the
-// edition, the theme labels, the format, the call to action.
-//
-// FLUSH LEFT ON THE PAGE MARGIN, and inside the band each column takes its own
-// outer margin, so the two theme blocks sit symmetrically about the seam. The
-// lockup takes its left cut, because this page sets nothing on a centre.
+// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
+// Playfair does all the talking: the two halves, the details, the notice that
+// the motions are held back. Inter appears small and gold only where it is pure
+// utility: the edition, the theme label, the format, the call to action.
 //
 // ---------------------------------------------------------------------------
 // The art, public domain via Wikimedia Commons:
 //
 //   carnival    Pieter Bruegel the Elder, The Fight Between Carnival and Lent
-//               (1559, Kunsthistorisches Museum). The crop is the carnival
-//               half: the barrel, the pie hat, the musicians. Chosen over the
-//               Peasant Dance because the painting already contains the
-//               argument, with the church and its penitents in the same
-//               square, and a crop can move between them later.
+//               (1559, Kunsthistorisches Museum). A vertical slice through the
+//               carnival half of the square: rooftops and the round dance at
+//               the top, the notable couple led by their fool in the middle,
+//               Carnival on his barrel at the bottom.
 //   collectors  Marinus van Reymerswaele, The Tax Collectors (first half of
-//               the 16th century, National Museum in Warsaw). The ledger, the
-//               coins, and the one face in the poster that looks back at you.
+//               the 16th century, National Museum in Warsaw). The clerk who
+//               looks back at you, the pointing finger, the coins.
 
 const MARGIN = 92;
 
 /* --- Copy this poster defines for itself ---------------------------------- */
 
 /** A picture, its aspect, and the treatment it was tuned for. Two paintings
- *  four centuries and one medium apart cannot share a filter: the Bruegel is a
- *  bright sanded square that has to come down, the Reymerswaele is already
- *  night-dark and has to come up. */
+ *  from different decades and different light cannot share a filter: the
+ *  Bruegel is a bright sanded square that has to come down, the Reymerswaele
+ *  is already night-dark and has to come up. */
 export interface Plate {
   src: string;
   ratio: number;
@@ -83,34 +72,33 @@ export interface Plate {
 }
 
 /** Where in the picture to centre, and how far in. x and y are fractions of
- *  the picture; scale 1 means the picture is exactly one panel wide. */
+ *  the picture; scale 1 means the picture is exactly one panel wide. A scale
+ *  too small to cover the panel is raised until it does. */
 export interface Crop {
   x: number;
   y: number;
   scale: number;
 }
 
-/** One theme: what the sacrifice is for, the picture it is argued on, and the
- *  thing being asked for, which is as much of the motion as anybody gets
- *  before the room. Line breaks are copy here, as everywhere in this repo, and
- *  they go at phrase boundaries. */
-export interface Theme {
-  /** what this sacrifice would be for, small and gold */
+/** One half of the page: its numeral, what the demand would be for, and the
+ *  painting it is argued on. */
+export interface Half {
+  numeral: string;
   label: string;
   plate: Plate;
   crop: Crop;
-  /** what it would cost, answering the headline */
-  answer: string[];
 }
 
 export interface Copy {
-  kicker: string;
-  /** the question both motions sit under */
-  hero: string[];
-  oneLiner: string;
-  themes: [Theme, Theme];
-  when: string;
-  where: string;
+  edition: string;
+  /** the date, then the time and place, one line each, set in the corner */
+  details: string[];
+  themeLabel: string;
+  /** the theme itself, one line per entry */
+  theme: string[];
+  halves: [Half, Half];
+  /** the line that says the motions are held back */
+  notice: string;
   /** how the night works, one line each */
   lines: string[];
   cta: string;
@@ -124,77 +112,66 @@ export interface Copy {
 interface Metrics {
   lockupTop: number;
   lockupW: number;
-  kickerTop: number;
-  kickerSize: number;
-  heroTop: number;
-  heroSize: number;
-  oneLinerTop: number;
-  oneLinerSize: number;
-  bandTop: number;
-  bandH: number;
+  editionSize: number;
+  dateSize: number;
+  detailSize: number;
+  themeLabelTop: number;
+  themeLabelSize: number;
+  themeTop: number;
+  themeSize: number;
+  numeralTop: number;
+  numeralSize: number;
   labelSize: number;
-  answerSize: number;
-  whenTop: number;
-  whenSize: number;
-  whereSize: number;
-  ctaTop: number;
+  ruleTop: number;
+  noticeSize: number;
   ctaSize: number;
-  formatTop: number;
-  formatSize: number;
-  /** portrait sets the format lines against the right margin, across from the
-   *  date, because the page is short. The story has room to stack them. */
-  formatRight: boolean;
+  linesTop: number;
+  linesSize: number;
 }
 
 const PORTRAIT: Metrics = {
-  lockupTop: 76,
+  lockupTop: 84,
   lockupW: 236,
-  kickerTop: 202,
-  kickerSize: 17,
-  heroTop: 240,
-  heroSize: 82,
-  oneLinerTop: 494,
-  oneLinerSize: 28,
-  bandTop: 558,
-  bandH: 462,
-  labelSize: 15,
-  answerSize: 31,
-  whenTop: 1066,
-  whenSize: 36,
-  whereSize: 28,
-  ctaTop: 1212,
-  ctaSize: 19,
-  formatTop: 1074,
-  formatSize: 15,
-  formatRight: true,
+  editionSize: 15,
+  dateSize: 28,
+  detailSize: 22,
+  themeLabelTop: 262,
+  themeLabelSize: 16,
+  themeTop: 298,
+  themeSize: 112,
+  numeralTop: 820,
+  numeralSize: 104,
+  labelSize: 40,
+  ruleTop: 1062,
+  noticeSize: 30,
+  ctaSize: 18,
+  linesTop: 1158,
+  linesSize: 14,
 };
 
 const STORY: Metrics = {
-  lockupTop: 132,
+  lockupTop: 124,
   lockupW: 268,
-  kickerTop: 296,
-  kickerSize: 19,
-  heroTop: 346,
-  heroSize: 96,
-  oneLinerTop: 634,
-  oneLinerSize: 32,
-  bandTop: 726,
-  bandH: 664,
-  labelSize: 16,
-  answerSize: 31,
-  whenTop: 1452,
-  whenSize: 42,
-  whereSize: 32,
-  ctaTop: 1770,
-  ctaSize: 21,
-  formatTop: 1620,
-  formatSize: 17,
-  formatRight: false,
+  editionSize: 17,
+  dateSize: 32,
+  detailSize: 25,
+  themeLabelTop: 340,
+  themeLabelSize: 18,
+  themeTop: 382,
+  themeSize: 126,
+  numeralTop: 1250,
+  numeralSize: 120,
+  labelSize: 46,
+  ruleTop: 1530,
+  noticeSize: 34,
+  ctaSize: 20,
+  linesTop: 1640,
+  linesSize: 16,
 };
 
 const metrics = (format: Format): Metrics => (format.height >= 1700 ? STORY : PORTRAIT);
 
-/* --- The band ------------------------------------------------------------- */
+/* --- The ground ----------------------------------------------------------- */
 
 /** Keep the picture over its own panel. A crop centre near an edge cannot be a
  *  panel centre, so the position is clamped: a crop says where the eye should
@@ -231,75 +208,27 @@ function PanelArt({
   );
 }
 
-/** Half the band: a painting, the scrim that says where type may sit on it,
- *  and one theme. The outer margin is the page margin and the inner one is
- *  half of it, which is what makes the two blocks read as a pair rather than
- *  as two posters that happen to be adjacent. */
-function Panel({
-  theme,
-  side,
-  m,
-  format,
-}: {
-  theme: Theme;
-  side: "left" | "right";
-  m: Metrics;
-  format: Format;
-}) {
-  const pw = format.width / 2;
-  const left = side === "left";
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        height: m.bandH,
-        left: left ? 0 : pw,
-        width: pw,
-        overflow: "hidden",
-      }}
-    >
-      <PanelArt plate={theme.plate} crop={theme.crop} pw={pw} ph={m.bandH} />
-      <div className="wo-scrim" />
-      <div
-        style={{
-          position: "absolute",
-          zIndex: 4,
-          left: left ? MARGIN : 40,
-          right: left ? 40 : MARGIN,
-          bottom: 38,
-        }}
-      >
-        <div className="wo-tick" />
-        <div
-          className="kicker"
-          style={{ fontSize: m.labelSize, letterSpacing: "0.24em", marginTop: 14 }}
-        >
-          {theme.label}
-        </div>
-        {theme.answer.map((line, i) => (
-          <p
-            key={i}
-            style={{
-              margin: 0,
-              marginTop: i === 0 ? 18 : 0,
-              fontFamily: "var(--cc-font-display)",
-              fontWeight: 400,
-              fontSize: m.answerSize,
-              lineHeight: 1.26,
-              letterSpacing: "-0.005em",
-              color: "var(--cc-ivory)",
-            }}
-          >
-            {line}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
+/** Where type is allowed to sit, as one gradient over both paintings. It is
+ *  built from the metrics rather than written as fixed percentages, because
+ *  the zones are the layout: near-black behind the theme, clear through the
+ *  middle where the paintings are the content, a ramp under the two halves,
+ *  and near-black again under the notice and the details. */
+function scrim(m: Metrics, format: Format) {
+  const H = format.height;
+  const pct = (y: number) => `${((y / H) * 100).toFixed(1)}%`;
+  const themeEnd = m.themeTop + m.themeSize * 2 * 0.94;
+  return `linear-gradient(180deg,
+    rgba(11, 9, 7, 0.82) 0%,
+    rgba(11, 9, 7, 0.76) ${pct(themeEnd - 60)},
+    rgba(11, 9, 7, 0.3) ${pct(themeEnd + 70)},
+    rgba(11, 9, 7, 0.04) ${pct(themeEnd + 150)},
+    rgba(11, 9, 7, 0.08) ${pct(m.numeralTop - 60)},
+    rgba(11, 9, 7, 0.62) ${pct(m.numeralTop + m.numeralSize + 40)},
+    rgba(9, 7, 5, 0.9) ${pct(m.ruleTop - 10)},
+    rgba(8, 6, 4, 0.95) 100%)`;
 }
 
-/* --- The poster ----------------------------------------------------------- */
+/* --- Type ----------------------------------------------------------------- */
 
 const CONDENSED: CSSProperties = {
   fontFamily: "var(--cc-font-condensed)",
@@ -311,130 +240,188 @@ const CONDENSED: CSSProperties = {
   margin: 0,
 };
 
+const SERIF: CSSProperties = {
+  fontFamily: "var(--cc-font-display)",
+  fontWeight: 400,
+  margin: 0,
+};
+
+/** One half's numeral and label. The outer margin is the page margin and the
+ *  inner one is half of it, so the two blocks sit symmetrically about the
+ *  seam and read as a pair rather than two posters that happen to touch. */
+function HalfLabel({
+  half,
+  side,
+  m,
+  format,
+}: {
+  half: Half;
+  side: "left" | "right";
+  m: Metrics;
+  format: Format;
+}) {
+  const left = side === "left";
+  return (
+    <div
+      className="wo-on-art"
+      style={{
+        position: "absolute",
+        top: m.numeralTop,
+        left: left ? MARGIN : format.width / 2 + 40,
+        right: left ? format.width / 2 + 40 : MARGIN,
+      }}
+    >
+      <p
+        className="wo-numeral"
+        style={{ ...SERIF, fontSize: m.numeralSize, lineHeight: 1 }}
+      >
+        {half.numeral}
+      </p>
+      <div className="wo-tick" style={{ marginTop: Math.round(m.numeralSize * 0.14) }} />
+      <p
+        style={{
+          ...SERIF,
+          marginTop: Math.round(m.labelSize * 0.42),
+          fontSize: m.labelSize,
+          lineHeight: 1.12,
+          letterSpacing: "-0.01em",
+          color: "var(--cc-ivory)",
+        }}
+      >
+        {half.label}
+      </p>
+    </div>
+  );
+}
+
+/* --- The poster ----------------------------------------------------------- */
+
 export function Poster({ copy, format }: { copy: Copy; format: Format }) {
   const m = metrics(format);
-  const bandBottom = m.bandTop + m.bandH;
+  const W = format.width;
+  const H = format.height;
+  const pw = W / 2;
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* the club, then the edition */}
+      {/* the ground: two paintings, floor to ceiling, meeting at the seam */}
+      {copy.halves.map((half, i) => (
+        <div
+          key={half.numeral}
+          style={{
+            position: "absolute",
+            top: 0,
+            height: H,
+            left: i === 0 ? 0 : pw,
+            width: pw,
+            overflow: "hidden",
+          }}
+        >
+          <PanelArt plate={half.plate} crop={half.crop} pw={pw} ph={H} />
+        </div>
+      ))}
+      <div className="wo-scrim" style={{ background: scrim(m, format) }} />
+      <div className="wo-seam" style={{ left: pw }} />
+      <div className="wo-frame" />
+
+      {/* the club, and opposite it the edition and the details */}
       <div style={{ position: "absolute", left: MARGIN, top: m.lockupTop }}>
         <Lockup width={m.lockupW} artwork="left" />
       </div>
       <div
-        className="kicker"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: m.kickerTop,
-          fontSize: m.kickerSize,
-          letterSpacing: "0.32em",
-        }}
+        className="wo-on-art"
+        style={{ position: "absolute", right: MARGIN, top: m.lockupTop + 4, textAlign: "right" }}
       >
-        {copy.kicker}
-      </div>
-
-      {/* the question both motions sit under */}
-      <div
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: m.heroTop,
-          width: format.width - MARGIN * 2,
-        }}
-      >
-        {copy.hero.map((line, i) => (
-          <p key={i} style={{ ...CONDENSED, fontSize: m.heroSize }}>
+        <div className="kicker" style={{ fontSize: m.editionSize, letterSpacing: "0.3em" }}>
+          {copy.edition}
+        </div>
+        {copy.details.map((line, i) => (
+          <p
+            key={line}
+            style={{
+              ...SERIF,
+              marginTop: i === 0 ? Math.round(m.dateSize * 0.5) : 2,
+              fontSize: i === 0 ? m.dateSize : m.detailSize,
+              lineHeight: 1.3,
+              color: i === 0 ? "var(--cc-ivory)" : "var(--cc-parchment)",
+            }}
+          >
             {line}
           </p>
         ))}
       </div>
-      <p
-        className="one-liner"
+
+      {/* the theme */}
+      <div
+        className="kicker wo-on-art"
         style={{
           position: "absolute",
           left: MARGIN,
-          top: m.oneLinerTop,
-          margin: 0,
-          fontFamily: "var(--cc-font-display)",
-          fontSize: m.oneLinerSize,
-          lineHeight: 1.3,
-          color: "var(--cc-parchment)",
+          top: m.themeLabelTop,
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          fontSize: m.themeLabelSize,
+          letterSpacing: "0.32em",
         }}
       >
-        {copy.oneLiner}
-      </p>
-
-      {/* the two themes, one band, a seam between them */}
-      <div className="wo-edge" style={{ top: m.bandTop }} />
-      <div style={{ position: "absolute", left: 0, top: m.bandTop, width: format.width, height: m.bandH }}>
-        <Panel theme={copy.themes[0]} side="left" m={m} format={format} />
-        <Panel theme={copy.themes[1]} side="right" m={m} format={format} />
-        <div className="wo-seam" style={{ left: format.width / 2 }} />
+        <span className="wo-tick" />
+        {copy.themeLabel}
       </div>
-      <div className="wo-edge" style={{ top: bandBottom }} />
+      <div
+        className="wo-on-art"
+        style={{ position: "absolute", left: MARGIN, top: m.themeTop, width: W - MARGIN * 2 }}
+      >
+        {copy.theme.map((line) => (
+          <p key={line} style={{ ...CONDENSED, fontSize: m.themeSize }}>
+            {line}
+          </p>
+        ))}
+      </div>
 
-      {/* when, where, and how the night runs */}
-      <div style={{ position: "absolute", left: MARGIN, top: m.whenTop }}>
+      {/* the two halves */}
+      <HalfLabel half={copy.halves[0]} side="left" m={m} format={format} />
+      <HalfLabel half={copy.halves[1]} side="right" m={m} format={format} />
+
+      {/* the notice, then how the night runs */}
+      <div className="wo-rule" style={{ top: m.ruleTop, left: MARGIN, right: MARGIN }} />
+      <div
+        className="wo-on-art"
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          right: MARGIN,
+          top: m.ruleTop + 30,
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+        }}
+      >
         <p
           style={{
-            margin: 0,
-            fontFamily: "var(--cc-font-display)",
-            fontWeight: 400,
-            fontSize: m.whenSize,
-            lineHeight: 1.16,
+            ...SERIF,
+            fontStyle: "italic",
+            fontSize: m.noticeSize,
+            lineHeight: 1.2,
             color: "var(--cc-ivory)",
           }}
         >
-          {copy.when}
+          {copy.notice}
         </p>
-        <p
-          style={{
-            margin: 0,
-            marginTop: 12,
-            fontFamily: "var(--cc-font-display)",
-            fontWeight: 400,
-            fontSize: m.whereSize,
-            lineHeight: 1.2,
-            color: "var(--cc-parchment)",
-          }}
-        >
-          {copy.where}
-        </p>
+        <div className="kicker" style={{ fontSize: m.ctaSize, letterSpacing: "0.28em" }}>
+          {copy.cta}
+        </div>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          ...(m.formatRight ? { right: MARGIN } : { left: MARGIN }),
-          top: m.formatTop,
-          textAlign: m.formatRight ? "right" : "left",
-        }}
-      >
+      <div style={{ position: "absolute", left: MARGIN, top: m.linesTop }}>
         {copy.lines.map((line) => (
           <div
             key={line}
             className="label"
-            style={{
-              fontSize: m.formatSize,
-              letterSpacing: "0.12em",
-              lineHeight: 1.7,
-            }}
+            style={{ fontSize: m.linesSize, letterSpacing: "0.12em", lineHeight: 1.7 }}
           >
             {line}
           </div>
         ))}
-      </div>
-      <div
-        className="kicker"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: m.ctaTop,
-          fontSize: m.ctaSize,
-          letterSpacing: "0.28em",
-        }}
-      >
-        {copy.cta}
       </div>
     </div>
   );

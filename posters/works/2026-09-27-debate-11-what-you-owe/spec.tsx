@@ -12,8 +12,8 @@ import { type Plate, Poster } from "./slides";
 // the handout and the recap unchanged.
 //
 // The reasoning behind the composition is in slides.tsx. The short version:
-// both motions ask the same thing, so the headline asks it, and the two panels
-// answer it with what each motion would actually take.
+// both motions ask the same thing, so the theme asks it, and each half of the
+// page names only what the demand would be for. The paintings do the rest.
 //
 // The held back motions, for whoever writes the handout:
 //
@@ -35,7 +35,7 @@ const collectors: Plate = {
 };
 
 const work: WorkSpec = {
-  title: "Debate Club #11, what you owe the country",
+  title: "Debate Club #11, what can India ask of you",
   date: "2026-09-27",
   formats: ["ig-portrait", "ig-story"],
 
@@ -47,29 +47,30 @@ const work: WorkSpec = {
         <Poster
           format={format}
           copy={{
-            kicker: "Debate Club #11",
-            hero: ["What should you", "sacrifice", "for India?"],
-            oneLiner: "Two motions on that question. Both announced on the day.",
-            themes: [
+            edition: "Debate Club #11",
+            details: ["Sunday, 27 September", "2 to 5 pm", "Big Pitcher, Indiranagar"],
+            themeLabel: "Theme",
+            theme: ["What can India", "ask of you?"],
+            halves: [
               {
-                label: "One. For India's image",
+                numeral: "I",
+                label: "For India's image",
                 plate: carnival,
-                // the carnival half of the square: the barrel, the pie hat and
-                // the musicians, with the crowd still reading as a crowd
-                crop: { x: 0.37, y: 0.775, scale: 4.4 },
-                answer: ["Your festivals, when you", "hold them abroad."],
+                // a full height slice through the carnival half of the square,
+                // at the smallest scale that covers the panel: rooftops, the
+                // notable couple and their fool, Carnival on his barrel
+                crop: { x: 0.42, y: 0.5, scale: 1 },
               },
               {
-                label: "Two. For India's future",
+                numeral: "II",
+                label: "For India's future",
                 plate: collectors,
-                // both faces and the ledger, with the coins left under the
-                // scrim where they are a suggestion rather than the subject
-                crop: { x: 0.5, y: 0.52, scale: 1.64 },
-                answer: ["What you never spent", "on children."],
+                // the clerk who looks back at you, the finger on the ledger,
+                // and the coins under the notice
+                crop: { x: 0.62, y: 0.4, scale: 2.3 },
               },
             ],
-            when: "Sunday, 27 September",
-            where: "2 to 5 pm, Big Pitcher, Indiranagar",
+            notice: "Full motions revealed on the day.",
             lines: [
               "Debaters drawn at random.",
               "The floor opens to everyone.",
