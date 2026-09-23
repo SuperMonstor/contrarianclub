@@ -1,30 +1,33 @@
 # Debate Club #11, motion one carousel
 
-The first of the two motion decks, for "I. For India's image". Post it
-Thursday or Friday before the night. The poster is
+Post it Thursday or Friday before the night. The poster is
 `works/2026-09-27-debate-11-what-you-owe`.
 
 ## Caption
 
-> Are Indians abroad embarrassing India?
+> Should Indians stop celebrating festivals abroad?
 >
-> This month it was a visarjan on a river in Leicester. Last Diwali it was
-> fireworks in Brampton. Every year there is a new video, and this month the
-> harshest headline came from home.
+> This month it was Ganesh idols on boats in Leicester. Last Diwali it was
+> fireworks in Brampton. Every time a clip goes viral, some of the harshest
+> replies come from back home: is this the image of India you're creating?
 >
-> But every community that ever celebrated in public abroad heard the same
-> thing first, and some of those festivals now close the city's schools.
+> So should Indians abroad be asked to hold back? Would it even fix anything?
+> And is it fair to ask them at all?
 >
-> So whose image is it? The first of two motions at Debate Club #11 is about
-> exactly that. The full motion is revealed on the day.
+> That's Motion 1 at Debate Club #11. Revealed on the day, or when this post
+> hits 1,000 likes. Whichever comes first.
 >
 > Sunday, 27 September, 2 to 5 pm. Big Pitcher, Indiranagar. Tickets out now,
 > link in bio.
 
-## What the deck does not say
+## The 1,000 likes promise
 
-The motion's words. The deck names the topic because a deck about it cannot
-avoid doing so, but the motion is held back until the day, as the poster
-promised. If the club decides to reveal it before the night instead, only the
-back cover changes: swap the notice for the motion, verbatim, and check it
-against `works/2026-09-27-debate-11-what-you-owe/copy.md`.
+Slide 8 promises the motion at 1,000 likes. If the post gets there before
+Sunday, somebody has to publish it that day, verbatim, exactly as it reads in
+`works/2026-09-27-debate-11-what-you-owe/copy.md`. Decide in advance where it
+goes: a story, a pinned comment, or an edit to this caption.
+
+## Sources
+
+Every post on the slides is real and quoted exactly, and every fact is
+sourced. The full list, with dates, is at the top of `spec.tsx`.
