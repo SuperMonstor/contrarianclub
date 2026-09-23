@@ -12,8 +12,8 @@ import { type Plate, Poster } from "./slides";
 // the handout and the recap unchanged.
 //
 // The reasoning behind the composition is in slides.tsx. The short version:
-// both motions are the same question, so the poster asks the question and
-// hangs the two instances of it underneath as a diptych.
+// both motions ask the same thing, so the headline asks it, and the two panels
+// answer it with what each motion would actually take.
 //
 // The held back motions, for whoever writes the handout:
 //
@@ -48,24 +48,24 @@ const work: WorkSpec = {
           format={format}
           copy={{
             kicker: "Debate Club #11",
-            hero: ["What do you owe", "the country?"],
+            hero: ["What should you", "sacrifice", "for India?"],
             oneLiner: "Two motions on that question. Both announced on the day.",
             themes: [
               {
-                label: "Theme One",
+                label: "One. For India's image",
                 plate: carnival,
                 // the carnival half of the square: the barrel, the pie hat and
                 // the musicians, with the crowd still reading as a crowd
                 crop: { x: 0.37, y: 0.775, scale: 4.4 },
-                question: ["Take a festival abroad.", "Who are you representing?"],
+                answer: ["Your festivals, when you", "hold them abroad."],
               },
               {
-                label: "Theme Two",
+                label: "Two. For India's future",
                 plate: collectors,
                 // both faces and the ledger, with the coins left under the
                 // scrim where they are a suggestion rather than the subject
                 crop: { x: 0.5, y: 0.52, scale: 1.64 },
-                question: ["Choose not to have children.", "Does the country get a say?"],
+                answer: ["What you never spent", "on children."],
               },
             ],
             when: "Sunday, 27 September",

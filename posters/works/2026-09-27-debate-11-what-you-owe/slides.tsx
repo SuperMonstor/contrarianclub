@@ -12,9 +12,13 @@ import "./slides.css";
 // Both motions are the same question in different clothes. One asks a diaspora
 // to give up a public celebration to protect the country's reputation; the
 // other asks a childfree adult to give up money to fix its birth rate. Neither
-// is about festivals or about tax. Both are about what the collective may ask
-// of a private life, so the poster asks that out loud and hangs the two
-// instances underneath it.
+// is about festivals or about tax. Both are about what the country may ask a
+// private life to give up, so the poster asks that out loud and hangs the two
+// answers underneath it.
+//
+// "Sacrifice" rather than "owe", because the word is in the first motion and
+// because it normally means dying in a war. Here the country wants a quieter
+// festival and a tax bracket, and that deflation is the piece's only joke.
 //
 // A DIPTYCH, BECAUSE THE NIGHT IS ONE ARGUMENT IN TWO CASES. Two panels, one
 // band, a gold seam down the middle. Read as a pair they say "two motions, one
@@ -25,14 +29,22 @@ import "./slides.css";
 // THE PICTURES CARRY WHAT THE COPY WITHHOLDS. Bruegel gives a town celebrating
 // in the open, in front of everyone, with the disapproving half of the same
 // square watching. Reymerswaele gives two clerks, a ledger and a heap of
-// coins, one of them looking straight out at the reader. The questions never
-// say festival, and never say tax; the paintings do it for them, which is what
+// coins, one of them looking straight out at the reader. Neither answer says
+// who is watching, and neither says tax; the paintings do that, which is what
 // keeps the motions unspent while the themes are genuinely on the page.
 //
-// THE QUESTIONS ARE THE THEMES, PHRASED AS QUESTIONS RATHER THAN SUBJECTS.
-// "Diaspora and national image" is a syllabus entry and nobody argues with a
-// syllabus. Both panels open on "If you", because the thing being decided in
-// the room is what the country may ask of the person reading the poster.
+// THE HEADLINE ASKS AND THE PANELS ANSWER, so the whole poster is one
+// sentence: what should you sacrifice for India, your festivals abroad, and
+// what you never spent on children. Both answers are noun phrases opening on a
+// possessive, because the point of the night is that these are yours until
+// somebody argues they are not. A subject line ("diaspora and national image")
+// would be a syllabus entry, and nobody argues with a syllabus.
+//
+// EACH PANEL'S LABEL CARRIES WHAT THE SACRIFICE IS FOR, and the big line
+// carries what it costs. "For India's image" over the festivals, "For India's
+// future" over the money. That is the only place the poster states the case
+// for the motions, it states it in six words, and it puts the national good
+// in the smallest type on the page, which is the club's opinion of it.
 //
 // TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the question
 // both motions sit under. Playfair does all the talking: the two themes, and
@@ -78,14 +90,17 @@ export interface Crop {
   scale: number;
 }
 
-/** One theme: the picture it is argued on, and the question that is as much
- *  of it as anybody gets before the room. Line breaks are copy here, as
- *  everywhere in this repo, and they go at phrase boundaries. */
+/** One theme: what the sacrifice is for, the picture it is argued on, and the
+ *  thing being asked for, which is as much of the motion as anybody gets
+ *  before the room. Line breaks are copy here, as everywhere in this repo, and
+ *  they go at phrase boundaries. */
 export interface Theme {
+  /** what this sacrifice would be for, small and gold */
   label: string;
   plate: Plate;
   crop: Crop;
-  question: string[];
+  /** what it would cost, answering the headline */
+  answer: string[];
 }
 
 export interface Copy {
@@ -118,7 +133,7 @@ interface Metrics {
   bandTop: number;
   bandH: number;
   labelSize: number;
-  questionSize: number;
+  answerSize: number;
   whenTop: number;
   whenSize: number;
   whereSize: number;
@@ -134,16 +149,16 @@ interface Metrics {
 const PORTRAIT: Metrics = {
   lockupTop: 76,
   lockupW: 236,
-  kickerTop: 208,
+  kickerTop: 202,
   kickerSize: 17,
-  heroTop: 254,
-  heroSize: 90,
-  oneLinerTop: 446,
+  heroTop: 240,
+  heroSize: 82,
+  oneLinerTop: 494,
   oneLinerSize: 28,
-  bandTop: 520,
-  bandH: 500,
+  bandTop: 558,
+  bandH: 462,
   labelSize: 15,
-  questionSize: 31,
+  answerSize: 31,
   whenTop: 1066,
   whenSize: 36,
   whereSize: 28,
@@ -159,20 +174,20 @@ const STORY: Metrics = {
   lockupW: 268,
   kickerTop: 296,
   kickerSize: 19,
-  heroTop: 350,
-  heroSize: 104,
-  oneLinerTop: 586,
+  heroTop: 346,
+  heroSize: 96,
+  oneLinerTop: 634,
   oneLinerSize: 32,
-  bandTop: 686,
-  bandH: 700,
+  bandTop: 726,
+  bandH: 664,
   labelSize: 16,
-  questionSize: 31,
-  whenTop: 1440,
+  answerSize: 31,
+  whenTop: 1452,
   whenSize: 42,
   whereSize: 32,
-  ctaTop: 1762,
+  ctaTop: 1770,
   ctaSize: 21,
-  formatTop: 1612,
+  formatTop: 1620,
   formatSize: 17,
   formatRight: false,
 };
@@ -258,11 +273,11 @@ function Panel({
         <div className="wo-tick" />
         <div
           className="kicker"
-          style={{ fontSize: m.labelSize, letterSpacing: "0.3em", marginTop: 14 }}
+          style={{ fontSize: m.labelSize, letterSpacing: "0.24em", marginTop: 14 }}
         >
           {theme.label}
         </div>
-        {theme.question.map((line, i) => (
+        {theme.answer.map((line, i) => (
           <p
             key={i}
             style={{
@@ -270,7 +285,7 @@ function Panel({
               marginTop: i === 0 ? 18 : 0,
               fontFamily: "var(--cc-font-display)",
               fontWeight: 400,
-              fontSize: m.questionSize,
+              fontSize: m.answerSize,
               lineHeight: 1.26,
               letterSpacing: "-0.005em",
               color: "var(--cc-ivory)",
