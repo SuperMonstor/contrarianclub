@@ -14,7 +14,7 @@ import "./slides.css";
 //   5  so people back home have started asking             the ask
 //   6  but would it even work?                             is it worth it
 //   7  and even if it would, is it fair to ask?            is it fair
-//   8  the motion, blacked out                             come and find out
+//   8  the motion, struck out                              come and find out
 //
 // It reads as one person talking, each slide picking up where the last one
 // stopped. Anyone editing a line should read the slide before it and the one
@@ -25,34 +25,34 @@ import "./slides.css";
 // The grammar
 //
 // THE POSTER OPENS AND CLOSES THE DECK. Slides 1 and 8 sit on the same
-// Bruegel carnival as the poster's first panel, so the carousel starts and
-// ends inside the thing people have already seen. Everything between is the
-// real world.
+// Bruegel carnival as the poster's first panel. Everything between is the
+// real world, in photographs of the things the copy describes, left close to
+// their own colour: only the painting carries the warm tone.
 //
-// PHOTOGRAPHS FOR WHAT HAPPENED, CLIPPINGS FOR WHAT PEOPLE SAID. The middle six
-// slides are photographs of the things the copy describes, under the same gold
-// frame and the same warm treatment as the paintings, so they read as one
-// printed object. What people posted is set as a cream clipping laid over the
-// picture: the one light material in the deck, because it is the one thing on
-// each slide that is somebody else talking.
+// NOTHING DECORATIVE. No frame drawn over the pictures, no ticks before
+// labels, no glow behind type, no fading rules, no numerals. Every one of
+// those was tried on this deck and every one of them made it look generated.
+// The pictures run to the edge, the type sits on a plain dark fade, and the
+// one division is a plain hairline.
 //
-// EVERY POST IS REAL AND QUOTED EXACTLY. None is invented or paraphrased. Each
-// was found reproduced in the press, and the source sits under the rule.
-// Private people's names and handles are struck out with the same hand-drawn
-// bar that strikes the motion on slide 8; an official account (a city) keeps
-// its name, because being quoted is its job.
+// GOLD MEANS ONE THING PER SLIDE. The call to action, or the single line the
+// slide exists for. Sources, credits, the counter and the labels are plain
+// muted type in sentence case; only "Tickets out now" is set in tracked caps.
 //
-// THE STRIKE IS ONE MARK, USED TWICE. Ink on the cream clippings, ivory on the
-// dark motion page. It always means the same thing: something is being held
-// back on purpose.
+// WHAT PEOPLE SAID IS PAPER. Each post is a clipping of printed paper laid on
+// the photograph: a torn foot, a slight tilt, a short real shadow, no avatar
+// and no rounded card. It is a cut-out, not an interface. Every post is real,
+// quoted exactly, found reproduced in the press, and sourced under the rule.
+// Private people's names are struck out with the same hand-drawn bar that
+// strikes the motion on slide 8, and are not in this repo either.
+//
+// NOT EVERY SLIDE IS THE SAME SLIDE. Most beats put the talking at the foot.
+// Slide 4 opens on its line and sets the post large in the middle, because the
+// post is the point. Slide 6 opens on its question and tucks the headline to
+// one side, so the empty lit street is the picture.
 //
 // THREE TYPEFACES. Oswald shouts once, the question on slide 1. Playfair does
-// all the talking. Inter is the posts themselves, and the small gold utility:
-// counter, sources, credits.
-//
-// ONE DIVISION, LOW ON THE PAGE, AT THE SAME HEIGHT EVERY TIME: a gold hairline
-// with the source and the photo credit under it. Every photograph is credited
-// on its own slide, which its licence requires.
+// all the talking. Inter is the posts themselves and the small print.
 
 const W = 1080;
 const H = 1350;
@@ -62,14 +62,12 @@ const MARGIN = 92;
 const RULE = 1140;
 /** Where the last line of narration lands, clear of the division. */
 const TEXT_BASE = RULE - 58;
-/** Where the clippings start, clear of the counter. */
-const CARDS_TOP = 158;
+/** Where things start at the head of a slide, clear of the counter. */
+const HEAD_TOP = 150;
 
 /* --- Pictures ------------------------------------------------------------- */
 
-/** A picture, its aspect, and the treatment it was tuned for. Photographs of
- *  a floodlit lake, a night courtyard and a noon memorial cannot share one
- *  filter, so each names its own. */
+/** A picture, its aspect, the treatment it was tuned for, and who made it. */
 export interface Plate {
   src: string;
   ratio: number;
@@ -110,8 +108,7 @@ function CropArt({ plate, crop }: { plate: Plate; crop: Crop }) {
 }
 
 /** The marker the strikes are drawn with: a turbulence filter that chews the
- *  edges so no two bars are the same shape. Defined once per slide, used by
- *  every <Strike>. */
+ *  edges so no two bars are the same shape. */
 function InkFilter() {
   return (
     <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden>
@@ -123,7 +120,7 @@ function InkFilter() {
   );
 }
 
-/** Every slide: the picture, its scrim, the frame, then the content. */
+/** Every slide: the picture, its fade, then the content. */
 function Ground({
   plate,
   crop,
@@ -140,7 +137,6 @@ function Ground({
       <InkFilter />
       <CropArt plate={plate} crop={crop} />
       <div className={scrim} />
-      <div className="ic-frame" />
       <div style={{ position: "absolute", inset: 0 }}>{children}</div>
     </div>
   );
@@ -155,6 +151,13 @@ const CONDENSED: CSSProperties = {
   lineHeight: 0.94,
   letterSpacing: "-0.004em",
   color: "var(--cc-ivory)",
+  margin: 0,
+};
+
+const SMALL: CSSProperties = {
+  fontFamily: "var(--cc-font-ui)",
+  fontWeight: 500,
+  color: "var(--cc-muted)",
   margin: 0,
 };
 
@@ -194,72 +197,38 @@ function Narration({ lines, size = 40 }: { lines: Line[]; size?: number }) {
   );
 }
 
+/** Where the reader is. Small and plain: a page number, not a feature. */
 function Counter({ n, of }: { n: number; of: number }) {
   return (
     <div
-      className="kicker ic-on-art"
+      className="ic-on-art"
       style={{
+        ...SMALL,
         position: "absolute",
         left: MARGIN,
-        top: 92,
-        fontSize: 15,
-        letterSpacing: "0.3em",
-        color: "var(--cc-gold)",
+        top: 88,
+        fontSize: 17,
+        color: "var(--cc-parchment)",
+        textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
       }}
     >
-      {String(n).padStart(2, "0")} <span style={{ opacity: 0.6 }}>/</span>{" "}
-      {String(of).padStart(2, "0")}
-    </div>
-  );
-}
-
-/** The small gold label with its tick, as the poster sets "Theme". */
-function Label({ children, style }: { children: ReactNode; style?: CSSProperties }) {
-  return (
-    <div
-      className="kicker ic-on-art"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 16,
-        fontSize: 16,
-        letterSpacing: "0.3em",
-        ...style,
-      }}
-    >
-      <span className="ic-tick" />
-      {children}
+      {n} of {of}
     </div>
   );
 }
 
 /** Under the rule: where the facts and the posts came from, then who made
- *  the picture. Small, and subordinate to the talking by construction. */
+ *  the picture. The smallest, quietest type on the slide. */
 function UnderRule({ source, credit }: { source?: string; credit: string }) {
   return (
     <div
       className="ic-on-art"
-      style={{ position: "absolute", left: MARGIN, top: RULE + 34, width: W - MARGIN * 2 }}
+      style={{ position: "absolute", left: MARGIN, top: RULE + 30, width: W - MARGIN * 2 }}
     >
-      {source && (
-        <div
-          className="kicker"
-          style={{ fontSize: 15, letterSpacing: "0.08em", lineHeight: 1.65 }}
-        >
-          {source}
-        </div>
-      )}
-      <div
-        style={{
-          marginTop: source ? 8 : 0,
-          fontFamily: "var(--cc-font-ui)",
-          fontSize: 13,
-          letterSpacing: "0.02em",
-          color: "var(--cc-muted)",
-        }}
-      >
+      {source && <p style={{ ...SMALL, fontSize: 16, lineHeight: 1.5 }}>{source}</p>}
+      <p style={{ ...SMALL, marginTop: source ? 6 : 0, fontSize: 13, fontWeight: 400 }}>
         {credit}
-      </div>
+      </p>
     </div>
   );
 }
@@ -267,15 +236,11 @@ function UnderRule({ source, credit }: { source?: string; credit: string }) {
 /* --- The strike ----------------------------------------------------------- */
 
 /** Words behind a hand-drawn bar. The hidden words still set the width, so the
- *  bar is as long as what it hides and the letters can be counted. Ink on the
- *  cream clippings, ivory on the dark motion page. */
+ *  bar is as long as what it hides. Ink on paper, ivory on the dark page. */
 export function Strike({ children, tone = "ink" }: { children: string; tone?: "ink" | "ivory" }) {
   const tilt = ((children.length % 3) - 1) * 0.45;
   return (
-    <span
-      className={`ic-strike ic-strike-${tone}`}
-      style={{ transform: `rotate(${tilt}deg)` }}
-    >
+    <span className={`ic-strike ic-strike-${tone}`} style={{ transform: `rotate(${tilt}deg)` }}>
       {children}
     </span>
   );
@@ -283,60 +248,113 @@ export function Strike({ children, tone = "ink" }: { children: string; tone?: "i
 
 /* --- The clippings -------------------------------------------------------- */
 
-/** One post, as it appeared, set on cream. `who` is either an official
- *  account, printed in full, or a private person, struck out. */
-export interface Post {
-  platform: string;
-  who:
-    | { kind: "official"; name: string; handle: string; initials: string }
-    | { kind: "private"; name: string; handle: string };
-  text: string;
-  meta: string;
+/** A torn foot for a piece of paper, as a clip-path. Deterministic, so a
+ *  re-export does not re-tear it: the same seed gives the same edge. The top
+ *  is a scissor cut, very slightly off true; the bottom is torn. */
+function tornEdge(seed: number) {
+  let s = seed;
+  const rnd = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const top: string[] = [`0 ${(rnd() * 2).toFixed(1)}px`, `100% ${(rnd() * 2).toFixed(1)}px`];
+  const bottom: string[] = [];
+  const steps = 34;
+  for (let i = steps; i >= 0; i--) {
+    const x = (i / steps) * 100;
+    const y = 2 + rnd() * 9;
+    bottom.push(`${x.toFixed(2)}% calc(100% - ${y.toFixed(1)}px)`);
+  }
+  return `polygon(${[...top, ...bottom].join(", ")})`;
 }
 
-function PostCard({ post, width = W - MARGIN * 2, size = 25 }: { post: Post; width?: number; size?: number }) {
-  const who = post.who;
+/** A piece of paper on the photograph: the torn edge, the tilt, and a short
+ *  real shadow. The shadow is on the wrapper because a clip-path would cut a
+ *  box-shadow off with the paper. */
+function Paper({
+  seed,
+  tilt,
+  width,
+  newsprint,
+  padding,
+  children,
+}: {
+  seed: number;
+  tilt: number;
+  width?: number;
+  newsprint?: boolean;
+  padding: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="ic-clipping" style={{ width, padding: "26px 30px 22px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div className="ic-avatar">{who.kind === "official" ? who.initials : ""}</div>
-        <div style={{ flex: 1, lineHeight: 1.3 }}>
-          <div style={{ fontWeight: 700, fontSize: 21 }}>
-            {who.kind === "official" ? who.name : <Strike>{who.name}</Strike>}
-          </div>
-          <div style={{ fontSize: 18, color: "rgba(23, 18, 11, 0.55)", marginTop: 3 }}>
-            {who.kind === "official" ? who.handle : <Strike>{who.handle}</Strike>}
-          </div>
-        </div>
-      </div>
-      <p style={{ margin: "18px 0 0", fontSize: size, lineHeight: 1.42 }}>{post.text}</p>
-      <div className="ic-clipping-meta">
-        {`${post.platform} \u00b7 ${post.meta}`}
+    <div className="ic-paper-shadow" style={{ transform: `rotate(${tilt}deg)`, width }}>
+      <div
+        className={newsprint ? "ic-paper ic-newsprint" : "ic-paper"}
+        style={{ clipPath: tornEdge(seed), padding }}
+      >
+        {children}
       </div>
     </div>
   );
 }
 
-/** A one-line reply, the way a comment sits under a video. */
+/** One post, as it appeared. An official account keeps its name; a private
+ *  person's is struck out. */
+export interface Post {
+  platform: string;
+  who: { kind: "official" | "private"; name: string; handle: string };
+  text: string;
+  date: string;
+}
+
+function PostPaper({
+  post,
+  seed,
+  tilt,
+  width,
+  size = 25,
+}: {
+  post: Post;
+  seed: number;
+  tilt: number;
+  width: number;
+  size?: number;
+}) {
+  const official = post.who.kind === "official";
+  return (
+    <Paper seed={seed} tilt={tilt} width={width} padding="26px 32px 34px">
+      <div style={{ fontSize: Math.round(size * 0.78), lineHeight: 1.3 }}>
+        <span style={{ fontWeight: 700 }}>
+          {official ? post.who.name : <Strike>{post.who.name}</Strike>}
+        </span>{" "}
+        <span style={{ color: "rgba(23, 18, 11, 0.55)" }}>
+          {official ? post.who.handle : <Strike>{post.who.handle}</Strike>}
+        </span>
+      </div>
+      <p style={{ margin: "12px 0 0", fontSize: size, lineHeight: 1.4 }}>{post.text}</p>
+      <p style={{ margin: "14px 0 0", fontSize: 16, color: "rgba(23, 18, 11, 0.55)" }}>
+        {`${post.platform}, ${post.date}`}
+      </p>
+    </Paper>
+  );
+}
+
+/** A one-line reply, torn off the bottom of a thread. */
 export interface Reply {
   name: string;
   text: string;
 }
 
-function ReplyCard({ reply }: { reply: Reply }) {
+function ReplyPaper({ reply, seed, tilt }: { reply: Reply; seed: number; tilt: number }) {
   return (
-    <div
-      className="ic-clipping"
-      style={{ display: "inline-flex", alignItems: "center", gap: 16, padding: "18px 26px" }}
-    >
-      <div className="ic-avatar" style={{ width: 40, height: 40 }} />
-      <div>
-        <div style={{ fontWeight: 700, fontSize: 17, lineHeight: 1.2 }}>
-          <Strike>{reply.name}</Strike>
-        </div>
-        <div style={{ fontSize: 28, lineHeight: 1.3, marginTop: 4 }}>{reply.text}</div>
+    <Paper seed={seed} tilt={tilt} padding="16px 26px 24px">
+      <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.2 }}>
+        <Strike>{reply.name}</Strike>
       </div>
-    </div>
+      <div style={{ fontSize: 30, lineHeight: 1.3, marginTop: 6, whiteSpace: "nowrap" }}>
+        {reply.text}
+      </div>
+    </Paper>
   );
 }
 
@@ -347,58 +365,100 @@ export interface Headline {
   date: string;
 }
 
-function HeadlineCard({ item }: { item: Headline }) {
+function HeadlinePaper({
+  item,
+  seed,
+  tilt,
+  width,
+}: {
+  item: Headline;
+  seed: number;
+  tilt: number;
+  width: number;
+}) {
   return (
-    <div className="ic-clipping ic-newsprint" style={{ width: 780, padding: "26px 34px 28px" }}>
-      <div className="ic-masthead">{item.masthead}</div>
+    <Paper seed={seed} tilt={tilt} width={width} newsprint padding="22px 30px 34px">
       <div
         style={{
-          marginTop: 14,
           fontFamily: "var(--cc-font-display)",
           fontWeight: 700,
-          fontSize: 44,
+          fontSize: 18,
+          paddingBottom: 10,
+          borderBottom: "2px solid rgba(23, 18, 11, 0.75)",
+        }}
+      >
+        {item.masthead}
+      </div>
+      <div
+        style={{
+          marginTop: 12,
+          fontFamily: "var(--cc-font-display)",
+          fontWeight: 700,
+          fontSize: 38,
           lineHeight: 1.12,
           letterSpacing: "-0.01em",
         }}
       >
         {item.headline}
       </div>
-      <div className="ic-clipping-meta" style={{ borderTop: "none", paddingTop: 0 }}>
+      <p style={{ margin: "12px 0 0", fontSize: 15, color: "rgba(23, 18, 11, 0.6)" }}>
         {item.date}
-      </div>
-    </div>
+      </p>
+    </Paper>
   );
 }
 
-/** What sits over the picture on a beat: posts, replies, or a headline. */
+/** What sits on the picture on a beat, and where. */
 export type Clipping =
-  | { kind: "posts"; posts: Post[]; size?: number }
+  | { kind: "posts"; posts: Post[]; size?: number; width?: number }
   | { kind: "replies"; replies: Reply[] }
-  | { kind: "headline"; item: Headline };
+  | { kind: "headline"; item: Headline; width?: number };
 
-function Clippings({ clipping }: { clipping: Clipping }) {
+function Clippings({
+  clipping,
+  top,
+  align,
+}: {
+  clipping: Clipping;
+  top: number;
+  align: "left" | "right" | "center";
+}) {
+  const justify = { left: "flex-start", right: "flex-end", center: "center" }[align];
+  // the papers do not all sit square, and no two sit at the same angle
+  const tilts = [-1.4, 0.9, -0.6];
   return (
     <div
       style={{
         position: "absolute",
-        left: MARGIN,
-        top: CARDS_TOP,
-        width: W - MARGIN * 2,
+        left: MARGIN - 8,
+        right: MARGIN - 8,
+        top,
         display: "flex",
         flexDirection: "column",
-        gap: 18,
+        alignItems: justify,
+        gap: 22,
       }}
     >
       {clipping.kind === "posts" &&
-        clipping.posts.map((p) => <PostCard key={p.text} post={p} size={clipping.size} />)}
+        clipping.posts.map((p, i) => (
+          <PostPaper
+            key={p.text}
+            post={p}
+            seed={17 + i * 11}
+            tilt={tilts[i % tilts.length]}
+            width={clipping.width ?? W - MARGIN * 2}
+            size={clipping.size}
+          />
+        ))}
       {clipping.kind === "replies" &&
         clipping.replies.map((r, i) => (
-          // the second reply steps in, the way a thread does
-          <div key={r.text} style={{ marginLeft: i * 120 }}>
-            <ReplyCard reply={r} />
+          <div key={r.text} style={{ marginLeft: i * 110 }}>
+            <ReplyPaper reply={r} seed={5 + i * 7} tilt={tilts[i % tilts.length]} />
           </div>
         ))}
-      {clipping.kind === "headline" && <HeadlineCard item={clipping.item} />}
+      {clipping.kind === "headline" && (
+        <HeadlinePaper item={clipping.item} seed={29} tilt={1.1} width={clipping.width ?? 760} />
+      )}
     </div>
   );
 }
@@ -428,7 +488,9 @@ export function Hook({
         className="ic-on-art"
         style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
       >
-        <Label style={{ marginBottom: 30 }}>{label}</Label>
+        <p style={{ ...SMALL, fontSize: 22, color: "var(--cc-parchment)", marginBottom: 22 }}>
+          {label}
+        </p>
         {question.map((l) => (
           <p key={l} style={{ ...CONDENSED, fontSize: size }}>
             {l}
@@ -441,15 +503,19 @@ export function Hook({
   );
 }
 
-/** 2 to 7. A beat of the story: the photograph, what people said about it laid
- *  over the top, and the talking at the foot, bottom-anchored so its last line
- *  lands on the division however long it runs. */
+/** 2 to 7. A beat of the story. By default the clippings sit at the head and
+ *  the talking at the foot. A beat can also open on a line of its own at the
+ *  head (`head`), and put its clippings anywhere down the page. */
 export function Beat({
   plate,
   crop,
   n,
   of,
+  head,
+  headSize,
   clipping,
+  clippingTop = HEAD_TOP,
+  clippingAlign = "left",
   lines,
   size,
   source,
@@ -458,15 +524,27 @@ export function Beat({
   crop: Crop;
   n: number;
   of: number;
+  head?: Line[];
+  headSize?: number;
   clipping?: Clipping;
+  clippingTop?: number;
+  clippingAlign?: "left" | "right" | "center";
   lines: Line[];
   size?: number;
   source?: string;
 }) {
   return (
-    <Ground plate={plate} crop={crop} scrim="ic-scrim">
+    <Ground plate={plate} crop={crop} scrim={head ? "ic-scrim-both" : "ic-scrim"}>
       <Counter n={n} of={of} />
-      {clipping && <Clippings clipping={clipping} />}
+      {head && (
+        <div
+          className="ic-on-art"
+          style={{ position: "absolute", left: MARGIN, width: 876, top: HEAD_TOP }}
+        >
+          <Narration lines={head} size={headSize} />
+        </div>
+      )}
+      {clipping && <Clippings clipping={clipping} top={clippingTop} align={clippingAlign} />}
       <div
         className="ic-on-art"
         style={{ position: "absolute", left: MARGIN, width: 876, bottom: H - TEXT_BASE }}
@@ -480,7 +558,7 @@ export function Beat({
 }
 
 /** The heart, drawn to read as the like button without being anybody's logo:
- *  an outline, in gold, sat on the baseline of the line it belongs to. */
+ *  an outline sat on the baseline of the line it belongs to. */
 function Heart({ size }: { size: number }) {
   return (
     <svg
@@ -493,7 +571,7 @@ function Heart({ size }: { size: number }) {
       <path
         d="M12 20.3s-7.1-4.4-9.2-8.6C1.2 8.4 3 4.6 6.6 4.3c2.1-.2 3.9.9 5.4 2.8 1.5-1.9 3.3-3 5.4-2.8 3.6.3 5.4 4.1 3.8 7.4-2.1 4.2-9.2 8.6-9.2 8.6z"
         fill="none"
-        stroke="var(--cc-gold-bright)"
+        stroke="currentColor"
         strokeWidth="1.9"
         strokeLinejoin="round"
       />
@@ -501,9 +579,8 @@ function Heart({ size }: { size: number }) {
   );
 }
 
-/** 8. The motion, struck out, and the terms on which it will be read. It is
- *  the poster's carnival again, at dusk, with the poster's masthead: the deck
- *  ends where it began, one step closer to the room. */
+/** 8. The motion, struck out, and the terms on which it will be read, on the
+ *  poster's carnival again: the deck ends where it began. */
 export function Motion({
   plate,
   crop,
@@ -533,15 +610,13 @@ export function Motion({
         className="ic-on-art"
         style={{ position: "absolute", right: MARGIN, top: 88, textAlign: "right" }}
       >
-        <div className="kicker" style={{ fontSize: 15, letterSpacing: "0.3em" }}>
-          Debate Club #11
-        </div>
+        <p style={{ ...SMALL, fontSize: 17 }}>Debate Club #11</p>
         {details.map((line, i) => (
           <p
             key={line}
             style={{
               margin: 0,
-              marginTop: i === 0 ? 12 : 2,
+              marginTop: i === 0 ? 10 : 2,
               fontFamily: "var(--cc-font-display)",
               fontSize: i === 0 ? 26 : 21,
               lineHeight: 1.3,
@@ -557,7 +632,9 @@ export function Motion({
         className="ic-on-art"
         style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
       >
-        <Label style={{ marginBottom: 30 }}>{label}</Label>
+        <p style={{ ...SMALL, fontSize: 22, color: "var(--cc-parchment)", marginBottom: 24 }}>
+          {label}
+        </p>
         <p
           style={{
             margin: 0,
@@ -575,7 +652,6 @@ export function Motion({
             margin: 0,
             marginTop: 44,
             fontFamily: "var(--cc-font-display)",
-            fontStyle: "italic",
             fontSize: 34,
             lineHeight: 1.3,
             color: "var(--cc-gold-bright)",
@@ -596,7 +672,7 @@ export function Motion({
           position: "absolute",
           left: MARGIN,
           right: MARGIN,
-          top: RULE + 34,
+          top: RULE + 30,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
@@ -604,21 +680,21 @@ export function Motion({
       >
         <div>
           {lines.map((l) => (
-            <div
-              key={l}
-              className="label"
-              style={{ fontSize: 14, letterSpacing: "0.12em", lineHeight: 1.7 }}
-            >
+            <p key={l} style={{ ...SMALL, fontSize: 16, lineHeight: 1.6 }}>
               {l}
-            </div>
+            </p>
           ))}
         </div>
         <div style={{ textAlign: "right" }}>
-          {cta.map((l) => (
+          {cta.map((l, i) => (
             <div
               key={l}
-              className="kicker"
-              style={{ fontSize: 17, letterSpacing: "0.26em", lineHeight: 1.75 }}
+              className={i === 0 ? "kicker" : undefined}
+              style={
+                i === 0
+                  ? { fontSize: 18, letterSpacing: "0.22em", lineHeight: 1.6 }
+                  : { ...SMALL, fontSize: 16, lineHeight: 1.8 }
+              }
             >
               {l}
             </div>

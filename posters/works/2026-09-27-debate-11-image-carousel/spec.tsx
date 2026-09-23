@@ -131,7 +131,7 @@ const work: WorkSpec = {
         <Hook
           plate={carnival}
           crop={{ x: 0.4, y: 0.5, scale: 1.9 }}
-          label="Debate Club #11 · Motion 1"
+          label="Debate Club #11, Motion 1"
           question={["Should Indians", "stop celebrating", "festivals abroad?"]}
           size={104}
         />
@@ -185,14 +185,9 @@ const work: WorkSpec = {
             posts: [
               {
                 platform: "X",
-                who: {
-                  kind: "official",
-                  name: "City of Brampton",
-                  handle: "@CityBrampton",
-                  initials: "CB",
-                },
+                who: { kind: "official", name: "City of Brampton", handle: "@CityBrampton" },
                 text: "Under the fireworks by-law, fireworks are prohibited in #Brampton, including on Diwali. ✨ ✅ Sparklers are permitted. Penalties for failing to comply range from $500 to $1,000 and may reach up to $100,000 if a court summons is issued. …",
-                meta: "18 October 2024",
+                date: "18 October 2024",
               },
             ],
           }}
@@ -211,16 +206,20 @@ const work: WorkSpec = {
       ),
     },
 
-    // 4. And it spreads: one couple becomes everyone.
+    // 4. And it spreads: one couple becomes everyone. This slide opens on its
+    //    line and sets the post large in the middle, because the post is the
+    //    point.
     {
       label: "Washington",
       hasImage: true,
       render: () => (
         <Beat
           plate={memorial}
-          crop={{ x: 0.42, y: 0.46, scale: 1.8 }}
+          crop={{ x: 0.42, y: 0.5, scale: 1.8 }}
           n={4}
           of={OF}
+          head={["None of this stays local anymore."]}
+          headSize={54}
           clipping={{
             kind: "posts",
             posts: [
@@ -228,20 +227,21 @@ const work: WorkSpec = {
                 platform: "X",
                 who: { kind: "private", name: "Account name", handle: "@account_handle" },
                 text: "Some places deserve respect, not the IT department making socially awkward TikTok dances. They ALL have to go back.",
-                meta: "March 2026 · 5.8M views · 9.7K likes",
+                date: "March 2026, 5.8 million views",
               },
             ],
-            size: 28,
+            size: 34,
+            width: 840,
           }}
+          clippingTop={300}
+          clippingAlign="center"
           lines={[
-            "None of this stays local anymore.",
-            "",
             {
               text: "Anti-Indian posts on X nearly tripled last year. One couple dancing at a war memorial in Washington somehow became an argument for cutting Indian visas.",
               tone: "parchment",
             },
           ]}
-          size={38}
+          size={36}
           source="Network Contagion Research Institute, March 2026. Post: The Juggernaut, 10 March 2026."
         />
       ),
@@ -265,13 +265,13 @@ const work: WorkSpec = {
                 platform: "X",
                 who: { kind: "private", name: "Account name", handle: "@account_handle" },
                 text: "This US Diwali video is viral on Instagram. The USA Police & Fire department had to intervene and stop fireworks and just look at the mess on the road And then you cry when you are deported. Is this the image of India & Hindus you are creating in foreign lands?",
-                meta: "22 October 2025",
+                date: "22 October 2025",
               },
               {
                 platform: "X",
                 who: { kind: "private", name: "Other name", handle: "@other_handle" },
                 text: "Was this necessary? No wonder Indians are being hated by foreigners",
-                meta: "21 September 2025",
+                date: "21 September 2025",
               },
             ],
           }}
@@ -289,33 +289,34 @@ const work: WorkSpec = {
       ),
     },
 
-    // 6. Is it worth it: the lights on, and nobody in the street.
+    // 6. Is it worth it. Opens on its question and tucks the headline to one
+    //    side, so the lights on and nobody in the street is the picture.
     {
       label: "Would it work",
       hasImage: true,
       render: () => (
         <Beat
           plate={belgrave}
-          crop={{ x: 0.58, y: 0.42, scale: 2.0 }}
+          crop={{ x: 0.58, y: 0.5, scale: 2.0 }}
           n={6}
           of={OF}
+          head={[
+            "But would it even work? If every Indian abroad went quiet tomorrow, would India's image recover?",
+          ]}
+          headSize={42}
           clipping={{
             kind: "headline",
             item: {
               masthead: "The News Minute",
-              headline: "‘Zero civic sense’ or racism? Unpacking global scrutiny of the Indian diaspora",
+              headline: "\u2018Zero civic sense\u2019 or racism? Unpacking global scrutiny of the Indian diaspora",
               date: "26 September 2025",
             },
+            width: 560,
           }}
-          lines={[
-            "But would it even work? If every Indian abroad went quiet tomorrow, would India's image recover?",
-            "",
-            {
-              text: "Or is a quieter Diwali just a band-aid on a much bigger problem?",
-              tone: "gold",
-            },
-          ]}
-          size={38}
+          clippingTop={520}
+          clippingAlign="right"
+          lines={[{ text: "Or is a quieter Diwali just a band-aid on a much bigger problem?", tone: "parchment" }]}
+          size={40}
         />
       ),
     },

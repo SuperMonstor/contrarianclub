@@ -5,78 +5,86 @@
 /* --- The pictures ----------------------------------------------------------- */
 
 /* The poster's carnival, treated exactly as the poster treats it, so slide 1
-   is recognisably the same picture. */
+   is recognisably the same picture. The painting is the only thing in the
+   deck that carries the warm tone. */
 .ic-art {
   z-index: 0;
   filter: saturate(0.64) contrast(1.06) brightness(0.72) sepia(0.28);
 }
 
-/* The same carnival at dusk, for the motion page: the square survives as a
-   crowd and rooftops, and the page is quiet enough to read a sentence on. */
+/* The same carnival at dusk, for the motion page. */
 .ic-art-dusk {
   z-index: 0;
   filter: saturate(0.5) contrast(1.08) brightness(0.52) sepia(0.34);
 }
 
-/* Photographs taken in daylight: the lake, the temple, the square. They come
-   down a stop, lose most of their colour and pick up the gold, so a news
-   photograph sits in the same printed object as a Flemish painting. */
+/* Photographs stay close to their own colour. Putting every one of them
+   through the same amber made the deck look like one filter; a little less
+   saturation and a little less light is all they need to sit beside the
+   painting. */
 .ic-photo {
   z-index: 0;
-  filter: saturate(0.6) contrast(1.06) brightness(0.8) sepia(0.28);
+  filter: saturate(0.84) contrast(1.03) brightness(0.86);
 }
 
-/* Noon at the memorial, the brightest picture in the deck by a distance, with
-   a white sky. Taken down harder than the rest. */
+/* Noon at the memorial, with a white sky: the one photograph taken down
+   properly. */
 .ic-photo-noon {
   z-index: 0;
-  filter: saturate(0.46) contrast(1.1) brightness(0.62) sepia(0.34);
+  filter: saturate(0.8) contrast(1.05) brightness(0.7);
 }
 
-/* Night photographs: the fireworks courtyard and the lit, empty street. Dark
-   already, and the light in them is the subject, so they are lifted, not
-   knocked back. */
+/* Night photographs are left alone: the light in them is the subject. */
 .ic-photo-night {
   z-index: 0;
-  filter: saturate(0.72) contrast(1.06) brightness(1.08) sepia(0.2);
+  filter: saturate(0.92) contrast(1.02);
 }
 
 /* --- Legibility ------------------------------------------------------------ */
 
-/* The beats: clippings at the top, which carry their own paper and need no
-   help, the picture clear through the middle, and near-black under the words
-   at the foot. */
+/* A plain dark fade, heavy where type sits and nowhere else. */
 .ic-scrim {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.55) 0%,
-      rgba(11, 9, 7, 0.12) 16%,
-      rgba(11, 9, 7, 0.06) 40%,
-      rgba(11, 9, 7, 0.48) 58%,
-      rgba(11, 9, 7, 0.9) 72%,
-      rgba(8, 6, 4, 0.97) 86%
-    ),
-    linear-gradient(90deg, rgba(11, 9, 7, 0.36) 0%, rgba(11, 9, 7, 0.1) 46%, rgba(11, 9, 7, 0) 76%);
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.5) 0%,
+    rgba(11, 9, 7, 0.1) 15%,
+    rgba(11, 9, 7, 0.05) 42%,
+    rgba(11, 9, 7, 0.55) 60%,
+    rgba(11, 9, 7, 0.92) 74%,
+    rgba(8, 6, 4, 0.97) 86%
+  );
 }
 
-/* The hook: the lockup at the top, a four line question at the foot. */
+/* For the beats that open on a line at the head as well as the foot. */
+.ic-scrim-both {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.9) 0%,
+    rgba(11, 9, 7, 0.78) 20%,
+    rgba(11, 9, 7, 0.1) 38%,
+    rgba(11, 9, 7, 0.08) 58%,
+    rgba(11, 9, 7, 0.8) 74%,
+    rgba(8, 6, 4, 0.97) 86%
+  );
+}
+
+/* The hook: the lockup at the top, the question at the foot. */
 .ic-scrim-cover {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11, 9, 7, 0.78) 0%,
-      rgba(11, 9, 7, 0.24) 15%,
-      rgba(11, 9, 7, 0.02) 30%,
-      rgba(11, 9, 7, 0.34) 44%,
-      rgba(11, 9, 7, 0.86) 58%,
-      rgba(8, 6, 4, 0.96) 74%
-    ),
-    linear-gradient(90deg, rgba(11, 9, 7, 0.4) 0%, rgba(11, 9, 7, 0.1) 50%, rgba(11, 9, 7, 0) 80%);
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.78) 0%,
+    rgba(11, 9, 7, 0.24) 15%,
+    rgba(11, 9, 7, 0.02) 30%,
+    rgba(11, 9, 7, 0.34) 44%,
+    rgba(11, 9, 7, 0.86) 58%,
+    rgba(8, 6, 4, 0.96) 74%
+  );
 }
 
 /* The motion page is a document: the painting stays as a texture at the top
@@ -94,110 +102,57 @@
   );
 }
 
-/* Type sitting over a picture still needs its own edge. */
+/* A tight shadow only. The wide soft glow that used to sit behind every line
+   read as a digital effect; the fade underneath does the real work. */
 .ic-on-art {
-  text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 4px 24px rgba(0, 0, 0, 0.62);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
 }
 
-/* --- The printed object ---------------------------------------------------- */
-
-/* The poster's frame, over the picture on every slide. */
-.ic-frame {
-  position: absolute;
-  inset: 40px;
-  border: 1px solid rgba(200, 162, 74, 0.5);
-  pointer-events: none;
-}
-.ic-frame::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(200, 162, 74, 0.2);
-}
-
-/* The one division, frame to frame, at the same height on every slide. */
+/* The one division: a plain hairline, not a gold gradient that fades out. */
 .ic-rule {
   position: absolute;
-  left: 40px;
-  right: 40px;
+  left: 92px;
+  right: 92px;
   height: 1px;
   border: 0;
   margin: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(200, 162, 74, 0.65) 0%,
-    rgba(200, 162, 74, 0.45) 50%,
-    rgba(200, 162, 74, 0.1) 100%
-  );
+  background: rgba(244, 234, 210, 0.22);
 }
 
-.ic-tick {
-  display: block;
-  width: 34px;
-  height: 1px;
-  background: var(--cc-gold);
-  opacity: 0.85;
+/* --- The paper ------------------------------------------------------------- */
+
+/* The shadow a sheet of paper actually casts on a photograph: short, a little
+   offset, and not very soft. It lives on the wrapper because the paper itself
+   is clipped to its torn edge, and a clip-path cuts box-shadows off. */
+.ic-paper-shadow {
+  filter: drop-shadow(3px 7px 7px rgba(0, 0, 0, 0.5));
 }
 
-/* --- The clippings --------------------------------------------------------- */
-
-/* What people said, on cream: the same ivory the Debate #10 decks printed
-   their details band in, and the one light material in this deck, because it
-   is the one thing on each slide that is somebody else talking. Dark ink, no
-   --cc- text tokens (they are tuned for near-black and vanish on cream), and a
-   real shadow, because it is laid on top of the picture, not printed into it. */
-.ic-clipping {
+/* Printed paper, cut out: off-white, square corners, a torn foot from the
+   clip-path, and the tooth of the stock, so it reads as a thing on the picture
+   rather than a panel in an interface. Dark ink throughout; none of the --cc-
+   text tokens, which are tuned for near-black and vanish on paper. */
+.ic-paper {
+  position: relative;
   box-sizing: border-box;
-  background: linear-gradient(180deg, #f8f0dc 0%, var(--cc-ivory) 55%, #ece0c2 100%);
+  background: #f3ecdc;
   color: #17120b;
   font-family: var(--cc-font-ui);
-  border: 1px solid rgba(138, 108, 44, 0.45);
-  border-radius: 6px;
-  box-shadow:
-    0 2px 0 rgba(0, 0, 0, 0.25),
-    0 22px 50px rgba(0, 0, 0, 0.55);
   text-shadow: none;
 }
+.ic-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-/* Newsprint is a little greyer and a little rougher than the post cards. */
+/* Newsprint is greyer than the printed posts. */
 .ic-newsprint {
-  background: linear-gradient(180deg, #eee5d0 0%, #e6dcc3 100%);
-  border-radius: 2px;
-}
-
-.ic-avatar {
-  flex: none;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: #2a2117;
-  color: var(--cc-ivory);
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: 0.04em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ic-clipping-meta {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(23, 18, 11, 0.14);
-  font-size: 16px;
-  color: rgba(23, 18, 11, 0.55);
-}
-
-.ic-masthead {
-  font-family: var(--cc-font-display);
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding-bottom: 12px;
-  border-bottom: 2px solid rgba(23, 18, 11, 0.7);
+  background: #e7e1d2;
 }
 
 /* --- The strike ------------------------------------------------------------ */
