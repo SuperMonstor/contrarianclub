@@ -2,8 +2,8 @@ import type { WorkSpec } from "../../src/core/types";
 import belgraveSrc from "./assets/belgrave.jpg";
 import carnivalSrc from "./assets/carnival.jpg";
 import fireworksSrc from "./assets/fireworks.jpg";
-import immersionSrc from "./assets/immersion.jpg";
 import memorialSrc from "./assets/memorial.jpg";
+import soarSrc from "./assets/soar.jpg";
 import templeSrc from "./assets/temple.jpg";
 import trafalgarSrc from "./assets/trafalgar.jpg";
 import { Beat, Hook, Motion, type Plate, Strike } from "./slides";
@@ -12,9 +12,8 @@ import { Beat, Hook, Motion, type Plate, Strike } from "./slides";
 // first motion, to go out a few days before the night. The poster is
 // works/2026-09-27-debate-11-what-you-owe.
 //
-// The motion is printed on slide 8 with its load bearing words struck out.
-// It is revealed on the day, or when this post reaches 1,000 likes, whichever
-// comes first. If it hits 1,000, somebody has to publish it that day. In full:
+// The motion is printed on slide 8 with everything after "This Club Believes
+// That" struck out, and it is read out in the room on the day. In full:
 //
 //   This Club Believes That Indians Should Sacrifice Public Festival
 //   Celebrations Abroad To Protect India's Global Image.
@@ -59,8 +58,12 @@ import { Beat, Hook, Motion, type Plate, Strike } from "./slides";
 //
 //   carnival   Bruegel, The Fight Between Carnival and Lent, 1559. The same
 //              file as the poster's first panel.
-//   immersion  Khairatabad Ganesh lowered into Hussain Sagar, Hyderabad.
-//              Kavali Chandrakanth KCK, CC BY-SA 4.0.
+//   soar       The River Soar in Leicester, the river the story is about:
+//              autumn, the towpath, swans on the water. Mat Fascione, CC BY-SA
+//              2.0. Chosen over a photograph of an idol, which reads as
+//              inflammatory unless it is from the event itself. The event's
+//              own footage belongs to Instagram's @triptalescrew_12; a still
+//              from it can replace this plate if they give permission.
 //   fireworks  Diwali fireworks in a courtyard between apartment towers,
 //              Gurugram. Slyronit, CC BY-SA 4.0.
 //   memorial   National World War II Memorial, Washington. Kurt Kaiser, CC0.
@@ -78,11 +81,11 @@ const carnival: Plate = {
   credit: "Pieter Bruegel the Elder, The Fight Between Carnival and Lent, 1559.",
 };
 const carnivalDusk: Plate = { ...carnival, art: "ic-art-dusk" };
-const immersion: Plate = {
-  src: immersionSrc,
-  ratio: 2117 / 4239,
+const soar: Plate = {
+  src: soarSrc,
+  ratio: 1600 / 1199,
   art: "ic-photo",
-  credit: "Photo: Kavali Chandrakanth KCK, CC BY-SA 4.0, toned. Hussain Sagar, Hyderabad.",
+  credit: "Photo: Mat Fascione, CC BY-SA 2.0, toned. River Soar, Leicester.",
 };
 const fireworks: Plate = {
   src: fireworksSrc,
@@ -117,6 +120,24 @@ const trafalgar: Plate = {
 
 const OF = 8;
 
+// Everything after the club's opening words, struck out word by word. Each bar
+// is as long as the word it hides, so the sentence keeps its real shape and
+// gives away nothing else.
+const HIDDEN = [
+  "Indians",
+  "Should",
+  "Sacrifice",
+  "Public",
+  "Festival",
+  "Celebrations",
+  "Abroad",
+  "To",
+  "Protect",
+  "India's",
+  "Global",
+  "Image.",
+];
+
 const work: WorkSpec = {
   title: "Debate Club #11, motion one",
   date: "2026-09-27",
@@ -138,15 +159,14 @@ const work: WorkSpec = {
       ),
     },
 
-    // 2. It happened. The photograph is the way it happens at home, which is
-    //    the whole of the first sentence.
+    // 2. It happened, on this river.
     {
       label: "Leicester",
       hasImage: true,
       render: () => (
         <Beat
-          plate={immersion}
-          crop={{ x: 0.42, y: 0.5, scale: 1.05 }}
+          plate={soar}
+          crop={{ x: 0.6, y: 0.5, scale: 1.7 }}
           n={2}
           of={OF}
           clipping={{
@@ -354,12 +374,15 @@ const work: WorkSpec = {
           label="Motion 1"
           motion={
             <>
-              This Club Believes That Indians Should <Strike tone="ivory">Sacrifice</Strike> Public
-              Festival Celebrations Abroad To <Strike tone="ivory">Protect</Strike> India's{" "}
-              <Strike tone="ivory">Global</Strike> <Strike tone="ivory">Image</Strike>.
+              This Club Believes That{" "}
+              {HIDDEN.map((word) => (
+                <span key={word}>
+                  <Strike tone="ivory">{word}</Strike>{" "}
+                </span>
+              ))}
             </>
           }
-          reveal={["Motion revealed on the day, or at 1,000 ", ".", "Whichever comes first."]}
+          notice="Read out in the room on Sunday. Nobody sees it before then."
           details={["Sunday, 27 September", "2 to 5 pm", "Big Pitcher, Indiranagar"]}
           lines={[
             "Debaters drawn at random.",

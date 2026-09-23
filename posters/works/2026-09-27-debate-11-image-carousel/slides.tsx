@@ -557,28 +557,6 @@ export function Beat({
   );
 }
 
-/** The heart, drawn to read as the like button without being anybody's logo:
- *  an outline sat on the baseline of the line it belongs to. */
-function Heart({ size }: { size: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      style={{ display: "inline-block", verticalAlign: "-0.12em", margin: "0 0.08em" }}
-      aria-label="likes"
-    >
-      <path
-        d="M12 20.3s-7.1-4.4-9.2-8.6C1.2 8.4 3 4.6 6.6 4.3c2.1-.2 3.9.9 5.4 2.8 1.5-1.9 3.3-3 5.4-2.8 3.6.3 5.4 4.1 3.8 7.4-2.1 4.2-9.2 8.6-9.2 8.6z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /** 8. The motion, struck out, and the terms on which it will be read, on the
  *  poster's carnival again: the deck ends where it began. */
 export function Motion({
@@ -586,7 +564,7 @@ export function Motion({
   crop,
   label,
   motion,
-  reveal,
+  notice,
   details,
   lines,
   cta,
@@ -595,8 +573,8 @@ export function Motion({
   crop: Crop;
   label: string;
   motion: ReactNode;
-  /** the reveal terms, either side of the heart, then a second line */
-  reveal: [string, string, string];
+  /** the line that says when it will be read */
+  notice: string;
   details: string[];
   lines: string[];
   cta: string[];
@@ -652,16 +630,12 @@ export function Motion({
             margin: 0,
             marginTop: 44,
             fontFamily: "var(--cc-font-display)",
-            fontSize: 34,
+            fontSize: 32,
             lineHeight: 1.3,
-            color: "var(--cc-gold-bright)",
+            color: "var(--cc-parchment)",
           }}
         >
-          {reveal[0]}
-          <Heart size={34} />
-          {reveal[1]}
-          <br />
-          {reveal[2]}
+          {notice}
         </p>
       </div>
 
