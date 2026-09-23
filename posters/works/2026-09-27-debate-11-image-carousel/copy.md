@@ -14,18 +14,18 @@ Post it Thursday or Friday before the night. The poster is
 > So should Indians abroad be asked to hold back? Would it even fix anything?
 > And is it fair to ask them at all?
 >
-> That's Motion 1 at Debate Club #11. Revealed on the day, or when this post
-> hits 1,000 likes. Whichever comes first.
+> That's Motion 1 at Debate Club #11. It is read out in the room on Sunday,
+> and nobody sees it before then.
 >
 > Sunday, 27 September, 2 to 5 pm. Big Pitcher, Indiranagar. Tickets out now,
 > link in bio.
 
-## The 1,000 likes promise
+## The Leicester photograph
 
-Slide 8 promises the motion at 1,000 likes. If the post gets there before
-Sunday, somebody has to publish it that day, verbatim, exactly as it reads in
-`works/2026-09-27-debate-11-what-you-owe/copy.md`. Decide in advance where it
-goes: a story, a pinned comment, or an edit to this caption.
+Slide 2 shows the River Soar in Leicester, not the event: a photograph of an
+idol reads as inflammatory unless it comes from the event itself, and the
+event's own footage belongs to Instagram's @triptalescrew_12. If they give
+permission for a still, it can replace `assets/soar.jpg` on slide 2.
 
 ## Sources
 
