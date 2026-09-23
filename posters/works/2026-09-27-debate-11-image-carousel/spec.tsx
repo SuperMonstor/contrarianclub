@@ -153,8 +153,8 @@ const work: WorkSpec = {
           plate={carnival}
           crop={{ x: 0.4, y: 0.5, scale: 1.9 }}
           label="Debate Club #11, Motion 1"
-          question={["Should Indians", "stop celebrating", "festivals abroad?"]}
-          size={104}
+          question={["Should", "Indians stop", "celebrating", "festivals", "abroad?"]}
+          size={150}
         />
       ),
     },

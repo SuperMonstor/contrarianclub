@@ -51,6 +51,10 @@ import "./slides.css";
 // post is the point. Slide 6 opens on its question and tucks the headline to
 // one side, so the empty lit street is the picture.
 //
+// THE HOOK IS THE WHOLE FIRST SLIDE. The question is set as large as the page
+// allows, so it reads at thumbnail size in the feed; the painting shows round
+// the letters. The motion two deck opens the same way.
+//
 // THREE TYPEFACES. Oswald shouts once, the question on slide 1. Playfair does
 // all the talking. Inter is the posts themselves and the small print.
 
@@ -465,7 +469,9 @@ function Clippings({
 
 /* --- The slides ----------------------------------------------------------- */
 
-/** 1. The hook, on the poster's carnival. */
+/** 1. The hook, on the poster's carnival. The question is the slide: set as
+ *  large as the page allows, centred in the space between the lockup and the
+ *  rule, with the painting showing round the letters. */
 export function Hook({
   plate,
   crop,
@@ -480,22 +486,31 @@ export function Hook({
   size: number;
 }) {
   return (
-    <Ground plate={plate} crop={crop} scrim="ic-scrim-cover">
+    <Ground plate={plate} crop={crop} scrim="ic-scrim-hook">
       <div style={{ position: "absolute", left: MARGIN, top: 84 }}>
-        <Lockup width={214} artwork="left" />
+        <Lockup width={200} artwork="left" />
       </div>
       <div
         className="ic-on-art"
-        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          right: MARGIN - 20,
+          top: 220,
+          bottom: H - RULE + 40,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
       >
-        <p style={{ ...SMALL, fontSize: 22, color: "var(--cc-parchment)", marginBottom: 22 }}>
-          {label}
-        </p>
         {question.map((l) => (
-          <p key={l} style={{ ...CONDENSED, fontSize: size }}>
+          <p key={l} style={{ ...CONDENSED, fontSize: size, lineHeight: 0.9 }}>
             {l}
           </p>
         ))}
+        <p style={{ ...SMALL, fontSize: 24, color: "var(--cc-parchment)", marginTop: 36 }}>
+          {label}
+        </p>
       </div>
       <hr className="ic-rule" style={{ top: RULE }} />
       <UnderRule credit={plate.credit} />
