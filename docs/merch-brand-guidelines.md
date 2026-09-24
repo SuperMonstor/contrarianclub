@@ -1,57 +1,70 @@
 # The Contrarian Debate Club
 
-## Merchandise brand guidelines
+## Creative brand guidelines
 
-**For designers and production suppliers**
+**For merchandise designers**
 
 **Version:** 24 September 2026
 
-### Brand direction
+### The idea
 
-The Contrarian Debate Club should feel like a members' debating society: thoughtful, old-world, and quietly confident. Merchandise should resemble a considered piece from a gallery or literary club. Use generous space, strong typography, and restrained color. Keep the finish clean and legible at the size of the item.
+The Contrarian Debate Club is a members' salon for argument. It should feel intellectual, old-world, and quietly bold: a debating society meeting in a gallery after dark. The work can be provocative, but it should still feel considered.
 
-### Name and artwork
+Use these guidelines as a visual and verbal compass. Explore original concepts, compositions, and treatments that express the club's character.
 
-- Use the full name, **The Contrarian Debate Club**. Do not shorten or redraw the logo.
-- Use the supplied vector artwork. The three-line wordmark is the primary mark.
-- The [centered logo](../public/contrarian-logo.svg) suits centered placements. The [left-aligned logo](../public/contrarian-logo-left.svg) suits left-aligned placements.
-- The approved dark-background artwork uses muted gold and white. The [light-background artwork](../posters/src/core/brand/logo-light.svg) uses muted gold and black. Treat the dark version as the default for merchandise; obtain approval for any light version in the final mockup.
-- Keep clear space around the logo of at least the cap height of the words "DEBATE CLUB". Do not crowd it with seams, pockets, other artwork, or trim.
-- Do not stretch, rotate, outline, shadow, recolor, crop, or reset the wordmark in another font.
+### Visual character
 
-### Color
+- **Editorial and typographic.** Strong words, a high-contrast serif, and generous space can carry a design.
+- **Dark and warm.** Think near-black walls, candlelit ivory, muted gold leaf, and dramatic light against shadow.
+- **Restrained.** Small details, fine rules, and deliberate contrast work better than visual clutter.
+- **Thought provoking.** The design may invite disagreement or curiosity, with wit and confidence rather than noise.
 
-| Color | Digital reference | Suggested use |
+Avoid neon colors, startup-style gradients, playful clip art, generic debate symbols, and crowded compositions.
+
+### Logo and name
+
+The formal name is **The Contrarian Debate Club**. The three-line wordmark is supplied as vector artwork:
+
+| Artwork | Use |
+| --- | --- |
+| [Centered gold and white logo](../public/contrarian-logo.svg) | Centered compositions on dark backgrounds |
+| [Left-aligned gold and white logo](../public/contrarian-logo-left.svg) | Left-aligned compositions on dark backgrounds |
+| [Centered gold and black logo](../posters/src/core/brand/logo-light.svg) | Compositions on light backgrounds |
+
+Choose the version that suits the composition and gives the logo clear contrast. Keep at least the cap height of "DEBATE CLUB" clear around it. Do not stretch, rotate, outline, shadow, recolor, crop, or re-typeset the wordmark. Original lettering and typography are welcome elsewhere in the design.
+
+### Color palette
+
+| Color | Digital reference | Character |
 | --- | --- | --- |
-| Warm near-black | `#0B0907` | Preferred dark ground |
-| Logo gold | `#B89B5E` | Gold within the supplied logo |
-| Ivory | `#F4EAD2` | Supporting text or light detail |
-| Accent gold | `#C8A24A` | Small rules or secondary details |
+| Warm near-black | `#0B0907` | The principal dark |
+| Ivory | `#F4EAD2` | Warm light and readable type |
+| Logo gold | `#B89B5E` | The gold in the supplied artwork |
+| Accent gold | `#C8A24A` | Small accents and fine rules |
+| Parchment | `#DDCEAC` | A softer light tone |
 
-These hex values describe the digital brand. They are **not** Pantone, thread, or ink specifications. Please propose physical color matches and provide a printed or stitched sample for approval. Keep gold muted and warm, rather than metallic yellow or bright orange. Avoid large fields of gold.
+Use the palette as a reference, not a formula. Gold should feel muted and warm. The hex values are digital references; physical colors will need interpretation in the chosen medium.
 
-### Typography and graphic style
+### Typography
 
-- Use **Playfair Display** for large editorial wording and **Inter** for small supporting text. The logo itself must always come from the vector file.
-- Use short, articulate copy. No exclamation marks, emoji, slogans invented by the supplier, or tech-style graphics.
-- Favor a simple composition with generous empty space. A fine gold rule can support the layout; avoid heavy borders, gradients, and decorative effects.
-- Do not add paintings or other imagery to the merchandise without a separate approved artwork file and usage check.
+- **Playfair Display** is the main editorial serif for prominent language.
+- **Inter** supports smaller text and details.
+- **Oswald** appears in some existing poster work for emphatic, condensed statements. Use it sparingly if it suits the concept.
 
-### Production guidance
+The supplied logo is artwork, not a font treatment to reconstruct. Designs can use original type compositions beyond the logo.
 
-- Start with a dark garment or product and the supplied gold-and-white logo. Keep the wordmark large enough that all three lines remain readable after production.
-- For small applications such as embroidery, patches, labels, or pins, request a physical stitch or print test. If the full wordmark loses detail, ask for a separately approved simplified artwork file. Do not simplify it independently.
-- Keep artwork in vector format through prepress. Do not use a screenshot or a low-resolution export as production art.
-- Do not infer a Pantone number, thread code, minimum physical logo size, or print method from this guide. Confirm these against the chosen material and production process.
+### Imagery and graphic elements
 
-### Approval before production
+The existing visual world draws from chiaroscuro and old-master paintings: figures emerging from darkness, warm sepia, and a single dramatic light source. Original illustration or graphic interpretation can explore that mood. If a design uses an existing artwork or photograph, include its source and confirm that the rights allow merchandise use.
 
-Please send a mockup for **each item and colorway** showing the product color, decoration method, artwork dimensions, placement measurements, and proposed ink or thread matches. Include a physical or press proof before the full run. Production starts only after the final artwork and sample are approved.
+Fine gold rules, subtle texture, and considered framing fit the brand. These are options, not required elements.
 
-### Files to send with this guide
+### Voice
 
-1. [Centered logo, dark background](../public/contrarian-logo.svg)
-2. [Left-aligned logo, dark background](../public/contrarian-logo-left.svg)
-3. [Centered logo, light background](../posters/src/core/brand/logo-light.svg), only if a light product is being considered
+Copy should be articulate, dry, and a little ceremonial. A sharp question or a concise, defensible statement can feel at home here. Original lines are encouraged. Avoid exclamation marks, emoji, motivational slogans, and marketing hype.
 
-For background on the wider visual system, see the [full brand guide](brand-guide.md). This merchandise guide takes precedence for supplier handoff where the digital guide discusses app-only details.
+### Creative review
+
+Please share concepts with a short explanation of the idea and any artwork sources. We will review how each concept feels as a whole, with particular attention to legibility, originality, and fidelity to the logo.
+
+For more context, see the [full brand guide](brand-guide.md). It documents the wider digital visual system; this page is the creative brief for merchandise.
