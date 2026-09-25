@@ -15,8 +15,9 @@ motion and should not be posted. The poster is
 > makes married couples pay back a state loan with interest if no child
 > arrives within five years.
 >
-> So should the benefits of marriage depend on having kids? And who gets to
-> decide what a marriage is for?
+> So should the benefits of marriage depend on having kids? Where does a
+> marriage get its value: the bond between two people, or what it does for
+> everyone else?
 >
 > That's Motion 2 at Debate Club #11. It is announced on the day, or when this
 > post hits 500 likes, whichever comes first.
