@@ -1,13 +1,13 @@
 import type { WorkSpec } from "../../src/core/types";
 import arnolfiniSrc from "./assets/arnolfini.jpg";
-import { Beat, Hook, Motion, type Plate, Strike } from "./slides";
+import { Beat, Hook, Invite, Motion, type Plate, Strike } from "./slides";
 
 // Debate Club #11, Sunday 27 September, Big Pitcher. The carousel for the
 // second motion, as rewritten after works/2026-09-27-debate-11-future-carousel
 // was made for the old one. The poster is works/2026-09-27-debate-11-what-
 // you-owe.
 //
-// The motion is printed on slide 8 with everything after "This Club Would"
+// The motion is printed on slide 9 with everything after "This Club Would"
 // struck out. It is read out on the day, or when the post reaches 500 likes,
 // whichever comes first. In full:
 //
@@ -52,7 +52,7 @@ import { Beat, Hook, Motion, type Plate, Strike } from "./slides";
 const arnolfini: Plate = { src: arnolfiniSrc, ratio: 3801 / 5200, art: "mc-art" };
 const arnolfiniDusk: Plate = { ...arnolfini, art: "mc-art-dusk" };
 
-const OF = 8;
+const OF = 10;
 
 // Everything after the club's opening words, struck out word by word. Each bar
 // is as long as the word it hides, so the sentence keeps its real shape and
@@ -239,7 +239,40 @@ const work: WorkSpec = {
       ),
     },
 
-    // 7. The crux, both answers side by side, with the whole room above.
+    // 7. What is on the table, and what is not. Opens at the head, the
+    //    joined hands below. The adoption line is the club's reading of
+    //    "having a child" in the motion.
+    {
+      label: "What's on the table",
+      hasImage: true,
+      render: () => (
+        <Beat
+          plate={arnolfini}
+          crop={{ x: 0.55, y: 0.4, scale: 2.2 }}
+          scrim="mc-scrim-head"
+          n={7}
+          of={OF}
+          head={[
+            "Nobody\u2019s marriage gets annulled. Nobody\u2019s stopped from living together.",
+            "",
+            {
+              text: "You could spend your life with someone and never marry. You just wouldn\u2019t get the state\u2019s package. And adopting a child would count.",
+              size: 36,
+              tone: "parchment",
+            },
+            "",
+            {
+              text: "The only question is whether that package should come with a condition.",
+              size: 36,
+            },
+          ]}
+          headSize={48}
+          detail="Detail: the couple."
+        />
+      ),
+    },
+
+    // 8. The crux, both answers side by side, with the whole room above.
     {
       label: "The question",
       hasImage: true,
@@ -248,26 +281,25 @@ const work: WorkSpec = {
           plate={arnolfini}
           crop={{ x: 0.5, y: 0.34, scale: 1 }}
           scrim="mc-scrim-wide"
-          n={7}
+          n={8}
           of={OF}
           lines={[
-            { text: "Nobody’s annulling anything. But the question underneath is real.", tone: "parchment" },
-            "",
-            { text: "Where does a marriage get its value?", size: 46, tone: "gold" },
+            { text: "Where does a marriage get its value?", size: 50, tone: "gold" },
             {
               text: "The bond between two people, or what it does for everyone else?",
-              size: 46,
+              size: 50,
               tone: "gold",
             },
             "",
-            "That’s what we’re debating this Sunday.",
+            "That\u2019s what we\u2019re debating this Sunday.",
           ]}
           size={38}
         />
       ),
     },
 
-    // 8. The motion, struck out, and the way in.
+    // 9. The motion, struck out, and when it will be read, which is the
+    //    point of the slide.
     {
       label: "The motion",
       hasImage: true,
@@ -288,8 +320,22 @@ const work: WorkSpec = {
           }
           notice="Motion announced on the day, or when this post hits 500 likes."
           details={["Sunday, 27 September", "2 to 5 pm", "Big Pitcher, Indiranagar"]}
-          invitation={["Spectate, or get involved in the debate.", "Watch live."]}
+        />
+      ),
+    },
+
+    // 10. The way in, on the husband's raised hand.
+    {
+      label: "Tickets",
+      hasImage: true,
+      render: () => (
+        <Invite
+          plate={arnolfini}
+          crop={{ x: 0.26, y: 0.33, scale: 2.6 }}
+          invitation={["Spectate, or get involved", "in the debate.", "Watch live."]}
+          when="Sunday, 27 September, 2 to 5 pm. Big Pitcher, Indiranagar."
           cta="Tickets in bio"
+          detail="Detail: the raised hand."
         />
       ),
     },

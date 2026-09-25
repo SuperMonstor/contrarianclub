@@ -18,18 +18,22 @@ import "./slides.css";
 //   4  and India is having fewer children                     its case
 //   5  Hungary runs a version                                 it has been done
 //   6  the other answer: the two of you                       answer two
-//   7  the bond, or what it does for everyone else?           the crux
-//   8  the motion, struck out, and the way in                 come and find out
+//   7  nobody's annulled; live together, adopt                what's on the table
+//   8  the bond, or what it does for everyone else?           the crux
+//   9  the motion, struck out, and when it is read            the withholding
+//  10  spectate, or get involved                              the way in
 //
 // The crux of the night is where the value of a marriage comes from: the bond
 // between two people, or its social function in raising the next generation.
 // The deck gives each answer its own case. Slides 3 to 5 argue the function,
 // slide 6 argues the bond (turning slide 2's list round: every benefit on it
-// goes to the spouse, not the children), and slide 7 sets the two side by
+// goes to the spouse, not the children), and slide 8 sets the two side by
 // side. Anyone editing a line should keep the two answers even.
 //
 // Slide 1 is deliberately harsher than the motion, and slide 7 walks it back
-// before asking the real question. Nothing here makes the idea look religious
+// before the crux: no marriage is annulled, a couple can live together for
+// life without marrying, and adopting a child counts. That last line is the
+// club's reading of "having a child"; change it only if the reading changes. Nothing here makes the idea look religious
 // or old-fashioned, on purpose. It is argued as policy.
 //
 // ---------------------------------------------------------------------------
@@ -52,16 +56,18 @@ import "./slides.css";
 //
 // NOT EVERY SLIDE IS THE SAME SLIDE. Beats sit at the foot by default. Slide 3
 // asks its question at the head and answers at the foot, with the mirror
-// between. Slide 6 opens at the head and leaves the dog below. Slide 7 pulls
-// back to the whole painting.
+// between. Slides 6 and 7 open at the head and leave the dog and the hands
+// below. Slide 8 pulls back to the whole painting. Slide 10 ends on the
+// husband's raised hand, someone asking to speak.
 //
 // NOTHING DECORATIVE. No frame over the painting, no ticks before labels, no
 // glow behind type, no fading rules. See "Avoid AI design tells" in the root
 // CLAUDE.md.
 //
 // GOLD MEANS ONE THING PER SLIDE, and most slides have none. It marks the
-// crux on slide 7 and "Tickets in bio" on slide 8, which is the only
-// line in the deck set in tracked caps. Sources, credits and the counter are
+// crux on slide 8, the 500 likes line on slide 9 (the largest type after the
+// hook, because it is what slide 9 is for), and "Tickets in bio" on slide 10,
+// the only line in the deck set in tracked caps. Sources, credits and the counter are
 // plain muted type in sentence case.
 //
 // THREE TYPEFACES. Oswald shouts once, on slide 1. Playfair does the talking.
@@ -357,29 +363,10 @@ export function Beat({
   );
 }
 
-/** 8. The motion, struck out, when it will be read, and the way in. */
-export function Motion({
-  plate,
-  crop,
-  label,
-  motion,
-  notice,
-  details,
-  invitation,
-  cta,
-}: {
-  plate: Plate;
-  crop: Crop;
-  label: string;
-  motion: ReactNode;
-  /** the line that says when it will be read */
-  notice: string;
-  details: string[];
-  invitation: string[];
-  cta: string;
-}) {
+/** The logo top left, and the date and place top right if given. */
+function Masthead({ details = [] }: { details?: string[] }) {
   return (
-    <Ground plate={plate} crop={crop} scrim="mc-scrim-motion">
+    <>
       <div style={{ position: "absolute", left: MARGIN, top: 84 }}>
         <Lockup width={214} artwork="left" />
       </div>
@@ -387,7 +374,7 @@ export function Motion({
         className="mc-on-art"
         style={{ position: "absolute", right: MARGIN, top: 88, textAlign: "right" }}
       >
-        <p style={{ ...SMALL, fontSize: 17 }}>Debate Club #11</p>
+        {details.length > 0 && <p style={{ ...SMALL, fontSize: 17 }}>Debate Club #11</p>}
         {details.map((line, i) => (
           <p
             key={line}
@@ -404,44 +391,95 @@ export function Motion({
           </p>
         ))}
       </div>
+    </>
+  );
+}
 
+/** 9. The motion, struck out, and when it will be read. The notice is the
+ *  point of the slide, so it is the largest line and the gold one; the
+ *  struck motion sits above it, smaller, as the thing being withheld. */
+export function Motion({
+  plate,
+  crop,
+  label,
+  motion,
+  notice,
+  details,
+}: {
+  plate: Plate;
+  crop: Crop;
+  label: string;
+  motion: ReactNode;
+  /** the line that says when it will be read */
+  notice: string;
+  details: string[];
+}) {
+  return (
+    <Ground plate={plate} crop={crop} scrim="mc-scrim-motion">
+      <Masthead details={details} />
       <div
         className="mc-on-art"
-        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - 950 }}
+        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: 110 }}
       >
-        <p style={{ ...SMALL, fontSize: 22, color: "var(--cc-parchment)", marginBottom: 22 }}>
+        <p style={{ ...SMALL, fontSize: 22, color: "var(--cc-parchment)", marginBottom: 20 }}>
           {label}
         </p>
         <p
           style={{
             margin: 0,
             fontFamily: "var(--cc-font-display)",
-            fontSize: 44,
-            lineHeight: 1.44,
+            fontSize: 34,
+            lineHeight: 1.5,
             letterSpacing: "-0.01em",
             color: "var(--cc-ivory)",
           }}
         >
           {motion}
         </p>
+        <hr className="mc-rule" style={{ position: "static", margin: "52px 0 44px" }} />
         <p
           style={{
             margin: 0,
-            marginTop: 34,
             fontFamily: "var(--cc-font-display)",
-            fontSize: 30,
-            lineHeight: 1.3,
-            color: "var(--cc-parchment)",
+            fontSize: 70,
+            lineHeight: 1.1,
+            letterSpacing: "-0.015em",
+            fontVariantNumeric: "lining-nums",
+            color: "var(--cc-gold-bright)",
           }}
         >
           {notice}
         </p>
       </div>
+    </Ground>
+  );
+}
 
-      <hr className="mc-rule" style={{ top: 1008 }} />
+/** 10. The way in: who it is for, when and where, and where the tickets are.
+ *  The date sits with the invitation rather than top right, where it would
+ *  land on the husband's face. */
+export function Invite({
+  plate,
+  crop,
+  invitation,
+  when,
+  cta,
+  detail,
+}: {
+  plate: Plate;
+  crop: Crop;
+  invitation: string[];
+  when: string;
+  cta: string;
+  /** which part of the painting, for the credit */
+  detail: string;
+}) {
+  return (
+    <Ground plate={plate} crop={crop} scrim="mc-scrim-foot">
+      <Masthead />
       <div
         className="mc-on-art"
-        style={{ position: "absolute", left: MARGIN, right: MARGIN, top: 1054 }}
+        style={{ position: "absolute", left: MARGIN, width: W - MARGIN * 2, bottom: H - TEXT_BASE }}
       >
         {invitation.map((l) => (
           <p
@@ -449,19 +487,32 @@ export function Motion({
             style={{
               margin: 0,
               fontFamily: "var(--cc-font-display)",
-              fontSize: 44,
-              lineHeight: 1.22,
-              letterSpacing: "-0.01em",
+              fontSize: 64,
+              lineHeight: 1.12,
+              letterSpacing: "-0.012em",
               color: "var(--cc-ivory)",
             }}
           >
             {l}
           </p>
         ))}
-        <div className="kicker" style={{ marginTop: 40, fontSize: 22, letterSpacing: "0.22em" }}>
+        <p
+          style={{
+            margin: 0,
+            marginTop: 36,
+            fontFamily: "var(--cc-font-display)",
+            fontSize: 28,
+            lineHeight: 1.3,
+            color: "var(--cc-parchment)",
+          }}
+        >
+          {when}
+        </p>
+        <div className="kicker" style={{ marginTop: 40, fontSize: 24, letterSpacing: "0.22em" }}>
           {cta}
         </div>
       </div>
+      <UnderRule detail={detail} />
     </Ground>
   );
 }
