@@ -15,9 +15,10 @@ motion and should not be posted. The poster is
 > makes married couples pay back a state loan with interest if no child
 > arrives within five years.
 >
-> So should the benefits of marriage depend on having kids? Where does a
-> marriage get its value: the bond between two people, or what it does for
-> everyone else?
+> Nobody's marriage would be annulled, you could still live together for life
+> without marrying, and adopting would count. The only question is whether the
+> state's package should come with a condition. Where does a marriage get its
+> value: the bond between two people, or what it does for everyone else?
 >
 > That's Motion 2 at Debate Club #11. It is announced on the day, or when this
 > post hits 500 likes, whichever comes first.
@@ -27,9 +28,16 @@ motion and should not be posted. The poster is
 
 ## The 500 likes promise
 
-Slide 8 says the motion is announced when the post reaches 500 likes. If it
+Slide 9 says the motion is announced when the post reaches 500 likes. If it
 does before Sunday, someone has to post the full motion that day, word for
 word, as it is written at the top of `spec.tsx`.
+
+## Adoption
+
+Slide 7 says adopting a child would count. That is the club's reading of
+"having a child" in the motion, and the room should be told the same thing
+when the motion is read. If the reading changes, change that line and the
+caption.
 
 ## Sources
 
