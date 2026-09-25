@@ -127,9 +127,10 @@ const work: WorkSpec = {
       ),
     },
 
-    // 3. What it is for: the question at the head, the mirror, the answer.
+    // 3. The first answer to what the state is paying for: the question at the
+    //    head, the mirror, the answer at the foot.
     {
-      label: "What it’s for",
+      label: "The first answer",
       hasImage: true,
       render: () => (
         <Beat
@@ -139,11 +140,11 @@ const work: WorkSpec = {
           lift
           n={3}
           of={OF}
-          head={["So why does the state", "hand all that out?"]}
+          head={["So what is the state", "actually paying for?"]}
           headSize={60}
           lines={[
             {
-              text: "One answer: marriage is where most of the next generation is raised, and the benefits are the state backing that.",
+              text: "One answer: the next generation. Marriage is where most children are raised, and the benefits back the families that raise them.",
               tone: "parchment",
             },
           ]}
@@ -204,9 +205,10 @@ const work: WorkSpec = {
       ),
     },
 
-    // 6. The hard cases, opening at the head, the dog below.
+    // 6. The second answer, turning slide 2's list round, with the hard cases
+    //    as its evidence. Opens at the head, the dog below.
     {
-      label: "Whose five years",
+      label: "The second answer",
       hasImage: true,
       render: () => (
         <Beat
@@ -217,24 +219,27 @@ const work: WorkSpec = {
           n={6}
           of={OF}
           head={[
-            "But whose five years?",
+            "The other answer: the two of you.",
             "",
             {
-              text: "One in six people face infertility at some point. Some couples marry at 38. Some adopt. Some spend those years caring for a parent.",
-              size: 38,
-              tone: "parchment",
+              text: "Look at that list again. Every benefit on it is for your spouse, not your children. It’s what you’d write if marriage were a promise between two people to look after each other.",
+              size: 36,
             },
             "",
-            { text: "Does a marriage without children count for less?", size: 38 },
+            {
+              text: "That promise doesn’t expire at five years. Not for the one in six people who face infertility, the couple who married at 38, or the pair who spent those years caring for a parent.",
+              size: 36,
+              tone: "parchment",
+            },
           ]}
-          headSize={60}
+          headSize={52}
           source="World Health Organization, April 2023."
           detail="Detail: the dog."
         />
       ),
     },
 
-    // 7. The question, with the whole room in view above it.
+    // 7. The crux, both answers side by side, with the whole room above.
     {
       label: "The question",
       hasImage: true,
@@ -246,10 +251,16 @@ const work: WorkSpec = {
           n={7}
           of={OF}
           lines={[
-            { text: "Nobody’s going to annul your marriage. But should it come with conditions?", size: 46, tone: "gold" },
+            { text: "Nobody’s annulling anything. But the question underneath is real.", tone: "parchment" },
+            "",
+            { text: "Where does a marriage get its value?", size: 46, tone: "gold" },
+            {
+              text: "The bond between two people, or what it does for everyone else?",
+              size: 46,
+              tone: "gold",
+            },
             "",
             "That’s what we’re debating this Sunday.",
-            { text: "What is marriage for, and does the state get to decide?", tone: "parchment" },
           ]}
           size={38}
         />

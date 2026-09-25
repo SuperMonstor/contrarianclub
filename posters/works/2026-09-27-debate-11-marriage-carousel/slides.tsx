@@ -14,17 +14,23 @@ import "./slides.css";
 //
 //   1  marriages should be annulled if you don't have kids    the provocation
 //   2  marriage changes what the state gives you              the stakes
-//   3  why does the state hand all that out?                  what it is for
-//   4  and India is having fewer children                     the case
+//   3  what is the state paying for? the next generation      answer one
+//   4  and India is having fewer children                     its case
 //   5  Hungary runs a version                                 it has been done
-//   6  but whose five years?                                  the hard cases
-//   7  nobody's annulling anything, but conditions?           the question
+//   6  the other answer: the two of you                       answer two
+//   7  the bond, or what it does for everyone else?           the crux
 //   8  the motion, struck out, and the way in                 come and find out
 //
-// Slide 1 is deliberately harsher than the motion. The deck walks it back to
-// something that sounds reasonable, and that walk is the pitch: by slide 7 a
-// reader should be unsure which side they are on. Nothing here makes the idea
-// look religious or old-fashioned, on purpose. It is argued as policy.
+// The crux of the night is where the value of a marriage comes from: the bond
+// between two people, or its social function in raising the next generation.
+// The deck gives each answer its own case. Slides 3 to 5 argue the function,
+// slide 6 argues the bond (turning slide 2's list round: every benefit on it
+// goes to the spouse, not the children), and slide 7 sets the two side by
+// side. Anyone editing a line should keep the two answers even.
+//
+// Slide 1 is deliberately harsher than the motion, and slide 7 walks it back
+// before asking the real question. Nothing here makes the idea look religious
+// or old-fashioned, on purpose. It is argued as policy.
 //
 // ---------------------------------------------------------------------------
 // The grammar
@@ -54,7 +60,7 @@ import "./slides.css";
 // CLAUDE.md.
 //
 // GOLD MEANS ONE THING PER SLIDE, and most slides have none. It marks the
-// question on slide 7 and "Tickets in bio" on slide 8, which is the only
+// crux on slide 7 and "Tickets in bio" on slide 8, which is the only
 // line in the deck set in tracked caps. Sources, credits and the counter are
 // plain muted type in sentence case.
 //
