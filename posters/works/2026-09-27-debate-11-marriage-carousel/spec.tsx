@@ -318,7 +318,7 @@ const work: WorkSpec = {
               ))}
             </>
           }
-          notice="Motion announced on the day, or when this post hits 500 likes."
+          notice={["Motion announced on the day,", "or when this post hits 500 likes."]}
           details={["Sunday, 27 September", "2 to 5 pm", "Big Pitcher, Indiranagar"]}
         />
       ),

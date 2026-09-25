@@ -65,9 +65,9 @@ import "./slides.css";
 // CLAUDE.md.
 //
 // GOLD MEANS ONE THING PER SLIDE, and most slides have none. It marks the
-// crux on slide 8, the 500 likes line on slide 9 (the largest type after the
-// hook, because it is what slide 9 is for), and "Tickets in bio" on slide 10,
-// the only line in the deck set in tracked caps. Sources, credits and the counter are
+// crux on slide 8 and "Tickets in bio" on slide 10, the only line in the deck
+// set in tracked caps. Slide 9 has none: its 500 likes line leads by size and
+// position instead. Sources, credits and the counter are
 // plain muted type in sentence case.
 //
 // THREE TYPEFACES. Oswald shouts once, on slide 1. Playfair does the talking.
@@ -396,8 +396,9 @@ function Masthead({ details = [] }: { details?: string[] }) {
 }
 
 /** 9. The motion, struck out, and when it will be read. The notice is the
- *  point of the slide, so it is the largest line and the gold one; the
- *  struck motion sits above it, smaller, as the thing being withheld. */
+ *  point of the slide, so it is the largest line and the last thing read, set
+ *  apart by space rather than a rule. It is ivory, not gold: in gold at
+ *  billboard size it read as a sale banner. Two lines, broken by hand. */
 export function Motion({
   plate,
   crop,
@@ -410,8 +411,8 @@ export function Motion({
   crop: Crop;
   label: string;
   motion: ReactNode;
-  /** the line that says when it will be read */
-  notice: string;
+  /** when it will be read, one entry per line */
+  notice: string[];
   details: string[];
 }) {
   return (
@@ -436,20 +437,23 @@ export function Motion({
         >
           {motion}
         </p>
-        <hr className="mc-rule" style={{ position: "static", margin: "52px 0 44px" }} />
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "var(--cc-font-display)",
-            fontSize: 70,
-            lineHeight: 1.1,
-            letterSpacing: "-0.015em",
-            fontVariantNumeric: "lining-nums",
-            color: "var(--cc-gold-bright)",
-          }}
-        >
-          {notice}
-        </p>
+        <div style={{ height: 104 }} />
+        {notice.map((l) => (
+          <p
+            key={l}
+            style={{
+              margin: 0,
+              fontFamily: "var(--cc-font-display)",
+              fontSize: 52,
+              lineHeight: 1.2,
+              letterSpacing: "-0.012em",
+              fontVariantNumeric: "lining-nums",
+              color: "var(--cc-ivory)",
+            }}
+          >
+            {l}
+          </p>
+        ))}
       </div>
     </Ground>
   );
