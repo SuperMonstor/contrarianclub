@@ -90,8 +90,12 @@ what goes on the handout and the recap, unchanged:
 
 1. This Club Believes That Indians Should Sacrifice Public Festival
    Celebrations Abroad To Protect India's Global Image.
-2. This Club Would Impose a Higher Income Tax on Adults Who Voluntarily Choose
-   to Remain Childfree.
+2. This Club Would Make Eligibility For The Legal And Financial Benefits Of
+   Marriage Conditional On Having A Child Within Five Years Of Marriage.
+
+   This replaced the original second motion (a higher income tax on adults who
+   choose to remain childfree) after the poster was published. The poster
+   names only "For India's future", so it still holds.
 
 The repo's rule is that a motion prints verbatim and is never compressed into
 a slogan. That rule is not suspended by this poster, it simply does not apply:

@@ -19,8 +19,9 @@ import { type Plate, Poster } from "./slides";
 //
 //   1. This Club Believes That Indians Should Sacrifice Public Festival
 //      Celebrations Abroad To Protect India's Global Image.
-//   2. This Club Would Impose a Higher Income Tax on Adults Who Voluntarily
-//      Choose to Remain Childfree.
+//   2. This Club Would Make Eligibility For The Legal And Financial Benefits
+//      Of Marriage Conditional On Having A Child Within Five Years Of
+//      Marriage. (It replaced a motion on taxing the childfree.)
 
 const carnival: Plate = {
   src: carnivalSrc,

@@ -1,5 +1,10 @@
 # Debate Club #11, motion two carousel
 
+**Superseded, do not post.** This deck argues the original second motion, a
+higher income tax on the childfree. The motion was rewritten to be about the
+benefits of marriage, and its deck is
+`works/2026-09-27-debate-11-marriage-carousel`.
+
 The pair of the motion one deck (`works/2026-09-27-debate-11-image-carousel`).
 Post it the day after that one, before the night. The poster is
 `works/2026-09-27-debate-11-what-you-owe`.
