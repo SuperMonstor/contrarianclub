@@ -22,22 +22,24 @@ import "./slides.css";
 //                   Each is the painting its motion's campaign used: Bruegel's
 //                   carnival from the poster for motion one, the Arnolfini
 //                   couple from the carousel for motion two.
-//   The label.      "Debate Club #11" and which motion it is, in plain
-//                   sentence case. No numeral.
+//   The date line.  "Debate Club #11" and the date, in plain sentence case.
+//                   The date is what makes it a keepsake a year on.
 //   The motion.     Verbatim, the wording the room votes on, under the club's
-//                   lead-in set smaller in the same face. Nothing on either
-//                   piece is larger.
-//   The fact.       One, with its source under it in the smallest type.
-//   The foot.       A plain hairline, the night and the room, then the handle.
+//                   lead-in set smaller in the same face. The only real text
+//                   on the piece.
+//   The handle.     At the foot, the one thing asked of a person afterwards,
+//                   and the only gold on the piece.
 //
-//   Gold marks one thing on each piece: the handle, the one thing a person is
-//   asked to do after the night. See "Avoid AI design tells" in the root
+//   Five things and no more: the lockup, the painting, the date line, the
+//   motion and the handle. An earlier cut also carried a fact, its source, the
+//   venue and a picture credit, and read as a flyer rather than a keepsake.
+//   The arguing is the handout's job. See "Avoid AI design tells" in the root
 //   CLAUDE.md for what is deliberately not here.
 //
 // THE ONE VARIABLE
 //
 // The motions are different lengths, so each sets its own size and the
-// painting takes whatever height is left. The sentence is fixed and the
+// painting takes the height it is given above them. The sentence is fixed and the
 // picture yields, not the reverse.
 
 /** Every horizontal inset, in px at 300ppi. 66px is 0.22in: clear of the
@@ -55,8 +57,6 @@ export interface Plate {
   ratio: number;
   /** the treatment class in slides.css */
   art: string;
-  /** what the picture is, printed small under the foot */
-  credit: string;
 }
 
 /** Where in the painting to centre, and how far in. x and y are fractions of
@@ -129,10 +129,6 @@ export function MotionBookmark({
   formula,
   motion,
   motionSize,
-  fact,
-  source,
-  when,
-  where,
   handle,
   bleed = 0,
 }: {
@@ -145,10 +141,6 @@ export function MotionBookmark({
   /** the claim, worded exactly as the room will vote on it */
   motion: ReactNode;
   motionSize: number;
-  fact: string;
-  source: string;
-  when: string;
-  where: string;
   handle: string;
   bleed?: number;
 }) {
@@ -182,14 +174,14 @@ export function MotionBookmark({
             margin: 0,
             fontFamily: "var(--cc-font-display)",
             fontWeight: 400,
-            fontSize: 30,
+            fontSize: 32,
             lineHeight: 1.25,
             color: "var(--cc-parchment)",
           }}
         >
           {formula}
         </p>
-        <Gap h={12} />
+        <Gap h={14} />
         <h1
           style={{
             margin: 0,
@@ -206,41 +198,7 @@ export function MotionBookmark({
 
         <div style={{ flex: 1, minHeight: 40 }} />
 
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "var(--cc-font-display)",
-            fontSize: 30,
-            lineHeight: 1.32,
-            fontVariantNumeric: "lining-nums",
-            color: "var(--cc-parchment)",
-          }}
-        >
-          {fact}
-        </p>
-        <Gap h={12} />
-        <p style={SMALL}>{source}</p>
-
-        <Gap h={40} />
-        <div className="bm11-rule" />
-        <Gap h={30} />
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "var(--cc-font-display)",
-            fontSize: 30,
-            lineHeight: 1.3,
-            color: "var(--cc-ivory)",
-          }}
-        >
-          {when}
-          <br />
-          {where}
-        </p>
-        <Gap h={18} />
         <p style={{ ...SMALL, fontWeight: 600, color: "var(--cc-gold)" }}>{handle}</p>
-        <Gap h={24} />
-        <p style={{ ...SMALL, fontWeight: 400 }}>{plate.credit}</p>
         <Gap h={78} />
       </div>
     </div>

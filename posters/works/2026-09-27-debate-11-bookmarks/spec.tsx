@@ -12,17 +12,6 @@ import { MotionBookmark, type Plate } from "./slides";
 // handouts/2026-09-27-debate-11-*/debate.js; if a motion changes there, it
 // changes here.
 //
-// The facts, one each:
-//
-//   I   anti-Indian posts on X nearly tripled   Network Contagion Research
-//       in 2025                                 Institute, 11 March 2026. The
-//                                               same source as the motion one
-//                                               carousel.
-//   II  1.9 children per woman in India;        UNFPA, State of World
-//       2.1 is replacement                      Population 2025. The same
-//                                               source as the marriage
-//                                               carousel.
-//
 // The pictures, both public domain, both the same files their campaigns used:
 //
 //   carnival   Bruegel, The Fight Between Carnival and Lent, 1559. Cut in on
@@ -36,18 +25,15 @@ const carnival: Plate = {
   src: carnivalSrc,
   ratio: 3000 / 2145,
   art: "bm11-art-carnival",
-  credit: "Pieter Bruegel the Elder, The Fight Between Carnival and Lent, 1559.",
 };
 
 const arnolfini: Plate = {
   src: arnolfiniSrc,
   ratio: 3801 / 5200,
   art: "bm11-art-arnolfini",
-  credit: "Jan van Eyck, The Arnolfini Portrait, 1434.",
 };
 
-const WHEN = "Sunday, 27 September";
-const WHERE = "Big Pitcher, Indiranagar";
+const LABEL = "Debate Club #11, 27 September 2026";
 const HANDLE = "@thecontrarian.club";
 
 const work: WorkSpec = {
@@ -63,15 +49,11 @@ const work: WorkSpec = {
           bleed={format.bleed}
           plate={carnival}
           crop={{ x: 0.38, y: 0.72, scale: 3.4 }}
-          plateHeight={820}
-          label="Debate Club #11, motion one of two"
+          plateHeight={1200}
+          label={LABEL}
           formula="This Club Believes that"
           motion={<>Indians should sacrifice public festival celebrations abroad to protect India&rsquo;s global image</>}
-          motionSize={42}
-          fact="Anti-Indian posts on X nearly tripled in 2025."
-          source="Network Contagion Research Institute, March 2026."
-          when={WHEN}
-          where={WHERE}
+          motionSize={48}
           handle={HANDLE}
         />
       ),
@@ -84,8 +66,8 @@ const work: WorkSpec = {
           bleed={format.bleed}
           plate={arnolfini}
           crop={{ x: 0.5, y: 0, scale: 1.6 }}
-          plateHeight={760}
-          label="Debate Club #11, motion two of two"
+          plateHeight={1160}
+          label={LABEL}
           formula="This Club Would"
           motion={
             <>
@@ -93,11 +75,7 @@ const work: WorkSpec = {
               having a child within five years of marriage
             </>
           }
-          motionSize={36}
-          fact="The average Indian woman now has 1.9 children. A population needs 2.1 to replace itself."
-          source="UNFPA, State of World Population 2025."
-          when={WHEN}
-          where={WHERE}
+          motionSize={40}
           handle={HANDLE}
         />
       ),
