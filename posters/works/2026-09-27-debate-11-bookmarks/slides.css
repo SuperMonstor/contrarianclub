@@ -1,0 +1,80 @@
+/* Debate Club #11, the two motions, as a pair of bookmarks. 600 x 1800 trim,
+   2 x 6in at 300px/in, so 1px is 1/300in and 12pt is 50px. Classes are
+   prefixed .bm11- because work CSS shares one global namespace.
+
+   Tuned for ink rather than a screen: the floor black sits at #0d0a08, not
+   deeper, because a press cannot hold a ramp that runs into solid; the grain
+   is heavier than on a post because it is dither, and it keeps six inches of
+   near-black from banding; and the paintings sit a little lighter than they
+   would in the feed, because ink gains on paper. */
+
+.bm11-sheet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #100c09 0%, #0e0b08 55%, #0d0a08 100%), var(--cc-black);
+}
+
+/* film grain, over the painting and under the type */
+.bm11-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.bm11-body {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The poster's carnival, a touch lighter than the poster has it, for ink. */
+.bm11-art-carnival {
+  filter: saturate(0.7) contrast(1.06) brightness(0.84) sepia(0.24);
+}
+
+/* The Arnolfini couple, close to its own colour: the green and the red are
+   the picture. */
+.bm11-art-arnolfini {
+  filter: saturate(0.86) contrast(1.05) brightness(0.96) sepia(0.1);
+}
+
+/* The painting darkens into the ground under it, so the label and the motion
+   start on near-black. A fade under type, not a fading rule. */
+.bm11-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 10, 8, 0) 55%,
+    rgba(13, 10, 8, 0.7) 80%,
+    rgba(13, 10, 8, 1) 100%
+  );
+}
+
+/* A little dark under the lockup at the head, only as far as it needs. */
+.bm11-top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(13, 10, 8, 0.86) 0%, rgba(13, 10, 8, 0.6) 55%, rgba(13, 10, 8, 0) 100%);
+}
+
+.bm11-on-art {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* The one division: a plain hairline. */
+.bm11-rule {
+  flex: none;
+  height: 1px;
+  background: rgba(244, 234, 210, 0.24);
+}
