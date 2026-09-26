@@ -1,0 +1,181 @@
+/* Debate Club #11, the second motion's carousel.
+   Work-local treatment only. Classes are prefixed .fc- because work CSS
+   shares one global namespace. */
+
+/* --- The pictures ----------------------------------------------------------- */
+
+/* The poster's tax collectors, treated exactly as the poster treats them, so
+   slide 1 is recognisably the same picture. The painting is the only thing in
+   the deck that carries the warm tone. */
+.fc-art {
+  z-index: 0;
+  filter: saturate(0.56) contrast(1.04) brightness(0.94) sepia(0.22);
+}
+
+/* The same painting taken down, for the motion page. */
+.fc-art-dusk {
+  z-index: 0;
+  filter: saturate(0.46) contrast(1.06) brightness(0.62) sepia(0.3);
+}
+
+/* Photographs stay close to their own colour. Putting every one of them
+   through the same amber made the deck look like one filter; a little less
+   saturation and a little less light is all they need to sit beside the
+   painting. */
+.fc-photo {
+  z-index: 0;
+  filter: saturate(0.84) contrast(1.03) brightness(0.86);
+}
+
+/* Noon at the memorial, with a white sky: the one photograph taken down
+   properly. */
+.fc-photo-noon {
+  z-index: 0;
+  filter: saturate(0.8) contrast(1.05) brightness(0.7);
+}
+
+/* Night photographs are left alone: the light in them is the subject. */
+.fc-photo-night {
+  z-index: 0;
+  filter: saturate(0.92) contrast(1.02);
+}
+
+/* --- Legibility ------------------------------------------------------------ */
+
+/* A plain dark fade, heavy where type sits and nowhere else. */
+.fc-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.5) 0%,
+    rgba(11, 9, 7, 0.1) 15%,
+    rgba(11, 9, 7, 0.05) 42%,
+    rgba(11, 9, 7, 0.55) 60%,
+    rgba(11, 9, 7, 0.92) 74%,
+    rgba(8, 6, 4, 0.97) 86%
+  );
+}
+
+/* For the beats that open on a line at the head as well as the foot. */
+.fc-scrim-both {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.9) 0%,
+    rgba(11, 9, 7, 0.78) 20%,
+    rgba(11, 9, 7, 0.1) 38%,
+    rgba(11, 9, 7, 0.08) 58%,
+    rgba(11, 9, 7, 0.8) 74%,
+    rgba(8, 6, 4, 0.97) 86%
+  );
+}
+
+/* The hook: the question covers most of the page, so the painting is taken
+   down evenly behind it and a little further at the foot for the credit. */
+.fc-scrim-hook {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.7) 0%,
+    rgba(11, 9, 7, 0.5) 18%,
+    rgba(11, 9, 7, 0.46) 50%,
+    rgba(11, 9, 7, 0.62) 76%,
+    rgba(8, 6, 4, 0.94) 88%
+  );
+}
+
+/* The motion page is a document: the painting stays as a texture at the top
+   and the sentence gets a near-black page of its own. */
+.fc-scrim-motion {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.74) 0%,
+    rgba(11, 9, 7, 0.3) 16%,
+    rgba(11, 9, 7, 0.5) 30%,
+    rgba(11, 9, 7, 0.9) 44%,
+    rgba(8, 6, 4, 0.97) 60%
+  );
+}
+
+/* A tight shadow only. The wide soft glow that used to sit behind every line
+   read as a digital effect; the fade underneath does the real work. */
+.fc-on-art {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* The one division: a plain hairline, not a gold gradient that fades out. */
+.fc-rule {
+  position: absolute;
+  left: 92px;
+  right: 92px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: rgba(244, 234, 210, 0.22);
+}
+
+/* --- The paper ------------------------------------------------------------- */
+
+/* The shadow a sheet of paper actually casts on a photograph: short, a little
+   offset, and not very soft. It lives on the wrapper because the paper itself
+   is clipped to its torn edge, and a clip-path cuts box-shadows off. */
+.fc-paper-shadow {
+  filter: drop-shadow(3px 7px 7px rgba(0, 0, 0, 0.5));
+}
+
+/* Printed paper, cut out: off-white, square corners, a torn foot from the
+   clip-path, and the tooth of the stock, so it reads as a thing on the picture
+   rather than a panel in an interface. Dark ink throughout; none of the --cc-
+   text tokens, which are tuned for near-black and vanish on paper. */
+.fc-paper {
+  position: relative;
+  box-sizing: border-box;
+  background: #f3ecdc;
+  color: #17120b;
+  font-family: var(--cc-font-ui);
+  text-shadow: none;
+}
+.fc-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Newsprint is greyer than the printed posts. */
+.fc-newsprint {
+  background: #e7e1d2;
+}
+
+/* --- The strike ------------------------------------------------------------ */
+
+/* Words behind a bar drawn by hand. The hidden words set the width, so the
+   letters can be counted. text-shadow is killed because a shadow still paints
+   under transparent text, which would leave every struck word legible as its
+   own shadow. The corners are uneven and the ink filter chews the edges, so it
+   reads as somebody with a marker rather than a typeset rectangle. The same
+   mark as the Debate #9 deck used. */
+.fc-strike {
+  display: inline-block;
+  color: transparent;
+  text-shadow: none;
+  line-height: 1;
+  padding: 0.06em 0.18em;
+  margin: 0 0.02em;
+  border-radius: 5px 11px 6px 13px / 10px 5px 12px 6px;
+  filter: url(#fc-ink);
+}
+.fc-strike-ink {
+  background: #1d160d;
+}
+.fc-strike-ivory {
+  background: var(--cc-ivory);
+}

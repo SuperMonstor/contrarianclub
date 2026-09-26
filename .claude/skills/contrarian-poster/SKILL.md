@@ -88,6 +88,14 @@ Short declaratives, dry and a little ceremonial. **No em dashes** (repo rule),
 no exclamation marks, no emoji, no growth-speak. Split a clause that wants an
 em dash into two short sentences, or use a colon.
 
+## Do not look generated
+
+Read "Avoid AI design tells" in the root `CLAUDE.md` before designing
+anything. It lists the patterns (frames over the art, ticks before labels,
+tracked caps everywhere, gold on everything, text glow, fading rules, mock UI
+cards) that made the Debate #11 pieces read as AI-made, and what to do
+instead.
+
 ## Brand quick reference
 
 Tokens are in `posters/src/core/brand/tokens.css`. Do not hardcode new colors;

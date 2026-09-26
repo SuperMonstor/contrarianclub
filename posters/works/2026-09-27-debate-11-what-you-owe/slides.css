@@ -1,0 +1,58 @@
+/* Debate Club #11, "What can India ask of you?".
+   Work-local CSS shares one global namespace, so everything here is prefixed
+   wo-. The two art treatments belong to this piece: they were tuned for these
+   two paintings and are not right for any others. */
+
+/* --- The two paintings ---------------------------------------------------- */
+
+/* Bruegel's square is a bright sanded ground under a pale winter sky, two
+   stops brighter than anything else this club prints. It comes down hard, and
+   the green in the costumes comes out, or the panel reads as a different
+   brand from the one beside it. */
+.wo-art-carnival {
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.64) contrast(1.06) brightness(0.72) sepia(0.28);
+}
+
+/* Reymerswaele is already night: oak panelling, one candle, a lot of shadow.
+   It gets no knock back at all, and the red and green of the two clerks come
+   down to sit beside the gold. */
+.wo-art-collectors {
+  z-index: 0;
+  object-fit: cover;
+  filter: saturate(0.56) contrast(1.04) brightness(0.94) sepia(0.22);
+}
+
+/* --- Where type is allowed to sit ----------------------------------------- */
+
+/* The gradient itself is built in slides.tsx from the layout's own numbers,
+   because its zones are the layout. This only places it. */
+.wo-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+/* A tight shadow only, so a bright passage of the picture behind a letter
+   never takes the letter away. A wide soft glow read as a digital effect. */
+.wo-on-art {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* The seam is the gap between two prints laid side by side: a plain dark
+   line, not a gold rule. */
+.wo-seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1px;
+  background: #0b0907;
+}
+
+/* The rule the notice sits under: a plain hairline. */
+.wo-rule {
+  position: absolute;
+  height: 1px;
+  background: rgba(244, 234, 210, 0.22);
+}
