@@ -1,0 +1,272 @@
+.card {
+  --gold: #c8a24a;
+  --gold-bright: #f0d36a;
+  --ivory: #f4ead2;
+  --parchment: #ddceac;
+  --muted: #9d9079;
+  --faint: #6f6450;
+  --wine: #7a221d;
+  --wine-bright: #b8443c;
+  position: relative;
+  isolation: isolate;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
+  color: var(--ivory);
+  font-family: var(--cc-font-ui), Inter, Arial, sans-serif;
+  background:
+    radial-gradient(120% 76% at 50% -14%, rgb(200 162 74 / 11%), transparent 60%),
+    linear-gradient(180deg, #0c0a07 0%, #0a0806 58%, #080604 100%),
+    #0b0907;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(130% 100% at 50% 34%, transparent 46%, rgb(0 0 0 / 66%) 100%);
+}
+
+.inset {
+  position: absolute;
+  inset: 38px;
+  z-index: 1;
+  border: 1px solid rgb(200 162 74 / 13%);
+  pointer-events: none;
+}
+
+.body {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 68px 108px 56px;
+}
+
+.logo {
+  display: block;
+  width: 200px;
+  height: auto;
+}
+
+.motion {
+  margin: 34px 0 0;
+  max-width: 1240px;
+  color: var(--ivory);
+  font-family: var(--cc-font-display), Georgia, serif;
+  font-size: 50px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.014em;
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 80%);
+}
+
+.stage {
+  margin: 22px 0 0;
+  color: var(--gold-bright);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.chart {
+  width: 100%;
+  margin: auto 0;
+}
+
+.totals {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.total {
+  display: flex;
+  flex-direction: column;
+  max-width: 38%;
+}
+
+.total strong {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.total span {
+  margin-top: 10px;
+  color: var(--parchment);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.leftTotal strong { color: var(--gold-bright); }
+.rightTotal { text-align: right; }
+.rightTotal strong { color: var(--wine-bright); }
+
+.neutralTotal {
+  flex: 1;
+  padding: 0 20px 3px;
+  color: var(--faint);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.distribution {
+  display: flex;
+  align-items: flex-end;
+  height: 200px;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.columnCount {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar { width: 62%; max-width: 116px; }
+.leftBar { background: linear-gradient(180deg, var(--gold-bright), var(--gold)); }
+.neutralBar { background: rgb(244 234 210 / 16%); }
+.rightBar { background: linear-gradient(180deg, var(--wine-bright), var(--wine)); }
+
+.baseline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(200 162 74 / 42%) 10%, rgb(200 162 74 / 42%) 90%, transparent);
+}
+
+.scale { display: flex; margin-top: 14px; }
+.scale span {
+  flex: 1;
+  min-width: 0;
+  color: var(--faint);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.swingTopic {
+  margin-top: 32px;
+  color: var(--gold);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.swingTopic b { color: var(--parchment); font-weight: 600; }
+
+.swingHeadline {
+  margin: 18px 0 0;
+  max-width: 1300px;
+  color: var(--ivory);
+  font-family: var(--cc-font-display), Georgia, serif;
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 80%);
+}
+
+.swingSub {
+  margin: 20px 0 0;
+  color: var(--gold-bright);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.movement { display: flex; height: 136px; gap: 6px; }
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.segment span {
+  font-size: 58px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.leftSegment { background: linear-gradient(180deg, var(--gold-bright), var(--gold)); }
+.leftSegment span { color: rgb(11 9 7 / 88%); }
+.heldSegment { background: rgb(244 234 210 / 13%); }
+.heldSegment span { color: var(--parchment); }
+.rightSegment { background: linear-gradient(180deg, var(--wine-bright), var(--wine)); }
+.rightSegment span { color: var(--ivory); }
+
+.movementLabels { display: flex; gap: 6px; margin-top: 18px; }
+.movementLabels span {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.movementLabels .leftSegment { color: var(--gold); background: none; }
+.movementLabels .heldSegment { color: var(--muted); background: none; }
+.movementLabels .rightSegment { color: var(--wine-bright); background: none; }
+
+.caption {
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  left: 0;
+  margin: 0;
+  color: var(--faint);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}

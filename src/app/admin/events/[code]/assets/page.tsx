@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Clock3, LockKeyhole } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { AssetExporter } from "@/components/debate-assets/asset-exporter";
 import { currentAdminPath } from "@/lib/admin-routes";
 import { getDebateAssets } from "@/lib/debate-assets-server";
 
@@ -88,6 +89,7 @@ export default async function DebateAssetsPage({
             ))}
           </div>
         </section>
+        <AssetExporter assets={assets} />
       </div>
     </main>
   );
