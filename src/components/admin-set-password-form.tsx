@@ -69,7 +69,7 @@ export function AdminSetPasswordForm() {
       if (updateError) throw updateError;
       setPassword("");
       setConfirmation("");
-      await client.current.auth.signOut();
+      await client.current.auth.signOut({ scope: "local" });
       const adminHost = process.env.NEXT_PUBLIC_ADMIN_HOST || DEFAULT_ADMIN_HOST;
       router.replace(window.location.hostname === adminHost ? "/login" : "/admin/login");
     } catch (cause) {

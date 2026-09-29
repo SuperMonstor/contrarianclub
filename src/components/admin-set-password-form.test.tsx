@@ -64,7 +64,7 @@ describe("admin invitation password setup", () => {
     await user.click(screen.getByRole("button", { name: "Set password" }));
 
     await waitFor(() => expect(updateUser).toHaveBeenCalledWith({ password: "secure-password-123" }));
-    await waitFor(() => expect(signOut).toHaveBeenCalled());
+    await waitFor(() => expect(signOut).toHaveBeenCalledWith({ scope: "local" }));
     await waitFor(() => expect(replace).toHaveBeenCalledWith("/admin/login"));
   });
 
