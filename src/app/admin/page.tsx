@@ -11,6 +11,7 @@ import {
   StarOff,
 } from "lucide-react";
 import { signOutAdmin, updateDefaultEvent } from "@/app/actions";
+import { AdminEventMenu } from "@/components/admin-event-menu";
 import { Logo } from "@/components/logo";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
@@ -199,6 +200,10 @@ export default async function AdminEventsPage() {
                     <Monitor size={16} className="text-[color:var(--cc-gold)]" />
                     Present
                   </Link>
+                  <AdminEventMenu
+                    eventTitle={event.title}
+                    assetsHref={adminPath(`/events/${event.code}/assets`, hostname)}
+                  />
                   <ArrowUpRight
                     size={18}
                     className="text-[color:var(--cc-faint)] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color:var(--cc-gold)]"
