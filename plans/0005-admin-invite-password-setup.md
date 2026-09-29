@@ -8,9 +8,9 @@
 
 ## Implementation
 
-- [ ] Test invalid or expired invite state, password mismatch, successful password update, and sign-out routing.
-- [ ] Add the password setup page and client form without exposing the service key.
-- [ ] Verify the page in a browser with a mocked invite session and run tests, lint, typecheck, and build.
+- [x] Test invalid or expired invite state, password mismatch, successful password update, and sign-out routing.
+- [x] Add the password setup page and client form without exposing the service key.
+- [x] Verify the page in a browser with a mocked invite session and run tests, lint, typecheck, and build.
 - [ ] Check redirect configuration and deploy the verified code after approval for any credit-consuming operation.
 - [ ] Send the Supabase invitation to the specified email with the admin-host redirect, then verify the user appears as invited.
 

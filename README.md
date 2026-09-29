@@ -73,8 +73,11 @@ Create admin users manually in Supabase Auth, then sign in at `/admin/login`.
 Keep public self-service signups disabled; every Auth user is treated as an
 admin until attendee/user auth is added.
 
-To give an editor access, create or invite their email in Supabase Auth and
-have them sign in at `/admin/login`. They can open `/admin`, choose the
+To give an editor access, invite their email in Supabase Auth with
+`https://admin.thecontrarian.club/set-password` as the redirect URL. Add that
+URL to the Supabase Auth redirect allow list first. The editor chooses a
+password from the invitation link, then signs in at `/admin/login`. They can
+open `/admin`, choose the
 hamburger menu on the debate, and select **Generate assets**. Once every
 motion has closed, revealed before and after scale polls, the page downloads
 one ZIP with three PNG cards per motion. The cards use only voters who voted
@@ -88,6 +91,7 @@ have changed since the displayed read time.
 - `/admin/events/new` creates an event.
 - `/admin/events/[code]` controls the poll.
 - `/admin/events/[code]/assets` previews and exports vote cards for every motion.
+- `/admin/set-password` lets invited admins choose a password.
 - `/admin/whatsapp` manages the independent WhatsApp subscriber list and campaigns.
 - `/admin/whatsapp/import` previews and imports `.xlsx` guest lists.
 - `/join/[code]` is the audience mobile view.

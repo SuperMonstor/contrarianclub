@@ -33,7 +33,7 @@
 
 Phase 1 intentionally uses public audience access for joining and voting. Admin controls require Supabase Auth and then use the service role key through server code. Later phases should add stricter row-level security.
 
-Keep public self-service signups disabled. During this phase, every Supabase Auth user is treated as an admin, so only create Auth users you intend to trust with the host/admin console. Before adding Google login, attendee login, invite-based signup, or any non-admin Auth users, reintroduce an explicit admin allowlist.
+Keep public self-service signups disabled. During this phase, every Supabase Auth user is treated as an admin, so only create or invite Auth users you intend to trust with the host/admin console. Before adding Google login, attendee login, or any non-admin Auth users, reintroduce an explicit admin allowlist.
 
 ## Admin Auth
 
@@ -46,6 +46,12 @@ Create an admin user in Supabase:
 5. Keep **Auto Confirm User** enabled if Supabase shows that option.
 
 No app metadata or raw JSON edits are required. Use that email and password at `/admin/login`.
+
+To invite an admin instead, first allow
+`https://admin.thecontrarian.club/set-password` under Supabase Authentication
+URL Configuration. Send the invite with that URL as `redirectTo`. The recipient
+chooses a password from the invite link and then signs in at `/admin/login`.
+Deploy the set-password page before sending the invitation.
 
 ## Local Development
 
