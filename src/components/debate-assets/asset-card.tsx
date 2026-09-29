@@ -122,6 +122,11 @@ export function AssetCard({
   elementRef?: Ref<HTMLDivElement>;
 }) {
   const counts = stage === "before" ? motion.before : motion.after;
+  const motionClass = motion.motion.length > 160
+    ? styles.motionVeryLong
+    : motion.motion.length > 100
+      ? styles.motionLong
+      : "";
   return (
     <div
       ref={elementRef}
@@ -136,7 +141,7 @@ export function AssetCard({
           <Swing motion={motion} />
         ) : (
           <>
-            <h2 className={styles.motion}>{motion.motion}</h2>
+            <h2 className={`${styles.motion} ${motionClass}`}>{motion.motion}</h2>
             <p className={styles.stage}>{stage === "before" ? "Before the debate" : "After the debate"}</p>
             <Standing motion={motion} counts={counts} />
           </>

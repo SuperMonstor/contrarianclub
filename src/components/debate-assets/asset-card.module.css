@@ -66,7 +66,10 @@
 
 .motion {
   margin: 34px 0 0;
-  max-width: 1240px;
+  width: 100%;
+  max-width: 900px;
+  min-height: 110px;
+  flex-shrink: 0;
   color: var(--ivory);
   font-family: var(--cc-font-display), Georgia, serif;
   font-size: 50px;
@@ -78,6 +81,9 @@
   overflow-wrap: anywhere;
   text-shadow: 0 2px 30px rgb(0 0 0 / 80%);
 }
+
+.motionLong { font-size: 40px; }
+.motionVeryLong { font-size: 32px; }
 
 .stage {
   margin: 22px 0 0;
