@@ -7,9 +7,8 @@ import { type Plate, Poster } from "./slides";
 // the room, and the date, venue and tickets are left off on purpose: this
 // piece announces what the night is about and nothing else.
 //
-// The two subjects are the education system and government schools, and the
-// legal dynamics of relationships. The reasoning behind the composition is in
-// slides.tsx.
+// The two themes, stated plainly: government schools, and relationships and
+// the law. The reasoning behind the composition is in slides.tsx.
 
 const school: Plate = {
   src: schoolSrc,
@@ -24,7 +23,7 @@ const settlement: Plate = {
 };
 
 const work: WorkSpec = {
-  title: "Debate Club #12, where does the state belong",
+  title: "Debate Club #12, government schools, relationships and the law",
   date: "2026-10-07",
   formats: ["ig-portrait", "ig-story"],
 
@@ -37,11 +36,10 @@ const work: WorkSpec = {
           format={format}
           copy={{
             edition: "Debate Club #12",
-            themeLabel: "Theme",
-            theme: ["Where does the", "state belong?"],
+            themeLabel: "Themes",
+            theme: ["Government schools.", "Relationships", "and the law."],
             rooms: [
               {
-                label: "In the classroom",
                 plate: school,
                 // the schoolmaster with his quill, the girl at the desk, and
                 // the boy asleep on the floor in front of them
@@ -51,7 +49,6 @@ const work: WorkSpec = {
                 },
               },
               {
-                label: "Between two people",
                 plate: settlement,
                 // the couple back to back, the lawyer leaning in, and the
                 // father with the contract

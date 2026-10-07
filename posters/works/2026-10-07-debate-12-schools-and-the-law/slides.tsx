@@ -3,31 +3,31 @@ import type { Format } from "../../src/core/formats";
 import { Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Debate Club #12. One poster: the theme now, the motions in the room.
+// Debate Club #12. One poster: the themes now, the motions in the room.
 //
 // ---------------------------------------------------------------------------
 // The argument the layout is making
 //
-// The night has two subjects that look unrelated: the education system and
-// government schools, and the law as it sits inside a relationship. What they
-// share is the state. In one it runs the room; in the other it writes the
-// terms between two people. So the theme asks the question both motions will
-// argue, "Where does the state belong?", and each picture names only where.
+// The night has two subjects: government schools, and relationships and the
+// law. The poster says so plainly. An earlier cut wrapped both in one clever
+// question ("Where does the state belong?") and it read as a slogan standing
+// between the reader and the topics, so the themes are now the headline.
 //
-// TWO ROOMS STACKED, THE STATE BETWEEN THEM. The classroom fills the top of
+// TWO ROOMS STACKED, THE THEMES BETWEEN THEM. The classroom fills the top of
 // the page, the marriage contract fills the bottom, both run edge to edge,
-// and the theme sits in the dark where the two meet. #11 was a side by side
-// diptych; this is the same idea turned on its side, because here the
-// question is not "for what" but "where", and the eye should travel from one
-// room, through the question, into the other.
+// and the two themes sit in the dark where the two meet, each beside its own
+// picture: schools directly under the schoolroom, relationships and the law
+// directly over the settlement. #11 was a side by side diptych; this one is
+// stacked so the eye reads down through one room, the two themes, and the
+// other room.
 //
 // THE PICTURES DO THE HINTING. Steen's schoolmaster trims his quill while the
 // school runs riot around him and a boy sleeps on the floor. Hogarth's two
 // fathers haggle over the settlement while the couple turn their backs on
 // each other and the lawyer leans in to the bride. Neither motion is named.
 //
-// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
-// Playfair names the two rooms and the edition. Inter is the small print in
+// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the themes.
+// Playfair sets the edition. Inter is the small print in
 // sentence case. Gold is used once, for the line that says the motions are
 // held back, and only it is set in tracked caps.
 //
@@ -61,9 +61,8 @@ export interface Crop {
   scale: number;
 }
 
-/** One of the two rooms: its name on the page, and the picture of it. */
+/** One of the two rooms: the picture of it, and how to crop it. */
 export interface Room {
-  label: string;
   plate: Plate;
   /** one crop per format family, because the bands change shape */
   crop: { portrait: Crop; story: Crop };
@@ -72,7 +71,7 @@ export interface Room {
 export interface Copy {
   edition: string;
   themeLabel: string;
-  /** the theme, one line per entry */
+  /** the themes, one line per entry, broken at phrase boundaries */
   theme: string[];
   rooms: [Room, Room];
   /** the line that says the motions are held back */
@@ -92,10 +91,9 @@ interface Metrics {
   split: number;
   themeLabelSize: number;
   themeSize: number;
-  labelSize: number;
-  /** baseline-ish tops of the two room labels */
-  labelTopA: number;
-  labelTopB: number;
+  /** where the top picture starts going dark, and where the bottom one does */
+  clearEndA: number;
+  clearEndB: number;
   ruleTop: number;
   noticeSize: number;
   linesSize: number;
@@ -108,10 +106,9 @@ const PORTRAIT: Metrics = {
   editionSize: 30,
   split: 676,
   themeLabelSize: 21,
-  themeSize: 118,
-  labelSize: 44,
-  labelTopA: 404,
-  labelTopB: 1010,
+  themeSize: 92,
+  clearEndA: 380,
+  clearEndB: 1050,
   ruleTop: 1150,
   noticeSize: 17,
   linesSize: 16,
@@ -124,10 +121,9 @@ const STORY: Metrics = {
   editionSize: 34,
   split: 958,
   themeLabelSize: 23,
-  themeSize: 128,
-  labelSize: 50,
-  labelTopA: 660,
-  labelTopB: 1450,
+  themeSize: 92,
+  clearEndA: 640,
+  clearEndB: 1500,
   ruleTop: 1650,
   noticeSize: 19,
   linesSize: 18,
@@ -164,27 +160,25 @@ function BandArt({ plate, crop, bw, bh }: { plate: Plate; crop: Crop; bw: number
  *  near-black at the split. Bottom band: near-black at the split, open over
  *  the settlement, then down again under the notice. The two meet at the same
  *  black, so the theme sits on one dark ground with a room either side. */
-function scrimTop(m: Metrics) {
+function scrimTop(m: Metrics, blockTop: number) {
   const pct = (y: number) => `${((y / m.split) * 100).toFixed(1)}%`;
   return `linear-gradient(180deg,
     rgba(11, 9, 7, 0.7) 0%,
     rgba(11, 9, 7, 0.34) ${pct(m.lockupTop + m.lockupW * 0.42 + 40)},
     rgba(11, 9, 7, 0.06) ${pct(m.lockupTop + m.lockupW * 0.42 + 120)},
-    rgba(11, 9, 7, 0.12) ${pct(m.labelTopA - 110)},
-    rgba(11, 9, 7, 0.62) ${pct(m.labelTopA + m.labelSize + 20)},
-    rgba(11, 9, 7, 0.96) ${pct(m.split - m.themeSize * 0.9)},
+    rgba(11, 9, 7, 0.1) ${pct(m.clearEndA)},
+    rgba(11, 9, 7, 0.9) ${pct(blockTop - 20)},
     rgba(11, 9, 7, 0.97) 100%)`;
 }
 
-function scrimBottom(m: Metrics, H: number) {
+function scrimBottom(m: Metrics, H: number, blockBottom: number) {
   const bh = H - m.split;
   const pct = (y: number) => `${(((y - m.split) / bh) * 100).toFixed(1)}%`;
   return `linear-gradient(180deg,
     rgba(11, 9, 7, 0.97) 0%,
-    rgba(11, 9, 7, 0.95) ${pct(m.split + m.themeSize * 1.05)},
-    rgba(11, 9, 7, 0.22) ${pct(m.split + m.themeSize * 1.05 + 150)},
-    rgba(11, 9, 7, 0.08) ${pct(m.labelTopB - 80)},
-    rgba(11, 9, 7, 0.6) ${pct(m.labelTopB + m.labelSize + 20)},
+    rgba(11, 9, 7, 0.92) ${pct(blockBottom + 10)},
+    rgba(11, 9, 7, 0.1) ${pct(blockBottom + 190)},
+    rgba(11, 9, 7, 0.1) ${pct(m.clearEndB)},
     rgba(9, 7, 5, 0.92) ${pct(m.ruleTop - 6)},
     rgba(8, 6, 4, 0.96) 100%)`;
 }
@@ -222,20 +216,22 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
   const H = format.height;
   const [a, b] = copy.rooms;
   const themeH = copy.theme.length * m.themeSize * 0.94;
-  const themeTop = m.split - themeH / 2 - m.themeLabelSize * 0.5;
+  const themeTop = m.split - themeH / 2 + m.themeLabelSize * 0.6;
+  const blockTop = themeTop - m.themeLabelSize * 2.2;
+  const blockBottom = themeTop + themeH;
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       {/* the ground: the classroom above, the contract below */}
       <div style={{ position: "absolute", left: 0, top: 0, width: W, height: m.split, overflow: "hidden" }}>
         <BandArt plate={a.plate} crop={a.crop[m.family]} bw={W} bh={m.split} />
-        <div className="ws-scrim" style={{ background: scrimTop(m) }} />
+        <div className="ws-scrim" style={{ background: scrimTop(m, blockTop) }} />
       </div>
       <div
         style={{ position: "absolute", left: 0, top: m.split, width: W, height: H - m.split, overflow: "hidden" }}
       >
         <BandArt plate={b.plate} crop={b.crop[m.family]} bw={W} bh={H - m.split} />
-        <div className="ws-scrim" style={{ background: scrimBottom(m, H) }} />
+        <div className="ws-scrim" style={{ background: scrimBottom(m, H, blockBottom) }} />
       </div>
 
       {/* the club, and opposite it the edition */}
@@ -257,52 +253,19 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
         {copy.edition}
       </p>
 
-      {/* the first room, named at the foot of its picture */}
-      <p
-        className="ws-on-art"
-        style={{
-          ...SERIF,
-          position: "absolute",
-          left: MARGIN,
-          top: m.labelTopA,
-          fontSize: m.labelSize,
-          lineHeight: 1.1,
-          letterSpacing: "-0.01em",
-          color: "var(--cc-ivory)",
-        }}
-      >
-        {a.label}
-      </p>
 
-      {/* the theme, on the dark where the two rooms meet */}
-      <div style={{ position: "absolute", left: MARGIN, right: MARGIN, top: themeTop - m.themeLabelSize * 2.2 }}>
+      {/* the themes, on the dark where the two rooms meet */}
+      <div style={{ position: "absolute", left: MARGIN, right: MARGIN, top: blockTop }}>
         <p style={{ ...SMALL, fontSize: m.themeLabelSize, color: "var(--cc-parchment)" }}>{copy.themeLabel}</p>
         <div style={{ marginTop: Math.round(m.themeLabelSize * 0.9) }}>
           {copy.theme.map((line) => (
-            <p key={line} style={{ ...CONDENSED, fontSize: m.themeSize }}>
+            <p key={line} style={{ ...CONDENSED, fontSize: m.themeSize, whiteSpace: "nowrap" }}>
               {line}
             </p>
           ))}
         </div>
       </div>
 
-      {/* the second room, named at the foot of its picture, opposite side */}
-      <p
-        className="ws-on-art"
-        style={{
-          ...SERIF,
-          position: "absolute",
-          right: MARGIN,
-          top: m.labelTopB,
-          fontSize: m.labelSize,
-          lineHeight: 1.1,
-          letterSpacing: "-0.01em",
-          color: "var(--cc-ivory)",
-          textAlign: "right",
-        }}
-      >
-        {b.label}
-      </p>
 
       {/* the notice, then how the night runs */}
       <div className="ws-rule" style={{ top: m.ruleTop, left: MARGIN, right: MARGIN }} />

@@ -5,34 +5,30 @@ venue and tickets are left off the poster on purpose.
 
 ## The frame
 
-The two subjects are the education system and government schools, and the
-legal dynamics of relationships. The theme is **Where does the state
-belong?** One half is the state running the room, the other is the law
-writing the terms between two people. The poster names only where:
+The two subjects are stated plainly, as the headline:
 
-- In the classroom
-- Between two people
+- Government schools.
+- Relationships and the law.
+
+An earlier cut wrapped both in one question ("Where does the state
+belong?"). It read as a slogan standing between the reader and the topics,
+so it was dropped.
 
 ## Listing title
 
-**The Contrarian Debate Club #12: Where Does The State Belong?**
+**The Contrarian Debate Club #12: Government Schools, Relationships And The Law**
 
-Alternates:
+Short form, for anywhere the organiser name already shows:
 
-- Debate Club #12: Where Does The State Belong?
-- Debate Club #12: The Classroom And The Courtroom
-
-The first is the recommendation and follows #11's pattern. Use the short
-second form where the organiser name already shows next to the title.
+- Debate Club #12: Government Schools, Relationships And The Law
 
 ## Description
 
 > The Contrarian Debate Club returns for its twelfth edition.
 >
-> The theme is where the state belongs. Two motions sit under it. One is
-> about the classroom: the education system and the schools the government
-> runs. The other is about what happens between two people, and how far the
-> law should reach into it.
+> Two themes this time. Government schools, and the education system they
+> sit inside. Relationships, and the law that governs what happens inside
+> them.
 >
 > The full motions are revealed on the day. Nobody sees them in advance, so
 > nobody turns up with a prepared case, and a first timer stands on the same
