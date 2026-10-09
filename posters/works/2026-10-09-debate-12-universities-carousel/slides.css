@@ -1,0 +1,113 @@
+/* Debate Club #12, the world-class universities carousel.
+   Work-local treatment only. Classes are prefixed .wu- because work CSS
+   shares one global namespace. */
+
+/* --- The picture ----------------------------------------------------------- */
+
+/* The School of Athens is a pale fresco: white stone, sky, marble. It is
+   taken down further than the kit's standard and warmed a little, so the
+   robes keep their colour and the stone stops glaring. */
+.wu-art {
+  z-index: 0;
+  filter: saturate(0.86) contrast(1.06) brightness(0.74) sepia(0.12);
+}
+
+/* The same fresco at dusk, for the motion. */
+.wu-art-dusk {
+  z-index: 0;
+  filter: saturate(0.62) contrast(1.06) brightness(0.5) sepia(0.24);
+}
+
+/* --- Legibility ------------------------------------------------------------ */
+
+/* The hook: a little under the logo, the hall left open, then a dark foot
+   for the condensed type. */
+.wu-scrim-hook {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.6) 0%,
+    rgba(11, 9, 7, 0.12) 16%,
+    rgba(11, 9, 7, 0.08) 36%,
+    rgba(11, 9, 7, 0.66) 50%,
+    rgba(11, 9, 7, 0.9) 60%,
+    rgba(8, 6, 4, 0.96) 78%
+  );
+}
+
+/* A beat that talks at the foot. */
+.wu-scrim-foot {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.55) 0%,
+    rgba(11, 9, 7, 0.1) 14%,
+    rgba(11, 9, 7, 0.08) 38%,
+    rgba(11, 9, 7, 0.66) 52%,
+    rgba(11, 9, 7, 0.92) 64%,
+    rgba(8, 6, 4, 0.97) 80%
+  );
+}
+
+/* A beat that talks at the head and leaves the figures below. */
+.wu-scrim-head {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.95) 0%,
+    rgba(11, 9, 7, 0.9) 34%,
+    rgba(11, 9, 7, 0.3) 48%,
+    rgba(11, 9, 7, 0.12) 62%,
+    rgba(11, 9, 7, 0.2) 78%,
+    rgba(8, 6, 4, 0.9) 88%
+  );
+}
+
+/* A beat that talks at the head and the foot, with the picture between. */
+.wu-scrim-split {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.94) 0%,
+    rgba(11, 9, 7, 0.86) 24%,
+    rgba(11, 9, 7, 0.16) 38%,
+    rgba(11, 9, 7, 0.12) 64%,
+    rgba(11, 9, 7, 0.86) 74%,
+    rgba(8, 6, 4, 0.97) 86%
+  );
+}
+
+/* The motion: the fresco is already at dusk, so this only deepens the foot
+   where the motion sits. */
+.wu-scrim-motion {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 7, 0.6) 0%,
+    rgba(11, 9, 7, 0.3) 18%,
+    rgba(11, 9, 7, 0.4) 40%,
+    rgba(8, 6, 4, 0.88) 58%,
+    rgba(8, 6, 4, 0.96) 100%
+  );
+}
+
+/* A short, close shadow, not a glow. */
+.wu-on-art {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* The one division: a plain hairline. */
+.wu-rule {
+  position: absolute;
+  left: 92px;
+  right: 92px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: rgba(244, 234, 210, 0.22);
+}
