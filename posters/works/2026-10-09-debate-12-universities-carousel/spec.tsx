@@ -58,15 +58,15 @@ const work: WorkSpec = {
 
   slides: [
     {
-      label: "1. The question",
+      label: "1. The claim",
       hasImage: true,
       render: () => (
         <Hook
           plate={athens}
           crop={{ x: 0.5, y: 0.5, scale: 2 }}
           edition={EDITION}
-          hook={["What’s holding", "India back from", "producing", "world-class", "universities?"]}
-          size={104}
+          hook={["India won’t", "produce a", "world-class", "university", "any time soon."]}
+          size={112}
         />
       ),
     },

@@ -8,7 +8,7 @@ import "./slides.css";
 // ---------------------------------------------------------------------------
 // The story
 //
-//   1  what's holding India back?                      the question
+//   1  India won't produce one any time soon          the claim
 //   2  our best is 118th, nothing in the top 100       the scoreboard
 //   3  the most competitive system, yet unemployable    the paradox
 //   4  partly the people running them                  cause one
@@ -38,8 +38,10 @@ import "./slides.css";
 // The fresco is pale (stone, sky, white marble), so it is taken down further
 // than the standard treatment, and only the text zones go near-black.
 //
-// THE HOOK IS THE ONE SHOUT. The question is set in the condensed face, as
-// large as it fits, under the hall. Everything after it is Playfair talking.
+// THE HOOK IS THE ONE SHOUT. The claim is set in the condensed face, as
+// large as it fits, under the hall. It says "won't", not "can't", on purpose:
+// it is a forecast, which is what the motion is, rather than a verdict on the
+// country. Everything after it is Playfair talking.
 //
 // NOT EVERY SLIDE IS THE SAME SLIDE. The lower figures sit near the foot of
 // the fresco, so those slides talk at the head and leave the figures below
@@ -254,7 +256,7 @@ function Masthead({ edition }: { edition: string }) {
 
 /* --- Slides --------------------------------------------------------------- */
 
-/** 1. The question, under the hall. */
+/** 1. The claim, under the hall. */
 export function Hook({
   plate,
   crop,
