@@ -26,13 +26,7 @@ import { Beat, Hook, Invite, Motion, type Plate } from "./slides";
 //            aren't considered employable          employability 56.35%, from
 //                                                  about 1 lakh candidates who
 //                                                  sat its employability test
-//   slide 4  vice-chancellors picked through a     State universities: the
-//            process run by governors and          governor, as chancellor,
-//            governments                           appoints from a search
-//                                                  committee's shortlist.
-//                                                  Central universities: the
-//                                                  President, as Visitor.
-//            professors paid on fixed government   UGC pay levels (2018
+//   slide 4  professors paid on fixed government   UGC pay levels (2018
 //            scales                                regulations): the same pay
 //                                                  at the same level. Promotion
 //                                                  between levels does need
@@ -102,9 +96,9 @@ const work: WorkSpec = {
           of={OF}
           head={[
             "But for a society that places so much emphasis on education, why is this the case?",
-            "India is one of the most competitive places in the world to get an education. Over 16 lakh students signed up for JEE Main this year, for a shot at about 18,800 IIT seats. And yet more than four in ten graduates still aren’t considered employable.",
+            "Over 16 lakh students signed up for JEE Main this year, for about 18,800 IIT seats. And yet more than four in ten graduates aren’t considered employable.",
           ]}
-          headSize={37}
+          headSize={44}
           source="NTA, JEE Main 2026. JoSAA 2026 seat matrix. India Skills Report 2026."
           detail="Detail: Pythagoras, and the students copying from his book."
         />
@@ -122,9 +116,9 @@ const work: WorkSpec = {
           of={OF}
           foot={[
             "So what’s at the crux of this problem? We think it’s partly the people running these universities.",
-            "Vice-chancellors are picked through a process run by governors and governments, and professors are paid on fixed government scales, so a great researcher and a mediocre one at the same level earn the same. If there’s very little in it for anyone to make their university great, why would they bother?",
+            "Professors are paid on fixed government scales, so a great researcher and a mediocre one at the same level earn the same. Why would anyone bother?",
           ]}
-          footSize={36}
+          footSize={44}
           source="UGC pay levels for university teachers, 2018 regulations."
           detail="Detail: Plato and Aristotle, at the head of the school."
         />
@@ -142,9 +136,9 @@ const work: WorkSpec = {
           of={OF}
           head={[
             "And partly it’s the way we look at education.",
-            "For most of us, college is a way to get a job, not a place to explore ideas. We chase ranks, we pick the safe option, and if you told your parents you wanted to become a researcher, most of them would talk you out of it.",
+            "For most of us, college is a way to get a job, not to explore ideas. Tell your parents you want to be a researcher and see how that goes.",
           ]}
-          headSize={40}
+          headSize={46}
           detail="Detail: Heraclitus, working alone."
         />
       ),
@@ -160,9 +154,9 @@ const work: WorkSpec = {
           n={6}
           of={OF}
           head={[
-            "The two feed each other. Students want a degree that gets them a job, universities are happy to hand out exactly that, and nobody is asking for anything more.",
+            "The two feed each other. Students want a degree that gets them a job, and universities are happy to hand out exactly that.",
           ]}
-          headSize={40}
+          headSize={46}
           foot={[{ text: "So which has to change first, the universities or us?", tone: "gold" }]}
           footSize={52}
           detail="Detail: Euclid, teaching."

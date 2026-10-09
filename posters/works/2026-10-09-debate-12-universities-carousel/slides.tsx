@@ -173,6 +173,8 @@ function Talk({ lines, size }: { lines: Line[]; size: number }) {
               lineHeight: 1.3,
               letterSpacing: "-0.005em",
               fontVariantNumeric: "lining-nums",
+              // no paragraph ends on one word by itself
+              textWrap: "pretty",
               color: TONES[l.tone ?? "ivory"],
             }}
           >
