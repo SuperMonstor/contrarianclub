@@ -3,43 +3,42 @@ import type { Format } from "../../src/core/formats";
 import { Lockup } from "../../src/core/kit";
 import "./slides.css";
 
-// Debate Club #12. One poster: the themes now, the motions in the room.
+// Debate Club #12. One poster: the theme now, the motions in the room.
 //
 // ---------------------------------------------------------------------------
 // The argument the layout is making
 //
-// The night has two subjects: government schools, and relationships and the
-// law. The poster says so plainly. An earlier cut wrapped both in one clever
-// question ("Where does the state belong?") and it read as a slogan standing
-// between the reader and the topics, so the themes are now the headline.
+// The theme is the Indian education system, and the poster says so plainly,
+// in the club's own words, as the headline. Earlier cuts of this poster
+// carried two themes and then one clever question over both; the question
+// read as a slogan, and the second theme was dropped from the night.
 //
-// TWO ROOMS STACKED, THE THEMES BETWEEN THEM. The classroom fills the top of
-// the page, the marriage contract fills the bottom, both run edge to edge,
-// and the two themes sit in the dark where the two meet, each beside its own
-// picture: schools directly under the schoolroom, relationships and the law
-// directly over the settlement. #11 was a side by side diptych; this one is
-// stacked so the eye reads down through one room, the two themes, and the
-// other room.
+// TWO CLASSROOMS STACKED, THE THEME BETWEEN THEM. Two schools a century and a
+// half apart fill the top and bottom of the page, edge to edge, and the theme
+// sits in the dark where they meet. #11 was a side by side diptych; this one
+// is stacked so the eye reads down through one classroom, the theme, and the
+// other. The pair is the argument: one room where nobody is in charge, one
+// room where the teacher has the pointer and every child is drilled.
 //
 // THE PICTURES DO THE HINTING. Steen's schoolmaster trims his quill while the
-// school runs riot around him and a boy sleeps on the floor. Hogarth's two
-// fathers haggle over the settlement while the couple turn their backs on
-// each other and the lawyer leans in to the bride. Neither motion is named.
+// school runs riot around him and a boy sleeps at his desk. Anker's teacher
+// stands over a room packed to the walls, pointer out, hands up on every
+// bench. Neither motion is named.
 //
-// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the themes.
-// Playfair sets the edition. Inter is the small print in
-// sentence case. Gold is used once, for the line that says the motions are
-// held back, and only it is set in tracked caps.
+// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
+// Playfair sets the edition. Inter is the small print in sentence case. Gold
+// is used once, for the line that says the motions are held back, and only
+// it is set in tracked caps.
 //
 // ---------------------------------------------------------------------------
 // The art, public domain via Wikimedia Commons:
 //
-//   school      Jan Steen, A School for Boys and Girls (c. 1670, Scottish
-//               National Gallery). The schoolmaster and his quill, the girl
-//               at the desk, the boy asleep on the floor.
-//   settlement  William Hogarth, Marriage A-la-Mode 1: The Marriage
-//               Settlement (c. 1743, National Gallery, London). The couple
-//               back to back, the lawyer, the contract on the table.
+//   school          Jan Steen, A School for Boys and Girls (c. 1670, Scottish
+//                   National Gallery). The schoolmaster and his quill, the
+//                   girl at the desk, the boy asleep.
+//   village-school  Albert Anker, The Village School of 1848 (1896,
+//                   Kunstmuseum Basel). The teacher and his pointer, the
+//                   crowded benches, the raised hands.
 
 const MARGIN = 84;
 
@@ -61,7 +60,7 @@ export interface Crop {
   scale: number;
 }
 
-/** One of the two rooms: the picture of it, and how to crop it. */
+/** One of the two classrooms: the picture of it, and how to crop it. */
 export interface Room {
   plate: Plate;
   /** one crop per format family, because the bands change shape */
@@ -71,7 +70,7 @@ export interface Room {
 export interface Copy {
   edition: string;
   themeLabel: string;
-  /** the themes, one line per entry, broken at phrase boundaries */
+  /** the theme, one line per entry, broken at phrase boundaries */
   theme: string[];
   rooms: [Room, Room];
   /** the line that says the motions are held back */
@@ -106,7 +105,7 @@ const PORTRAIT: Metrics = {
   editionSize: 30,
   split: 676,
   themeLabelSize: 21,
-  themeSize: 92,
+  themeSize: 104,
   clearEndA: 380,
   clearEndB: 1050,
   ruleTop: 1150,
@@ -121,7 +120,7 @@ const STORY: Metrics = {
   editionSize: 34,
   split: 958,
   themeLabelSize: 23,
-  themeSize: 92,
+  themeSize: 104,
   clearEndA: 640,
   clearEndB: 1500,
   ruleTop: 1650,
@@ -158,7 +157,7 @@ function BandArt({ plate, crop, bw, bh }: { plate: Plate; crop: Crop; bw: number
 /** Where type may sit on each band, built from the layout's own numbers.
  *  Top band: soft under the lockup, open over the classroom, then down to
  *  near-black at the split. Bottom band: near-black at the split, open over
- *  the settlement, then down again under the notice. The two meet at the same
+ *  the second classroom, then down again under the notice. The two meet at the same
  *  black, so the theme sits on one dark ground with a room either side. */
 function scrimTop(m: Metrics, blockTop: number) {
   const pct = (y: number) => `${((y / m.split) * 100).toFixed(1)}%`;
@@ -177,7 +176,7 @@ function scrimBottom(m: Metrics, H: number, blockBottom: number) {
   return `linear-gradient(180deg,
     rgba(11, 9, 7, 0.97) 0%,
     rgba(11, 9, 7, 0.92) ${pct(blockBottom + 10)},
-    rgba(11, 9, 7, 0.1) ${pct(blockBottom + 190)},
+    rgba(11, 9, 7, 0.1) ${pct(blockBottom + 130)},
     rgba(11, 9, 7, 0.1) ${pct(m.clearEndB)},
     rgba(9, 7, 5, 0.92) ${pct(m.ruleTop - 6)},
     rgba(8, 6, 4, 0.96) 100%)`;
@@ -222,16 +221,16 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* the ground: the classroom above, the contract below */}
+      {/* the ground: one classroom above, another below */}
       <div style={{ position: "absolute", left: 0, top: 0, width: W, height: m.split, overflow: "hidden" }}>
         <BandArt plate={a.plate} crop={a.crop[m.family]} bw={W} bh={m.split} />
-        <div className="ws-scrim" style={{ background: scrimTop(m, blockTop) }} />
+        <div className="ie-scrim" style={{ background: scrimTop(m, blockTop) }} />
       </div>
       <div
         style={{ position: "absolute", left: 0, top: m.split, width: W, height: H - m.split, overflow: "hidden" }}
       >
         <BandArt plate={b.plate} crop={b.crop[m.family]} bw={W} bh={H - m.split} />
-        <div className="ws-scrim" style={{ background: scrimBottom(m, H, blockBottom) }} />
+        <div className="ie-scrim" style={{ background: scrimBottom(m, H, blockBottom) }} />
       </div>
 
       {/* the club, and opposite it the edition */}
@@ -239,7 +238,7 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
         <Lockup width={m.lockupW} artwork="left" />
       </div>
       <p
-        className="ws-on-art"
+        className="ie-on-art"
         style={{
           ...SERIF,
           position: "absolute",
@@ -254,7 +253,7 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
       </p>
 
 
-      {/* the themes, on the dark where the two rooms meet */}
+      {/* the theme, on the dark where the two classrooms meet */}
       <div style={{ position: "absolute", left: MARGIN, right: MARGIN, top: blockTop }}>
         <p style={{ ...SMALL, fontSize: m.themeLabelSize, color: "var(--cc-parchment)" }}>{copy.themeLabel}</p>
         <div style={{ marginTop: Math.round(m.themeLabelSize * 0.9) }}>
@@ -268,7 +267,7 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
 
 
       {/* the notice, then how the night runs */}
-      <div className="ws-rule" style={{ top: m.ruleTop, left: MARGIN, right: MARGIN }} />
+      <div className="ie-rule" style={{ top: m.ruleTop, left: MARGIN, right: MARGIN }} />
       <div
         style={{
           position: "absolute",
