@@ -15,7 +15,7 @@ import "./slides.css";
 //   5  partly the way we look at education             cause two
 //   6  the two feed each other; which changes first?   the crux
 //   7  the motion, verbatim                            what the room argues
-//   8  come argue it out                               the way in
+//   8  the Debate #12 poster                          the way in
 //
 // It is written as one person talking, in full sentences, because that is how
 // the club speaks about this. Slides 4 and 5 are the club's two causes and
@@ -32,8 +32,8 @@ import "./slides.css";
 // one: the hall itself, the two globes (the world it is ranked against),
 // Pythagoras with a crowd copying from his book, Plato and Aristotle at the
 // head of the school, Heraclitus working alone, Euclid bent over a slate with
-// his students, the whole school at dusk, and Raphael's own face, the one
-// person in it looking out at you.
+// his students, and the whole school at dusk. Then the deck hands over to
+// the Debate #12 poster itself, so it ends on the event.
 //
 // The fresco is pale (stone, sky, white marble), so it is taken down further
 // than the standard treatment, and only the text zones go near-black.
@@ -43,7 +43,7 @@ import "./slides.css";
 //
 // NOT EVERY SLIDE IS THE SAME SLIDE. The lower figures sit near the foot of
 // the fresco, so those slides talk at the head and leave the figures below
-// (3 and 5). The higher ones talk at the foot (2, 4 and 8). Slide 6 opens at
+// (3 and 5). The higher ones talk at the foot (2 and 4). Slide 6 opens at
 // the head and lands its question at the foot, with Euclid between. Slide 7
 // pulls back to the whole school, at dusk.
 //
@@ -52,7 +52,7 @@ import "./slides.css";
 // AI design tells" in the root CLAUDE.md.
 //
 // GOLD MEANS ONE THING PER SLIDE, and most slides have none. It marks the
-// question the deck exists for on slide 6, and the invitation on slide 8.
+// question the deck exists for on slide 6, and nothing else.
 // No tracked caps anywhere. Sources, credits and the counter are plain muted
 // type in sentence case.
 
@@ -381,41 +381,17 @@ export function Motion({
   );
 }
 
-/** 8. The way in, under the one face in the fresco that looks back. */
-export function Invite({
-  plate,
-  crop,
-  edition,
-  invitation,
-  detail,
-}: {
-  plate: Plate;
-  crop: Crop;
-  edition: string;
-  invitation: string;
-  detail: string;
-}) {
+/** 8. The Debate #12 poster, exactly as published. It is the exported image
+ *  from works/2026-10-07-debate-12-indian-education, copied into this
+ *  folder's assets so the carousel carries everything it needs. Its own
+ *  format is 1080 x 1350, the same as a carousel slide, so it runs edge to
+ *  edge with nothing added. */
+export function Poster({ src }: { src: string }) {
   return (
-    <Ground plate={plate} crop={crop} scrim="wu-scrim-foot">
-      <Masthead edition={edition} />
-      <p
-        className="wu-on-art"
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          width: W - MARGIN * 2,
-          bottom: H - TEXT_BASE,
-          margin: 0,
-          fontFamily: "var(--cc-font-display)",
-          fontSize: 66,
-          lineHeight: 1.12,
-          letterSpacing: "-0.012em",
-          color: "var(--cc-gold-bright)",
-        }}
-      >
-        {invitation}
-      </p>
-      <UnderRule detail={detail} />
-    </Ground>
+    <img
+      src={src}
+      alt=""
+      style={{ position: "absolute", inset: 0, width: W, height: H, maxWidth: "none" }}
+    />
   );
 }

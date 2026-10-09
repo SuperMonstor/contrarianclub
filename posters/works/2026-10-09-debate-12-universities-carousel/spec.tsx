@@ -1,6 +1,7 @@
 import type { WorkSpec } from "../../src/core/types";
 import athensSrc from "./assets/athens.jpg";
-import { Beat, Hook, Invite, Motion, type Plate } from "./slides";
+import posterSrc from "./assets/poster.jpg";
+import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 
 // Debate Club #12, the Indian education system. The carousel for the motion:
 //
@@ -39,6 +40,10 @@ import { Beat, Hook, Invite, Motion, type Plate } from "./slides";
 // The picture. Raphael, The School of Athens, 1509 to 1511, fresco, Stanza
 // della Segnatura, Apostolic Palace, Vatican. Public domain. Wikimedia
 // Commons, "Raffael 058.jpg" (The Yorck Project), 6045 x 4671.
+//
+// Slide 8 is the Debate #12 poster, assets/poster.jpg, copied from
+// works/2026-10-07-debate-12-indian-education/out/ig-portrait.jpg. If that
+// poster is re-exported, copy it in again.
 
 const athens: Plate = { src: athensSrc, ratio: 6045 / 4671, art: "wu-art" };
 const athensDusk: Plate = { ...athens, art: "wu-art-dusk" };
@@ -180,13 +185,7 @@ const work: WorkSpec = {
       label: "8. The way in",
       hasImage: true,
       render: () => (
-        <Invite
-          plate={athens}
-          crop={{ x: 0.91, y: 0.68, scale: 6.5 }}
-          edition={EDITION}
-          invitation="Come argue it out at Debate Club #12."
-          detail="Detail: Raphael, the one face looking out."
-        />
+        <Poster src={posterSrc} />
       ),
     },
   ],

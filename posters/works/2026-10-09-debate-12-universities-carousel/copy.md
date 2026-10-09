@@ -17,12 +17,12 @@ and 5 give each side its own slide.
 
 ## Open questions
 
-- **The motion is printed in full on slide 7.** The Debate #12 poster says
-  "Motions revealed on the day", and the #11 decks struck their motions out.
-  If this one is meant to stay hidden until the night, slide 7 needs the same
-  treatment.
-- **Date and venue.** Slide 8 names the edition only. Add the date and
-  place once they are fixed.
+- **The motion is printed in full on slide 7, and slide 8 is the Debate #12
+  poster, which says "Motions revealed on the day".** The two contradict
+  each other side by side. Either strike the motion out on slide 7, as the
+  #11 decks did, or accept that this one is announced early.
+- **Date and venue.** The poster carries neither. Add them to the caption
+  once they are fixed.
 
 ## Sources
 
