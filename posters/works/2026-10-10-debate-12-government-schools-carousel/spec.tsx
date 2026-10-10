@@ -50,15 +50,9 @@ import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 //                                                mean cost per pupil under a
 //                                                third of government schools'
 //
-//   slide 8  the guest: a Congress spokesperson    South Matters, 13 Sep 2026:
-//            building a platform to report         Dhruv Jatti, Congress
-//            broken government schools in          spokesperson, founded
-//            Karnataka                             NammaShale; 607 citizen
-//                                                  reports from 26 districts.
-//            a state his own party runs            Congress has governed
-//                                                  Karnataka since May 2023 (CM
-//                                                  D. K. Shivakumar since June
-//                                                  2026).
+//   slide 8  the guest, someone actively working   Dhruv Jatti, founder of
+//            to fix government schools             NammaShale (South Matters,
+//                                                  13 Sep 2026)
 //
 // The guest is described, not named, on purpose. Slides 4 and 6 are the
 // club's argument and the opposition's, and cite nothing.
@@ -288,15 +282,11 @@ const work: WorkSpec = {
           of={OF}
           edition={EDITION}
           foot={[
-            "And this time, there’s a twist. Our guest is a Congress spokesperson who is building a platform for anyone to report a broken government school in Karnataka, a state his own party runs. He’ll explain what’s really going on inside these schools, then take on the room.",
-            {
-              text: "Bring your toughest questions. You can challenge his ideas and policies directly.",
-              tone: "gold",
-            },
+            "This time, we’re bringing in someone who’s actively working to fix government schools.",
+            { text: "And the room gets to challenge him directly.", tone: "gold" },
             { text: "A first of its kind in Bangalore.", tone: "parchment", size: 30 },
           ]}
-          footSize={38}
-          source="South Matters, 13 September 2026."
+          footSize={52}
         />
       ),
     },

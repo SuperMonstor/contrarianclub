@@ -12,11 +12,9 @@ rebuilding?
 
 ## Open questions
 
-- **The guest (slide 8)** is Dhruv Jatti, Congress spokesperson and founder
-  of NammaShale. The slide describes him without naming him, on purpose.
-  NammaShale's own count (13 September) has none of its 607 reports
-  independently verified as fixed. That would sharpen the slide but reads as
-  a jab at a guest, so it is left out.
+- **The guest (slide 8)** is Dhruv Jatti, founder of NammaShale. The slide
+  only says he is actively working on the problem and that the room gets to
+  challenge him; it does not name him or his party.
 - **"A first of its kind in Bangalore."** The club's own claim, and not one
   anyone has checked. "A first for the club" is the safe version.
 - **Slide 1's photograph** is an empty classroom whose file does not say
