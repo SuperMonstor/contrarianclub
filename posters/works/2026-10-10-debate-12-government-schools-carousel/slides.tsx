@@ -8,7 +8,7 @@ import "./slides.css";
 // ---------------------------------------------------------------------------
 // The story
 //
-//   1  fixing government schools won't change a thing   the claim
+//   1  CJP exposing schools won't change a thing       the claim
 //   2  CJP's Fix the Schools campaign                    the news
 //   3  we've tried this: buildings up, learning not      the record
 //   4  the government runs the school and judges it      the diagnosis

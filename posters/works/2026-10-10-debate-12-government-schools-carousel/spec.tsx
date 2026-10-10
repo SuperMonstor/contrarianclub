@@ -153,8 +153,8 @@ const work: WorkSpec = {
           plate={classroom}
           crop={{ x: 0.5, y: 0.5, scale: 1 }}
           edition={EDITION}
-          hook={["Fixing", "government", "schools won’t", "change a thing."]}
-          size={118}
+          hook={["CJP exposing", "government", "schools isn’t", "going to change", "a thing."]}
+          size={108}
         />
       ),
     },
