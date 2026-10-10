@@ -12,10 +12,6 @@ rebuilding?
 
 ## Open questions
 
-- **The motion is printed in full on slide 7, and slide 9 is the Debate #12
-  poster, which says "Motions revealed on the day".** Same contradiction as
-  the universities carousel. Strike the motion out, or accept that it is
-  announced early.
 - **The guest (slide 8).** Not named. A name and role would make the slide
   far more credible. If he is from CJP, slide 2 and the hook can say so.
 - **"A first of its kind in Bangalore."** The club's own claim, and not one

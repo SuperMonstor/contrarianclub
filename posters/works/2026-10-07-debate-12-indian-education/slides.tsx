@@ -28,7 +28,8 @@ import "./slides.css";
 // TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
 // Playfair sets the edition. Inter is the small print in sentence case. Gold
 // is used once, for the line that says the motions are held back, and only
-// it is set in tracked caps.
+// it is set in tracked caps. Once the motions went out in the carousels that
+// line came off, and the poster carries no gold.
 //
 // ---------------------------------------------------------------------------
 // The art, public domain via Wikimedia Commons:
@@ -73,8 +74,9 @@ export interface Copy {
   /** the theme, one line per entry, broken at phrase boundaries */
   theme: string[];
   rooms: [Room, Room];
-  /** the line that says the motions are held back */
-  notice: string;
+  /** the line that says the motions are held back. Left out once the
+   *  motions are public, and the night's lines take its place on the left. */
+  notice?: string;
   /** how the night works, one line each */
   lines: string[];
 }
@@ -279,10 +281,12 @@ export function Poster({ copy, format }: { copy: Copy; format: Format }) {
           alignItems: "flex-start",
         }}
       >
-        <div className="kicker" style={{ fontSize: m.noticeSize, letterSpacing: "0.26em", lineHeight: 1.5 }}>
-          {copy.notice}
-        </div>
-        <div style={{ textAlign: "right" }}>
+        {copy.notice && (
+          <div className="kicker" style={{ fontSize: m.noticeSize, letterSpacing: "0.26em", lineHeight: 1.5 }}>
+            {copy.notice}
+          </div>
+        )}
+        <div style={{ textAlign: copy.notice ? "right" : "left" }}>
           {copy.lines.map((line) => (
             <p key={line} style={{ ...SMALL, fontSize: m.linesSize, lineHeight: 1.6 }}>
               {line}

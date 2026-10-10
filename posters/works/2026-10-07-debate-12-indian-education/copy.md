@@ -48,4 +48,9 @@ Short form, for anywhere the organiser name already shows:
 
 ## Open questions
 
+- **Description copy.** The poster no longer says the motions are held
+  back, since the carousels publish them, but the description above still
+  says "We don't share the exact motions until the day". Update it if the
+  listing is live.
+
 - Add date, time and venue to the description once they are fixed.

@@ -3,9 +3,12 @@ import schoolSrc from "./assets/school.jpg";
 import villageSchoolSrc from "./assets/village-school.jpg";
 import { type Plate, Poster } from "./slides";
 
-// Debate Club #12. One poster, theme only. The motions are held back until
-// the room, and the date, venue and tickets are left off on purpose: this
-// piece announces what the night is about and nothing else.
+// Debate Club #12. One poster, theme only. The date, venue and tickets are
+// left off on purpose: this piece announces what the night is about and
+// nothing else. The motions were first held back until the room; the notice
+// saying so came off once the two motion carousels put them out
+// (works/2026-10-09-debate-12-universities-carousel and
+// works/2026-10-10-debate-12-government-schools-carousel).
 //
 // The theme, in the club's words: the Indian education system. The reasoning
 // behind the composition is in slides.tsx.
@@ -60,7 +63,6 @@ const work: WorkSpec = {
                 },
               },
             ],
-            notice: "Motions revealed on the day",
             lines: [
               "Debaters drawn at random.",
               "The floor opens to everyone.",
