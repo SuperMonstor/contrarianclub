@@ -11,6 +11,13 @@
   filter: saturate(0.92) contrast(1.04) brightness(0.8);
 }
 
+/* The one painting, the guest slide. Bingham's grove is dark already, so it
+   is lifted a little rather than taken down, and only lightly warmed. */
+.gs-art {
+  z-index: 0;
+  filter: saturate(0.9) contrast(1.06) brightness(1.08) sepia(0.06);
+}
+
 /* A night photograph, already dark: left almost as it is. */
 .gs-photo-night {
   z-index: 0;

@@ -1,12 +1,12 @@
 import type { WorkSpec } from "../../src/core/types";
-import classroomSrc from "./assets/classroom.jpg";
+import ashoknagarSrc from "./assets/ashoknagar.jpg";
 import jantarMantarSrc from "./assets/jantar-mantar.jpg";
 import mealSrc from "./assets/meal.jpg";
 import odishaSrc from "./assets/odisha.jpg";
 import posterSrc from "./assets/poster.jpg";
 import punjabSrc from "./assets/punjab.jpg";
 import rajasthanSrc from "./assets/rajasthan.jpg";
-import roomSrc from "./assets/room.jpg";
+import stumpSpeakingSrc from "./assets/stump-speaking.jpg";
 import tamilNaduSrc from "./assets/tamil-nadu.jpg";
 import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 
@@ -62,8 +62,8 @@ import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 // own slides, as the licences require; "toned" marks a crop and a colour
 // treatment. The room is the club's own photograph.
 //
-//   classroom      An empty classroom. Muzammil, CC BY-SA 4.0. The file does
-//                  not say where it was taken, so the credit names no place.
+//   ashoknagar     A government school in Ashoknagar, Bengaluru: tiled roof,
+//                  weeds through the courtyard. Shyamal, CC BY-SA 4.0.
 //   jantar-mantar  CJP's protest site at Jantar Mantar, Delhi, 21 July 2026
 //                  (NPR and Al Jazeera, 21 July 2026, place the CJP site
 //                  there that day). Alnitak-Alnilam-Mintaka, CC BY-SA 4.0.
@@ -77,18 +77,21 @@ import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 //                  4.0.
 //   odisha         Government Upper Primary School, Rejingtal, Odisha.
 //                  Subhashish Panigrahi, CC BY-SA 4.0.
-//   room           Debate Club #8. The club's own photograph, from
-//                  works/2026-08-09-debate-8-recap.
+//   stump-speaking George Caleb Bingham, Stump Speaking, 1853 to 1854, Saint
+//                  Louis Art Museum. Public domain. A politician on his feet
+//                  in front of a crowd that is sizing him up: the guest and
+//                  the room. The one painting in the deck, and it hands over
+//                  to the poster's paintings on the next slide.
 //   poster         The Debate #12 poster, copied from
 //                  works/2026-10-07-debate-12-indian-education/out/
 //                  ig-portrait.jpg. If that poster is re-exported, copy it
 //                  in again.
 
-const classroom: Plate = {
-  src: classroomSrc,
-  ratio: 960 / 1280,
+const ashoknagar: Plate = {
+  src: ashoknagarSrc,
+  ratio: 1,
   art: "gs-photo",
-  credit: "Photo: Muzammil, CC BY-SA 4.0, toned. An empty classroom.",
+  credit: "Photo: Shyamal, CC BY-SA 4.0, toned. Government school, Ashoknagar, Bengaluru.",
 };
 const jantarMantar: Plate = {
   src: jantarMantarSrc,
@@ -129,11 +132,11 @@ const odisha: Plate = {
   credit:
     "Photo: Subhashish Panigrahi, CC BY-SA 4.0, toned. Government Upper Primary School, Rejingtal, Odisha.",
 };
-const room: Plate = {
-  src: roomSrc,
-  ratio: 1500 / 2000,
-  art: "gs-photo",
-  credit: "Debate Club #8.",
+const stumpSpeaking: Plate = {
+  src: stumpSpeakingSrc,
+  ratio: 3000 / 2204,
+  art: "gs-art",
+  credit: "George Caleb Bingham, Stump Speaking, 1853 to 1854.",
 };
 
 const OF = 9;
@@ -150,7 +153,7 @@ const work: WorkSpec = {
       hasImage: true,
       render: () => (
         <Hook
-          plate={classroom}
+          plate={ashoknagar}
           crop={{ x: 0.5, y: 0.5, scale: 1 }}
           edition={EDITION}
           hook={["CJP exposing", "government", "schools isn’t", "going to change", "a thing."]}
@@ -275,8 +278,8 @@ const work: WorkSpec = {
       hasImage: true,
       render: () => (
         <Beat
-          plate={room}
-          crop={{ x: 0.5, y: 0.5, scale: 1 }}
+          plate={stumpSpeaking}
+          crop={{ x: 0.3, y: 0.5, scale: 1 }}
           scrim="gs-scrim-foot"
           n={8}
           of={OF}

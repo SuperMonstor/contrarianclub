@@ -17,10 +17,6 @@ rebuilding?
   challenge him; it does not name him or his party.
 - **"A first of its kind in Bangalore."** The club's own claim, and not one
   anyone has checked. "A first for the club" is the safe version.
-- **Slide 1's photograph** is an empty classroom whose file does not say
-  where it was taken. The credit names no place for that reason. Swap it for
-  an Indian government school if one turns up.
-
 ## Sources
 
 Every fact on the slides is sourced, and the list, with what each source

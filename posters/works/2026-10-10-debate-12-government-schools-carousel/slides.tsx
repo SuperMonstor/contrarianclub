@@ -27,14 +27,16 @@ import "./slides.css";
 // The grammar
 //
 // REAL PLACES, NOT PAINTINGS. This motion is about schools that exist now, so
-// the deck is photographs: real government schools in Rajasthan, Punjab,
-// Tamil Nadu and Odisha, a midday meal, CJP's protest at Jantar Mantar, and
-// the club's own room. Each is credited on its slide, as its licence needs.
+// the deck is photographs: a neglected government school in Bengaluru, real
+// government schools in Rajasthan, Punjab, Tamil Nadu and Odisha, a midday
+// meal, and CJP's protest at Jantar Mantar. The one exception is the guest
+// slide: Bingham's Stump Speaking, a politician facing a crowd, which also
+// hands over to the poster's paintings. Each is credited on its slide, as its licence needs.
 // Photos stay close to their own colour (no warm filter, see the root
 // CLAUDE.md); they are only taken down a little, and only the text zones go
 // near-black.
 //
-// THE HOOK IS THE ONE SHOUT, over an empty classroom. Everything after it is
+// THE HOOK IS THE ONE SHOUT, over the Bengaluru school gone to weeds. Everything after it is
 // Playfair talking.
 //
 // NOT EVERY SLIDE IS THE SAME SLIDE. Where the picture's subject sits low,
