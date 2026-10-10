@@ -50,8 +50,18 @@ import { Beat, Hook, Motion, Poster, type Plate } from "./slides";
 //                                                mean cost per pupil under a
 //                                                third of government schools'
 //
-// Slides 4 and 6 are the club's argument and the opposition's, and cite
-// nothing. Slide 8's guest is the club's own news.
+//   slide 8  the guest: a Congress spokesperson    South Matters, 13 Sep 2026:
+//            building a platform to report         Dhruv Jatti, Congress
+//            broken government schools in          spokesperson, founded
+//            Karnataka                             NammaShale; 607 citizen
+//                                                  reports from 26 districts.
+//            a state his own party runs            Congress has governed
+//                                                  Karnataka since May 2023 (CM
+//                                                  D. K. Shivakumar since June
+//                                                  2026).
+//
+// The guest is described, not named, on purpose. Slides 4 and 6 are the
+// club's argument and the opposition's, and cite nothing.
 //
 // ---------------------------------------------------------------------------
 // The pictures. Free licensed from Wikimedia Commons and credited on their
@@ -278,7 +288,7 @@ const work: WorkSpec = {
           of={OF}
           edition={EDITION}
           foot={[
-            "And this time, there’s a twist. We’re bringing in a special guest who works on government schools every day. He’ll explain what’s really going on inside them, and then go up against the room.",
+            "And this time, there’s a twist. Our guest is a Congress spokesperson who is building a platform for anyone to report a broken government school in Karnataka, a state his own party runs. He’ll explain what’s really going on inside these schools, then take on the room.",
             {
               text: "Bring your toughest questions. You can challenge his ideas and policies directly.",
               tone: "gold",
@@ -286,6 +296,7 @@ const work: WorkSpec = {
             { text: "A first of its kind in Bangalore.", tone: "parchment", size: 30 },
           ]}
           footSize={38}
+          source="South Matters, 13 September 2026."
         />
       ),
     },
