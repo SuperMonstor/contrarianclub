@@ -125,6 +125,52 @@ describe("WhatsApp workbook import form", () => {
     );
   });
 
+  it("asks for the source date when every column is detected but no time exists", async () => {
+    const user = userEvent.setup();
+    global.fetch = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          ready: false,
+          sheetName: "Guests",
+          headers: ["Name", "Phone", "WhatsApp updates"],
+          detection: {
+            mapping: {
+              name: "Name",
+              phone: "Phone",
+              consent: "WhatsApp updates",
+              preferenceTime: null,
+            },
+            ambiguous: [],
+            missing: [],
+          },
+          mapping: {
+            name: "Name",
+            phone: "Phone",
+            consent: "WhatsApp updates",
+            preferenceTime: null,
+          },
+          alreadyImported: false,
+          sourceDateRequired: true,
+        }),
+        { status: 200 },
+      ),
+    );
+    render(<ImportWorkbookForm />);
+    await user.upload(
+      screen.getByLabelText("Excel workbook"),
+      new File(["workbook"], "guests.xlsx"),
+    );
+    await user.click(screen.getByRole("button", { name: "Preview import" }));
+
+    expect(await screen.findByLabelText("Consent column")).toHaveValue(
+      "WhatsApp updates",
+    );
+    await user.type(screen.getByLabelText("Source debate date"), "2026-08-15");
+    expect(
+      screen.getByRole("button", { name: "Preview with mapping" }),
+    ).toBeEnabled();
+  });
+
   it("reveals the source date when an ambiguous time column is left unused", async () => {
     const user = userEvent.setup();
     global.fetch = vi.fn().mockResolvedValue(

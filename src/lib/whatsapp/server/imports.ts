@@ -166,9 +166,17 @@ async function prepareImport(
 
   validateMapping(headers, mapping);
   if (mapping.preferenceTime === null && !options.sourceDate) {
-    throw new ImportInputError(
-      "Source date is required when no preference time column is selected.",
-    );
+    // Return the detected mapping so the form can ask for the debate date.
+    return {
+      ready: false as const,
+      sheetName,
+      headers,
+      detection,
+      mapping,
+      fileSha256,
+      alreadyImported: Boolean(priorImport),
+      sourceDateRequired: true,
+    };
   }
 
   const normalized = normalizeImportRows(rows, mapping, options.sourceDate);
@@ -217,7 +225,9 @@ export async function confirmWhatsAppImport(
   const supabase = createServiceClient();
   const prepared = await prepareImport(file, options, supabase);
   if (!prepared.ready) {
-    throw new ImportInputError("Choose the workbook columns before importing.");
+    throw new ImportInputError(
+      "Choose the workbook columns and source date before importing.",
+    );
   }
   if (prepared.alreadyImported) {
     throw new ImportAlreadyAppliedError("This workbook was already imported.");
