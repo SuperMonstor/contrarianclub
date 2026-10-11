@@ -45,7 +45,16 @@ type SendDependencies = {
   send: typeof sendTemplateMessage;
   updateDelivery: (id: string, update: DeliveryUpdate) => Promise<void>;
   refresh: (campaignId: string) => Promise<string>;
-  hasPending: (campaignId: string) => Promise<boolean>;
+  loadQueueState: (campaignId: string) => Promise<QueueState>;
+};
+
+type QueueState = {
+  // Deliveries the next batch can still claim.
+  pending: number;
+  // Claimed deliveries whose send outcome is not recorded yet.
+  inFlight: number;
+  // Deliveries with an uncertain outcome an admin has to review.
+  needsReview: number;
 };
 
 export type BatchResult = {
@@ -55,6 +64,8 @@ export type BatchResult = {
   failed: number;
   unknown: number;
   hasMore: boolean;
+  inFlight: number;
+  needsReview: number;
   retryAfterMs: number;
 };
 
@@ -155,15 +166,26 @@ function defaultSendDependencies(): SendDependencies {
       if (error) throw error;
       return String(data);
     },
-    async hasPending(campaignId) {
-      const { count, error } = await supabase
-        .from("whatsapp_deliveries")
-        .select("id", { count: "exact", head: true })
-        .eq("campaign_id", campaignId)
-        .in("status", ["queued", "retryable_failed"])
-        .lt("attempt_count", 3);
-      if (error) throw error;
-      return (count ?? 0) > 0;
+    async loadQueueState(campaignId) {
+      const deliveries = () =>
+        supabase
+          .from("whatsapp_deliveries")
+          .select("id", { count: "exact", head: true })
+          .eq("campaign_id", campaignId);
+      const results = await Promise.all([
+        deliveries()
+          .in("status", ["queued", "retryable_failed"])
+          .lt("attempt_count", 3),
+        deliveries().eq("status", "sending"),
+        deliveries().eq("status", "unknown"),
+      ]);
+      for (const result of results) {
+        if (result.error) throw result.error;
+      }
+      const [pending, inFlight, needsReview] = results.map(
+        (result) => result.count ?? 0,
+      );
+      return { pending, inFlight, needsReview };
     },
   };
 }
@@ -262,11 +284,14 @@ export async function sendCampaignBatch(
   }
 
   await dependencies.refresh(campaignId);
-  const hasMore = await dependencies.hasPending(campaignId);
+  const queue = await dependencies.loadQueueState(campaignId);
+  const hasMore = queue.pending > 0;
   return {
     claimed: deliveries.length,
     ...counts,
     hasMore,
+    inFlight: queue.inFlight,
+    needsReview: queue.needsReview,
     retryAfterMs: hasMore && counts.retryable > 0 ? 1_000 : 0,
   };
 }

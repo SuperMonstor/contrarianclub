@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, LoaderCircle, Play, RotateCw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BatchResult } from "@/lib/whatsapp/server/campaigns";
 
@@ -19,11 +20,14 @@ export function CampaignRunner({
   campaignId: string;
   autoStart?: boolean;
 }) {
+  const router = useRouter();
   const runningRef = useRef(false);
   const startedRef = useRef(false);
   const [running, setRunning] = useState(false);
   const [complete, setComplete] = useState(false);
   const [needsReview, setNeedsReview] = useState(false);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [inFlight, setInFlight] = useState(0);
   const [totals, setTotals] = useState<Totals>(emptyTotals);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,6 +37,7 @@ export function CampaignRunner({
     setRunning(true);
     setComplete(false);
     setNeedsReview(false);
+    setInFlight(0);
     setError(null);
 
     try {
@@ -58,11 +63,17 @@ export function CampaignRunner({
           unknown: current.unknown + batch.unknown,
         }));
 
-        if (batch.unknown > 0) {
+        const queueDrained = !batch.hasMore || batch.claimed === 0;
+        if (batch.unknown > 0 || (queueDrained && batch.needsReview > 0)) {
           setNeedsReview(true);
+          setReviewCount(Math.max(batch.needsReview, batch.unknown));
+          setInFlight(batch.inFlight);
           continueSending = false;
-        } else if (!batch.hasMore || batch.claimed === 0) {
-          setComplete(true);
+        } else if (queueDrained) {
+          // Sends claimed by an interrupted batch have no outcome yet. They
+          // become uncertain after five minutes, so the queue is not complete.
+          setInFlight(batch.inFlight);
+          setComplete(batch.inFlight === 0);
           continueSending = false;
         } else if (batch.retryAfterMs > 0) {
           await delay(batch.retryAfterMs);
@@ -73,8 +84,9 @@ export function CampaignRunner({
     } finally {
       runningRef.current = false;
       setRunning(false);
+      router.refresh();
     }
-  }, [campaignId]);
+  }, [campaignId, router]);
 
   useEffect(() => {
     if (autoStart && !startedRef.current) {
@@ -95,7 +107,9 @@ export function CampaignRunner({
                 ? "Campaign queue complete"
                 : needsReview
                   ? "Sending paused for review"
-                  : "Ready to send"}
+                  : inFlight > 0
+                    ? "Waiting for sends in flight"
+                    : "Ready to send"}
           </h2>
         </div>
         <button
@@ -106,12 +120,12 @@ export function CampaignRunner({
         >
           {running ? (
             <LoaderCircle className="animate-spin" size={18} />
-          ) : needsReview || error ? (
+          ) : needsReview || inFlight > 0 || error ? (
             <RotateCw size={18} />
           ) : (
             <Play size={18} />
           )}
-          {needsReview || error ? "Resume sending" : "Start sending"}
+          {needsReview || inFlight > 0 || error ? "Resume sending" : "Start sending"}
         </button>
       </div>
       <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -123,7 +137,14 @@ export function CampaignRunner({
       {needsReview ? (
         <p className="mt-4 flex items-center gap-2 text-sm text-[#f0c9c4]">
           <AlertTriangle size={17} />
-          {totals.unknown} {totals.unknown === 1 ? "outcome needs" : "outcomes need"} review
+          {reviewCount} {reviewCount === 1 ? "outcome needs" : "outcomes need"} review
+        </p>
+      ) : null}
+      {inFlight > 0 ? (
+        <p className="mt-4 text-sm text-[color:var(--cc-muted)]">
+          {inFlight} {inFlight === 1 ? "send is" : "sends are"} still in flight from an
+          interrupted batch. Resume in a few minutes to confirm{" "}
+          {inFlight === 1 ? "it" : "them"}.
         </p>
       ) : null}
       {error ? <p className="mt-4 text-sm text-[#f0c9c4]">{error}</p> : null}

@@ -3,6 +3,27 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CampaignRunner } from "@/components/whatsapp/campaign-runner";
 
+const refresh = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh }) }));
+
+function batch(overrides: Record<string, unknown>) {
+  return new Response(
+    JSON.stringify({
+      claimed: 0,
+      sent: 0,
+      retryable: 0,
+      failed: 0,
+      unknown: 0,
+      hasMore: false,
+      inFlight: 0,
+      needsReview: 0,
+      retryAfterMs: 0,
+      ...overrides,
+    }),
+    { status: 200 },
+  );
+}
+
 const originalFetch = global.fetch;
 
 afterEach(() => {
@@ -23,6 +44,8 @@ describe("WhatsApp campaign runner", () => {
             failed: 0,
             unknown: 0,
             hasMore: true,
+            inFlight: 0,
+            needsReview: 0,
             retryAfterMs: 0,
           }),
           { status: 200 },
@@ -37,6 +60,8 @@ describe("WhatsApp campaign runner", () => {
             failed: 0,
             unknown: 0,
             hasMore: false,
+            inFlight: 0,
+            needsReview: 0,
             retryAfterMs: 0,
           }),
           { status: 200 },
@@ -62,6 +87,8 @@ describe("WhatsApp campaign runner", () => {
             failed: 0,
             unknown: 1,
             hasMore: true,
+            inFlight: 0,
+            needsReview: 1,
             retryAfterMs: 0,
           }),
           { status: 200 },
@@ -76,6 +103,8 @@ describe("WhatsApp campaign runner", () => {
             failed: 0,
             unknown: 0,
             hasMore: false,
+            inFlight: 0,
+            needsReview: 0,
             retryAfterMs: 0,
           }),
           { status: 200 },
@@ -87,5 +116,33 @@ describe("WhatsApp campaign runner", () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
     await user.click(screen.getByRole("button", { name: "Resume sending" }));
     await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2));
+  });
+
+  it("does not report completion while an interrupted batch is in flight", async () => {
+    global.fetch = vi.fn().mockResolvedValueOnce(batch({ inFlight: 4 }));
+
+    render(<CampaignRunner campaignId="campaign-1" autoStart />);
+    expect(await screen.findByText("Waiting for sends in flight")).toBeInTheDocument();
+    expect(screen.queryByText("Campaign queue complete")).not.toBeInTheDocument();
+    expect(screen.getByText(/4 sends are still in flight/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Resume sending" })).toBeEnabled();
+  });
+
+  it("asks for review when earlier uncertain outcomes remain", async () => {
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce(batch({ claimed: 2, sent: 2, needsReview: 3 }));
+
+    render(<CampaignRunner campaignId="campaign-1" autoStart />);
+    expect(await screen.findByText("3 outcomes need review")).toBeInTheDocument();
+    expect(screen.queryByText("Campaign queue complete")).not.toBeInTheDocument();
+  });
+
+  it("refreshes the server counters when sending stops", async () => {
+    global.fetch = vi.fn().mockResolvedValueOnce(batch({ claimed: 1, sent: 1 }));
+
+    render(<CampaignRunner campaignId="campaign-1" autoStart />);
+    expect(await screen.findByText("Campaign queue complete")).toBeInTheDocument();
+    await waitFor(() => expect(refresh).toHaveBeenCalled());
   });
 });

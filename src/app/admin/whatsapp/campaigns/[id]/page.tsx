@@ -42,7 +42,7 @@ export default async function WhatsAppCampaignPage({
           <CampaignStat value={accepted} label="Accepted" />
           <CampaignStat value={counts.delivered + counts.read} label="Delivered" />
           <CampaignStat value={counts.read} label="Read" />
-          <CampaignStat value={counts.retryable_failed + counts.queued} label="Pending" />
+          <CampaignStat value={counts.retryable_failed + counts.queued + counts.sending} label="Pending" />
           <CampaignStat value={counts.failed + counts.unknown} label="Needs attention" />
         </section>
         {counts.skipped ? (

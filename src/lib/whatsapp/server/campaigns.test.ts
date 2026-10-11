@@ -17,6 +17,8 @@ const parameters = {
   ticketUrl: "https://contrarian.club/tickets",
 };
 
+const emptyQueue = { pending: 0, inFlight: 0, needsReview: 0 };
+
 describe("WhatsApp campaign service", () => {
   it("does not offer a retry after the third attempt", () => {
     expect(canRetryUnknownDelivery(2)).toBe(true);
@@ -72,7 +74,7 @@ describe("WhatsApp campaign service", () => {
       send,
       updateDelivery,
       refresh: vi.fn().mockResolvedValue("completed"),
-      hasPending: vi.fn().mockResolvedValue(false),
+      loadQueueState: vi.fn().mockResolvedValue(emptyQueue),
     };
 
     const result = await sendCampaignBatch("campaign-1", dependencies as never);
@@ -107,7 +109,10 @@ describe("WhatsApp campaign service", () => {
         send: vi.fn().mockResolvedValue(metaResult),
         updateDelivery,
         refresh: vi.fn().mockResolvedValue("partial_failed"),
-        hasPending: vi.fn().mockResolvedValue(expectedStatus === "retryable_failed"),
+        loadQueueState: vi.fn().mockResolvedValue({
+          ...emptyQueue,
+          pending: expectedStatus === "retryable_failed" ? 1 : 0,
+        }),
       };
 
       await sendCampaignBatch("campaign-1", dependencies as never);
@@ -135,11 +140,32 @@ describe("WhatsApp campaign service", () => {
       send: vi.fn().mockRejectedValue(new Error("network")),
       updateDelivery,
       refresh: vi.fn().mockResolvedValue("partial_failed"),
-      hasPending: vi.fn().mockResolvedValue(false),
+      loadQueueState: vi.fn().mockResolvedValue(emptyQueue),
     } as never);
     expect(updateDelivery).toHaveBeenCalledWith(
       "delivery-1",
       expect.objectContaining({ status: "unknown" }),
     );
+  });
+
+  it("reports in-flight and uncertain deliveries left from earlier batches", async () => {
+    const result = await sendCampaignBatch("campaign-1", {
+      markStale: vi.fn().mockResolvedValue(undefined),
+      loadCampaign: vi.fn().mockResolvedValue({ parameters }),
+      claim: vi.fn().mockResolvedValue([]),
+      send: vi.fn(),
+      updateDelivery: vi.fn(),
+      refresh: vi.fn().mockResolvedValue("sending"),
+      loadQueueState: vi
+        .fn()
+        .mockResolvedValue({ pending: 0, inFlight: 3, needsReview: 2 }),
+    } as never);
+
+    expect(result).toMatchObject({
+      claimed: 0,
+      hasMore: false,
+      inFlight: 3,
+      needsReview: 2,
+    });
   });
 });
