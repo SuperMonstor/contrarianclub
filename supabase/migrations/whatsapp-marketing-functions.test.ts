@@ -15,6 +15,11 @@ const campaignCreationFix = readFileSync(
   "utf8",
 );
 
+const skipOptedOut = readFileSync(
+  new URL("./20261010020000_020_skip_opted_out_deliveries.sql", import.meta.url),
+  "utf8",
+);
+
 describe("WhatsApp marketing functions", () => {
   it("keeps import and campaign creation transactional", () => {
     expect(migration).toContain(
@@ -52,5 +57,21 @@ describe("campaign creation fix", () => {
     );
     expect(campaignCreationFix).not.toContain("on conflict");
     expect(campaignCreationFix).toContain("where subscriber.is_active = true;");
+  });
+});
+
+describe("opted-out deliveries", () => {
+  it("adds a skipped status for subscribers who opt out before sending", () => {
+    expect(skipOptedOut).toMatch(/check \(status in \([^)]*'skipped'\)\)/);
+  });
+
+  it("skips inactive subscribers and claims only active ones", () => {
+    expect(skipOptedOut).toContain(
+      "create or replace function public.claim_whatsapp_deliveries",
+    );
+    expect(skipOptedOut).toContain("set status = 'skipped'");
+    expect(skipOptedOut).toContain("and subscriber.is_active = false;");
+    expect(skipOptedOut).toContain("and subscriber.is_active = true");
+    expect(skipOptedOut).toContain("for update skip locked");
   });
 });

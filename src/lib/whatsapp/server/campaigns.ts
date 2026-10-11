@@ -303,6 +303,7 @@ export async function getCampaignDetail(campaignId: string) {
     "retryable_failed",
     "unknown",
     "failed",
+    "skipped",
   ] as const;
   const [campaignResult, ...countResults] = await Promise.all([
     supabase
