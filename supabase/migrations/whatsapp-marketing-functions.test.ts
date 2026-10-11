@@ -10,6 +10,11 @@ const migration = readFileSync(
   "utf8",
 );
 
+const campaignCreationFix = readFileSync(
+  new URL("./20261010010000_019_fix_campaign_creation.sql", import.meta.url),
+  "utf8",
+);
+
 describe("WhatsApp marketing functions", () => {
   it("keeps import and campaign creation transactional", () => {
     expect(migration).toContain(
@@ -37,5 +42,15 @@ describe("WhatsApp marketing functions", () => {
     expect(migration).toMatch(
       /grant execute on function[\s\S]+to service_role;/,
     );
+  });
+});
+
+describe("campaign creation fix", () => {
+  it("drops the conflict target that collided with the campaign_id output column", () => {
+    expect(campaignCreationFix).toContain(
+      "create or replace function public.create_whatsapp_campaign",
+    );
+    expect(campaignCreationFix).not.toContain("on conflict");
+    expect(campaignCreationFix).toContain("where subscriber.is_active = true;");
   });
 });
