@@ -1,0 +1,40 @@
+/* Debate Club #12, "The Indian education system".
+   Work-local CSS shares one global namespace, so everything here is prefixed
+   ie-. The two art treatments were tuned for these two paintings only. */
+
+/* --- The two paintings ---------------------------------------------------- */
+
+/* Steen's schoolroom is a warm brown interior with a pale plastered wall on
+   the right. It needs only a light knock back; the wall is what would glare. */
+.ie-art-school {
+  z-index: 0;
+  filter: saturate(0.74) contrast(1.06) brightness(0.8) sepia(0.16);
+}
+
+/* Anker's schoolroom is a bright plastered wall and pale pine benches,
+   photographed warm. It comes down harder than the Steen, or the bottom of
+   the page outshines the top. */
+.ie-art-village {
+  z-index: 0;
+  filter: saturate(0.62) contrast(1.06) brightness(0.68) sepia(0.2);
+}
+
+/* --- Where type is allowed to sit ----------------------------------------- */
+
+/* The gradients are built in slides.tsx from the layout's own numbers. */
+.ie-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+/* A tight shadow only. A wide soft glow reads as a digital effect. */
+.ie-on-art {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+}
+
+/* The rule the notice sits under: a plain hairline. */
+.ie-rule {
+  position: absolute;
+  height: 1px;
+  background: rgba(244, 234, 210, 0.22);
+}

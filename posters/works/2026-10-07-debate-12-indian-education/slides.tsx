@@ -1,0 +1,299 @@
+import type { CSSProperties } from "react";
+import type { Format } from "../../src/core/formats";
+import { Lockup } from "../../src/core/kit";
+import "./slides.css";
+
+// Debate Club #12. One poster: the theme now, the motions in the room.
+//
+// ---------------------------------------------------------------------------
+// The argument the layout is making
+//
+// The theme is the Indian education system, and the poster says so plainly,
+// in the club's own words, as the headline. Earlier cuts of this poster
+// carried two themes and then one clever question over both; the question
+// read as a slogan, and the second theme was dropped from the night.
+//
+// TWO CLASSROOMS STACKED, THE THEME BETWEEN THEM. Two schools a century and a
+// half apart fill the top and bottom of the page, edge to edge, and the theme
+// sits in the dark where they meet. #11 was a side by side diptych; this one
+// is stacked so the eye reads down through one classroom, the theme, and the
+// other. The pair is the argument: one room where nobody is in charge, one
+// room where the teacher has the pointer and every child is drilled.
+//
+// THE PICTURES DO THE HINTING. Steen's schoolmaster trims his quill while the
+// school runs riot around him and a boy sleeps at his desk. Anker's teacher
+// stands over a room packed to the walls, pointer out, hands up on every
+// bench. Neither motion is named.
+//
+// TYPE DOES THREE JOBS. Oswald condensed caps shouts once, for the theme.
+// Playfair sets the edition. Inter is the small print in sentence case. Gold
+// is used once, for the line that says the motions are held back, and only
+// it is set in tracked caps. Once the motions went out in the carousels that
+// line came off, and the poster carries no gold.
+//
+// ---------------------------------------------------------------------------
+// The art, public domain via Wikimedia Commons:
+//
+//   school          Jan Steen, A School for Boys and Girls (c. 1670, Scottish
+//                   National Gallery). The schoolmaster and his quill, the
+//                   girl at the desk, the boy asleep.
+//   village-school  Albert Anker, The Village School of 1848 (1896,
+//                   Kunstmuseum Basel). The teacher and his pointer, the
+//                   crowded benches, the raised hands.
+
+const MARGIN = 84;
+
+/* --- Copy this poster defines for itself ---------------------------------- */
+
+/** A painting, its aspect, and the filter class tuned for it. */
+export interface Plate {
+  src: string;
+  ratio: number;
+  art: string;
+}
+
+/** Where to centre, as fractions of the picture, and how far in. scale 1
+ *  means the picture is exactly one page wide; too small to cover the band is
+ *  raised until it does. */
+export interface Crop {
+  x: number;
+  y: number;
+  scale: number;
+}
+
+/** One of the two classrooms: the picture of it, and how to crop it. */
+export interface Room {
+  plate: Plate;
+  /** one crop per format family, because the bands change shape */
+  crop: { portrait: Crop; story: Crop };
+}
+
+export interface Copy {
+  edition: string;
+  themeLabel: string;
+  /** the theme, one line per entry, broken at phrase boundaries */
+  theme: string[];
+  rooms: [Room, Room];
+  /** the line that says the motions are held back. Left out once the
+   *  motions are public, and the night's lines take its place on the left. */
+  notice?: string;
+  /** how the night works, one line each */
+  lines: string[];
+}
+
+/* --- Metrics -------------------------------------------------------------- */
+
+interface Metrics {
+  family: "portrait" | "story";
+  lockupTop: number;
+  lockupW: number;
+  editionSize: number;
+  /** where the two bands meet, and the middle of the theme */
+  split: number;
+  themeLabelSize: number;
+  themeSize: number;
+  /** where the top picture starts going dark, and where the bottom one does */
+  clearEndA: number;
+  clearEndB: number;
+  ruleTop: number;
+  noticeSize: number;
+  linesSize: number;
+}
+
+const PORTRAIT: Metrics = {
+  family: "portrait",
+  lockupTop: 76,
+  lockupW: 230,
+  editionSize: 30,
+  split: 676,
+  themeLabelSize: 21,
+  themeSize: 104,
+  clearEndA: 380,
+  clearEndB: 1050,
+  ruleTop: 1150,
+  noticeSize: 17,
+  linesSize: 16,
+};
+
+const STORY: Metrics = {
+  family: "story",
+  lockupTop: 132,
+  lockupW: 262,
+  editionSize: 34,
+  split: 958,
+  themeLabelSize: 23,
+  themeSize: 104,
+  clearEndA: 640,
+  clearEndB: 1500,
+  ruleTop: 1650,
+  noticeSize: 19,
+  linesSize: 18,
+};
+
+const metrics = (format: Format): Metrics => (format.height >= 1700 ? STORY : PORTRAIT);
+
+/* --- The ground ----------------------------------------------------------- */
+
+function BandArt({ plate, crop, bw, bh }: { plate: Plate; crop: Crop; bw: number; bh: number }) {
+  const minScale = (bh / bw) * plate.ratio;
+  const w = bw * Math.max(crop.scale, minScale, 1);
+  const h = w / plate.ratio;
+  const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
+  return (
+    <img
+      className={plate.art}
+      src={plate.src}
+      alt=""
+      style={{
+        position: "absolute",
+        width: w,
+        height: h,
+        left: clamp(bw / 2 - crop.x * w, bw - w, 0),
+        top: clamp(bh / 2 - crop.y * h, bh - h, 0),
+        maxWidth: "none",
+      }}
+    />
+  );
+}
+
+/** Where type may sit on each band, built from the layout's own numbers.
+ *  Top band: soft under the lockup, open over the classroom, then down to
+ *  near-black at the split. Bottom band: near-black at the split, open over
+ *  the second classroom, then down again under the notice. The two meet at the same
+ *  black, so the theme sits on one dark ground with a room either side. */
+function scrimTop(m: Metrics, blockTop: number) {
+  const pct = (y: number) => `${((y / m.split) * 100).toFixed(1)}%`;
+  return `linear-gradient(180deg,
+    rgba(11, 9, 7, 0.7) 0%,
+    rgba(11, 9, 7, 0.34) ${pct(m.lockupTop + m.lockupW * 0.42 + 40)},
+    rgba(11, 9, 7, 0.06) ${pct(m.lockupTop + m.lockupW * 0.42 + 120)},
+    rgba(11, 9, 7, 0.1) ${pct(m.clearEndA)},
+    rgba(11, 9, 7, 0.9) ${pct(blockTop - 20)},
+    rgba(11, 9, 7, 0.97) 100%)`;
+}
+
+function scrimBottom(m: Metrics, H: number, blockBottom: number) {
+  const bh = H - m.split;
+  const pct = (y: number) => `${(((y - m.split) / bh) * 100).toFixed(1)}%`;
+  return `linear-gradient(180deg,
+    rgba(11, 9, 7, 0.97) 0%,
+    rgba(11, 9, 7, 0.92) ${pct(blockBottom + 10)},
+    rgba(11, 9, 7, 0.1) ${pct(blockBottom + 130)},
+    rgba(11, 9, 7, 0.1) ${pct(m.clearEndB)},
+    rgba(9, 7, 5, 0.92) ${pct(m.ruleTop - 6)},
+    rgba(8, 6, 4, 0.96) 100%)`;
+}
+
+/* --- Type ----------------------------------------------------------------- */
+
+const CONDENSED: CSSProperties = {
+  fontFamily: "var(--cc-font-condensed)",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  lineHeight: 0.94,
+  letterSpacing: "-0.004em",
+  color: "var(--cc-ivory)",
+  margin: 0,
+};
+
+const SERIF: CSSProperties = {
+  fontFamily: "var(--cc-font-display)",
+  fontWeight: 400,
+  margin: 0,
+};
+
+const SMALL: CSSProperties = {
+  fontFamily: "var(--cc-font-ui)",
+  fontWeight: 500,
+  color: "var(--cc-muted)",
+  margin: 0,
+};
+
+/* --- The poster ----------------------------------------------------------- */
+
+export function Poster({ copy, format }: { copy: Copy; format: Format }) {
+  const m = metrics(format);
+  const W = format.width;
+  const H = format.height;
+  const [a, b] = copy.rooms;
+  const themeH = copy.theme.length * m.themeSize * 0.94;
+  const themeTop = m.split - themeH / 2 + m.themeLabelSize * 0.6;
+  const blockTop = themeTop - m.themeLabelSize * 2.2;
+  const blockBottom = themeTop + themeH;
+
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {/* the ground: one classroom above, another below */}
+      <div style={{ position: "absolute", left: 0, top: 0, width: W, height: m.split, overflow: "hidden" }}>
+        <BandArt plate={a.plate} crop={a.crop[m.family]} bw={W} bh={m.split} />
+        <div className="ie-scrim" style={{ background: scrimTop(m, blockTop) }} />
+      </div>
+      <div
+        style={{ position: "absolute", left: 0, top: m.split, width: W, height: H - m.split, overflow: "hidden" }}
+      >
+        <BandArt plate={b.plate} crop={b.crop[m.family]} bw={W} bh={H - m.split} />
+        <div className="ie-scrim" style={{ background: scrimBottom(m, H, blockBottom) }} />
+      </div>
+
+      {/* the club, and opposite it the edition */}
+      <div style={{ position: "absolute", left: MARGIN, top: m.lockupTop }}>
+        <Lockup width={m.lockupW} artwork="left" />
+      </div>
+      <p
+        className="ie-on-art"
+        style={{
+          ...SERIF,
+          position: "absolute",
+          right: MARGIN,
+          top: m.lockupTop - 4,
+          fontSize: m.editionSize,
+          lineHeight: 1.2,
+          color: "var(--cc-ivory)",
+        }}
+      >
+        {copy.edition}
+      </p>
+
+
+      {/* the theme, on the dark where the two classrooms meet */}
+      <div style={{ position: "absolute", left: MARGIN, right: MARGIN, top: blockTop }}>
+        <p style={{ ...SMALL, fontSize: m.themeLabelSize, color: "var(--cc-parchment)" }}>{copy.themeLabel}</p>
+        <div style={{ marginTop: Math.round(m.themeLabelSize * 0.9) }}>
+          {copy.theme.map((line) => (
+            <p key={line} style={{ ...CONDENSED, fontSize: m.themeSize, whiteSpace: "nowrap" }}>
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
+
+
+      {/* the notice, then how the night runs */}
+      <div className="ie-rule" style={{ top: m.ruleTop, left: MARGIN, right: MARGIN }} />
+      <div
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          right: MARGIN,
+          top: m.ruleTop + 34,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        {copy.notice && (
+          <div className="kicker" style={{ fontSize: m.noticeSize, letterSpacing: "0.26em", lineHeight: 1.5 }}>
+            {copy.notice}
+          </div>
+        )}
+        <div style={{ textAlign: copy.notice ? "right" : "left" }}>
+          {copy.lines.map((line) => (
+            <p key={line} style={{ ...SMALL, fontSize: m.linesSize, lineHeight: 1.6 }}>
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
