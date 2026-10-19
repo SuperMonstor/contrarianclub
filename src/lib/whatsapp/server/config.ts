@@ -8,6 +8,7 @@ const VARIABLE_MAP = {
   WHATSAPP_WEBHOOK_VERIFY_TOKEN: "webhookVerifyToken",
   WHATSAPP_GRAPH_API_VERSION: "graphApiVersion",
   WHATSAPP_TEMPLATE_NAME: "templateName",
+  WHATSAPP_WELCOME_TEMPLATE_NAME: "welcomeTemplateName",
   WHATSAPP_TEMPLATE_LANGUAGE: "templateLanguage",
 } as const;
 

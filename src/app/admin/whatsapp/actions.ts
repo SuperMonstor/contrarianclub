@@ -6,9 +6,10 @@ import { requireAdminUser } from "@/lib/auth";
 import { currentAdminPath } from "@/lib/admin-routes";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
-  createCampaign,
+  createAnnouncementCampaign,
   isUuid,
 } from "@/lib/whatsapp/server/campaigns";
+import { createPosterUpload } from "@/lib/whatsapp/server/posters";
 
 export async function createWhatsAppCampaign(formData: FormData) {
   const user = await requireAdminUser();
@@ -16,19 +17,35 @@ export async function createWhatsAppCampaign(formData: FormData) {
     throw new Error("Confirm that Meta messaging charges may apply.");
   }
 
-  const result = await createCampaign(
+  const result = await createAnnouncementCampaign(
     {
-      title: String(formData.get("title") ?? ""),
-      date: String(formData.get("date") ?? ""),
+      debateNumber: String(formData.get("debateNumber") ?? ""),
+      inviteOnly: formData.get("inviteOnly") === "yes",
+      motions: formData.getAll("motion").map(String),
+      location: String(formData.get("location") ?? ""),
       time: String(formData.get("time") ?? ""),
-      venue: String(formData.get("venue") ?? ""),
-      ticketUrl: String(formData.get("ticketUrl") ?? ""),
+      detailsUrl: String(formData.get("detailsUrl") ?? ""),
+      posterUrl: String(formData.get("posterUrl") ?? ""),
     },
     user.id,
   );
   redirect(
     `${await currentAdminPath(`/whatsapp/campaigns/${result.campaignId}`)}?send=1`,
   );
+}
+
+// Returns errors instead of throwing because production builds hide thrown
+// Server Action messages, and the form shows this one inline.
+export async function createWhatsAppPosterUpload(contentType: string, size: number) {
+  await requireAdminUser();
+  try {
+    return { ok: true as const, ...(await createPosterUpload(contentType, size)) };
+  } catch (error) {
+    return {
+      ok: false as const,
+      error: error instanceof Error ? error.message : "The poster could not be uploaded.",
+    };
+  }
 }
 
 export async function requeueUnknownWhatsAppDelivery(formData: FormData) {

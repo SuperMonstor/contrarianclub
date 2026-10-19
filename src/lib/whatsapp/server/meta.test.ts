@@ -10,7 +10,8 @@ vi.mock("@/lib/whatsapp/server/config", () => ({
     appSecret: "app-secret",
     webhookVerifyToken: "verify-token",
     graphApiVersion: "v25.0",
-    templateName: "new_debate_announcement",
+    templateName: "debate_announcement",
+    welcomeTemplateName: "subscriber_welcome",
     templateLanguage: "en",
   }),
 }));
@@ -19,17 +20,10 @@ import { sendTemplateMessage } from "@/lib/whatsapp/server/meta";
 
 const originalFetch = global.fetch;
 const input = {
-  delivery: {
-    recipientPhone: "+919876543210",
-    recipientName: "Asha",
-  },
-  campaign: {
-    title: "A debate",
-    date: "August 27",
-    time: "7:00 PM",
-    venue: "BIC",
-    ticketUrl: "https://contrarian.club/tickets",
-  },
+  messaging_product: "whatsapp",
+  to: "919876543210",
+  type: "template",
+  template: { name: "subscriber_welcome", language: { code: "en" } },
 };
 
 afterEach(() => {
@@ -40,16 +34,27 @@ afterEach(() => {
 beforeEach(() => vi.restoreAllMocks());
 
 describe("Meta WhatsApp message sending", () => {
-  it("returns Meta's message ID after acceptance", async () => {
-    global.fetch = vi.fn().mockResolvedValue(
+  it("posts the payload and returns Meta's message ID after acceptance", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify({ messages: [{ id: "wamid.123" }] }), {
         status: 200,
       }),
     );
+    global.fetch = fetchMock;
     await expect(sendTemplateMessage(input)).resolves.toEqual({
       kind: "sent",
       messageId: "wamid.123",
     });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://graph.facebook.com/v25.0/phone-id/messages",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify(input),
+        headers: expect.objectContaining({
+          Authorization: "Bearer secret-token",
+        }),
+      }),
+    );
   });
 
   it.each([429, 500, 503])("classifies HTTP %s as retryable", async (status) => {

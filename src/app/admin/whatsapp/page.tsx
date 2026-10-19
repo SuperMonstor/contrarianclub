@@ -3,6 +3,7 @@ import { ArrowUpRight, FileUp, Megaphone, Users } from "lucide-react";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
+import { campaignLabel } from "@/lib/whatsapp/template";
 import { getWhatsAppOverview } from "@/lib/whatsapp/server/subscribers";
 
 export const dynamic = "force-dynamic";
@@ -90,7 +91,7 @@ export default async function WhatsAppMarketingPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-[color:var(--cc-parchment)]">
-                      {campaign.parameters.title ?? "Untitled debate"}
+                      {campaignLabel(campaign.kind, campaign.parameters)}
                     </p>
                     <p className="mt-1 text-xs text-[color:var(--cc-muted)]">
                       {campaign.recipient_count} recipients

@@ -48,12 +48,16 @@ export type ImportCounts = {
   invalidCount: number;
 };
 
-export type CampaignParameters = {
-  title: string;
-  date: string;
+export type WhatsAppCampaignKind = "announcement" | "welcome";
+
+export type AnnouncementParameters = {
+  debateNumber: string;
+  inviteOnly: boolean;
+  motions: string[];
+  location: string;
   time: string;
-  venue: string;
-  ticketUrl: string;
+  detailsUrl: string;
+  posterUrl: string;
 };
 
 export type WhatsAppDeliveryStatus =

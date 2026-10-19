@@ -1,5 +1,6 @@
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
+import type { WhatsAppCampaignKind } from "@/lib/whatsapp/types";
 
 export type WhatsAppSubscriber = {
   id: string;
@@ -24,10 +25,8 @@ export type WhatsAppImportSummary = {
 
 export type WhatsAppCampaignSummary = {
   id: string;
-  parameters: {
-    title?: string;
-    date?: string;
-  };
+  kind: WhatsAppCampaignKind;
+  parameters: Record<string, unknown>;
   status: string;
   recipient_count: number;
   created_at: string;
@@ -54,7 +53,7 @@ export async function getWhatsAppOverview() {
       .maybeSingle<WhatsAppImportSummary>(),
     supabase
       .from("whatsapp_campaigns")
-      .select("id, parameters, status, recipient_count, created_at")
+      .select("id, kind, parameters, status, recipient_count, created_at")
       .order("created_at", { ascending: false })
       .limit(8)
       .returns<WhatsAppCampaignSummary[]>(),
