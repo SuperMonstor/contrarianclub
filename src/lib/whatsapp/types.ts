@@ -64,4 +64,5 @@ export type WhatsAppDeliveryStatus =
   | "read"
   | "retryable_failed"
   | "unknown"
-  | "failed";
+  | "failed"
+  | "skipped";

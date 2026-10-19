@@ -42,9 +42,15 @@ export default async function WhatsAppCampaignPage({
           <CampaignStat value={accepted} label="Accepted" />
           <CampaignStat value={counts.delivered + counts.read} label="Delivered" />
           <CampaignStat value={counts.read} label="Read" />
-          <CampaignStat value={counts.retryable_failed + counts.queued} label="Pending" />
+          <CampaignStat value={counts.retryable_failed + counts.queued + counts.sending} label="Pending" />
           <CampaignStat value={counts.failed + counts.unknown} label="Needs attention" />
         </section>
+        {counts.skipped ? (
+          <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
+            {counts.skipped.toLocaleString("en-IN")} skipped because the subscriber opted out before
+            their message was sent.
+          </p>
+        ) : null}
 
         <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
           <CampaignRunner campaignId={campaign.id} autoStart={send === "1"} />
