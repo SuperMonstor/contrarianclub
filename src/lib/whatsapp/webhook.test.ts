@@ -24,7 +24,7 @@ describe("WhatsApp webhook signatures", () => {
 });
 
 describe("WhatsApp opt-out text", () => {
-  it.each(["STOP", " unsubscribe ", "remove  me"])(
+  it.each(["STOP", " unsubscribe ", "remove  me", "Stop promotions", "Stop updates"])(
     "recognizes %j",
     (text) => expect(isOptOutText(text)).toBe(true),
   );
@@ -138,5 +138,47 @@ describe("WhatsApp webhook event extraction", () => {
     expect(allowedPriorStatuses("delivered")).toContain("sent");
     expect(allowedPriorStatuses("read")).toContain("delivered");
     expect(allowedPriorStatuses("failed")).not.toContain("read");
+  });
+});
+
+describe("WhatsApp stop buttons", () => {
+  const tap = (button: { text?: string; payload?: string }) => ({
+    entry: [
+      {
+        changes: [
+          {
+            field: "messages",
+            value: {
+              messages: [
+                {
+                  from: "919876543210",
+                  timestamp: "1760000000",
+                  type: "button",
+                  button,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  it.each([
+    { text: "Stop promotions", payload: "Stop promotions" },
+    { text: "Stop updates", payload: "Stop updates" },
+    { payload: "STOP PROMOTIONS" },
+  ])("treats a tap on %j as an opt-out", (button) => {
+    expect(extractWebhookEvents(tap(button))).toEqual([
+      {
+        kind: "opt_out",
+        phoneE164: "+919876543210",
+        occurredAt: new Date(1760000000 * 1000).toISOString(),
+      },
+    ]);
+  });
+
+  it("ignores taps on other buttons", () => {
+    expect(extractWebhookEvents(tap({ text: "Details", payload: "Details" }))).toEqual([]);
   });
 });
