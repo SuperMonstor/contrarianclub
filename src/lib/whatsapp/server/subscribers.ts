@@ -34,7 +34,7 @@ export type WhatsAppCampaignSummary = {
 
 export async function getWhatsAppOverview() {
   const supabase = createServiceClient();
-  const [active, inactive, latestImport, recentCampaigns] = await Promise.all([
+  const [active, inactive, latestImport, recentCampaigns, pendingWelcomes] = await Promise.all([
     supabase
       .from("whatsapp_subscribers")
       .select("id", { count: "exact", head: true })
@@ -57,9 +57,10 @@ export async function getWhatsAppOverview() {
       .order("created_at", { ascending: false })
       .limit(8)
       .returns<WhatsAppCampaignSummary[]>(),
+    supabase.rpc("count_pending_whatsapp_welcomes"),
   ]);
 
-  for (const result of [active, inactive, latestImport, recentCampaigns]) {
+  for (const result of [active, inactive, latestImport, recentCampaigns, pendingWelcomes]) {
     if (result.error) throw result.error;
   }
   return {
@@ -67,6 +68,7 @@ export async function getWhatsAppOverview() {
     inactiveCount: inactive.count ?? 0,
     latestImport: latestImport.data,
     recentCampaigns: recentCampaigns.data ?? [],
+    pendingWelcomeCount: Number(pendingWelcomes.data ?? 0),
   };
 }
 

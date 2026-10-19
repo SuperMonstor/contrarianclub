@@ -1,5 +1,6 @@
 import { ImportWorkbookForm } from "@/components/whatsapp/import-workbook-form";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
+import { currentAdminPath } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export default async function WhatsAppImportPage() {
           description="Add the latest debate guest list. Phone numbers are deduplicated automatically, and the newest Yes or No preference wins."
         />
         <div className="mt-6">
-          <ImportWorkbookForm />
+          <ImportWorkbookForm welcomeHref={await currentAdminPath("/whatsapp/welcome")} />
         </div>
       </div>
     </main>

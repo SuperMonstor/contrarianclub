@@ -7,6 +7,7 @@ import { currentAdminPath } from "@/lib/admin-routes";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
   createAnnouncementCampaign,
+  createWelcomeCampaign,
   isUuid,
 } from "@/lib/whatsapp/server/campaigns";
 import { createPosterUpload } from "@/lib/whatsapp/server/posters";
@@ -29,6 +30,17 @@ export async function createWhatsAppCampaign(formData: FormData) {
     },
     user.id,
   );
+  redirect(
+    `${await currentAdminPath(`/whatsapp/campaigns/${result.campaignId}`)}?send=1`,
+  );
+}
+
+export async function createWhatsAppWelcomeCampaign(formData: FormData) {
+  const user = await requireAdminUser();
+  if (formData.get("acknowledgeCharges") !== "yes") {
+    throw new Error("Confirm that Meta messaging charges may apply.");
+  }
+  const result = await createWelcomeCampaign(user.id);
   redirect(
     `${await currentAdminPath(`/whatsapp/campaigns/${result.campaignId}`)}?send=1`,
   );

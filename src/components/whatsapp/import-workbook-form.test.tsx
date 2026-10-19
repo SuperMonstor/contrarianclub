@@ -64,7 +64,7 @@ describe("WhatsApp workbook import form", () => {
         ),
       );
     global.fetch = fetchMock;
-    render(<ImportWorkbookForm />);
+    render(<ImportWorkbookForm welcomeHref="/whatsapp/welcome" />);
 
     const file = new File(["workbook"], "debate-guests.xlsx");
     await user.upload(screen.getByLabelText("Excel workbook"), file);
@@ -75,6 +75,9 @@ describe("WhatsApp workbook import form", () => {
     expect(screen.getByText("+91******3210")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Confirm import" }));
     expect(await screen.findByText("Import complete")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Next: welcome new subscribers" }),
+    ).toHaveAttribute("href", "/whatsapp/welcome");
     expect(screen.getByText("1 invalid")).toBeInTheDocument();
 
     expect(fetchMock).toHaveBeenCalledTimes(2);

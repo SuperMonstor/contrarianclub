@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, FileUp, Megaphone, Users } from "lucide-react";
+import { ArrowUpRight, FileUp, HandHeart, Megaphone, Users } from "lucide-react";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
 import { adminPath, currentHostname } from "@/lib/admin-routes";
 import { requireAdminUser } from "@/lib/auth";
@@ -17,10 +17,22 @@ export default async function WhatsAppMarketingPage() {
     <main className="club-shell min-h-screen px-5 py-6">
       <div className="club-rise mx-auto w-full max-w-6xl">
         <MarketingHeader />
-        <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Stat value={overview.activeCount} label="Active recipients" />
           <Stat value={overview.inactiveCount} label="Opted out" />
           <Stat value={overview.recentCampaigns.length} label="Recent campaigns" />
+          <Link
+            href={adminPath("/whatsapp/welcome", hostname)}
+            className="club-panel flex min-h-32 flex-col justify-between p-5 transition hover:-translate-y-0.5"
+          >
+            <HandHeart className="text-[color:var(--cc-gold)]" />
+            <span className="flex items-center justify-between font-semibold">
+              {overview.pendingWelcomeCount
+                ? `Welcome ${overview.pendingWelcomeCount.toLocaleString("en-IN")} new`
+                : "Welcome message"}
+              <ArrowUpRight size={17} />
+            </span>
+          </Link>
           <Link
             href={adminPath("/whatsapp/campaigns/new", hostname)}
             className="club-panel-gold flex min-h-32 flex-col justify-between p-5 transition hover:-translate-y-0.5"
