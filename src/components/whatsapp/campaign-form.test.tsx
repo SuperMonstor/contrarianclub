@@ -70,4 +70,26 @@ describe("WhatsApp campaign form", () => {
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Choose a JPEG or PNG image.");
   });
+
+  it("fills the number and motions from a chosen debate", async () => {
+    const user = userEvent.setup();
+    render(
+      <CampaignForm
+        activeSubscriberCount={3}
+        debates={[
+          {
+            id: "event-1",
+            code: "ABC123",
+            title: "Debate #12",
+            debateNumber: "12",
+            motions: ["First motion.", "Second motion."],
+          },
+        ]}
+      />,
+    );
+    await user.selectOptions(screen.getByLabelText("Fill from a debate"), "event-1");
+    expect(screen.getByLabelText("Debate number")).toHaveValue("12");
+    expect(screen.getByLabelText("Motion 1")).toHaveValue("First motion.");
+    expect(screen.getByLabelText("Motion 2 (optional)")).toHaveValue("Second motion.");
+  });
 });

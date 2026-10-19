@@ -8,6 +8,7 @@ import {
 } from "@/app/admin/whatsapp/actions";
 import { AnnouncementPreview } from "@/components/whatsapp/message-preview";
 import { createBrowserClient } from "@/lib/supabase/browser";
+import type { DebateOption } from "@/lib/whatsapp/server/debates";
 
 type Fields = {
   debateNumber: string;
@@ -38,10 +39,13 @@ const POSTER_MAX_BYTES = 5 * 1024 * 1024;
 
 export function CampaignForm({
   activeSubscriberCount,
+  debates = [],
 }: {
   activeSubscriberCount: number;
+  debates?: DebateOption[];
 }) {
   const [fields, setFields] = useState(initialFields);
+  const [debateId, setDebateId] = useState("");
   const [inviteOnly, setInviteOnly] = useState(false);
   const [poster, setPoster] = useState<PosterState>({ state: "empty" });
   const [chargesAccepted, setChargesAccepted] = useState(false);
@@ -60,6 +64,20 @@ export function CampaignForm({
 
   function update(name: keyof Fields, value: string) {
     setFields((current) => ({ ...current, [name]: value }));
+  }
+
+  // Fills the number and motions from a debate record. Everything stays
+  // editable, and the other fields are left alone.
+  function chooseDebate(id: string) {
+    setDebateId(id);
+    const debate = debates.find((option) => option.id === id);
+    if (!debate) return;
+    setFields((current) => ({
+      ...current,
+      debateNumber: debate.debateNumber ?? current.debateNumber,
+      motionOne: debate.motions[0] ?? "",
+      motionTwo: debate.motions[1] ?? "",
+    }));
   }
 
   async function uploadPoster(file: File | null) {
@@ -150,6 +168,24 @@ export function CampaignForm({
           </span>
         </div>
         <div className="mt-6 grid gap-4">
+          {debates.length ? (
+            <label className="grid gap-2">
+              <span className="club-label">Fill from a debate</span>
+              <select
+                className="club-input px-3 py-2.5"
+                aria-label="Fill from a debate"
+                value={debateId}
+                onChange={(event) => chooseDebate(event.target.value)}
+              >
+                <option value="">Type the details in</option>
+                {debates.map((debate) => (
+                  <option key={debate.id} value={debate.id}>
+                    {debate.title} ({debate.code})
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
             {input("debateNumber", "Debate number", {
               maxLength: 4,
