@@ -1,6 +1,8 @@
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
+  ANNOUNCEMENT_TEMPLATE_NAME,
+  WELCOME_TEMPLATE_NAME,
   buildAnnouncementPayload,
   buildWelcomePayload,
   validateAnnouncement,
@@ -37,11 +39,7 @@ type DeliveryUpdate = {
 type CampaignSnapshot = { campaignId: string; recipientCount: number };
 
 type CreateDependencies = {
-  getConfig: () => {
-    templateName: string;
-    welcomeTemplateName: string;
-    templateLanguage: string;
-  };
+  getConfig: () => { templateLanguage: string };
   isPosterUrl: (url: string) => boolean;
   createSnapshot: (input: {
     parameters: AnnouncementInput;
@@ -168,7 +166,7 @@ export async function createAnnouncementCampaign(
   return dependencies.createSnapshot({
     parameters,
     userId,
-    templateName: config.templateName,
+    templateName: ANNOUNCEMENT_TEMPLATE_NAME,
     languageCode: config.templateLanguage,
   });
 }
@@ -186,7 +184,7 @@ export async function createWelcomeCampaign(
   return dependencies.createWelcomeSnapshot({
     parameters,
     userId,
-    templateName: config.welcomeTemplateName,
+    templateName: WELCOME_TEMPLATE_NAME,
     languageCode: config.templateLanguage,
   });
 }
@@ -201,8 +199,16 @@ export async function getPendingWelcomeCount(): Promise<number> {
 
 // Builds the Meta payload for one recipient. Campaign parameters are validated
 // once, before any delivery is claimed, so a bad campaign fails the batch
-// instead of failing every message.
+// instead of failing every message. A campaign created for an earlier template
+// is refused, since this code fills in the current template's values.
 function payloadBuilder(campaign: SendableCampaign) {
+  const expectedTemplate =
+    campaign.kind === "welcome" ? WELCOME_TEMPLATE_NAME : ANNOUNCEMENT_TEMPLATE_NAME;
+  if (campaign.template_name !== expectedTemplate) {
+    throw new Error(
+      "This campaign was created for an earlier message template and can no longer be sent. Create a new campaign.",
+    );
+  }
   const config = {
     templateName: campaign.template_name,
     templateLanguage: campaign.language_code,

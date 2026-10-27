@@ -8,8 +8,14 @@ type TemplateConfig = {
   templateLanguage: string;
 };
 
-// The approved Meta template bodies. Each must match the text submitted in
-// WhatsApp Manager exactly, with {{n}} wherever the app fills in a value.
+// The approved Meta templates. Each body must match the text submitted to Meta
+// exactly, with {{n}} wherever the app fills in a value. The names live here,
+// not in configuration, because a name and the body it points at only work as
+// a pair: two templates with the same number of values would otherwise accept
+// each other's values in the wrong places.
+export const ANNOUNCEMENT_TEMPLATE_NAME = "debate_early_access_v2";
+export const WELCOME_TEMPLATE_NAME = "subscriber_welcome";
+
 // Announcements go out as the early-access offer, which is also the first
 // message most subscribers get, so it says why they are receiving it. The
 // motions are left to the poster.
