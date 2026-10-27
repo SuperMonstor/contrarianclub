@@ -1,9 +1,18 @@
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
+import {
+  OPT_OUT_CONFIRMATION,
+  buildTextPayload,
+} from "@/lib/whatsapp/template";
 import { allowedPriorStatuses } from "@/lib/whatsapp/webhook";
 import type { WhatsAppWebhookEvent } from "@/lib/whatsapp/webhook";
+import {
+  sendWhatsAppMessage,
+  type MetaSendResult,
+} from "@/lib/whatsapp/server/meta";
 
 type ServiceClient = ReturnType<typeof createServiceClient>;
+type SendReply = (payload: object) => Promise<MetaSendResult>;
 
 async function processStatusEvent(
   event: Extract<WhatsAppWebhookEvent, { kind: "status" }>,
@@ -41,28 +50,64 @@ async function processStatusEvent(
   }
 }
 
+// A failed confirmation must not fail the webhook: the opt-out is already
+// stored, and a retried webhook would find the subscriber inactive anyway.
+async function confirmOptOut(phoneE164: string, sendReply: SendReply) {
+  try {
+    const result = await sendReply(buildTextPayload(phoneE164, OPT_OUT_CONFIRMATION));
+    if (result.kind !== "sent") {
+      console.error("WhatsApp opt-out confirmation failed:", result.message);
+    }
+  } catch (error) {
+    console.error(
+      "WhatsApp opt-out confirmation failed:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+  }
+}
+
 async function processOptOutEvent(
   event: Extract<WhatsAppWebhookEvent, { kind: "opt_out" }>,
   supabase: ServiceClient,
+  sendReply: SendReply,
 ) {
-  const { error } = await supabase
+  const optOut = {
+    is_active: false,
+    preference_at: event.occurredAt,
+    preference_source: "whatsapp",
+    opted_out_at: event.occurredAt,
+  };
+
+  // Only the change from active to inactive is confirmed, so repeated STOPs
+  // and Meta's webhook retries never send a second reply.
+  const { data, error } = await supabase
     .from("whatsapp_subscribers")
-    .update({
-      is_active: false,
-      preference_at: event.occurredAt,
-      preference_source: "whatsapp",
-      opted_out_at: event.occurredAt,
-    })
-    .eq("phone_e164", event.phoneE164);
+    .update(optOut)
+    .eq("phone_e164", event.phoneE164)
+    .eq("is_active", true)
+    .select("id");
   if (error) throw error;
+  if (data?.length) {
+    await confirmOptOut(event.phoneE164, sendReply);
+    return;
+  }
+
+  // Already inactive: still record the newest preference so an older import
+  // cannot reactivate the subscriber.
+  const { error: recordError } = await supabase
+    .from("whatsapp_subscribers")
+    .update(optOut)
+    .eq("phone_e164", event.phoneE164);
+  if (recordError) throw recordError;
 }
 
 export async function processWhatsAppWebhookEvents(
   events: WhatsAppWebhookEvent[],
   supabase: ServiceClient = createServiceClient(),
+  sendReply: SendReply = sendWhatsAppMessage,
 ): Promise<void> {
   for (const event of events) {
     if (event.kind === "status") await processStatusEvent(event, supabase);
-    else await processOptOutEvent(event, supabase);
+    else await processOptOutEvent(event, supabase, sendReply);
   }
 }

@@ -34,7 +34,7 @@ function safeError(body: MetaBody | null, fallback: string) {
   };
 }
 
-export async function sendTemplateMessage(
+export async function sendWhatsAppMessage(
   payload: object,
 ): Promise<MetaSendResult> {
   const config = getWhatsAppConfig();
