@@ -30,9 +30,15 @@ export const WELCOME_TEMPLATE_BODY = [
   "You'll ONLY receive a message when there's a new debate coming up, and you can opt out at any time by tapping the button below or replying STOP.",
 ].join("\n");
 
-// The announcement's Details button is a dynamic URL button. Meta appends the
-// campaign ID to this path, and the route redirects to the campaign's link.
-export const DETAILS_BUTTON_PATH = "/api/whatsapp/details/";
+// The approved footer under the announcement body. It has no variables, so
+// the app never sends it, but previews show it.
+export const ANNOUNCEMENT_TEMPLATE_FOOTER =
+  "We respect your inbox. Reply STOP to opt out anytime.";
+
+// The announcement's View Details button is a dynamic URL button approved as
+// https://offlyn.life/{{1}}, so the app sends the part of the event's Offlyn
+// link after this base.
+export const DETAILS_URL_BASE = "https://offlyn.life/";
 
 export const MAX_MOTIONS = 2;
 const META_BODY_LIMIT = 1024;
@@ -109,6 +115,15 @@ function requireHttpsUrl(value: unknown, label: string): string {
   return text;
 }
 
+export function detailsUrlSuffix(detailsUrl: string): string {
+  if (!detailsUrl.startsWith(DETAILS_URL_BASE)) {
+    throw new Error(`Details link must be an Offlyn link starting with ${DETAILS_URL_BASE}`);
+  }
+  const suffix = detailsUrl.slice(DETAILS_URL_BASE.length);
+  if (!suffix) throw new Error("Details link must point to a specific Offlyn event.");
+  return suffix;
+}
+
 export function validateAnnouncement(
   input: AnnouncementInput,
 ): AnnouncementParameters {
@@ -137,6 +152,7 @@ export function validateAnnouncement(
     detailsUrl: requireHttpsUrl(input.detailsUrl, "Details link"),
     posterUrl: requireHttpsUrl(input.posterUrl, "Poster"),
   };
+  detailsUrlSuffix(parameters.detailsUrl);
   if (renderAnnouncementBody(parameters).length > META_BODY_LIMIT) {
     throw new Error(
       "The message is too long for WhatsApp. Shorten the motions, location, or time.",
@@ -166,7 +182,6 @@ function templateMessage(
 export function buildAnnouncementPayload(
   recipientPhone: string,
   input: AnnouncementInput,
-  campaignId: string,
   config: TemplateConfig,
 ) {
   const parameters = validateAnnouncement(input);
@@ -186,7 +201,7 @@ export function buildAnnouncementPayload(
       type: "button",
       sub_type: "url",
       index: "0",
-      parameters: [{ type: "text", text: campaignId }],
+      parameters: [{ type: "text", text: detailsUrlSuffix(parameters.detailsUrl) }],
     },
   ]);
 }

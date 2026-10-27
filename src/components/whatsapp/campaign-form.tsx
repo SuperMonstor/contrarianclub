@@ -9,6 +9,7 @@ import {
 import { AnnouncementPreview } from "@/components/whatsapp/message-preview";
 import { createBrowserClient } from "@/lib/supabase/browser";
 import type { DebateOption } from "@/lib/whatsapp/server/debates";
+import { DETAILS_URL_BASE } from "@/lib/whatsapp/template";
 
 type Fields = {
   debateNumber: string;
@@ -50,16 +51,12 @@ export function CampaignForm({
   const [poster, setPoster] = useState<PosterState>({ state: "empty" });
   const [chargesAccepted, setChargesAccepted] = useState(false);
 
+  const detailsUrl = fields.detailsUrl.trim();
+  const detailsUrlValid =
+    detailsUrl.startsWith(DETAILS_URL_BASE) && detailsUrl.length > DETAILS_URL_BASE.length;
   const valid = useMemo(() => {
     if (!/^[1-9][0-9]{0,3}$/.test(fields.debateNumber.trim())) return false;
-    if (![fields.motionOne, fields.location, fields.time].every((value) => value.trim())) {
-      return false;
-    }
-    try {
-      return new URL(fields.detailsUrl).protocol === "https:";
-    } catch {
-      return false;
-    }
+    return [fields.motionOne, fields.location, fields.time].every((value) => value.trim());
   }, [fields]);
 
   function update(name: keyof Fields, value: string) {
@@ -214,11 +211,16 @@ export function CampaignForm({
             maxLength: 120,
             placeholder: "Saturday, 8 November, 7:00 PM",
           })}
-          {input("detailsUrl", "Details link", {
+          {input("detailsUrl", "Offlyn event link", {
             maxLength: 2048,
             type: "url",
-            placeholder: "https://tickets.example/debate",
+            placeholder: `${DETAILS_URL_BASE}e/...`,
           })}
+          {detailsUrl && !detailsUrlValid ? (
+            <p className="-mt-2 text-sm text-[#f0c9c4]" role="alert">
+              View Details only opens Offlyn links, so this must start with {DETAILS_URL_BASE}
+            </p>
+          ) : null}
 
           <div className="grid gap-2">
             <span className="club-label">Poster</span>
@@ -270,7 +272,9 @@ export function CampaignForm({
         <button
           type="submit"
           className="club-btn club-btn-primary mt-5 w-full px-5 py-3"
-          disabled={!valid || !posterUrl || !chargesAccepted || activeSubscriberCount === 0}
+          disabled={
+            !valid || !detailsUrlValid || !posterUrl || !chargesAccepted || activeSubscriberCount === 0
+          }
         >
           <Megaphone size={18} />
           Create and send campaign
@@ -293,8 +297,8 @@ export function CampaignForm({
           />
         </div>
         <p className="mt-4 text-xs leading-5 text-[color:var(--cc-muted)]">
-          The wording is fixed by the approved Meta template. Details opens the
-          link above, and Stop promotions opts the subscriber out.
+          The wording is fixed by the approved Meta template. View Details opens
+          the Offlyn link above, and replying STOP or NO opts the subscriber out.
         </p>
       </section>
     </form>

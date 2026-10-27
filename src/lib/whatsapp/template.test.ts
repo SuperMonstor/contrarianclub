@@ -14,7 +14,7 @@ const announcement = {
   motions: ["This house believes the AI boom is a bubble."],
   location: "Bangalore International Centre",
   time: "Saturday, 8 November, 7:00 PM",
-  detailsUrl: "https://tickets.example/debate-12",
+  detailsUrl: "https://offlyn.life/e/ncWEIfi",
   posterUrl: "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/a.png",
 };
 
@@ -68,6 +68,12 @@ describe("WhatsApp announcement template", () => {
     expect(() =>
       validateAnnouncement({ ...announcement, detailsUrl: "http://tickets.example" }),
     ).toThrow("Details link must use HTTPS.");
+    expect(() =>
+      validateAnnouncement({ ...announcement, detailsUrl: "https://tickets.example/e/1" }),
+    ).toThrow("Details link must be an Offlyn link starting with https://offlyn.life/");
+    expect(() =>
+      validateAnnouncement({ ...announcement, detailsUrl: "https://offlyn.life/" }),
+    ).toThrow("Details link must point to a specific Offlyn event.");
     expect(() => validateAnnouncement({ ...announcement, posterUrl: "" })).toThrow(
       "Poster is required.",
     );
@@ -83,10 +89,8 @@ describe("WhatsApp announcement template", () => {
     ).toThrow("The message is too long for WhatsApp.");
   });
 
-  it("sends the poster header, four body values, and the campaign ID as the button suffix", () => {
-    expect(
-      buildAnnouncementPayload("+919876543210", announcement, "campaign-1", config),
-    ).toEqual({
+  it("sends the poster header, four body values, and the Offlyn path as the button suffix", () => {
+    expect(buildAnnouncementPayload("+919876543210", announcement, config)).toEqual({
       messaging_product: "whatsapp",
       recipient_type: "individual",
       to: "919876543210",
@@ -112,7 +116,7 @@ describe("WhatsApp announcement template", () => {
             type: "button",
             sub_type: "url",
             index: "0",
-            parameters: [{ type: "text", text: "campaign-1" }],
+            parameters: [{ type: "text", text: "e/ncWEIfi" }],
           },
         ],
       },

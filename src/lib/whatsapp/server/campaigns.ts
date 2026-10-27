@@ -192,7 +192,7 @@ export async function getPendingWelcomeCount(): Promise<number> {
 // Builds the Meta payload for one recipient. Announcement parameters are
 // validated once, before any delivery is claimed, so a bad campaign fails the
 // batch instead of failing every message.
-function payloadBuilder(campaignId: string, campaign: SendableCampaign) {
+function payloadBuilder(campaign: SendableCampaign) {
   const config = {
     templateName: campaign.template_name,
     templateLanguage: campaign.language_code,
@@ -202,7 +202,7 @@ function payloadBuilder(campaignId: string, campaign: SendableCampaign) {
   }
   const parameters = validateAnnouncement(campaign.parameters);
   return (recipientPhone: string) =>
-    buildAnnouncementPayload(recipientPhone, parameters, campaignId, config);
+    buildAnnouncementPayload(recipientPhone, parameters, config);
 }
 
 function defaultSendDependencies(): SendDependencies {
@@ -344,7 +344,7 @@ export async function sendCampaignBatch(
   await dependencies.markStale(campaignId);
   const campaign = await dependencies.loadCampaign(campaignId);
   if (!campaign) throw new CampaignNotFoundError();
-  const buildPayload = payloadBuilder(campaignId, campaign);
+  const buildPayload = payloadBuilder(campaign);
   const deliveries = await dependencies.claim(campaignId, 20);
   const counts = { sent: 0, retryable: 0, failed: 0, unknown: 0 };
 

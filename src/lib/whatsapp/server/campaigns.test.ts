@@ -16,7 +16,7 @@ const parameters = {
   motions: ["This house believes the AI boom is a bubble."],
   location: "BIC",
   time: "Saturday, 8 November, 7:00 PM",
-  detailsUrl: "https://tickets.example/debate-12",
+  detailsUrl: "https://offlyn.life/e/ncWEIfi",
   posterUrl: "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/a.png",
 };
 

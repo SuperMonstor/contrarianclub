@@ -35,18 +35,19 @@ describe("WhatsApp campaign form", () => {
     await user.type(screen.getByLabelText("Motion 2 (optional)"), "Second motion.");
     await user.type(screen.getByLabelText("Location"), "BIC");
     await user.type(screen.getByLabelText("Time"), "Saturday, 7:00 PM");
-    await user.type(screen.getByLabelText("Details link"), "http://tickets.test/debate");
+    await user.type(screen.getByLabelText("Offlyn event link"), "https://tickets.test/debate");
     await user.click(screen.getByLabelText("I understand Meta messaging charges may apply"));
 
     expect(screen.getByText("Contrarian Debate Club #12 (invite only)")).toBeInTheDocument();
     expect(screen.getByText("1) First motion. 2) Second motion.")).toBeInTheDocument();
-    expect(screen.getByText("Stop promotions")).toBeInTheDocument();
+    expect(screen.getByText("View Details")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("must start with https://offlyn.life/");
 
     const button = screen.getByRole("button", { name: "Create and send campaign" });
     expect(button).toBeDisabled();
 
-    await user.clear(screen.getByLabelText("Details link"));
-    await user.type(screen.getByLabelText("Details link"), "https://tickets.test/debate");
+    await user.clear(screen.getByLabelText("Offlyn event link"));
+    await user.type(screen.getByLabelText("Offlyn event link"), "https://offlyn.life/e/ncWEIfi");
     expect(button).toBeDisabled();
 
     const poster = new File(["poster"], "poster.png", { type: "image/png" });

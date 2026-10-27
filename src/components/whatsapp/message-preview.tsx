@@ -2,6 +2,7 @@ import { ExternalLink, ImageIcon, Reply } from "lucide-react";
 import type { ReactNode } from "react";
 import {
   ANNOUNCEMENT_TEMPLATE_BODY,
+  ANNOUNCEMENT_TEMPLATE_FOOTER,
   WELCOME_TEMPLATE_BODY,
   formatDebateNumber,
   formatMotions,
@@ -10,10 +11,7 @@ import {
 
 type Button = { label: string; kind: "link" | "reply" };
 
-export const ANNOUNCEMENT_BUTTONS: Button[] = [
-  { label: "Details", kind: "link" },
-  { label: "Stop promotions", kind: "reply" },
-];
+export const ANNOUNCEMENT_BUTTONS: Button[] = [{ label: "View Details", kind: "link" }];
 
 export const WELCOME_BUTTONS: Button[] = [{ label: "Stop updates", kind: "reply" }];
 
@@ -31,11 +29,13 @@ function formatLine(line: string): ReactNode[] {
 
 export function MessagePreview({
   body,
+  footer,
   buttons,
   posterUrl,
   showPosterSlot = false,
 }: {
   body: string;
+  footer?: string;
   buttons: Button[];
   posterUrl?: string | null;
   showPosterSlot?: boolean;
@@ -54,8 +54,9 @@ export function MessagePreview({
         {body.split("\n").map((line, index) =>
           line ? <p key={index}>{formatLine(line)}</p> : <div key={index} className="h-4" />,
         )}
+        {footer ? <p className="mt-3 text-xs leading-5 text-[#655741]">{footer}</p> : null}
       </div>
-      <div className="grid border-t border-[#d6c9ab]">
+      {buttons.length ? <div className="grid border-t border-[#d6c9ab]">
         {buttons.map((button) => (
           <span
             key={button.label}
@@ -65,7 +66,7 @@ export function MessagePreview({
             {button.label}
           </span>
         ))}
-      </div>
+      </div> : null}
     </div>
   );
 }
@@ -95,6 +96,7 @@ export function AnnouncementPreview({
   return (
     <MessagePreview
       body={body}
+      footer={ANNOUNCEMENT_TEMPLATE_FOOTER}
       buttons={ANNOUNCEMENT_BUTTONS}
       posterUrl={posterUrl}
       showPosterSlot
