@@ -11,17 +11,13 @@ type TemplateConfig = {
 // The approved Meta template bodies. Each must match the text submitted in
 // WhatsApp Manager exactly, with {{n}} wherever the app fills in a value.
 // Announcements go out as the early-access offer, which is also the first
-// message most subscribers get, so it says why they are receiving it.
+// message most subscribers get, so it says why they are receiving it. It stays
+// short and leaves the motions to the poster.
 export const ANNOUNCEMENT_TEMPLATE_BODY = [
   "*Contrarian Debate Club #{{1}}: early access*",
-  "We're reaching out because you opted in to hear about future debates from The Contrarian Debate Club, and we wanted you to hear about this one first.",
+  "{{2}}, {{3}}.",
   "",
-  "For the next 24 hours, before it goes public, tickets are capped at ₹{{2}} for people who've attended our debates before.",
-  "*Time:* {{3}}",
-  "*Location:* {{4}}",
-  "*Motions:* {{5}}",
-  "",
-  "Tap below to book before it opens to everyone.",
+  "You opted in to hear about our debates, so you're hearing about this one first. For the next 24 hours, tickets are capped at ₹{{4}} for people who've attended before.",
 ].join("\n");
 
 // Mirrors the approved text, whose sign-off line Meta stores with a dash
@@ -44,10 +40,7 @@ export const ANNOUNCEMENT_TEMPLATE_FOOTER =
 // link after this base.
 export const DETAILS_URL_BASE = "https://offlyn.life/";
 
-export const MAX_MOTIONS = 2;
-const META_BODY_LIMIT = 1024;
 const LIMITS = {
-  motion: 400,
   location: 160,
   time: 120,
   url: 2048,
@@ -61,7 +54,6 @@ export type AnnouncementInput = {
   debateNumber: string;
   inviteOnly: boolean;
   price: string;
-  motions: string[];
   location: string;
   time: string;
   detailsUrl: string;
@@ -78,18 +70,12 @@ export function formatDebateNumber(debateNumber: string, inviteOnly: boolean) {
   return inviteOnly ? `${debateNumber} (invite only)` : debateNumber;
 }
 
-export function formatMotions(motions: string[]): string {
-  if (motions.length === 1) return motions[0];
-  return motions.map((motion, index) => `${index + 1}) ${motion}`).join(" ");
-}
-
 export function announcementBodyValues(parameters: AnnouncementParameters) {
   return [
     formatDebateNumber(parameters.debateNumber, parameters.inviteOnly),
-    parameters.price,
     parameters.time,
     parameters.location,
-    formatMotions(parameters.motions),
+    parameters.price,
   ];
 }
 
@@ -146,33 +132,16 @@ export function validateAnnouncement(
     throw new Error("Price must be a whole number of rupees, such as 599.");
   }
 
-  const motions = (Array.isArray(input.motions) ? input.motions : [])
-    .map(toTemplateText)
-    .filter(Boolean);
-  if (motions.length === 0) throw new Error("Add at least one motion.");
-  if (motions.length > MAX_MOTIONS) {
-    throw new Error(`Add no more than ${MAX_MOTIONS} motions.`);
-  }
-  if (motions.some((motion) => motion.length > LIMITS.motion)) {
-    throw new Error(`Each motion must be ${LIMITS.motion} characters or fewer.`);
-  }
-
   const parameters: AnnouncementParameters = {
     debateNumber,
     inviteOnly: input.inviteOnly === true,
     price,
-    motions,
     location: requireText(input.location, "Location", LIMITS.location),
     time: requireText(input.time, "Time", LIMITS.time),
     detailsUrl: requireHttpsUrl(input.detailsUrl, "Details link"),
     posterUrl: requireHttpsUrl(input.posterUrl, "Poster"),
   };
   detailsUrlSuffix(parameters.detailsUrl);
-  if (renderAnnouncementBody(parameters).length > META_BODY_LIMIT) {
-    throw new Error(
-      "The message is too long for WhatsApp. Shorten the motions, location, or time.",
-    );
-  }
   return parameters;
 }
 

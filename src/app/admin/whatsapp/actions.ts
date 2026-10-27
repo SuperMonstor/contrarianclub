@@ -23,7 +23,6 @@ export async function createWhatsAppCampaign(formData: FormData) {
       debateNumber: String(formData.get("debateNumber") ?? ""),
       inviteOnly: formData.get("inviteOnly") === "yes",
       price: String(formData.get("price") ?? ""),
-      motions: formData.getAll("motion").map(String),
       location: String(formData.get("location") ?? ""),
       time: String(formData.get("time") ?? ""),
       detailsUrl: String(formData.get("detailsUrl") ?? ""),

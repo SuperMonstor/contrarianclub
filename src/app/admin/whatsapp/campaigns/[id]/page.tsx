@@ -138,7 +138,8 @@ function CampaignMessage({
     const imageUrl = parameters.headerImageUrl;
     return <WelcomePreview imageUrl={typeof imageUrl === "string" ? imageUrl : null} />;
   }
-  if (!Array.isArray(parameters.motions) || typeof parameters.price !== "string") {
+  // Campaigns sent before the current template listed the motions in the text.
+  if (Array.isArray(parameters.motions) || typeof parameters.price !== "string") {
     return (
       <p className="text-sm text-[color:var(--cc-muted)]">
         This campaign used an earlier template.
@@ -152,7 +153,6 @@ function CampaignMessage({
         debateNumber={announcement.debateNumber}
         inviteOnly={announcement.inviteOnly}
         price={announcement.price}
-        motions={announcement.motions}
         location={announcement.location}
         time={announcement.time}
         posterUrl={announcement.posterUrl}
