@@ -22,7 +22,7 @@ const parameters = {
 
 const announcementCampaign = {
   kind: "announcement",
-  template_name: "debate_announcement",
+  template_name: "debate_early_access_v2",
   language_code: "en",
   parameters,
 };
@@ -30,11 +30,7 @@ const announcementCampaign = {
 const welcomeImage =
   "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/b.jpg";
 
-const config = () => ({
-  templateName: "debate_announcement",
-  welcomeTemplateName: "subscriber_welcome",
-  templateLanguage: "en",
-});
+const config = () => ({ templateLanguage: "en" });
 
 const emptyQueue = { pending: 0, inFlight: 0, needsReview: 0 };
 
@@ -44,7 +40,7 @@ describe("WhatsApp campaign service", () => {
     expect(canRetryUnknownDelivery(3)).toBe(false);
   });
 
-  it("creates an announcement snapshot with the configured template", async () => {
+  it("creates an announcement snapshot with the current template", async () => {
     const createSnapshot = vi.fn().mockResolvedValue({
       campaignId: "campaign-1",
       recipientCount: 42,
@@ -60,7 +56,7 @@ describe("WhatsApp campaign service", () => {
     expect(createSnapshot).toHaveBeenCalledWith({
       parameters,
       userId: "admin-1",
-      templateName: "debate_announcement",
+      templateName: "debate_early_access_v2",
       languageCode: "en",
     });
   });
@@ -130,7 +126,7 @@ describe("WhatsApp campaign service", () => {
     };
 
     const announcementPayload = await run(announcementCampaign);
-    expect(announcementPayload.template.name).toBe("debate_announcement");
+    expect(announcementPayload.template.name).toBe("debate_early_access_v2");
     expect(announcementPayload.template.components).toHaveLength(3);
 
     const welcomePayload = await run({
@@ -144,6 +140,21 @@ describe("WhatsApp campaign service", () => {
       { type: "header", parameters: [{ type: "image", image: { link: welcomeImage } }] },
       { type: "body", parameters: [{ type: "text", text: "Asha" }] },
     ]);
+  });
+
+  it("refuses to send a campaign created for an earlier template", async () => {
+    const claim = vi.fn();
+    await expect(
+      sendCampaignBatch("campaign-1", {
+        markStale: vi.fn().mockResolvedValue(undefined),
+        loadCampaign: vi.fn().mockResolvedValue({
+          ...announcementCampaign,
+          template_name: "debate_early_access",
+        }),
+        claim,
+      } as never),
+    ).rejects.toThrow("created for an earlier message template");
+    expect(claim).not.toHaveBeenCalled();
   });
 
   it("fails a batch with invalid parameters before claiming anyone", async () => {

@@ -38,7 +38,7 @@ describe("WhatsApp campaign form", () => {
     await user.click(screen.getByLabelText("I understand Meta messaging charges may apply"));
 
     expect(
-      screen.getByText("Contrarian Debate Club #12 (invite only): early access"),
+      screen.getByText("Contrarian Debate Club #12 (invite only)"),
     ).toBeInTheDocument();
     expect(screen.getByText(/tickets are capped at ₹599/)).toBeInTheDocument();
     expect(screen.getByText("Book Now")).toBeInTheDocument();

@@ -85,9 +85,9 @@ export function AnnouncementPreview({
 }) {
   const body = renderTemplateBody(ANNOUNCEMENT_TEMPLATE_BODY, [
     formatDebateNumber(debateNumber.trim() || "12", inviteOnly),
+    price.trim() || "599",
     time.trim() || "Date and time",
     location.trim() || "Location",
-    price.trim() || "599",
   ]);
   return (
     <MessagePreview

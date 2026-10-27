@@ -146,7 +146,7 @@ export function CampaignForm({
           })}
           {input("time", "Time", {
             maxLength: 120,
-            placeholder: "Saturday, 8 November, 7:00 PM",
+            placeholder: "Sunday, 1 November, 2:30 PM",
           })}
           {input("detailsUrl", "Offlyn event link", {
             maxLength: 2048,

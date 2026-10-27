@@ -10,8 +10,6 @@ vi.mock("@/lib/whatsapp/server/config", () => ({
     appSecret: "app-secret",
     webhookVerifyToken: "verify-token",
     graphApiVersion: "v25.0",
-    templateName: "debate_announcement",
-    welcomeTemplateName: "subscriber_welcome",
     templateLanguage: "en",
   }),
 }));

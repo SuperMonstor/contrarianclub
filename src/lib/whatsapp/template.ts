@@ -8,16 +8,26 @@ type TemplateConfig = {
   templateLanguage: string;
 };
 
-// The approved Meta template bodies. Each must match the text submitted in
-// WhatsApp Manager exactly, with {{n}} wherever the app fills in a value.
+// The approved Meta templates. Each body must match the text submitted to Meta
+// exactly, with {{n}} wherever the app fills in a value. The names live here,
+// not in configuration, because a name and the body it points at only work as
+// a pair: two templates with the same number of values would otherwise accept
+// each other's values in the wrong places.
+export const ANNOUNCEMENT_TEMPLATE_NAME = "debate_early_access_v2";
+export const WELCOME_TEMPLATE_NAME = "subscriber_welcome";
+
 // Announcements go out as the early-access offer, which is also the first
-// message most subscribers get, so it says why they are receiving it. It stays
-// short and leaves the motions to the poster.
+// message most subscribers get, so it says why they are receiving it. The
+// motions are left to the poster.
 export const ANNOUNCEMENT_TEMPLATE_BODY = [
-  "*Contrarian Debate Club #{{1}}: early access*",
-  "{{2}}, {{3}}.",
+  "*Contrarian Debate Club #{{1}}*",
+  "We're reaching out because you opted in to hear about future debates from The Contrarian Debate Club.",
   "",
-  "You opted in to hear about our debates, so you're hearing about this one first. For the next 24 hours, tickets are capped at ₹{{4}} for people who've attended before.",
+  "For the next 24 hours, before it goes public, tickets are capped at ₹{{2}} for people who've attended our debates before.",
+  "*Time:* {{3}}",
+  "*Location:* {{4}}",
+  "",
+  "Tap below to book before it opens to everyone.",
 ].join("\n");
 
 // Mirrors the approved text, whose sign-off line Meta stores with a dash
@@ -73,9 +83,9 @@ export function formatDebateNumber(debateNumber: string, inviteOnly: boolean) {
 export function announcementBodyValues(parameters: AnnouncementParameters) {
   return [
     formatDebateNumber(parameters.debateNumber, parameters.inviteOnly),
+    parameters.price,
     parameters.time,
     parameters.location,
-    parameters.price,
   ];
 }
 

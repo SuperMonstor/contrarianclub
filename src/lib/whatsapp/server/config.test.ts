@@ -15,8 +15,6 @@ const variables = [
   "WHATSAPP_APP_SECRET",
   "WHATSAPP_WEBHOOK_VERIFY_TOKEN",
   "WHATSAPP_GRAPH_API_VERSION",
-  "WHATSAPP_TEMPLATE_NAME",
-  "WHATSAPP_WELCOME_TEMPLATE_NAME",
   "WHATSAPP_TEMPLATE_LANGUAGE",
 ] as const;
 
@@ -39,8 +37,6 @@ function configure() {
   process.env.WHATSAPP_APP_SECRET = "app-secret";
   process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN = "verify-token";
   process.env.WHATSAPP_GRAPH_API_VERSION = "v25.0";
-  process.env.WHATSAPP_TEMPLATE_NAME = "debate_announcement";
-  process.env.WHATSAPP_WELCOME_TEMPLATE_NAME = "subscriber_welcome";
   process.env.WHATSAPP_TEMPLATE_LANGUAGE = "en";
 }
 
@@ -51,8 +47,6 @@ describe("WhatsApp server configuration", () => {
       accessToken: "token",
       phoneNumberId: "phone-id",
       graphApiVersion: "v25.0",
-      templateName: "debate_announcement",
-      welcomeTemplateName: "subscriber_welcome",
       templateLanguage: "en",
     });
   });
