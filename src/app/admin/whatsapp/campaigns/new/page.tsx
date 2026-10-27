@@ -18,7 +18,7 @@ export default async function NewWhatsAppCampaignPage() {
         <MarketingHeader
           eyebrow="New dispatch"
           title="Announce a debate"
-          description="Pick the debate to fill in its number and motions, add the rest, review the message, then send it to the entire active list."
+          description="Pick the debate to fill in its number, add the rest and a poster that shows the motions, review the message, then send it to the entire active list."
         />
         <div className="mt-6">
           <CampaignForm activeSubscriberCount={activeSubscriberCount} debates={debates} />

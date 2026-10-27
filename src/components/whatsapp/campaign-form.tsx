@@ -11,8 +11,6 @@ import { DETAILS_URL_BASE } from "@/lib/whatsapp/template";
 type Fields = {
   debateNumber: string;
   price: string;
-  motionOne: string;
-  motionTwo: string;
   location: string;
   time: string;
   detailsUrl: string;
@@ -21,8 +19,6 @@ type Fields = {
 const initialFields: Fields = {
   debateNumber: "",
   price: "",
-  motionOne: "",
-  motionTwo: "",
   location: "",
   time: "",
   detailsUrl: "",
@@ -47,15 +43,15 @@ export function CampaignForm({
   const valid = useMemo(() => {
     if (!/^[1-9][0-9]{0,3}$/.test(fields.debateNumber.trim())) return false;
     if (!/^[1-9][0-9]{0,4}$/.test(fields.price.trim())) return false;
-    return [fields.motionOne, fields.location, fields.time].every((value) => value.trim());
+    return [fields.location, fields.time].every((value) => value.trim());
   }, [fields]);
 
   function update(name: keyof Fields, value: string) {
     setFields((current) => ({ ...current, [name]: value }));
   }
 
-  // Fills the number and motions from a debate record. Everything stays
-  // editable, and the other fields are left alone.
+  // Fills the number from a debate record. It stays editable, and the other
+  // fields are left alone.
   function chooseDebate(id: string) {
     setDebateId(id);
     const debate = debates.find((option) => option.id === id);
@@ -63,8 +59,6 @@ export function CampaignForm({
     setFields((current) => ({
       ...current,
       debateNumber: debate.debateNumber ?? current.debateNumber,
-      motionOne: debate.motions[0] ?? "",
-      motionTwo: debate.motions[1] ?? "",
     }));
   }
 
@@ -85,23 +79,6 @@ export function CampaignForm({
           type={options.type ?? "text"}
           inputMode={options.inputMode}
           placeholder={options.placeholder}
-          value={fields[name]}
-          onChange={(event) => update(name, event.target.value)}
-        />
-      </label>
-    );
-  }
-
-  function motion(name: "motionOne" | "motionTwo", label: string, required: boolean) {
-    return (
-      <label className="grid gap-2">
-        <span className="club-label">{label}</span>
-        <textarea
-          className="club-input min-h-20 px-3 py-2.5"
-          name="motion"
-          aria-label={label}
-          required={required}
-          maxLength={400}
           value={fields[name]}
           onChange={(event) => update(name, event.target.value)}
         />
@@ -163,8 +140,6 @@ export function CampaignForm({
             placeholder: "599",
             inputMode: "numeric",
           })}
-          {motion("motionOne", "Motion 1", true)}
-          {motion("motionTwo", "Motion 2 (optional)", false)}
           {input("location", "Location", {
             maxLength: 160,
             placeholder: "Bangalore International Centre",
@@ -224,7 +199,6 @@ export function CampaignForm({
             debateNumber={fields.debateNumber}
             inviteOnly={inviteOnly}
             price={fields.price}
-            motions={[fields.motionOne, fields.motionTwo]}
             location={fields.location}
             time={fields.time}
             posterUrl={posterUrl}

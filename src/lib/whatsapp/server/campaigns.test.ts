@@ -14,7 +14,6 @@ const parameters = {
   debateNumber: "12",
   price: "599",
   inviteOnly: false,
-  motions: ["This house believes the AI boom is a bubble."],
   location: "BIC",
   time: "Saturday, 8 November, 7:00 PM",
   detailsUrl: "https://offlyn.life/e/ncWEIfi",

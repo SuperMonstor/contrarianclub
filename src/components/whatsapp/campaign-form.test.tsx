@@ -32,8 +32,6 @@ describe("WhatsApp campaign form", () => {
     await user.type(screen.getByLabelText("Debate number"), "12");
     await user.click(screen.getByLabelText("Invite only"));
     await user.type(screen.getByLabelText("Early access price (₹)"), "599");
-    await user.type(screen.getByLabelText("Motion 1"), "First motion.");
-    await user.type(screen.getByLabelText("Motion 2 (optional)"), "Second motion.");
     await user.type(screen.getByLabelText("Location"), "BIC");
     await user.type(screen.getByLabelText("Time"), "Saturday, 7:00 PM");
     await user.type(screen.getByLabelText("Offlyn event link"), "https://tickets.test/debate");
@@ -42,7 +40,7 @@ describe("WhatsApp campaign form", () => {
     expect(
       screen.getByText("Contrarian Debate Club #12 (invite only): early access"),
     ).toBeInTheDocument();
-    expect(screen.getByText("1) First motion. 2) Second motion.")).toBeInTheDocument();
+    expect(screen.getByText(/tickets are capped at ₹599/)).toBeInTheDocument();
     expect(screen.getByText("Book Now")).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("must start with https://offlyn.life/");
 
@@ -76,7 +74,7 @@ describe("WhatsApp campaign form", () => {
     expect(screen.getByRole("button", { name: "Create and send campaign" })).toBeDisabled();
   });
 
-  it("fills the number and motions from a chosen debate", async () => {
+  it("fills the number from a chosen debate", async () => {
     const user = userEvent.setup();
     render(
       <CampaignForm
@@ -87,14 +85,11 @@ describe("WhatsApp campaign form", () => {
             code: "ABC123",
             title: "Debate #12",
             debateNumber: "12",
-            motions: ["First motion.", "Second motion."],
           },
         ]}
       />,
     );
     await user.selectOptions(screen.getByLabelText("Fill from a debate"), "event-1");
     expect(screen.getByLabelText("Debate number")).toHaveValue("12");
-    expect(screen.getByLabelText("Motion 1")).toHaveValue("First motion.");
-    expect(screen.getByLabelText("Motion 2 (optional)")).toHaveValue("Second motion.");
   });
 });

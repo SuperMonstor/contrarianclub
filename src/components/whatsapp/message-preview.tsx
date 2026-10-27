@@ -5,7 +5,6 @@ import {
   ANNOUNCEMENT_TEMPLATE_FOOTER,
   WELCOME_TEMPLATE_BODY,
   formatDebateNumber,
-  formatMotions,
   renderTemplateBody,
 } from "@/lib/whatsapp/template";
 
@@ -73,7 +72,6 @@ export function AnnouncementPreview({
   debateNumber,
   inviteOnly,
   price,
-  motions,
   location,
   time,
   posterUrl,
@@ -81,18 +79,15 @@ export function AnnouncementPreview({
   debateNumber: string;
   inviteOnly: boolean;
   price: string;
-  motions: string[];
   location: string;
   time: string;
   posterUrl?: string | null;
 }) {
-  const filledMotions = motions.map((motion) => motion.trim()).filter(Boolean);
   const body = renderTemplateBody(ANNOUNCEMENT_TEMPLATE_BODY, [
     formatDebateNumber(debateNumber.trim() || "12", inviteOnly),
-    price.trim() || "599",
     time.trim() || "Date and time",
     location.trim() || "Location",
-    formatMotions(filledMotions.length ? filledMotions : ["The motion"]),
+    price.trim() || "599",
   ]);
   return (
     <MessagePreview
