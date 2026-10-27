@@ -1,6 +1,6 @@
 "use client";
 
-import { Megaphone, ShieldCheck } from "lucide-react";
+import { FlaskConical, Megaphone, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createWhatsAppCampaign } from "@/app/admin/whatsapp/actions";
 import { AnnouncementPreview } from "@/components/whatsapp/message-preview";
@@ -26,9 +26,11 @@ const initialFields: Fields = {
 
 export function CampaignForm({
   activeSubscriberCount,
+  testerCount = 0,
   debates = [],
 }: {
   activeSubscriberCount: number;
+  testerCount?: number;
   debates?: DebateOption[];
 }) {
   const [fields, setFields] = useState(initialFields);
@@ -45,6 +47,8 @@ export function CampaignForm({
     if (!/^[1-9][0-9]{0,4}$/.test(fields.price.trim())) return false;
     return [fields.location, fields.time].every((value) => value.trim());
   }, [fields]);
+
+  const ready = valid && detailsUrlValid && Boolean(posterUrl) && chargesAccepted;
 
   function update(name: keyof Fields, value: string) {
     setFields((current) => ({ ...current, [name]: value }));
@@ -177,16 +181,33 @@ export function CampaignForm({
             snapshot of every active subscriber and starts sending immediately.
           </span>
         </label>
-        <button
-          type="submit"
-          className="club-btn club-btn-primary mt-5 w-full px-5 py-3"
-          disabled={
-            !valid || !detailsUrlValid || !posterUrl || !chargesAccepted || activeSubscriberCount === 0
-          }
-        >
-          <Megaphone size={18} />
-          Create and send campaign
-        </button>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <button
+            type="submit"
+            name="mode"
+            value="test"
+            className="club-btn w-full px-5 py-3"
+            disabled={!ready || testerCount === 0}
+          >
+            <FlaskConical size={18} />
+            Send test to {testerCount.toLocaleString("en-IN")}{" "}
+            {testerCount === 1 ? "tester" : "testers"}
+          </button>
+          <button
+            type="submit"
+            name="mode"
+            value="everyone"
+            className="club-btn club-btn-primary w-full px-5 py-3"
+            disabled={!ready || activeSubscriberCount === 0}
+          >
+            <Megaphone size={18} />
+            Send to everyone
+          </button>
+        </div>
+        <p className="mt-3 text-xs leading-5 text-[color:var(--cc-muted)]">
+          A test goes only to subscribers marked as testers. Once it looks right on
+          their phones, send the same message to everyone from the test&apos;s page.
+        </p>
       </section>
 
       <section className="club-panel-gold self-start p-5 sm:p-7">

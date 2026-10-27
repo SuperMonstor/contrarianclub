@@ -26,7 +26,7 @@ import { CampaignForm } from "@/components/whatsapp/campaign-form";
 describe("WhatsApp campaign form", () => {
   it("previews the approved template and needs a poster, HTTPS link, and charge confirmation", async () => {
     const user = userEvent.setup();
-    render(<CampaignForm activeSubscriberCount={1842} />);
+    render(<CampaignForm activeSubscriberCount={1842} testerCount={3} />);
     expect(screen.getByText("1,842 active recipients")).toBeInTheDocument();
 
     await user.type(screen.getByLabelText("Debate number"), "12");
@@ -44,8 +44,10 @@ describe("WhatsApp campaign form", () => {
     expect(screen.getByText("Book Now")).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("must start with https://offlyn.life/");
 
-    const button = screen.getByRole("button", { name: "Create and send campaign" });
+    const button = screen.getByRole("button", { name: "Send to everyone" });
+    const testButton = screen.getByRole("button", { name: "Send test to 3 testers" });
     expect(button).toBeDisabled();
+    expect(testButton).toBeDisabled();
 
     await user.clear(screen.getByLabelText("Offlyn event link"));
     await user.type(screen.getByLabelText("Offlyn event link"), "https://offlyn.life/e/ncWEIfi");
@@ -54,6 +56,7 @@ describe("WhatsApp campaign form", () => {
     const poster = new File(["poster"], "poster.png", { type: "image/png" });
     await user.upload(screen.getByLabelText("Poster"), poster);
     await waitFor(() => expect(button).toBeEnabled());
+    expect(testButton).toBeEnabled();
     expect(uploadToSignedUrl).toHaveBeenCalledWith("poster.png", "upload-token", poster, {
       contentType: "image/png",
     });
@@ -71,7 +74,7 @@ describe("WhatsApp campaign form", () => {
       new File(["gif"], "poster.gif", { type: "image/gif" }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Choose a JPEG or PNG image.");
-    expect(screen.getByRole("button", { name: "Create and send campaign" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Send to everyone" })).toBeDisabled();
   });
 
   it("fills the number from a chosen debate", async () => {

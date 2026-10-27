@@ -46,6 +46,7 @@ type CreateDependencies = {
     userId: string;
     templateName: string;
     languageCode: string;
+    testOnly: boolean;
   }) => Promise<CampaignSnapshot>;
   createWelcomeSnapshot: (input: {
     parameters: WelcomeInput;
@@ -132,6 +133,7 @@ function defaultCreateDependencies(): CreateDependencies {
         p_language_code: input.languageCode,
         p_parameters: input.parameters,
         p_created_by: input.userId,
+        p_test_only: input.testOnly,
       });
       if (error) throw error;
       return snapshotResult(data);
@@ -153,9 +155,11 @@ function defaultCreateDependencies(): CreateDependencies {
   };
 }
 
+// A test send goes only to active subscribers flagged as testers.
 export async function createAnnouncementCampaign(
   input: AnnouncementInput,
   userId: string,
+  { testOnly }: { testOnly: boolean },
   dependencies: CreateDependencies = defaultCreateDependencies(),
 ) {
   const parameters = validateAnnouncement(input);
@@ -168,7 +172,34 @@ export async function createAnnouncementCampaign(
     userId,
     templateName: ANNOUNCEMENT_TEMPLATE_NAME,
     languageCode: config.templateLanguage,
+    testOnly,
   });
+}
+
+// Sends a checked test announcement to the whole list with exactly the same
+// details, so nothing is retyped between the test and the real send.
+export async function sendTestAnnouncementToEveryone(
+  testCampaignId: string,
+  userId: string,
+  dependencies: CreateDependencies = defaultCreateDependencies(),
+  loadCampaign: (id: string) => Promise<CampaignRecord | null> = loadCampaignRecord,
+) {
+  const campaign = isUuid(testCampaignId) ? await loadCampaign(testCampaignId) : null;
+  if (!campaign) throw new CampaignNotFoundError();
+  if (!campaign.is_test || campaign.kind !== "announcement") {
+    throw new Error("Only a test announcement can be sent on to everyone.");
+  }
+  if (campaign.template_name !== ANNOUNCEMENT_TEMPLATE_NAME) {
+    throw new Error(
+      "This test used an earlier message template. Send a new test first.",
+    );
+  }
+  return createAnnouncementCampaign(
+    campaign.parameters as AnnouncementInput,
+    userId,
+    { testOnly: false },
+    dependencies,
+  );
 }
 
 export async function createWelcomeCampaign(
@@ -398,6 +429,7 @@ export async function sendCampaignBatch(
 type CampaignRecord = {
   id: string;
   kind: WhatsAppCampaignKind;
+  is_test: boolean;
   template_name: string;
   language_code: string;
   parameters: Record<string, unknown>;
@@ -407,6 +439,19 @@ type CampaignRecord = {
   completed_at: string | null;
   created_at: string;
 };
+
+const CAMPAIGN_RECORD_COLUMNS =
+  "id, kind, is_test, template_name, language_code, parameters, status, recipient_count, started_at, completed_at, created_at";
+
+async function loadCampaignRecord(campaignId: string) {
+  const { data, error } = await createServiceClient()
+    .from("whatsapp_campaigns")
+    .select(CAMPAIGN_RECORD_COLUMNS)
+    .eq("id", campaignId)
+    .maybeSingle<CampaignRecord>();
+  if (error) throw error;
+  return data;
+}
 
 type UnknownDelivery = {
   id: string;
@@ -434,7 +479,7 @@ export async function getCampaignDetail(campaignId: string) {
     supabase
       .from("whatsapp_campaigns")
       .select(
-        "id, kind, template_name, language_code, parameters, status, recipient_count, started_at, completed_at, created_at",
+        CAMPAIGN_RECORD_COLUMNS,
       )
       .eq("id", campaignId)
       .maybeSingle<CampaignRecord>(),

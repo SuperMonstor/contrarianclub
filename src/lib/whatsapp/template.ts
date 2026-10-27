@@ -246,6 +246,15 @@ export function buildTextPayload(recipientPhone: string, body: string) {
 export function campaignLabel(
   kind: WhatsAppCampaignKind,
   parameters: Record<string, unknown>,
+  isTest = false,
+): string {
+  const label = baseCampaignLabel(kind, parameters);
+  return isTest ? `Test: ${label}` : label;
+}
+
+function baseCampaignLabel(
+  kind: WhatsAppCampaignKind,
+  parameters: Record<string, unknown>,
 ): string {
   if (kind === "welcome") return "Welcome message";
   if (typeof parameters.debateNumber === "string") {

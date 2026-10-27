@@ -103,7 +103,7 @@ export default async function WhatsAppMarketingPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-[color:var(--cc-parchment)]">
-                      {campaignLabel(campaign.kind, campaign.parameters)}
+                      {campaignLabel(campaign.kind, campaign.parameters, campaign.is_test)}
                     </p>
                     <p className="mt-1 text-xs text-[color:var(--cc-muted)]">
                       {campaign.recipient_count} recipients

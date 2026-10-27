@@ -1,7 +1,10 @@
 import { Search } from "lucide-react";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
-import { setWhatsAppSubscriberActive } from "@/app/admin/whatsapp/actions";
+import {
+  setWhatsAppSubscriberActive,
+  setWhatsAppSubscriberTester,
+} from "@/app/admin/whatsapp/actions";
 import { requireAdminUser } from "@/lib/auth";
 import { maskIndianPhone } from "@/lib/whatsapp/phone";
 import { getWhatsAppSubscribers } from "@/lib/whatsapp/server/subscribers";
@@ -23,7 +26,7 @@ export default async function WhatsAppSubscribersPage({
         <MarketingHeader
           eyebrow="Master audience"
           title="Subscribers"
-          description="Every Indian mobile number appears once. Active subscribers receive the next campaign snapshot."
+          description="Every Indian mobile number appears once. Active subscribers receive the next campaign snapshot, and testers also receive test sends."
         />
         <form className="club-panel mt-6 flex gap-3 p-4" method="get">
           <label className="relative flex-1">
@@ -48,7 +51,7 @@ export default async function WhatsAppSubscribersPage({
             {subscribers.map((subscriber) => (
               <article
                 key={subscriber.id}
-                className="grid gap-4 px-5 py-4 md:grid-cols-[1fr_auto_auto] md:items-center"
+                className="grid gap-4 px-5 py-4 md:grid-cols-[1fr_auto_auto_auto] md:items-center"
               >
                 <div className="min-w-0">
                   <p className="truncate font-semibold text-[color:var(--cc-parchment)]">
@@ -62,8 +65,16 @@ export default async function WhatsAppSubscribersPage({
                   <span className={`club-chip ${subscriber.is_active ? "club-chip-live" : ""}`}>
                     {subscriber.is_active ? "active" : "opted out"}
                   </span>
+                  {subscriber.is_tester ? <span className="club-chip ml-2">tester</span> : null}
                   <p className="mt-2 text-right">via {subscriber.preference_source}</p>
                 </div>
+                <form action={setWhatsAppSubscriberTester}>
+                  <input type="hidden" name="subscriberId" value={subscriber.id} />
+                  <input type="hidden" name="isTester" value={subscriber.is_tester ? "false" : "true"} />
+                  <PendingSubmitButton className="club-btn px-3 py-2 text-xs">
+                    {subscriber.is_tester ? "Remove tester" : "Make tester"}
+                  </PendingSubmitButton>
+                </form>
                 <form action={setWhatsAppSubscriberActive} className="flex items-center gap-2">
                   <input type="hidden" name="subscriberId" value={subscriber.id} />
                   <input type="hidden" name="isActive" value={subscriber.is_active ? "false" : "true"} />

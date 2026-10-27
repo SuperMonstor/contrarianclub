@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { AlertTriangle, ExternalLink } from "lucide-react";
+import { AlertTriangle, ExternalLink, Megaphone } from "lucide-react";
 import { notFound } from "next/navigation";
-import { requeueUnknownWhatsAppDelivery } from "@/app/admin/whatsapp/actions";
+import {
+  requeueUnknownWhatsAppDelivery,
+  sendWhatsAppTestToEveryone,
+} from "@/app/admin/whatsapp/actions";
 import { CampaignRunner } from "@/components/whatsapp/campaign-runner";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
 import {
@@ -11,12 +14,13 @@ import {
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { requireAdminUser } from "@/lib/auth";
 import { maskIndianPhone } from "@/lib/whatsapp/phone";
-import { campaignLabel } from "@/lib/whatsapp/template";
+import { ANNOUNCEMENT_TEMPLATE_NAME, campaignLabel } from "@/lib/whatsapp/template";
 import type { AnnouncementParameters } from "@/lib/whatsapp/types";
 import {
   canRetryUnknownDelivery,
   getCampaignDetail,
 } from "@/lib/whatsapp/server/campaigns";
+import { getActiveWhatsAppSubscriberCount } from "@/lib/whatsapp/server/subscribers";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +38,20 @@ export default async function WhatsAppCampaignPage({
   if (!detail) notFound();
   const { campaign, counts, unknownDeliveries } = detail;
   const accepted = counts.sent + counts.delivered + counts.read;
+  const canSendToEveryone =
+    campaign.is_test &&
+    campaign.kind === "announcement" &&
+    campaign.template_name === ANNOUNCEMENT_TEMPLATE_NAME;
+  const activeSubscriberCount = canSendToEveryone
+    ? await getActiveWhatsAppSubscriberCount()
+    : 0;
 
   return (
     <main className="club-shell min-h-screen px-5 py-6">
       <div className="club-rise mx-auto w-full max-w-6xl">
         <MarketingHeader
           eyebrow="Campaign ledger"
-          title={campaignLabel(campaign.kind, campaign.parameters)}
+          title={campaignLabel(campaign.kind, campaign.parameters, campaign.is_test)}
           description={`${campaign.recipient_count.toLocaleString("en-IN")} recipients were fixed in this campaign snapshot.`}
         />
 
@@ -73,6 +84,29 @@ export default async function WhatsAppCampaignPage({
             </div>
           </section>
         </div>
+
+        {canSendToEveryone ? (
+          <section className="club-panel-gold mt-5 p-5 sm:p-6">
+            <p className="club-kicker">Checked the test?</p>
+            <h2 className="club-display club-d-card mt-2">Send this to everyone</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--cc-muted)]">
+              Sends exactly this message, with the same poster and link, to all{" "}
+              {activeSubscriberCount.toLocaleString("en-IN")} active subscribers. Testers
+              get it again.
+            </p>
+            <form action={sendWhatsAppTestToEveryone} className="mt-4 grid gap-3 sm:max-w-xl">
+              <input type="hidden" name="campaignId" value={campaign.id} />
+              <label className="club-panel-quiet flex items-start gap-3 px-4 py-3 text-sm text-[color:var(--cc-muted)]">
+                <input className="mt-1" type="checkbox" name="acknowledgeCharges" value="yes" required />
+                <span>I understand Meta messaging charges may apply.</span>
+              </label>
+              <PendingSubmitButton className="club-btn club-btn-primary w-full px-5 py-3">
+                <Megaphone size={18} />
+                Send to {activeSubscriberCount.toLocaleString("en-IN")} subscribers
+              </PendingSubmitButton>
+            </form>
+          </section>
+        ) : null}
 
         {unknownDeliveries.length ? (
           <section className="club-panel mt-5 p-5 sm:p-6">
