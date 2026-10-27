@@ -1,8 +1,32 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/whatsapp/server/workbook", () => ({
+  parseImportWorkbook: vi.fn(async () => ({
+    sheetName: "Guests",
+    rows: [
+      ["Name", "Phone", "WhatsApp updates"],
+      ["Asha", "9876543210", "Yes"],
+    ],
+  })),
+}));
+vi.mock("@/lib/supabase/server", () => {
+  const query = {
+    select: () => query,
+    eq: () => query,
+    in: () => query,
+    maybeSingle: async () => ({ data: null, error: null }),
+    returns: async () => ({ data: [], error: null }),
+  };
+  return { createServiceClient: () => ({ from: () => query }) };
+});
 
-import { calculateImportCounts } from "@/lib/whatsapp/server/imports";
+import {
+  calculateImportCounts,
+  confirmWhatsAppImport,
+  ImportInputError,
+  previewWhatsAppImport,
+} from "@/lib/whatsapp/server/imports";
 import type { NormalizedImportRow } from "@/lib/whatsapp/types";
 
 const rows: NormalizedImportRow[] = [
@@ -69,5 +93,36 @@ describe("WhatsApp import preview counts", () => {
       unchangedCount: 2,
       invalidCount: 2,
     });
+  });
+});
+
+describe("WhatsApp import without a preference time column", () => {
+  const file = () => new File(["workbook"], "guests.xlsx");
+
+  it("returns the detected mapping and asks for the source date", async () => {
+    await expect(
+      previewWhatsAppImport(file(), { sourceDate: null }),
+    ).resolves.toMatchObject({
+      ready: false,
+      sourceDateRequired: true,
+      mapping: {
+        name: "Name",
+        phone: "Phone",
+        consent: "WhatsApp updates",
+        preferenceTime: null,
+      },
+    });
+  });
+
+  it("previews once the source date is supplied", async () => {
+    await expect(
+      previewWhatsAppImport(file(), { sourceDate: "2026-08-15" }),
+    ).resolves.toMatchObject({ ready: true, validRows: 1 });
+  });
+
+  it("refuses to confirm without the source date", async () => {
+    await expect(
+      confirmWhatsAppImport(file(), { sourceDate: null }, "admin-1"),
+    ).rejects.toBeInstanceOf(ImportInputError);
   });
 });

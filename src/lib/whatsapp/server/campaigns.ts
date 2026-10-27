@@ -1,12 +1,18 @@
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
-import { validateCampaignInput } from "@/lib/whatsapp/template";
-import type { CampaignParameters } from "@/lib/whatsapp/types";
+import {
+  buildAnnouncementPayload,
+  buildWelcomePayload,
+  validateAnnouncement,
+  type AnnouncementInput,
+} from "@/lib/whatsapp/template";
+import type { WhatsAppCampaignKind } from "@/lib/whatsapp/types";
 import { getWhatsAppConfig } from "@/lib/whatsapp/server/config";
 import {
   sendTemplateMessage,
   type MetaSendResult,
 } from "@/lib/whatsapp/server/meta";
+import { isWhatsAppPosterUrl } from "@/lib/whatsapp/server/posters";
 
 type ClaimedDelivery = {
   id: string;
@@ -26,26 +32,52 @@ type DeliveryUpdate = {
   failed_at?: string | null;
 };
 
+type CampaignSnapshot = { campaignId: string; recipientCount: number };
+
 type CreateDependencies = {
-  getConfig: () => { templateName: string; templateLanguage: string };
+  getConfig: () => {
+    templateName: string;
+    welcomeTemplateName: string;
+    templateLanguage: string;
+  };
+  isPosterUrl: (url: string) => boolean;
   createSnapshot: (input: {
-    parameters: CampaignParameters;
+    parameters: AnnouncementInput;
     userId: string;
     templateName: string;
     languageCode: string;
-  }) => Promise<{ campaignId: string; recipientCount: number }>;
+  }) => Promise<CampaignSnapshot>;
+  createWelcomeSnapshot: (input: {
+    userId: string;
+    templateName: string;
+    languageCode: string;
+  }) => Promise<CampaignSnapshot>;
+};
+
+type SendableCampaign = {
+  kind: WhatsAppCampaignKind;
+  template_name: string;
+  language_code: string;
+  parameters: AnnouncementInput;
 };
 
 type SendDependencies = {
   markStale: (campaignId: string) => Promise<void>;
-  loadCampaign: (
-    campaignId: string,
-  ) => Promise<{ parameters: CampaignParameters } | null>;
+  loadCampaign: (campaignId: string) => Promise<SendableCampaign | null>;
   claim: (campaignId: string, limit: number) => Promise<ClaimedDelivery[]>;
   send: typeof sendTemplateMessage;
   updateDelivery: (id: string, update: DeliveryUpdate) => Promise<void>;
   refresh: (campaignId: string) => Promise<string>;
-  hasPending: (campaignId: string) => Promise<boolean>;
+  loadQueueState: (campaignId: string) => Promise<QueueState>;
+};
+
+type QueueState = {
+  // Deliveries the next batch can still claim.
+  pending: number;
+  // Claimed deliveries whose send outcome is not recorded yet.
+  inFlight: number;
+  // Deliveries with an uncertain outcome an admin has to review.
+  needsReview: number;
 };
 
 export type BatchResult = {
@@ -55,6 +87,8 @@ export type BatchResult = {
   failed: number;
   unknown: number;
   hasMore: boolean;
+  inFlight: number;
+  needsReview: number;
   retryAfterMs: number;
 };
 
@@ -75,9 +109,21 @@ export function canRetryUnknownDelivery(attemptCount: number): boolean {
   return Number.isInteger(attemptCount) && attemptCount >= 0 && attemptCount < 3;
 }
 
+function snapshotResult(data: unknown): CampaignSnapshot {
+  const result = (Array.isArray(data) ? data[0] : data) as
+    | { campaign_id: string; recipient_count: number }
+    | null;
+  if (!result) throw new Error("Campaign transaction returned no result.");
+  return {
+    campaignId: result.campaign_id,
+    recipientCount: result.recipient_count,
+  };
+}
+
 function defaultCreateDependencies(): CreateDependencies {
   return {
     getConfig: getWhatsAppConfig,
+    isPosterUrl: isWhatsAppPosterUrl,
     async createSnapshot(input) {
       const supabase = createServiceClient();
       const { data, error } = await supabase.rpc("create_whatsapp_campaign", {
@@ -87,29 +133,76 @@ function defaultCreateDependencies(): CreateDependencies {
         p_created_by: input.userId,
       });
       if (error) throw error;
-      const result = Array.isArray(data) ? data[0] : data;
-      if (!result) throw new Error("Campaign transaction returned no result.");
-      return {
-        campaignId: result.campaign_id as string,
-        recipientCount: result.recipient_count as number,
-      };
+      return snapshotResult(data);
+    },
+    async createWelcomeSnapshot(input) {
+      const supabase = createServiceClient();
+      const { data, error } = await supabase.rpc(
+        "create_whatsapp_welcome_campaign",
+        {
+          p_template_name: input.templateName,
+          p_language_code: input.languageCode,
+          p_created_by: input.userId,
+        },
+      );
+      if (error) throw error;
+      return snapshotResult(data);
     },
   };
 }
 
-export async function createCampaign(
-  parameters: CampaignParameters,
+export async function createAnnouncementCampaign(
+  input: AnnouncementInput,
   userId: string,
   dependencies: CreateDependencies = defaultCreateDependencies(),
 ) {
-  const validated = validateCampaignInput(parameters);
+  const parameters = validateAnnouncement(input);
+  if (!dependencies.isPosterUrl(parameters.posterUrl)) {
+    throw new Error("Upload the poster again before sending.");
+  }
   const config = dependencies.getConfig();
   return dependencies.createSnapshot({
-    parameters: validated,
+    parameters,
     userId,
     templateName: config.templateName,
     languageCode: config.templateLanguage,
   });
+}
+
+export async function createWelcomeCampaign(
+  userId: string,
+  dependencies: CreateDependencies = defaultCreateDependencies(),
+) {
+  const config = dependencies.getConfig();
+  return dependencies.createWelcomeSnapshot({
+    userId,
+    templateName: config.welcomeTemplateName,
+    languageCode: config.templateLanguage,
+  });
+}
+
+export async function getPendingWelcomeCount(): Promise<number> {
+  const { data, error } = await createServiceClient().rpc(
+    "count_pending_whatsapp_welcomes",
+  );
+  if (error) throw error;
+  return Number(data ?? 0);
+}
+
+// Builds the Meta payload for one recipient. Announcement parameters are
+// validated once, before any delivery is claimed, so a bad campaign fails the
+// batch instead of failing every message.
+function payloadBuilder(campaignId: string, campaign: SendableCampaign) {
+  const config = {
+    templateName: campaign.template_name,
+    templateLanguage: campaign.language_code,
+  };
+  if (campaign.kind === "welcome") {
+    return (recipientPhone: string) => buildWelcomePayload(recipientPhone, config);
+  }
+  const parameters = validateAnnouncement(campaign.parameters);
+  return (recipientPhone: string) =>
+    buildAnnouncementPayload(recipientPhone, parameters, campaignId, config);
 }
 
 function defaultSendDependencies(): SendDependencies {
@@ -125,9 +218,9 @@ function defaultSendDependencies(): SendDependencies {
     async loadCampaign(campaignId) {
       const { data, error } = await supabase
         .from("whatsapp_campaigns")
-        .select("parameters")
+        .select("kind, template_name, language_code, parameters")
         .eq("id", campaignId)
-        .maybeSingle<{ parameters: CampaignParameters }>();
+        .maybeSingle<SendableCampaign>();
       if (error) throw error;
       return data;
     },
@@ -155,15 +248,26 @@ function defaultSendDependencies(): SendDependencies {
       if (error) throw error;
       return String(data);
     },
-    async hasPending(campaignId) {
-      const { count, error } = await supabase
-        .from("whatsapp_deliveries")
-        .select("id", { count: "exact", head: true })
-        .eq("campaign_id", campaignId)
-        .in("status", ["queued", "retryable_failed"])
-        .lt("attempt_count", 3);
-      if (error) throw error;
-      return (count ?? 0) > 0;
+    async loadQueueState(campaignId) {
+      const deliveries = () =>
+        supabase
+          .from("whatsapp_deliveries")
+          .select("id", { count: "exact", head: true })
+          .eq("campaign_id", campaignId);
+      const results = await Promise.all([
+        deliveries()
+          .in("status", ["queued", "retryable_failed"])
+          .lt("attempt_count", 3),
+        deliveries().eq("status", "sending"),
+        deliveries().eq("status", "unknown"),
+      ]);
+      for (const result of results) {
+        if (result.error) throw result.error;
+      }
+      const [pending, inFlight, needsReview] = results.map(
+        (result) => result.count ?? 0,
+      );
+      return { pending, inFlight, needsReview };
     },
   };
 }
@@ -218,18 +322,12 @@ async function persistMetaResult(
 
 async function processDelivery(
   delivery: ClaimedDelivery,
-  campaign: { parameters: CampaignParameters },
+  buildPayload: (recipientPhone: string) => object,
   dependencies: SendDependencies,
 ) {
   let result: MetaSendResult;
   try {
-    result = await dependencies.send({
-      delivery: {
-        recipientPhone: delivery.recipient_phone,
-        recipientName: delivery.recipient_name,
-      },
-      campaign: campaign.parameters,
-    });
+    result = await dependencies.send(buildPayload(delivery.recipient_phone));
   } catch {
     result = {
       kind: "unknown",
@@ -246,6 +344,7 @@ export async function sendCampaignBatch(
   await dependencies.markStale(campaignId);
   const campaign = await dependencies.loadCampaign(campaignId);
   if (!campaign) throw new CampaignNotFoundError();
+  const buildPayload = payloadBuilder(campaignId, campaign);
   const deliveries = await dependencies.claim(campaignId, 20);
   const counts = { sent: 0, retryable: 0, failed: 0, unknown: 0 };
 
@@ -253,7 +352,7 @@ export async function sendCampaignBatch(
     const settled = await Promise.allSettled(
       deliveries
         .slice(index, index + 5)
-        .map((delivery) => processDelivery(delivery, campaign, dependencies)),
+        .map((delivery) => processDelivery(delivery, buildPayload, dependencies)),
     );
     for (const result of settled) {
       if (result.status === "fulfilled") counts[result.value] += 1;
@@ -262,20 +361,24 @@ export async function sendCampaignBatch(
   }
 
   await dependencies.refresh(campaignId);
-  const hasMore = await dependencies.hasPending(campaignId);
+  const queue = await dependencies.loadQueueState(campaignId);
+  const hasMore = queue.pending > 0;
   return {
     claimed: deliveries.length,
     ...counts,
     hasMore,
+    inFlight: queue.inFlight,
+    needsReview: queue.needsReview,
     retryAfterMs: hasMore && counts.retryable > 0 ? 1_000 : 0,
   };
 }
 
 type CampaignRecord = {
   id: string;
+  kind: WhatsAppCampaignKind;
   template_name: string;
   language_code: string;
-  parameters: CampaignParameters;
+  parameters: Record<string, unknown>;
   status: string;
   recipient_count: number;
   started_at: string | null;
@@ -303,12 +406,13 @@ export async function getCampaignDetail(campaignId: string) {
     "retryable_failed",
     "unknown",
     "failed",
+    "skipped",
   ] as const;
   const [campaignResult, ...countResults] = await Promise.all([
     supabase
       .from("whatsapp_campaigns")
       .select(
-        "id, template_name, language_code, parameters, status, recipient_count, started_at, completed_at, created_at",
+        "id, kind, template_name, language_code, parameters, status, recipient_count, started_at, completed_at, created_at",
       )
       .eq("id", campaignId)
       .maybeSingle<CampaignRecord>(),

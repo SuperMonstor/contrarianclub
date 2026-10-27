@@ -63,6 +63,9 @@ export function ChallengeVote({
   );
   const activityId = activity.id;
   const round = challenge.round;
+  // Start, reset, pause and resume can change eligibility or clear requests
+  // without changing the round number, so they trigger recovery as well.
+  const lifecycle = `${activity.status}:${activity.voting_opens_at ?? ""}`;
   const recoveryIdRef = useRef(0);
   const requestIdRef = useRef(0);
 
@@ -115,7 +118,7 @@ export function ChallengeVote({
       recoveryIdRef.current += 1;
       requestIdRef.current += 1;
     };
-  }, [recoverParticipation]);
+  }, [recoverParticipation, lifecycle]);
 
   const protectedTime =
     activity.status === "open" && !challenge.paused && remaining > 0;

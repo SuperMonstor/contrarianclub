@@ -1,5 +1,6 @@
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
+import type { WhatsAppCampaignKind } from "@/lib/whatsapp/types";
 
 export type WhatsAppSubscriber = {
   id: string;
@@ -24,10 +25,8 @@ export type WhatsAppImportSummary = {
 
 export type WhatsAppCampaignSummary = {
   id: string;
-  parameters: {
-    title?: string;
-    date?: string;
-  };
+  kind: WhatsAppCampaignKind;
+  parameters: Record<string, unknown>;
   status: string;
   recipient_count: number;
   created_at: string;
@@ -35,7 +34,7 @@ export type WhatsAppCampaignSummary = {
 
 export async function getWhatsAppOverview() {
   const supabase = createServiceClient();
-  const [active, inactive, latestImport, recentCampaigns] = await Promise.all([
+  const [active, inactive, latestImport, recentCampaigns, pendingWelcomes] = await Promise.all([
     supabase
       .from("whatsapp_subscribers")
       .select("id", { count: "exact", head: true })
@@ -54,13 +53,14 @@ export async function getWhatsAppOverview() {
       .maybeSingle<WhatsAppImportSummary>(),
     supabase
       .from("whatsapp_campaigns")
-      .select("id, parameters, status, recipient_count, created_at")
+      .select("id, kind, parameters, status, recipient_count, created_at")
       .order("created_at", { ascending: false })
       .limit(8)
       .returns<WhatsAppCampaignSummary[]>(),
+    supabase.rpc("count_pending_whatsapp_welcomes"),
   ]);
 
-  for (const result of [active, inactive, latestImport, recentCampaigns]) {
+  for (const result of [active, inactive, latestImport, recentCampaigns, pendingWelcomes]) {
     if (result.error) throw result.error;
   }
   return {
@@ -68,6 +68,7 @@ export async function getWhatsAppOverview() {
     inactiveCount: inactive.count ?? 0,
     latestImport: latestImport.data,
     recentCampaigns: recentCampaigns.data ?? [],
+    pendingWelcomeCount: Number(pendingWelcomes.data ?? 0),
   };
 }
 

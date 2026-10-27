@@ -36,6 +36,8 @@ describe("WhatsApp campaign batch route", () => {
       failed: 0,
       unknown: 0,
       hasMore: false,
+      inFlight: 0,
+      needsReview: 0,
       retryAfterMs: 0,
     });
   });

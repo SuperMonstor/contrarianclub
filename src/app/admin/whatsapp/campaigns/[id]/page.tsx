@@ -4,9 +4,15 @@ import { notFound } from "next/navigation";
 import { requeueUnknownWhatsAppDelivery } from "@/app/admin/whatsapp/actions";
 import { CampaignRunner } from "@/components/whatsapp/campaign-runner";
 import { MarketingHeader } from "@/components/whatsapp/marketing-header";
+import {
+  AnnouncementPreview,
+  WelcomePreview,
+} from "@/components/whatsapp/message-preview";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { requireAdminUser } from "@/lib/auth";
 import { maskIndianPhone } from "@/lib/whatsapp/phone";
+import { campaignLabel } from "@/lib/whatsapp/template";
+import type { AnnouncementParameters } from "@/lib/whatsapp/types";
 import {
   canRetryUnknownDelivery,
   getCampaignDetail,
@@ -34,7 +40,7 @@ export default async function WhatsAppCampaignPage({
       <div className="club-rise mx-auto w-full max-w-6xl">
         <MarketingHeader
           eyebrow="Campaign ledger"
-          title={campaign.parameters.title}
+          title={campaignLabel(campaign.kind, campaign.parameters)}
           description={`${campaign.recipient_count.toLocaleString("en-IN")} recipients were fixed in this campaign snapshot.`}
         />
 
@@ -42,9 +48,15 @@ export default async function WhatsAppCampaignPage({
           <CampaignStat value={accepted} label="Accepted" />
           <CampaignStat value={counts.delivered + counts.read} label="Delivered" />
           <CampaignStat value={counts.read} label="Read" />
-          <CampaignStat value={counts.retryable_failed + counts.queued} label="Pending" />
+          <CampaignStat value={counts.retryable_failed + counts.queued + counts.sending} label="Pending" />
           <CampaignStat value={counts.failed + counts.unknown} label="Needs attention" />
         </section>
+        {counts.skipped ? (
+          <p className="mt-3 text-sm text-[color:var(--cc-muted)]">
+            {counts.skipped.toLocaleString("en-IN")} skipped because the subscriber opted out before
+            their message was sent.
+          </p>
+        ) : null}
 
         <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
           <CampaignRunner campaignId={campaign.id} autoStart={send === "1"} />
@@ -56,28 +68,9 @@ export default async function WhatsAppCampaignPage({
               </div>
               <span className="club-chip">{campaign.status.replace("_", " ")}</span>
             </div>
-            <div className="mt-5 rounded-sm border border-[color:var(--cc-line)] bg-[#efe6d1] px-5 py-5 text-sm leading-6 text-[#201a12]">
-              <p>Hi there, bookings are open for the next Contrarian Club debate.</p>
-              <p className="mt-4 font-semibold">{campaign.parameters.title}</p>
-              <p className="mt-4">
-                {campaign.parameters.date} at {campaign.parameters.time}<br />
-                {campaign.parameters.venue}
-              </p>
-              <p className="mt-4 break-all">
-                Book your seat: {campaign.parameters.ticketUrl}
-              </p>
-              <p className="mt-4 text-[#655741]">
-                Reply STOP to stop receiving debate announcements.
-              </p>
+            <div className="mt-5">
+              <CampaignMessage kind={campaign.kind} parameters={campaign.parameters} />
             </div>
-            <Link
-              href={campaign.parameters.ticketUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="club-btn mt-4 w-full px-4 py-3"
-            >
-              <ExternalLink size={16} /> Open ticket link
-            </Link>
           </section>
         </div>
 
@@ -131,6 +124,44 @@ export default async function WhatsAppCampaignPage({
         ) : null}
       </div>
     </main>
+  );
+}
+
+function CampaignMessage({
+  kind,
+  parameters,
+}: {
+  kind: "announcement" | "welcome";
+  parameters: Record<string, unknown>;
+}) {
+  if (kind === "welcome") return <WelcomePreview />;
+  if (!Array.isArray(parameters.motions)) {
+    return (
+      <p className="text-sm text-[color:var(--cc-muted)]">
+        This campaign used an earlier template.
+      </p>
+    );
+  }
+  const announcement = parameters as AnnouncementParameters;
+  return (
+    <>
+      <AnnouncementPreview
+        debateNumber={announcement.debateNumber}
+        inviteOnly={announcement.inviteOnly}
+        motions={announcement.motions}
+        location={announcement.location}
+        time={announcement.time}
+        posterUrl={announcement.posterUrl}
+      />
+      <Link
+        href={announcement.detailsUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="club-btn mt-4 w-full px-4 py-3"
+      >
+        <ExternalLink size={16} /> Open details link
+      </Link>
+    </>
   );
 }
 

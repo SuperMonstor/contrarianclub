@@ -147,6 +147,92 @@ describe("ChallengeVote", () => {
     ).toBeInTheDocument();
   });
 
+  it("recovers eligibility when the first speaker starts after enrollment", async () => {
+    let started = false;
+    const rpc = vi.fn(async (name: string) => {
+      if (name === "get_speaker_participation") {
+        return {
+          data: [{ round: 1, joined: true, eligible: started, requested: false }],
+          error: null,
+        };
+      }
+      return { data: null, error: null };
+    });
+    vi.mocked(createBrowserClient).mockReturnValue({ rpc } as never);
+    const firstRound = { ...challenge, round: 1 };
+
+    const { rerender } = render(
+      <ChallengeVote
+        activity={{ ...activity, status: "draft", voting_opens_at: null }}
+        challenge={{ ...firstRound, votingOpen: false }}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+    expect(await screen.findByText(/Enrolled once/i)).toBeInTheDocument();
+
+    started = true;
+    rerender(
+      <ChallengeVote
+        activity={{
+          ...activity,
+          status: "open",
+          voting_opens_at: "2026-08-08T19:01:30.000Z",
+        }}
+        challenge={firstRound}
+        voteToken="token-1"
+        refresh={vi.fn(async () => undefined)}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Request next speaker" }),
+    ).toBeInTheDocument();
+  });
+
+  it("drops a withdrawn request state after a same-round rehearsal reset", async () => {
+    let requested = true;
+    const rpc = vi.fn(async (name: string) => {
+      if (name === "get_speaker_participation") {
+        return {
+          data: [{ round: 1, joined: true, eligible: true, requested }],
+          error: null,
+        };
+      }
+      return { data: null, error: null };
+    });
+    vi.mocked(createBrowserClient).mockReturnValue({ rpc } as never);
+    const firstRound = { ...challenge, round: 1 };
+    const props = {
+      challenge: firstRound,
+      voteToken: "token-1",
+      refresh: vi.fn(async () => undefined),
+    };
+
+    const { rerender } = render(
+      <ChallengeVote
+        {...props}
+        activity={{ ...activity, voting_opens_at: "2026-08-08T19:01:30.000Z" }}
+      />,
+    );
+    expect(
+      await screen.findByRole("button", { name: /Withdraw next-speaker request/i }),
+    ).toBeInTheDocument();
+
+    // Reset and restart: round 1 again, with a new protected-time window.
+    requested = false;
+    rerender(
+      <ChallengeVote
+        {...props}
+        activity={{ ...activity, voting_opens_at: "2026-08-08T19:20:00.000Z" }}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Request next speaker" }),
+    ).toBeInTheDocument();
+  });
+
   it("submits one next-speaker request for the expected round", async () => {
     const rpc = mockRpc();
     const user = userEvent.setup();

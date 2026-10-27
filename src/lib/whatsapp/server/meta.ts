@@ -1,15 +1,5 @@
 import "server-only";
-import { buildTemplatePayload } from "@/lib/whatsapp/template";
-import type { CampaignParameters } from "@/lib/whatsapp/types";
 import { getWhatsAppConfig } from "@/lib/whatsapp/server/config";
-
-type SendInput = {
-  delivery: {
-    recipientPhone: string;
-    recipientName: string | null;
-  };
-  campaign: CampaignParameters;
-};
 
 export type MetaSendResult =
   | { kind: "sent"; messageId: string }
@@ -45,10 +35,9 @@ function safeError(body: MetaBody | null, fallback: string) {
 }
 
 export async function sendTemplateMessage(
-  input: SendInput,
+  payload: object,
 ): Promise<MetaSendResult> {
   const config = getWhatsAppConfig();
-  const payload = buildTemplatePayload(input.delivery, input.campaign, config);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
 

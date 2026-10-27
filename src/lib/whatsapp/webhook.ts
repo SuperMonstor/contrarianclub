@@ -46,9 +46,34 @@ export function verifyWebhookSignature(
   return supplied.length === expected.length && timingSafeEqual(supplied, expected);
 }
 
+// Typed replies, plus the labels of the announcement's "Stop promotions" and
+// the welcome message's "Stop updates" quick reply buttons.
+const OPT_OUT_PHRASES = [
+  "STOP",
+  "UNSUBSCRIBE",
+  "REMOVE ME",
+  "STOP PROMOTIONS",
+  "STOP UPDATES",
+];
+
 export function isOptOutText(value: string): boolean {
   const normalized = value.trim().replace(/\s+/g, " ").toUpperCase();
-  return ["STOP", "UNSUBSCRIBE", "REMOVE ME"].includes(normalized);
+  return OPT_OUT_PHRASES.includes(normalized);
+}
+
+// A typed reply arrives as a text message. A tap on a template quick reply
+// button arrives as a button message carrying the button's label and payload.
+function replyText(message: JsonRecord): string | null {
+  if (message.type === "text") {
+    const body = record(message.text)?.body;
+    return typeof body === "string" ? body : null;
+  }
+  if (message.type === "button") {
+    const button = record(message.button);
+    if (typeof button?.text === "string") return button.text;
+    return typeof button?.payload === "string" ? button.payload : null;
+  }
+  return null;
 }
 
 export function allowedPriorStatuses(
@@ -107,15 +132,8 @@ function optOutEvents(value: JsonRecord): WhatsAppWebhookEvent[] {
   const events: WhatsAppWebhookEvent[] = [];
   for (const item of array(value.messages)) {
     const message = record(item);
-    const text = record(message?.text);
-    if (
-      !message ||
-      message.type !== "text" ||
-      typeof text?.body !== "string" ||
-      !isOptOutText(text.body)
-    ) {
-      continue;
-    }
+    const text = message ? replyText(message) : null;
+    if (!message || text === null || !isOptOutText(text)) continue;
     const phoneE164 = normalizeIndianPhone(message.from);
     const occurredAt = timestampIso(message.timestamp);
     if (!phoneE164 || !occurredAt) continue;

@@ -1,6 +1,7 @@
 "use client";
 
 import { FileSpreadsheet, LoaderCircle, Upload } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type {
   ImportColumnMapping,
@@ -58,7 +59,7 @@ function addOptions(formData: FormData, mapping: Partial<ImportColumnMapping>, s
   if (sourceDate) formData.set("sourceDate", sourceDate);
 }
 
-export function ImportWorkbookForm() {
+export function ImportWorkbookForm({ welcomeHref }: { welcomeHref?: string }) {
   const [file, setFile] = useState<File | null>(null);
   const [state, setState] = useState<FormState>("idle");
   const [preview, setPreview] = useState<Preview | null>(null);
@@ -289,6 +290,11 @@ export function ImportWorkbookForm() {
             The master list has been updated
           </h2>
           <CountGrid counts={completed} />
+          {welcomeHref ? (
+            <Link href={welcomeHref} className="club-btn club-btn-primary mt-5 w-full px-4 py-3">
+              Next: welcome new subscribers
+            </Link>
+          ) : null}
         </section>
       ) : null}
 
