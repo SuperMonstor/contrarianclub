@@ -25,7 +25,7 @@ const config = { templateName: "debate_announcement", templateLanguage: "en" };
 describe("WhatsApp announcement template", () => {
   it("matches the body submitted to Meta", () => {
     expect(ANNOUNCEMENT_TEMPLATE_BODY).toBe(
-      "*Contrarian Debate Club #{{1}}: early access*\n{{2}}, {{3}}.\n\nYou opted in to hear about our debates, so you're hearing about this one first. For the next 24 hours, tickets are capped at ₹{{4}} for people who've attended before.",
+      "*Contrarian Debate Club #{{1}}*\nWe're reaching out because you opted in to hear about future debates from The Contrarian Debate Club.\n\nFor the next 24 hours, before it goes public, tickets are capped at ₹{{2}} for people who've attended our debates before.\n*Time:* {{3}}\n*Location:* {{4}}\n\nTap below to book before it opens to everyone.",
     );
   });
 
@@ -33,8 +33,9 @@ describe("WhatsApp announcement template", () => {
     const body = renderAnnouncementBody(
       validateAnnouncement({ ...announcement, inviteOnly: true }),
     );
-    expect(body).toContain("*Contrarian Debate Club #12 (invite only): early access*");
-    expect(body).toContain("Saturday, 8 November, 7:00 PM, Bangalore International Centre.");
+    expect(body).toContain("*Contrarian Debate Club #12 (invite only)*");
+    expect(body).toContain("*Time:* Saturday, 8 November, 7:00 PM");
+    expect(body).toContain("*Location:* Bangalore International Centre");
     expect(body).toContain("tickets are capped at ₹599 for people");
   });
 
@@ -90,9 +91,9 @@ describe("WhatsApp announcement template", () => {
             type: "body",
             parameters: [
               { type: "text", text: "12" },
+              { type: "text", text: "599" },
               { type: "text", text: announcement.time },
               { type: "text", text: announcement.location },
-              { type: "text", text: "599" },
             ],
           },
           {
