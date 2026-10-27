@@ -9,6 +9,7 @@ import {
   createAnnouncementCampaign,
   createWelcomeCampaign,
   isUuid,
+  sendTestAnnouncementToEveryone,
 } from "@/lib/whatsapp/server/campaigns";
 import { createPosterUpload } from "@/lib/whatsapp/server/posters";
 
@@ -28,6 +29,21 @@ export async function createWhatsAppCampaign(formData: FormData) {
       detailsUrl: String(formData.get("detailsUrl") ?? ""),
       posterUrl: String(formData.get("posterUrl") ?? ""),
     },
+    user.id,
+    { testOnly: formData.get("mode") === "test" },
+  );
+  redirect(
+    `${await currentAdminPath(`/whatsapp/campaigns/${result.campaignId}`)}?send=1`,
+  );
+}
+
+export async function sendWhatsAppTestToEveryone(formData: FormData) {
+  const user = await requireAdminUser();
+  if (formData.get("acknowledgeCharges") !== "yes") {
+    throw new Error("Confirm that Meta messaging charges may apply.");
+  }
+  const result = await sendTestAnnouncementToEveryone(
+    String(formData.get("campaignId") ?? ""),
     user.id,
   );
   redirect(
@@ -117,5 +133,22 @@ export async function setWhatsAppSubscriberActive(formData: FormData) {
   if (error) throw error;
 
   revalidatePath("/admin/whatsapp");
+  revalidatePath("/admin/whatsapp/subscribers");
+}
+
+export async function setWhatsAppSubscriberTester(formData: FormData) {
+  await requireAdminUser();
+  const subscriberId = String(formData.get("subscriberId") ?? "");
+  const testerValue = String(formData.get("isTester") ?? "");
+  if (!isUuid(subscriberId) || !["true", "false"].includes(testerValue)) {
+    throw new Error("Invalid subscriber update.");
+  }
+
+  const { error } = await createServiceClient()
+    .from("whatsapp_subscribers")
+    .update({ is_tester: testerValue === "true" })
+    .eq("id", subscriberId);
+  if (error) throw error;
+
   revalidatePath("/admin/whatsapp/subscribers");
 }

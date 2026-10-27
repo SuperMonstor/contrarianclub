@@ -163,6 +163,9 @@ describe("campaign labels", () => {
     expect(campaignLabel("announcement", { debateNumber: "12", inviteOnly: true })).toBe(
       "Contrarian Debate Club #12 (invite only)",
     );
+    expect(campaignLabel("announcement", { debateNumber: "14", inviteOnly: false }, true)).toBe(
+      "Test: Contrarian Debate Club #14",
+    );
     expect(campaignLabel("announcement", { title: "An older debate" })).toBe(
       "An older debate",
     );

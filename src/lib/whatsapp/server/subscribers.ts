@@ -7,6 +7,7 @@ export type WhatsAppSubscriber = {
   phone_e164: string;
   name: string | null;
   is_active: boolean;
+  is_tester: boolean;
   preference_at: string;
   preference_source: "import" | "whatsapp" | "admin";
   opted_out_at: string | null;
@@ -26,6 +27,7 @@ export type WhatsAppImportSummary = {
 export type WhatsAppCampaignSummary = {
   id: string;
   kind: WhatsAppCampaignKind;
+  is_test: boolean;
   parameters: Record<string, unknown>;
   status: string;
   recipient_count: number;
@@ -53,7 +55,7 @@ export async function getWhatsAppOverview() {
       .maybeSingle<WhatsAppImportSummary>(),
     supabase
       .from("whatsapp_campaigns")
-      .select("id, kind, parameters, status, recipient_count, created_at")
+      .select("id, kind, is_test, parameters, status, recipient_count, created_at")
       .order("created_at", { ascending: false })
       .limit(8)
       .returns<WhatsAppCampaignSummary[]>(),
@@ -82,7 +84,7 @@ export async function getWhatsAppSubscribers(search: string) {
   let query = supabase
     .from("whatsapp_subscribers")
     .select(
-      "id, phone_e164, name, is_active, preference_at, preference_source, opted_out_at",
+      "id, phone_e164, name, is_active, is_tester, preference_at, preference_source, opted_out_at",
     )
     .order("updated_at", { ascending: false })
     .limit(200);
@@ -95,12 +97,16 @@ export async function getWhatsAppSubscribers(search: string) {
   return data ?? [];
 }
 
-export async function getActiveWhatsAppSubscriberCount() {
+export async function getActiveWhatsAppSubscriberCount({
+  testersOnly = false,
+}: { testersOnly?: boolean } = {}) {
   const supabase = createServiceClient();
-  const { count, error } = await supabase
+  let query = supabase
     .from("whatsapp_subscribers")
     .select("id", { count: "exact", head: true })
     .eq("is_active", true);
+  if (testersOnly) query = query.eq("is_tester", true);
+  const { count, error } = await query;
   if (error) throw error;
   return count ?? 0;
 }

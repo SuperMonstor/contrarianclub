@@ -8,6 +8,7 @@ import {
   createAnnouncementCampaign,
   createWelcomeCampaign,
   sendCampaignBatch,
+  sendTestAnnouncementToEveryone,
 } from "@/lib/whatsapp/server/campaigns";
 
 const parameters = {
@@ -47,7 +48,7 @@ describe("WhatsApp campaign service", () => {
     });
 
     await expect(
-      createAnnouncementCampaign(parameters, "admin-1", {
+      createAnnouncementCampaign(parameters, "admin-1", { testOnly: false }, {
         getConfig: config,
         isPosterUrl: () => true,
         createSnapshot,
@@ -58,13 +59,63 @@ describe("WhatsApp campaign service", () => {
       userId: "admin-1",
       templateName: "debate_early_access_v2",
       languageCode: "en",
+      testOnly: false,
     });
+
+    await createAnnouncementCampaign(parameters, "admin-1", { testOnly: true }, {
+      getConfig: config,
+      isPosterUrl: () => true,
+      createSnapshot,
+    } as never);
+    expect(createSnapshot).toHaveBeenLastCalledWith(
+      expect.objectContaining({ testOnly: true }),
+    );
+  });
+
+  it("sends a checked test announcement to everyone with the same details", async () => {
+    const createSnapshot = vi.fn().mockResolvedValue({
+      campaignId: "campaign-3",
+      recipientCount: 500,
+    });
+    const testCampaign = {
+      id: "6a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d",
+      kind: "announcement",
+      is_test: true,
+      template_name: "debate_early_access_v2",
+      parameters,
+    };
+    const dependencies = {
+      getConfig: config,
+      isPosterUrl: () => true,
+      createSnapshot,
+    } as never;
+
+    await expect(
+      sendTestAnnouncementToEveryone(testCampaign.id, "admin-1", dependencies, async () =>
+        testCampaign as never,
+      ),
+    ).resolves.toEqual({ campaignId: "campaign-3", recipientCount: 500 });
+    expect(createSnapshot).toHaveBeenCalledWith(
+      expect.objectContaining({ parameters, testOnly: false }),
+    );
+
+    await expect(
+      sendTestAnnouncementToEveryone(testCampaign.id, "admin-1", dependencies, async () =>
+        ({ ...testCampaign, is_test: false }) as never,
+      ),
+    ).rejects.toThrow("Only a test announcement can be sent on to everyone.");
+    await expect(
+      sendTestAnnouncementToEveryone(testCampaign.id, "admin-1", dependencies, async () =>
+        ({ ...testCampaign, template_name: "debate_early_access" }) as never,
+      ),
+    ).rejects.toThrow("This test used an earlier message template.");
+    expect(createSnapshot).toHaveBeenCalledTimes(1);
   });
 
   it("refuses a poster that is not in the club's poster bucket", async () => {
     const createSnapshot = vi.fn();
     await expect(
-      createAnnouncementCampaign(parameters, "admin-1", {
+      createAnnouncementCampaign(parameters, "admin-1", { testOnly: false }, {
         getConfig: config,
         isPosterUrl: () => false,
         createSnapshot,

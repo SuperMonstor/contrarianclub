@@ -8,8 +8,9 @@ export const dynamic = "force-dynamic";
 
 export default async function NewWhatsAppCampaignPage() {
   await requireAdminUser();
-  const [activeSubscriberCount, debates] = await Promise.all([
+  const [activeSubscriberCount, testerCount, debates] = await Promise.all([
     getActiveWhatsAppSubscriberCount(),
+    getActiveWhatsAppSubscriberCount({ testersOnly: true }),
     getDebateOptions(),
   ]);
   return (
@@ -18,10 +19,14 @@ export default async function NewWhatsAppCampaignPage() {
         <MarketingHeader
           eyebrow="New dispatch"
           title="Announce a debate"
-          description="Pick the debate to fill in its number, add the rest and a poster that shows the motions, review the message, then send it to the entire active list."
+          description="Pick the debate to fill in its number, add the rest and a poster that shows the motions, send a test to the testers, then send the same message to the entire active list."
         />
         <div className="mt-6">
-          <CampaignForm activeSubscriberCount={activeSubscriberCount} debates={debates} />
+          <CampaignForm
+            activeSubscriberCount={activeSubscriberCount}
+            testerCount={testerCount}
+            debates={debates}
+          />
         </div>
       </div>
     </main>
