@@ -10,6 +10,7 @@ import { DETAILS_URL_BASE } from "@/lib/whatsapp/template";
 
 type Fields = {
   debateNumber: string;
+  price: string;
   motionOne: string;
   motionTwo: string;
   location: string;
@@ -19,6 +20,7 @@ type Fields = {
 
 const initialFields: Fields = {
   debateNumber: "",
+  price: "",
   motionOne: "",
   motionTwo: "",
   location: "",
@@ -44,6 +46,7 @@ export function CampaignForm({
     detailsUrl.startsWith(DETAILS_URL_BASE) && detailsUrl.length > DETAILS_URL_BASE.length;
   const valid = useMemo(() => {
     if (!/^[1-9][0-9]{0,3}$/.test(fields.debateNumber.trim())) return false;
+    if (!/^[1-9][0-9]{0,4}$/.test(fields.price.trim())) return false;
     return [fields.motionOne, fields.location, fields.time].every((value) => value.trim());
   }, [fields]);
 
@@ -155,6 +158,11 @@ export function CampaignForm({
               Invite only
             </label>
           </div>
+          {input("price", "Early access price (₹)", {
+            maxLength: 5,
+            placeholder: "599",
+            inputMode: "numeric",
+          })}
           {motion("motionOne", "Motion 1", true)}
           {motion("motionTwo", "Motion 2 (optional)", false)}
           {input("location", "Location", {
@@ -172,7 +180,7 @@ export function CampaignForm({
           })}
           {detailsUrl && !detailsUrlValid ? (
             <p className="-mt-2 text-sm text-[#f0c9c4]" role="alert">
-              View Details only opens Offlyn links, so this must start with {DETAILS_URL_BASE}
+              Book Now only opens Offlyn links, so this must start with {DETAILS_URL_BASE}
             </p>
           ) : null}
 
@@ -215,6 +223,7 @@ export function CampaignForm({
           <AnnouncementPreview
             debateNumber={fields.debateNumber}
             inviteOnly={inviteOnly}
+            price={fields.price}
             motions={[fields.motionOne, fields.motionTwo]}
             location={fields.location}
             time={fields.time}
@@ -222,7 +231,7 @@ export function CampaignForm({
           />
         </div>
         <p className="mt-4 text-xs leading-5 text-[color:var(--cc-muted)]">
-          The wording is fixed by the approved Meta template. View Details opens
+          The wording is fixed by the approved Meta template. Book Now opens
           the Offlyn link above, and replying STOP or NO opts the subscriber out.
         </p>
       </section>

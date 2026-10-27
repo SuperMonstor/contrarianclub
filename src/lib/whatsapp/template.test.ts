@@ -13,6 +13,7 @@ import {
 const announcement = {
   debateNumber: "12",
   inviteOnly: false,
+  price: "599",
   motions: ["This house believes the AI boom is a bubble."],
   location: "Bangalore International Centre",
   time: "Saturday, 8 November, 7:00 PM",
@@ -25,7 +26,7 @@ const config = { templateName: "debate_announcement", templateLanguage: "en" };
 describe("WhatsApp announcement template", () => {
   it("matches the body submitted to Meta", () => {
     expect(ANNOUNCEMENT_TEMPLATE_BODY).toBe(
-      "*Contrarian Debate Club #{{1}}*\n\nA new debate is coming up.\n\n*Motions:* {{2}}\n\n*Location:* {{3}}\n\n*Time:* {{4}}\n\nTap below for details.",
+      "*Contrarian Debate Club #{{1}}: early access*\nWe're reaching out because you opted in to hear about future debates from The Contrarian Debate Club, and we wanted you to hear about this one first.\n\nFor the next 24 hours, before it goes public, tickets are capped at ₹{{2}} for people who've attended our debates before.\n*Time:* {{3}}\n*Location:* {{4}}\n*Motions:* {{5}}\n\nTap below to book before it opens to everyone.",
     );
   });
 
@@ -43,7 +44,8 @@ describe("WhatsApp announcement template", () => {
         motions: ["First motion.", "Second motion."],
       }),
     );
-    expect(body).toContain("*Contrarian Debate Club #12 (invite only)*");
+    expect(body).toContain("*Contrarian Debate Club #12 (invite only): early access*");
+    expect(body).toContain("tickets are capped at ₹599 for people");
     expect(body).toContain("*Motions:* 1) First motion. 2) Second motion.");
   });
 
@@ -60,6 +62,9 @@ describe("WhatsApp announcement template", () => {
   it("rejects incomplete or unsafe input", () => {
     expect(() => validateAnnouncement({ ...announcement, debateNumber: "twelve" })).toThrow(
       "Debate number must be a whole number, such as 12.",
+    );
+    expect(() => validateAnnouncement({ ...announcement, price: "Rs 599" })).toThrow(
+      "Price must be a whole number of rupees, such as 599.",
     );
     expect(() => validateAnnouncement({ ...announcement, motions: [" "] })).toThrow(
       "Add at least one motion.",
@@ -91,7 +96,7 @@ describe("WhatsApp announcement template", () => {
     ).toThrow("The message is too long for WhatsApp.");
   });
 
-  it("sends the poster header, four body values, and the Offlyn path as the button suffix", () => {
+  it("sends the poster header, five body values in template order, and the Offlyn path as the button suffix", () => {
     expect(buildAnnouncementPayload("+919876543210", announcement, config)).toEqual({
       messaging_product: "whatsapp",
       recipient_type: "individual",
@@ -109,9 +114,10 @@ describe("WhatsApp announcement template", () => {
             type: "body",
             parameters: [
               { type: "text", text: "12" },
-              { type: "text", text: announcement.motions[0] },
-              { type: "text", text: announcement.location },
+              { type: "text", text: "599" },
               { type: "text", text: announcement.time },
+              { type: "text", text: announcement.location },
+              { type: "text", text: announcement.motions[0] },
             ],
           },
           {

@@ -138,7 +138,7 @@ function CampaignMessage({
     const imageUrl = parameters.headerImageUrl;
     return <WelcomePreview imageUrl={typeof imageUrl === "string" ? imageUrl : null} />;
   }
-  if (!Array.isArray(parameters.motions)) {
+  if (!Array.isArray(parameters.motions) || typeof parameters.price !== "string") {
     return (
       <p className="text-sm text-[color:var(--cc-muted)]">
         This campaign used an earlier template.
@@ -151,6 +151,7 @@ function CampaignMessage({
       <AnnouncementPreview
         debateNumber={announcement.debateNumber}
         inviteOnly={announcement.inviteOnly}
+        price={announcement.price}
         motions={announcement.motions}
         location={announcement.location}
         time={announcement.time}

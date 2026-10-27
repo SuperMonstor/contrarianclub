@@ -53,6 +53,7 @@ export type WhatsAppCampaignKind = "announcement" | "welcome";
 export type AnnouncementParameters = {
   debateNumber: string;
   inviteOnly: boolean;
+  price: string;
   motions: string[];
   location: string;
   time: string;
