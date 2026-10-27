@@ -31,6 +31,7 @@ describe("WhatsApp campaign form", () => {
 
     await user.type(screen.getByLabelText("Debate number"), "12");
     await user.click(screen.getByLabelText("Invite only"));
+    await user.type(screen.getByLabelText("Early access price (₹)"), "599");
     await user.type(screen.getByLabelText("Motion 1"), "First motion.");
     await user.type(screen.getByLabelText("Motion 2 (optional)"), "Second motion.");
     await user.type(screen.getByLabelText("Location"), "BIC");
@@ -38,9 +39,11 @@ describe("WhatsApp campaign form", () => {
     await user.type(screen.getByLabelText("Offlyn event link"), "https://tickets.test/debate");
     await user.click(screen.getByLabelText("I understand Meta messaging charges may apply"));
 
-    expect(screen.getByText("Contrarian Debate Club #12 (invite only)")).toBeInTheDocument();
+    expect(
+      screen.getByText("Contrarian Debate Club #12 (invite only): early access"),
+    ).toBeInTheDocument();
     expect(screen.getByText("1) First motion. 2) Second motion.")).toBeInTheDocument();
-    expect(screen.getByText("View Details")).toBeInTheDocument();
+    expect(screen.getByText("Book Now")).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("must start with https://offlyn.life/");
 
     const button = screen.getByRole("button", { name: "Create and send campaign" });

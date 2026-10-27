@@ -11,7 +11,7 @@ import {
 
 type Button = { label: string; kind: "link" | "reply" };
 
-export const ANNOUNCEMENT_BUTTONS: Button[] = [{ label: "View Details", kind: "link" }];
+export const ANNOUNCEMENT_BUTTONS: Button[] = [{ label: "Book Now", kind: "link" }];
 
 // WhatsApp renders *text* as bold. The preview does the same so the admin sees
 // what subscribers will see.
@@ -72,6 +72,7 @@ export function MessagePreview({
 export function AnnouncementPreview({
   debateNumber,
   inviteOnly,
+  price,
   motions,
   location,
   time,
@@ -79,6 +80,7 @@ export function AnnouncementPreview({
 }: {
   debateNumber: string;
   inviteOnly: boolean;
+  price: string;
   motions: string[];
   location: string;
   time: string;
@@ -87,9 +89,10 @@ export function AnnouncementPreview({
   const filledMotions = motions.map((motion) => motion.trim()).filter(Boolean);
   const body = renderTemplateBody(ANNOUNCEMENT_TEMPLATE_BODY, [
     formatDebateNumber(debateNumber.trim() || "12", inviteOnly),
-    formatMotions(filledMotions.length ? filledMotions : ["The motion"]),
-    location.trim() || "Location",
+    price.trim() || "599",
     time.trim() || "Date and time",
+    location.trim() || "Location",
+    formatMotions(filledMotions.length ? filledMotions : ["The motion"]),
   ]);
   return (
     <MessagePreview

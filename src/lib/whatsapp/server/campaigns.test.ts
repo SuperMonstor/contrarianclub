@@ -12,6 +12,7 @@ import {
 
 const parameters = {
   debateNumber: "12",
+  price: "599",
   inviteOnly: false,
   motions: ["This house believes the AI boom is a bubble."],
   location: "BIC",

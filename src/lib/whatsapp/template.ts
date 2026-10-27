@@ -10,18 +10,18 @@ type TemplateConfig = {
 
 // The approved Meta template bodies. Each must match the text submitted in
 // WhatsApp Manager exactly, with {{n}} wherever the app fills in a value.
+// Announcements go out as the early-access offer, which is also the first
+// message most subscribers get, so it says why they are receiving it.
 export const ANNOUNCEMENT_TEMPLATE_BODY = [
-  "*Contrarian Debate Club #{{1}}*",
+  "*Contrarian Debate Club #{{1}}: early access*",
+  "We're reaching out because you opted in to hear about future debates from The Contrarian Debate Club, and we wanted you to hear about this one first.",
   "",
-  "A new debate is coming up.",
+  "For the next 24 hours, before it goes public, tickets are capped at ₹{{2}} for people who've attended our debates before.",
+  "*Time:* {{3}}",
+  "*Location:* {{4}}",
+  "*Motions:* {{5}}",
   "",
-  "*Motions:* {{2}}",
-  "",
-  "*Location:* {{3}}",
-  "",
-  "*Time:* {{4}}",
-  "",
-  "Tap below for details.",
+  "Tap below to book before it opens to everyone.",
 ].join("\n");
 
 // Mirrors the approved text, whose sign-off line Meta stores with a dash
@@ -39,7 +39,7 @@ export const WELCOME_TEMPLATE_BODY = [
 export const ANNOUNCEMENT_TEMPLATE_FOOTER =
   "We respect your inbox. Reply STOP to opt out anytime.";
 
-// The announcement's View Details button is a dynamic URL button approved as
+// The announcement's Book Now button is a dynamic URL button approved as
 // https://offlyn.life/{{1}}, so the app sends the part of the event's Offlyn
 // link after this base.
 export const DETAILS_URL_BASE = "https://offlyn.life/";
@@ -60,6 +60,7 @@ export type WelcomeInput = {
 export type AnnouncementInput = {
   debateNumber: string;
   inviteOnly: boolean;
+  price: string;
   motions: string[];
   location: string;
   time: string;
@@ -85,9 +86,10 @@ export function formatMotions(motions: string[]): string {
 export function announcementBodyValues(parameters: AnnouncementParameters) {
   return [
     formatDebateNumber(parameters.debateNumber, parameters.inviteOnly),
-    formatMotions(parameters.motions),
-    parameters.location,
+    parameters.price,
     parameters.time,
+    parameters.location,
+    formatMotions(parameters.motions),
   ];
 }
 
@@ -139,6 +141,10 @@ export function validateAnnouncement(
   if (!/^[1-9][0-9]{0,3}$/.test(debateNumber)) {
     throw new Error("Debate number must be a whole number, such as 12.");
   }
+  const price = toTemplateText(input.price);
+  if (!/^[1-9][0-9]{0,4}$/.test(price)) {
+    throw new Error("Price must be a whole number of rupees, such as 599.");
+  }
 
   const motions = (Array.isArray(input.motions) ? input.motions : [])
     .map(toTemplateText)
@@ -154,6 +160,7 @@ export function validateAnnouncement(
   const parameters: AnnouncementParameters = {
     debateNumber,
     inviteOnly: input.inviteOnly === true,
+    price,
     motions,
     location: requireText(input.location, "Location", LIMITS.location),
     time: requireText(input.time, "Time", LIMITS.time),
