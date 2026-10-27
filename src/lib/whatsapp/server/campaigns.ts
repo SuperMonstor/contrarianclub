@@ -11,7 +11,7 @@ import {
 import type { WhatsAppCampaignKind } from "@/lib/whatsapp/types";
 import { getWhatsAppConfig } from "@/lib/whatsapp/server/config";
 import {
-  sendTemplateMessage,
+  sendWhatsAppMessage,
   type MetaSendResult,
 } from "@/lib/whatsapp/server/meta";
 import { isWhatsAppPosterUrl } from "@/lib/whatsapp/server/posters";
@@ -68,7 +68,7 @@ type SendDependencies = {
   markStale: (campaignId: string) => Promise<void>;
   loadCampaign: (campaignId: string) => Promise<SendableCampaign | null>;
   claim: (campaignId: string, limit: number) => Promise<ClaimedDelivery[]>;
-  send: typeof sendTemplateMessage;
+  send: typeof sendWhatsAppMessage;
   updateDelivery: (id: string, update: DeliveryUpdate) => Promise<void>;
   refresh: (campaignId: string) => Promise<string>;
   loadQueueState: (campaignId: string) => Promise<QueueState>;
@@ -248,7 +248,7 @@ function defaultSendDependencies(): SendDependencies {
       if (error) throw error;
       return (data ?? []) as ClaimedDelivery[];
     },
-    send: sendTemplateMessage,
+    send: sendWhatsAppMessage,
     async updateDelivery(id, update) {
       const { error } = await supabase
         .from("whatsapp_deliveries")

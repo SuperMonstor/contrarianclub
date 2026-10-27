@@ -16,7 +16,7 @@ vi.mock("@/lib/whatsapp/server/config", () => ({
   }),
 }));
 
-import { sendTemplateMessage } from "@/lib/whatsapp/server/meta";
+import { sendWhatsAppMessage } from "@/lib/whatsapp/server/meta";
 
 const originalFetch = global.fetch;
 const input = {
@@ -41,7 +41,7 @@ describe("Meta WhatsApp message sending", () => {
       }),
     );
     global.fetch = fetchMock;
-    await expect(sendTemplateMessage(input)).resolves.toEqual({
+    await expect(sendWhatsAppMessage(input)).resolves.toEqual({
       kind: "sent",
       messageId: "wamid.123",
     });
@@ -63,7 +63,7 @@ describe("Meta WhatsApp message sending", () => {
         status,
       }),
     );
-    await expect(sendTemplateMessage(input)).resolves.toMatchObject({
+    await expect(sendWhatsAppMessage(input)).resolves.toMatchObject({
       kind: "retryable",
       errorCode: "4",
     });
@@ -76,7 +76,7 @@ describe("Meta WhatsApp message sending", () => {
         { status: 400 },
       ),
     );
-    await expect(sendTemplateMessage(input)).resolves.toEqual({
+    await expect(sendWhatsAppMessage(input)).resolves.toEqual({
       kind: "terminal",
       errorCode: "132001",
       message: "Template missing",
@@ -87,14 +87,14 @@ describe("Meta WhatsApp message sending", () => {
     global.fetch = vi.fn().mockResolvedValue(
       new Response("not json", { status: 200 }),
     );
-    await expect(sendTemplateMessage(input)).resolves.toMatchObject({
+    await expect(sendWhatsAppMessage(input)).resolves.toMatchObject({
       kind: "unknown",
     });
   });
 
   it("marks network failures as unknown because Meta may have accepted", async () => {
     global.fetch = vi.fn().mockRejectedValue(new TypeError("network lost"));
-    await expect(sendTemplateMessage(input)).resolves.toMatchObject({
+    await expect(sendWhatsAppMessage(input)).resolves.toMatchObject({
       kind: "unknown",
     });
   });

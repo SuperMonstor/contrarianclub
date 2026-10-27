@@ -242,6 +242,21 @@ export function buildWelcomePayload(
   ]);
 }
 
+// Sent as a free-form reply inside the customer service window that the
+// subscriber's own STOP message opens, so it needs no approved template.
+export const OPT_OUT_CONFIRMATION =
+  "You've been unsubscribed from The Contrarian Debate Club. You won't receive any more messages from us.";
+
+export function buildTextPayload(recipientPhone: string, body: string) {
+  return {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: recipientPhone.replace(/^\+/, ""),
+    type: "text",
+    text: { body },
+  };
+}
+
 export function campaignLabel(
   kind: WhatsAppCampaignKind,
   parameters: Record<string, unknown>,
