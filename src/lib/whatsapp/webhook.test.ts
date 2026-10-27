@@ -24,12 +24,12 @@ describe("WhatsApp webhook signatures", () => {
 });
 
 describe("WhatsApp opt-out text", () => {
-  it.each(["STOP", " unsubscribe ", "remove  me", "Stop promotions", "Stop updates"])(
+  it.each(["STOP", "no", " No ", " unsubscribe ", "remove  me", "Stop promotions", "Stop updates"])(
     "recognizes %j",
     (text) => expect(isOptOutText(text)).toBe(true),
   );
 
-  it.each(["stop please", "remove", "hello"])("ignores %j", (text) => {
+  it.each(["stop please", "remove", "hello", "no thanks", "know"])("ignores %j", (text) => {
     expect(isOptOutText(text)).toBe(false);
   });
 });

@@ -134,7 +134,10 @@ function CampaignMessage({
   kind: "announcement" | "welcome";
   parameters: Record<string, unknown>;
 }) {
-  if (kind === "welcome") return <WelcomePreview />;
+  if (kind === "welcome") {
+    const imageUrl = parameters.headerImageUrl;
+    return <WelcomePreview imageUrl={typeof imageUrl === "string" ? imageUrl : null} />;
+  }
   if (!Array.isArray(parameters.motions)) {
     return (
       <p className="text-sm text-[color:var(--cc-muted)]">

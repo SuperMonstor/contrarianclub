@@ -46,10 +46,11 @@ export function verifyWebhookSignature(
   return supplied.length === expected.length && timingSafeEqual(supplied, expected);
 }
 
-// Typed replies, plus the labels of the announcement's "Stop promotions" and
-// the welcome message's "Stop updates" quick reply buttons.
+// Typed replies, plus the labels of quick reply stop buttons. This number
+// only sends announcements, so a bare "no" reply also counts as opting out.
 const OPT_OUT_PHRASES = [
   "STOP",
+  "NO",
   "UNSUBSCRIBE",
   "REMOVE ME",
   "STOP PROMOTIONS",

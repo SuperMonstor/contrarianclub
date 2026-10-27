@@ -24,15 +24,25 @@ export const ANNOUNCEMENT_TEMPLATE_BODY = [
   "Tap below for details.",
 ].join("\n");
 
+// Mirrors the approved text, whose sign-off line Meta stores with a dash
+// character written here as an escape.
 export const WELCOME_TEMPLATE_BODY = [
-  "Hello, Sudarshan from The Contrarian Club here. You'd signed up to be notified of future debates.",
+  "Hi {{1}}, you're receiving this message because you signed up for updates from The Contrarian Debate Club.",
   "",
-  "You'll ONLY receive a message when there's a new debate coming up, and you can opt out at any time by tapping the button below or replying STOP.",
+  "We'll only message you about upcoming debates. To unsubscribe at any time, reply STOP.",
+  "",
+  "\u2014 The Contrarian Debate Club",
 ].join("\n");
 
-// The announcement's Details button is a dynamic URL button. Meta appends the
-// campaign ID to this path, and the route redirects to the campaign's link.
-export const DETAILS_BUTTON_PATH = "/api/whatsapp/details/";
+// The approved footer under the announcement body. It has no variables, so
+// the app never sends it, but previews show it.
+export const ANNOUNCEMENT_TEMPLATE_FOOTER =
+  "We respect your inbox. Reply STOP to opt out anytime.";
+
+// The announcement's View Details button is a dynamic URL button approved as
+// https://offlyn.life/{{1}}, so the app sends the part of the event's Offlyn
+// link after this base.
+export const DETAILS_URL_BASE = "https://offlyn.life/";
 
 export const MAX_MOTIONS = 2;
 const META_BODY_LIMIT = 1024;
@@ -42,6 +52,10 @@ const LIMITS = {
   time: 120,
   url: 2048,
 } as const;
+
+export type WelcomeInput = {
+  headerImageUrl: string;
+};
 
 export type AnnouncementInput = {
   debateNumber: string;
@@ -109,6 +123,15 @@ function requireHttpsUrl(value: unknown, label: string): string {
   return text;
 }
 
+export function detailsUrlSuffix(detailsUrl: string): string {
+  if (!detailsUrl.startsWith(DETAILS_URL_BASE)) {
+    throw new Error(`Details link must be an Offlyn link starting with ${DETAILS_URL_BASE}`);
+  }
+  const suffix = detailsUrl.slice(DETAILS_URL_BASE.length);
+  if (!suffix) throw new Error("Details link must point to a specific Offlyn event.");
+  return suffix;
+}
+
 export function validateAnnouncement(
   input: AnnouncementInput,
 ): AnnouncementParameters {
@@ -137,6 +160,7 @@ export function validateAnnouncement(
     detailsUrl: requireHttpsUrl(input.detailsUrl, "Details link"),
     posterUrl: requireHttpsUrl(input.posterUrl, "Poster"),
   };
+  detailsUrlSuffix(parameters.detailsUrl);
   if (renderAnnouncementBody(parameters).length > META_BODY_LIMIT) {
     throw new Error(
       "The message is too long for WhatsApp. Shorten the motions, location, or time.",
@@ -145,10 +169,20 @@ export function validateAnnouncement(
   return parameters;
 }
 
+export function validateWelcome(input: WelcomeInput): WelcomeInput {
+  return { headerImageUrl: requireHttpsUrl(input.headerImageUrl, "Image") };
+}
+
+// The welcome greets each subscriber by first name, falling back to "there".
+export function greetingName(name: string | null): string {
+  const first = toTemplateText(name ?? "").split(" ")[0]?.slice(0, 40);
+  return first || "there";
+}
+
 function templateMessage(
   recipientPhone: string,
   config: TemplateConfig,
-  components?: unknown[],
+  components: unknown[],
 ) {
   return {
     messaging_product: "whatsapp",
@@ -158,7 +192,7 @@ function templateMessage(
     template: {
       name: config.templateName,
       language: { code: config.templateLanguage },
-      ...(components ? { components } : {}),
+      components,
     },
   };
 }
@@ -166,7 +200,6 @@ function templateMessage(
 export function buildAnnouncementPayload(
   recipientPhone: string,
   input: AnnouncementInput,
-  campaignId: string,
   config: TemplateConfig,
 ) {
   const parameters = validateAnnouncement(input);
@@ -186,18 +219,27 @@ export function buildAnnouncementPayload(
       type: "button",
       sub_type: "url",
       index: "0",
-      parameters: [{ type: "text", text: campaignId }],
+      parameters: [{ type: "text", text: detailsUrlSuffix(parameters.detailsUrl) }],
     },
   ]);
 }
 
-// The welcome template has no variables, and its quick reply button needs no
-// parameters, so the message carries no components at all.
 export function buildWelcomePayload(
-  recipientPhone: string,
+  recipient: { phone: string; name: string | null },
+  input: WelcomeInput,
   config: TemplateConfig,
 ) {
-  return templateMessage(recipientPhone, config);
+  const { headerImageUrl } = validateWelcome(input);
+  return templateMessage(recipient.phone, config, [
+    {
+      type: "header",
+      parameters: [{ type: "image", image: { link: headerImageUrl } }],
+    },
+    {
+      type: "body",
+      parameters: [{ type: "text", text: greetingName(recipient.name) }],
+    },
+  ]);
 }
 
 export function campaignLabel(

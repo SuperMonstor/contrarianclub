@@ -16,7 +16,7 @@ const parameters = {
   motions: ["This house believes the AI boom is a bubble."],
   location: "BIC",
   time: "Saturday, 8 November, 7:00 PM",
-  detailsUrl: "https://tickets.example/debate-12",
+  detailsUrl: "https://offlyn.life/e/ncWEIfi",
   posterUrl: "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/a.png",
 };
 
@@ -26,6 +26,9 @@ const announcementCampaign = {
   language_code: "en",
   parameters,
 };
+
+const welcomeImage =
+  "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/b.jpg";
 
 const config = () => ({
   templateName: "debate_announcement",
@@ -74,20 +77,34 @@ describe("WhatsApp campaign service", () => {
     expect(createSnapshot).not.toHaveBeenCalled();
   });
 
-  it("creates a welcome snapshot with the welcome template", async () => {
+  it("creates a welcome snapshot with the welcome template and image", async () => {
     const createWelcomeSnapshot = vi.fn().mockResolvedValue({
       campaignId: "campaign-2",
       recipientCount: 7,
     });
-    await createWelcomeCampaign("admin-1", {
+    await createWelcomeCampaign({ headerImageUrl: welcomeImage }, "admin-1", {
       getConfig: config,
+      isPosterUrl: () => true,
       createWelcomeSnapshot,
     } as never);
     expect(createWelcomeSnapshot).toHaveBeenCalledWith({
+      parameters: { headerImageUrl: welcomeImage },
       userId: "admin-1",
       templateName: "subscriber_welcome",
       languageCode: "en",
     });
+  });
+
+  it("refuses a welcome image that is not in the club's poster bucket", async () => {
+    const createWelcomeSnapshot = vi.fn();
+    await expect(
+      createWelcomeCampaign({ headerImageUrl: welcomeImage }, "admin-1", {
+        getConfig: config,
+        isPosterUrl: () => false,
+        createWelcomeSnapshot,
+      } as never),
+    ).rejects.toThrow("Upload the image again before sending.");
+    expect(createWelcomeSnapshot).not.toHaveBeenCalled();
   });
 
   it("sends each campaign kind with its own template payload", async () => {
@@ -120,15 +137,13 @@ describe("WhatsApp campaign service", () => {
       kind: "welcome",
       template_name: "subscriber_welcome",
       language_code: "en",
-      parameters: {},
+      parameters: { headerImageUrl: welcomeImage },
     });
-    expect(welcomePayload).toEqual({
-      messaging_product: "whatsapp",
-      recipient_type: "individual",
-      to: "919876543210",
-      type: "template",
-      template: { name: "subscriber_welcome", language: { code: "en" } },
-    });
+    expect(welcomePayload.template.name).toBe("subscriber_welcome");
+    expect(welcomePayload.template.components).toEqual([
+      { type: "header", parameters: [{ type: "image", image: { link: welcomeImage } }] },
+      { type: "body", parameters: [{ type: "text", text: "Asha" }] },
+    ]);
   });
 
   it("fails a batch with invalid parameters before claiming anyone", async () => {
