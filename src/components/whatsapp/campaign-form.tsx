@@ -1,13 +1,10 @@
 "use client";
 
-import { ImageUp, LoaderCircle, Megaphone, ShieldCheck } from "lucide-react";
+import { Megaphone, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
-import {
-  createWhatsAppCampaign,
-  createWhatsAppPosterUpload,
-} from "@/app/admin/whatsapp/actions";
+import { createWhatsAppCampaign } from "@/app/admin/whatsapp/actions";
 import { AnnouncementPreview } from "@/components/whatsapp/message-preview";
-import { createBrowserClient } from "@/lib/supabase/browser";
+import { PosterUploadField } from "@/components/whatsapp/poster-upload-field";
 import type { DebateOption } from "@/lib/whatsapp/server/debates";
 import { DETAILS_URL_BASE } from "@/lib/whatsapp/template";
 
@@ -20,12 +17,6 @@ type Fields = {
   detailsUrl: string;
 };
 
-type PosterState =
-  | { state: "empty" }
-  | { state: "uploading" }
-  | { state: "ready"; url: string }
-  | { state: "error"; message: string };
-
 const initialFields: Fields = {
   debateNumber: "",
   motionOne: "",
@@ -34,9 +25,6 @@ const initialFields: Fields = {
   time: "",
   detailsUrl: "",
 };
-
-const POSTER_TYPES = ["image/jpeg", "image/png"];
-const POSTER_MAX_BYTES = 5 * 1024 * 1024;
 
 export function CampaignForm({
   activeSubscriberCount,
@@ -48,7 +36,7 @@ export function CampaignForm({
   const [fields, setFields] = useState(initialFields);
   const [debateId, setDebateId] = useState("");
   const [inviteOnly, setInviteOnly] = useState(false);
-  const [poster, setPoster] = useState<PosterState>({ state: "empty" });
+  const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [chargesAccepted, setChargesAccepted] = useState(false);
 
   const detailsUrl = fields.detailsUrl.trim();
@@ -75,38 +63,6 @@ export function CampaignForm({
       motionOne: debate.motions[0] ?? "",
       motionTwo: debate.motions[1] ?? "",
     }));
-  }
-
-  async function uploadPoster(file: File | null) {
-    if (!file) return;
-    if (!POSTER_TYPES.includes(file.type)) {
-      setPoster({ state: "error", message: "Choose a JPEG or PNG image." });
-      return;
-    }
-    if (file.size > POSTER_MAX_BYTES) {
-      setPoster({ state: "error", message: "The poster must be 5 MB or smaller." });
-      return;
-    }
-
-    setPoster({ state: "uploading" });
-    try {
-      const upload = await createWhatsAppPosterUpload(file.type, file.size);
-      if (!upload.ok) throw new Error(upload.error);
-      const supabase = createBrowserClient();
-      if (!supabase) throw new Error("Supabase is not configured in this browser.");
-      const { error } = await supabase.storage
-        .from(upload.bucket)
-        .uploadToSignedUrl(upload.path, upload.token, file, {
-          contentType: file.type,
-        });
-      if (error) throw error;
-      setPoster({ state: "ready", url: upload.publicUrl });
-    } catch (caught) {
-      setPoster({
-        state: "error",
-        message: caught instanceof Error ? caught.message : "The poster could not be uploaded.",
-      });
-    }
   }
 
   function input(
@@ -149,8 +105,6 @@ export function CampaignForm({
       </label>
     );
   }
-
-  const posterUrl = poster.state === "ready" ? poster.url : null;
 
   return (
     <form action={createWhatsAppCampaign} className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
@@ -222,36 +176,7 @@ export function CampaignForm({
             </p>
           ) : null}
 
-          <div className="grid gap-2">
-            <span className="club-label">Poster</span>
-            <label
-              htmlFor="whatsapp-poster"
-              className="club-panel-quiet flex cursor-pointer items-center gap-3 px-4 py-3 text-sm transition hover:border-[color:var(--cc-line-strong)]"
-            >
-              {poster.state === "uploading" ? (
-                <LoaderCircle className="animate-spin text-[color:var(--cc-gold)]" size={18} />
-              ) : (
-                <ImageUp className="text-[color:var(--cc-gold)]" size={18} />
-              )}
-              {poster.state === "uploading"
-                ? "Uploading poster"
-                : poster.state === "ready"
-                  ? "Poster uploaded. Choose another to replace it."
-                  : "Choose a JPEG or PNG, up to 5 MB"}
-            </label>
-            <input
-              id="whatsapp-poster"
-              className="sr-only"
-              type="file"
-              accept={POSTER_TYPES.join(",")}
-              aria-label="Poster"
-              onChange={(event) => uploadPoster(event.target.files?.[0] ?? null)}
-            />
-            {poster.state === "error" ? (
-              <p className="text-sm text-[#f0c9c4]" role="alert">{poster.message}</p>
-            ) : null}
-            <input type="hidden" name="posterUrl" value={posterUrl ?? ""} />
-          </div>
+          <PosterUploadField label="Poster" name="posterUrl" onUploaded={setPosterUrl} />
         </div>
 
         <label className="club-panel-quiet mt-6 flex items-start gap-3 px-4 py-4 text-sm text-[color:var(--cc-muted)]">

@@ -4,7 +4,9 @@ import {
   buildAnnouncementPayload,
   buildWelcomePayload,
   validateAnnouncement,
+  validateWelcome,
   type AnnouncementInput,
+  type WelcomeInput,
 } from "@/lib/whatsapp/template";
 import type { WhatsAppCampaignKind } from "@/lib/whatsapp/types";
 import { getWhatsAppConfig } from "@/lib/whatsapp/server/config";
@@ -48,6 +50,7 @@ type CreateDependencies = {
     languageCode: string;
   }) => Promise<CampaignSnapshot>;
   createWelcomeSnapshot: (input: {
+    parameters: WelcomeInput;
     userId: string;
     templateName: string;
     languageCode: string;
@@ -58,7 +61,7 @@ type SendableCampaign = {
   kind: WhatsAppCampaignKind;
   template_name: string;
   language_code: string;
-  parameters: AnnouncementInput;
+  parameters: Record<string, unknown>;
 };
 
 type SendDependencies = {
@@ -142,6 +145,7 @@ function defaultCreateDependencies(): CreateDependencies {
         {
           p_template_name: input.templateName,
           p_language_code: input.languageCode,
+          p_parameters: input.parameters,
           p_created_by: input.userId,
         },
       );
@@ -170,11 +174,17 @@ export async function createAnnouncementCampaign(
 }
 
 export async function createWelcomeCampaign(
+  input: WelcomeInput,
   userId: string,
   dependencies: CreateDependencies = defaultCreateDependencies(),
 ) {
+  const parameters = validateWelcome(input);
+  if (!dependencies.isPosterUrl(parameters.headerImageUrl)) {
+    throw new Error("Upload the image again before sending.");
+  }
   const config = dependencies.getConfig();
   return dependencies.createWelcomeSnapshot({
+    parameters,
     userId,
     templateName: config.welcomeTemplateName,
     languageCode: config.templateLanguage,
@@ -189,20 +199,26 @@ export async function getPendingWelcomeCount(): Promise<number> {
   return Number(data ?? 0);
 }
 
-// Builds the Meta payload for one recipient. Announcement parameters are
-// validated once, before any delivery is claimed, so a bad campaign fails the
-// batch instead of failing every message.
+// Builds the Meta payload for one recipient. Campaign parameters are validated
+// once, before any delivery is claimed, so a bad campaign fails the batch
+// instead of failing every message.
 function payloadBuilder(campaign: SendableCampaign) {
   const config = {
     templateName: campaign.template_name,
     templateLanguage: campaign.language_code,
   };
   if (campaign.kind === "welcome") {
-    return (recipientPhone: string) => buildWelcomePayload(recipientPhone, config);
+    const parameters = validateWelcome(campaign.parameters as WelcomeInput);
+    return (delivery: ClaimedDelivery) =>
+      buildWelcomePayload(
+        { phone: delivery.recipient_phone, name: delivery.recipient_name },
+        parameters,
+        config,
+      );
   }
-  const parameters = validateAnnouncement(campaign.parameters);
-  return (recipientPhone: string) =>
-    buildAnnouncementPayload(recipientPhone, parameters, config);
+  const parameters = validateAnnouncement(campaign.parameters as AnnouncementInput);
+  return (delivery: ClaimedDelivery) =>
+    buildAnnouncementPayload(delivery.recipient_phone, parameters, config);
 }
 
 function defaultSendDependencies(): SendDependencies {
@@ -322,12 +338,12 @@ async function persistMetaResult(
 
 async function processDelivery(
   delivery: ClaimedDelivery,
-  buildPayload: (recipientPhone: string) => object,
+  buildPayload: (delivery: ClaimedDelivery) => object,
   dependencies: SendDependencies,
 ) {
   let result: MetaSendResult;
   try {
-    result = await dependencies.send(buildPayload(delivery.recipient_phone));
+    result = await dependencies.send(buildPayload(delivery));
   } catch {
     result = {
       kind: "unknown",

@@ -40,7 +40,10 @@ export async function createWhatsAppWelcomeCampaign(formData: FormData) {
   if (formData.get("acknowledgeCharges") !== "yes") {
     throw new Error("Confirm that Meta messaging charges may apply.");
   }
-  const result = await createWelcomeCampaign(user.id);
+  const result = await createWelcomeCampaign(
+    { headerImageUrl: String(formData.get("headerImageUrl") ?? "") },
+    user.id,
+  );
   redirect(
     `${await currentAdminPath(`/whatsapp/campaigns/${result.campaignId}`)}?send=1`,
   );

@@ -24,10 +24,14 @@ export const ANNOUNCEMENT_TEMPLATE_BODY = [
   "Tap below for details.",
 ].join("\n");
 
+// Mirrors the approved text, whose sign-off line Meta stores with a dash
+// character written here as an escape.
 export const WELCOME_TEMPLATE_BODY = [
-  "Hello, Sudarshan from The Contrarian Club here. You'd signed up to be notified of future debates.",
+  "Hi {{1}}, you're receiving this message because you signed up for updates from The Contrarian Debate Club.",
   "",
-  "You'll ONLY receive a message when there's a new debate coming up, and you can opt out at any time by tapping the button below or replying STOP.",
+  "We'll only message you about upcoming debates. To unsubscribe at any time, reply STOP.",
+  "",
+  "\u2014 The Contrarian Debate Club",
 ].join("\n");
 
 // The approved footer under the announcement body. It has no variables, so
@@ -48,6 +52,10 @@ const LIMITS = {
   time: 120,
   url: 2048,
 } as const;
+
+export type WelcomeInput = {
+  headerImageUrl: string;
+};
 
 export type AnnouncementInput = {
   debateNumber: string;
@@ -161,10 +169,20 @@ export function validateAnnouncement(
   return parameters;
 }
 
+export function validateWelcome(input: WelcomeInput): WelcomeInput {
+  return { headerImageUrl: requireHttpsUrl(input.headerImageUrl, "Image") };
+}
+
+// The welcome greets each subscriber by first name, falling back to "there".
+export function greetingName(name: string | null): string {
+  const first = toTemplateText(name ?? "").split(" ")[0]?.slice(0, 40);
+  return first || "there";
+}
+
 function templateMessage(
   recipientPhone: string,
   config: TemplateConfig,
-  components?: unknown[],
+  components: unknown[],
 ) {
   return {
     messaging_product: "whatsapp",
@@ -174,7 +192,7 @@ function templateMessage(
     template: {
       name: config.templateName,
       language: { code: config.templateLanguage },
-      ...(components ? { components } : {}),
+      components,
     },
   };
 }
@@ -206,13 +224,22 @@ export function buildAnnouncementPayload(
   ]);
 }
 
-// The welcome template has no variables, and its quick reply button needs no
-// parameters, so the message carries no components at all.
 export function buildWelcomePayload(
-  recipientPhone: string,
+  recipient: { phone: string; name: string | null },
+  input: WelcomeInput,
   config: TemplateConfig,
 ) {
-  return templateMessage(recipientPhone, config);
+  const { headerImageUrl } = validateWelcome(input);
+  return templateMessage(recipient.phone, config, [
+    {
+      type: "header",
+      parameters: [{ type: "image", image: { link: headerImageUrl } }],
+    },
+    {
+      type: "body",
+      parameters: [{ type: "text", text: greetingName(recipient.name) }],
+    },
+  ]);
 }
 
 export function campaignLabel(

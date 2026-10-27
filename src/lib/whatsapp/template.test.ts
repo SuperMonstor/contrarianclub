@@ -4,6 +4,8 @@ import {
   buildAnnouncementPayload,
   buildWelcomePayload,
   campaignLabel,
+  greetingName,
+  WELCOME_TEMPLATE_BODY,
   renderAnnouncementBody,
   validateAnnouncement,
 } from "@/lib/whatsapp/template";
@@ -125,19 +127,51 @@ describe("WhatsApp announcement template", () => {
 });
 
 describe("WhatsApp welcome template", () => {
-  it("sends the template without components", () => {
+  it("mirrors the approved body with one name variable", () => {
+    expect(WELCOME_TEMPLATE_BODY.match(/\{\{\d+\}\}/g)).toEqual(["{{1}}"]);
+    expect(WELCOME_TEMPLATE_BODY.startsWith("Hi {{1}}, you're receiving this message")).toBe(true);
+  });
+
+  it("greets subscribers by first name", () => {
+    expect(greetingName("  Asha   Rao ")).toBe("Asha");
+    expect(greetingName(null)).toBe("there");
+    expect(greetingName("   ")).toBe("there");
+  });
+
+  it("sends the chosen image header and the first name", () => {
     expect(
-      buildWelcomePayload("+919876543210", {
-        templateName: "subscriber_welcome",
-        templateLanguage: "en",
-      }),
+      buildWelcomePayload(
+        { phone: "+919876543210", name: "Asha Rao" },
+        { headerImageUrl: "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/b.jpg" },
+        { templateName: "subscriber_welcome", templateLanguage: "en" },
+      ),
     ).toEqual({
       messaging_product: "whatsapp",
       recipient_type: "individual",
       to: "919876543210",
       type: "template",
-      template: { name: "subscriber_welcome", language: { code: "en" } },
+      template: {
+        name: "subscriber_welcome",
+        language: { code: "en" },
+        components: [
+          {
+            type: "header",
+            parameters: [{ type: "image", image: { link: "https://project.supabase.co/storage/v1/object/public/whatsapp-posters/b.jpg" } }],
+          },
+          { type: "body", parameters: [{ type: "text", text: "Asha" }] },
+        ],
+      },
     });
+  });
+
+  it("requires an HTTPS image", () => {
+    expect(() =>
+      buildWelcomePayload(
+        { phone: "+919876543210", name: null },
+        { headerImageUrl: "" },
+        { templateName: "subscriber_welcome", templateLanguage: "en" },
+      ),
+    ).toThrow("Image is required.");
   });
 });
 

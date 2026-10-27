@@ -13,8 +13,6 @@ type Button = { label: string; kind: "link" | "reply" };
 
 export const ANNOUNCEMENT_BUTTONS: Button[] = [{ label: "View Details", kind: "link" }];
 
-export const WELCOME_BUTTONS: Button[] = [{ label: "Stop updates", kind: "reply" }];
-
 // WhatsApp renders *text* as bold. The preview does the same so the admin sees
 // what subscribers will see.
 function formatLine(line: string): ReactNode[] {
@@ -47,7 +45,7 @@ export function MessagePreview({
         <img src={posterUrl} alt="Poster preview" className="block max-h-96 w-full object-cover" />
       ) : showPosterSlot ? (
         <div className="flex h-40 items-center justify-center gap-2 bg-[#ddd2b8] text-sm text-[#655741]">
-          <ImageIcon size={18} /> Poster
+          <ImageIcon size={18} /> Image
         </div>
       ) : null}
       <div className="break-words px-5 py-5">
@@ -104,6 +102,13 @@ export function AnnouncementPreview({
   );
 }
 
-export function WelcomePreview() {
-  return <MessagePreview body={WELCOME_TEMPLATE_BODY} buttons={WELCOME_BUTTONS} />;
+export function WelcomePreview({ imageUrl }: { imageUrl?: string | null }) {
+  return (
+    <MessagePreview
+      body={renderTemplateBody(WELCOME_TEMPLATE_BODY, ["Asha"])}
+      buttons={[]}
+      posterUrl={imageUrl}
+      showPosterSlot
+    />
+  );
 }

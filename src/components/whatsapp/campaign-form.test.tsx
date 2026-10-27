@@ -70,6 +70,7 @@ describe("WhatsApp campaign form", () => {
       new File(["gif"], "poster.gif", { type: "image/gif" }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Choose a JPEG or PNG image.");
+    expect(screen.getByRole("button", { name: "Create and send campaign" })).toBeDisabled();
   });
 
   it("fills the number and motions from a chosen debate", async () => {
