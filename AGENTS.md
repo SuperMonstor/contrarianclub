@@ -8,6 +8,13 @@ This version has breaking changes. APIs, conventions, and file structure may all
 
 Never use em dashes (—) anywhere: code, comments, commit messages, prose, or poster/marketing copy. Use periods, commas, colons, or parentheses instead. This applies to all generated text in this repo.
 
+# Debate vocabulary
+
+- **TCBT** means "This Club Believes That", the club's own take on the
+  opening other debating societies use for a motion. Drafts use the
+  abbreviation; anything published spells it out ("This Club Believes
+  that ..."). Policy motions open "This Club Would" instead.
+
 # Agent workflow
 
 - Keep ADRs brief, direct, and easy to understand. Record the context,
